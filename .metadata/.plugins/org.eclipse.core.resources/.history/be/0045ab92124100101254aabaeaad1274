@@ -1,0 +1,11 @@
+package com.oracle.oBootHello.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class MemberService {
+
+	// boot 방식 -> Repository 연결
+	
+	
+}

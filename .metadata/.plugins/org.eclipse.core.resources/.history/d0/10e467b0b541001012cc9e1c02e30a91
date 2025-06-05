@@ -1,0 +1,12 @@
+package com.oracle.oBootDbConnect.service;
+
+import com.oracle.oBootDbConnect.repository.MemberRepository;
+
+public class MemberService {
+	private final MemberRepository memberRepository;
+	
+	// 생성자를 만들어서 memberRepository야 오류 해결 ? -- 11:34 6/5
+	public MemberService(MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
+	}
+}

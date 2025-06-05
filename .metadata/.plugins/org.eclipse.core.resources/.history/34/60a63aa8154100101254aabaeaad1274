@@ -1,0 +1,26 @@
+package com.oracle.oBootHello.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.oracle.oBootHello.dto.Member1;
+import com.oracle.oBootHello.repository.MemberRepository;
+
+@Service
+public class MemberService {
+
+	// boot 방식 -> Repository 연결
+	// 2. DI --> 생성자
+	private final MemberRepository memberRepository;
+	@Autowired
+	public MemberService(MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
+	}
+	
+	// 회원 가입
+	public Long memberSave (Member1 member1)  {
+		System.out.println("MemberService memberSave start");
+		memberRepository.save(member1);
+	}
+	
+}

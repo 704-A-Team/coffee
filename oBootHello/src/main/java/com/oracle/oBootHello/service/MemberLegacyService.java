@@ -1,0 +1,24 @@
+package com.oracle.oBootHello.service;
+
+import com.oracle.oBootHello.dto.Member1;
+import com.oracle.oBootHello.repository.MemberLegacyRepository;
+import com.oracle.oBootHello.repository.MemberLegacyRepositoryImpl;
+
+public class MemberLegacyService {
+	// 1. 전통적인 방식           인터페이스                 new 구현체(Impl) 넣어야 한다
+	MemberLegacyRepository memberLegacyRepository = new MemberLegacyRepositoryImpl();
+	// 회원 가입
+	public Long memberSave(Member1 member1)  {
+		System.out.println("MemberLegacyService memberSave start");
+		memberLegacyRepository.save(member1);
+		
+		return member1.getId();
+	}
+	
+	public String allMembers() {
+		System.out.println("MemberLegacyService allMembers start");
+		String findMsg = memberLegacyRepository.findAll();
+		
+		return findMsg;
+	}
+}

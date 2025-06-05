@@ -1,0 +1,21 @@
+package com.oracle.oBootHello.repository;
+
+import java.util.List;
+
+import com.oracle.oBootHello.dto.Member1;
+
+public class MemberLegacyRepositoryImpl implements MemberLegacyRepository {
+
+	@Override
+	public Member1 save(Member1 member1) {
+		System.out.println("MemberLegacyRepositoryImpl save");
+		return member1;
+	}
+
+	@Override
+	public String findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

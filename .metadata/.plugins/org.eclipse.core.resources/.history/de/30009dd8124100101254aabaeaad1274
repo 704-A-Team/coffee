@@ -1,0 +1,17 @@
+package com.oracle.oBootHello.service;
+
+import org.springframework.stereotype.Service;
+
+import com.oracle.oBootHello.repository.MemberRepository;
+
+@Service
+public class MemberService {
+
+	// boot 방식 -> Repository 연결
+	// 2. DI --> 생성자
+	private final MemberRepository memberRepository;
+	public MemberService(MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
+	}
+	
+}

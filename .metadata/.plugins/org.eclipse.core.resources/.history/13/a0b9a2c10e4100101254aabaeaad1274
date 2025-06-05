@@ -1,0 +1,6 @@
+package com.oracle.oBootHello.service;
+
+public class MemberService {
+
+	// boot 방식 -> Repository 연결
+}

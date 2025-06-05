@@ -1,0 +1,45 @@
+package com.oracle.oBootDbConnect.repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+
+public class JdbcMemberRepository implements MemberRepository {
+
+	// JDBC 사용
+	private final DataSource dataSource;
+	@Autowired
+	public JdbcMemberRepository(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	private Connection getConnection() {
+		// Connection kConn = DataSourceUtils.getConnection(dataSource);
+		// return kConn;
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
+	@Override
+	public Member7 save(Member7 meber7) {
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		ResultSet rs = null;
+		conn = getConnection();
+		return null;
+	}
+
+	@Override
+	public List<Member7> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

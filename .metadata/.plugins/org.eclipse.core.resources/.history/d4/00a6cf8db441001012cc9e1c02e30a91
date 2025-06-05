@@ -1,0 +1,21 @@
+package com.oracle.oBootDbConnect.repository;
+
+import java.util.List;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+
+public class MemoryMemberRepository implements MemberRepository {
+
+	@Override
+	public Member7 save(Member7 meber7) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Member7> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

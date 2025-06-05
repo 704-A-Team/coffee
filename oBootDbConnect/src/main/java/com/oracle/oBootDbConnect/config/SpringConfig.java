@@ -1,0 +1,31 @@
+package com.oracle.oBootDbConnect.config;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+// 설정 파일에는 MUST --> @Configuration  붙여준다
+
+import com.oracle.oBootDbConnect.repository.JdbcMemberRepository;
+import com.oracle.oBootDbConnect.repository.MemberRepository;
+import com.oracle.oBootDbConnect.repository.MemoryMemberRepository;
+@Configuration
+public class SpringConfig {
+	
+	private DataSource dataSource;
+	
+	public SpringConfig(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	@Bean
+	public MemberRepository memberRepository()  {
+	//	return new MemoryMemberRepository(); 			// --> Memory 부품 교체
+		return new JdbcMemberRepository(dataSource);	// --> Oracle 부품 교체
+	}
+	
+	
+	
+	
+	
+}

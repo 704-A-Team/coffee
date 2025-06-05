@@ -1,0 +1,5 @@
+package com.oracle.oBootHello.dto;
+
+public class Member1 {
+
+}

@@ -1,0 +1,6 @@
+package com.oracle.oBootHello.dto;
+
+public class Member1 {
+	private Long id;
+	private String name;
+}

@@ -1,0 +1,6 @@
+package com.oracle.oBootDbConnect.domain;
+
+public class Member7 {
+	private Long id;
+	private String name;
+}

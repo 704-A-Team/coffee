@@ -1,0 +1,36 @@
+package com.oracle.oBootDbConnect.repository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+
+
+public class MemoryMemberRepository implements MemberRepository {
+	private static Map<Long, Member7> store = new HashMap<Long, Member7>();
+	private static Long sequence = 0L;
+	
+	
+	@Override
+	public Member7 save(Member7 meber7) {
+		meber7.setId(++sequence);
+		store.put(meber7.getId(), meber7);
+		System.out.println("MemoryMemberRepository sequence->" + sequence);
+		System.out.println("MemoryMemberRepository meber7->" + meber7);
+		
+		return meber7;
+	}
+
+	@Override
+	public List<Member7> findAll() {
+		System.out.println("MemoryMemberRepository findAll start");
+		List<Member7> listMember = new ArrayList<>(store.values());
+		System.out.println("MemoryMemberRepository findAll listMember.size()-> " + listMember.size());
+		return listMember;
+	}
+
+}

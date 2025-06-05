@@ -1,0 +1,5 @@
+package com.oracle.oBootDbConnect.repository;
+
+public interface MemberRepository {
+
+}

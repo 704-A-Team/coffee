@@ -1,0 +1,38 @@
+package com.oracle.oBootHello.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.oracle.oBootHello.dto.Member1;
+import com.oracle.oBootHello.repository.MemberRepository;
+
+@Service
+public class MemberService {
+
+	// boot 방식 -> Repository 연결
+	// 2. DI --> 생성자
+	private final MemberRepository memberRepository;
+	@Autowired
+	public MemberService(MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
+	}
+	
+	// 회원 가입
+	public Long memberSave (Member1 member1)  {
+		System.out.println("MemberService memberSave start");
+		memberRepository.save(member1);
+		return member1.getId();
+	}
+	
+	public List<Member1> allMember1() {
+		System.out.println("MemberService allMember1 start");
+		List<Member1> memList = null;
+		memList = memberRepository.findAll();
+		System.out.println("MemberService memList.size-> "+ memList.size());
+		return memList;
+		
+	}
+	
+}

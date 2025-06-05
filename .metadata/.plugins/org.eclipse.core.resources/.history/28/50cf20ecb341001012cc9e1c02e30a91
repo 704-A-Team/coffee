@@ -1,0 +1,16 @@
+package com.oracle.oBootDbConnect.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+	// http://localhost:8382/ -> root 인데
+	// localhost:8382 라고 치면 static -->> index.html 이동한다
+	// 컨트롤러가 정적 파일(static -->> index.html)보다 우선순위가 높다
+	@GetMapping("/")
+	public String home() {
+		System.out.println("HomeController home start");
+		return "home";
+	}
+}

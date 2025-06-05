@@ -1,0 +1,6 @@
+package com.oracle.oBootHello.service;
+
+public class MemberService {
+
+	// Boot 방식
+}
