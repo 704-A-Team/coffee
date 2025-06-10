@@ -10,4 +10,6 @@ public interface BDao {
 	public void modify(String bId, String bName, String bTitle, String bContent);
 	public void bDelete(String bId);
 	public void write(String bName, String bTitle, String bContent);
+	public BDto reply_view(String bId);
+	public void reply(int bId, String bName, String bTitle, String bContent, int bGroup, int bStep, int bIndent);
 }

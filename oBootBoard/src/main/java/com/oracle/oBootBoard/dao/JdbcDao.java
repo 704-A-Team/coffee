@@ -3,6 +3,7 @@ package com.oracle.oBootBoard.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -104,6 +105,7 @@ public class JdbcDao implements BDao {
 		
 		return bDto;
 	}
+	// 내부에서 호출하면 private로 한다
 	private void upBit(String strId) {
 		Connection conn = null;
 		PreparedStatement ptmt = null;
@@ -161,6 +163,9 @@ public class JdbcDao implements BDao {
 		PreparedStatement ptmt = null;
 		String sql = "Insert Into Mvc_Board Values(mvc_board_seq.nextval , ? , ? , ? , sysdate , ? , mvc_board_seq.nextval , ? , ? )";
 		
+		// seqence할 때 한 ROW 일때 nextval 하여도 같은 값을 가진다
+		// nextval 하고 값을 또 쓰려면 원칙적으로 currval을 쓴다
+		// String sql ..  Values(mvc_board_seq.nextval , ? , ? , ? , sysdate , 0 , mvc_board_seq.currval , 0 , 0 )";
 		try {
 			conn = getConnection();
 			ptmt = conn.prepareStatement(sql);
@@ -194,6 +199,107 @@ public class JdbcDao implements BDao {
 			conn = getConnection();
 			ptmt = conn.prepareStatement(sql);
 			ptmt.setString(1, bId);
+			int result = ptmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ptmt != null) ptmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+	}
+	@Override
+	public BDto reply_view(String strbId){
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		String sql = "Select * From mvc_board where bId = ?";
+		ResultSet rs = null;
+		BDto dto = null;
+		
+		try {
+			conn = getConnection();
+			ptmt = conn.prepareStatement(sql);
+			ptmt.setString(1, strbId);
+			rs = ptmt.executeQuery();
+			if(rs.next()) {
+				int bId = rs.getInt("bId");
+				String bName = rs.getString("bName");
+				String bTitle = rs.getString("bTitle");
+				String bContent = rs.getString("bContent");
+				Timestamp bDate = rs.getTimestamp("bDate");
+				int bHit = rs.getInt("bHit");
+				int bGroup = rs.getInt("bGroup");
+				int bStep = rs.getInt("bStep");
+				int bIndent = rs.getInt("bIndent");
+				dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		finally {
+			try {
+				if(rs != null ) rs.close();
+				if(ptmt != null) ptmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}
+	@Override
+	public void reply(int bId, String bName, String bTitle, String bContent, int bGroup, int bStep, int bIndent) {
+		
+		// 홍해 기적
+		replyShape(bGroup, bStep);
+		
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		
+		try {
+			conn = getConnection();
+			// String sql = "Insert into (bId, bName, bTitle, bContent, bGroup, bStep, bIndent) mvc_Board Values( mvc_board_seq.nextval, ? , ? , ? , ? , ? , ?)";
+			String sql = "insert into mvc_board (bId, bName, bTitle, bContent, "
+			     	+ " bGroup, bStep, bIndent)"
+				    + " values (mvc_board_seq.nextval, ?, ?, ?, ?, ?, ?)";
+
+			ptmt = conn.prepareStatement(sql);
+			ptmt.setString(1, bName);
+			ptmt.setString(2, bTitle);
+			ptmt.setString(3, bContent);
+			ptmt.setInt(4, bGroup);
+			ptmt.setInt(5, bStep+1);
+			ptmt.setInt(6, bIndent+1);
+			int result = ptmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ptmt != null) ptmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+	}
+	private void replyShape(int bGroup, int bStep) {
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		
+		try {
+			conn = getConnection();
+			String sql = "update mvc_board set bStep = bStep + 1  Where bGroup = ? And bStep > ?";
+			ptmt = conn.prepareStatement(sql);
+			ptmt.setInt(1, bGroup);
+			ptmt.setInt(2, bStep);
 			int result = ptmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();

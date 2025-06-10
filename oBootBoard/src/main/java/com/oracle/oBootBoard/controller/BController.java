@@ -86,6 +86,24 @@ public class BController {
 		return "redirect:list";
 	}
 	
+	@RequestMapping("/reply_view")
+	public String replay_view(HttpServletRequest request, Model model) {
+		System.out.println("reply_view start");
+		
+		model.addAttribute("request", request);
+		bExecuteService.bReplyViewCmd(model);
+		return "reply_view";
+	}
+	
+	@PostMapping(value = "/reply")
+	public String reply(HttpServletRequest request, Model model) {
+		System.out.println("reply");
+		
+		model.addAttribute("request", request);
+		bExecuteService.bReplyCmd(model);
+		
+		return "redirect:list";
+	}
 	
 	
 }

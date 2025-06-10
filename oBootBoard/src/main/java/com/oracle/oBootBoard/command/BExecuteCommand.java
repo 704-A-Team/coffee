@@ -57,6 +57,7 @@ public class BExecuteCommand {
 	}
 
 	public void bWriteCmd(Model model) {
+//           HW 01
 //		  1) model이용 , map 선언
 //		  2) request 이용 ->  bName  ,bTitle  , bContent  추출
 //		  3) dao  instance 선언
@@ -81,8 +82,46 @@ public class BExecuteCommand {
 	    //	 4) delete method 이용하여 삭제
 		Map<String, Object> map = model.asMap();
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		
 		String bId = request.getParameter("bId");
 		jdbcDao.bDelete(bId);
+		
+	}
+
+	public void bReplyViewCmd(Model model) {
+//		  1)  model이용 , map 선언
+//		  2) request 이용 ->  bid  추출
+//		  3) dao  instance 선언
+//		  4) reply_view method 이용하여 (bid)
+//		    - BDto dto = dao.reply_view(bId);
+		Map<String, Object> map = model.asMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		
+		String bId = request.getParameter("bId");
+		BDto dto = jdbcDao.reply_view(bId);
+		model.addAttribute("reply_view", dto);
+	}
+
+	public void bReplyCmd(Model model) {
+//		  1)  model이용 , map 선언
+//		  2) request 이용 -> bid,         bName ,  bTitle,
+//		                    bContent ,  bGroup , bStep ,
+//		                    bIndent 추출
+//		  3) dao  instance 선언
+//		  4) reply method 이용하여 댓글저장 
+//		    - dao.reply(bId, bName, bTitle, bContent, bGroup, bStep, bIndent);
+		
+		Map<String, Object> map = model.asMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		
+		int bId = Integer.parseInt(request.getParameter("bId"));
+		String bName = request.getParameter("bName");
+		String bTitle = request.getParameter("bTitle");
+		String bContent = request.getParameter("bContent");
+		int bGroup = Integer.parseInt(request.getParameter("bGroup"));
+		int bStep = Integer.parseInt(request.getParameter("bStep"));
+		int bIndent = Integer.parseInt(request.getParameter("bIndent"));
+		jdbcDao.reply(bId, bName, bTitle, bContent, bGroup, bStep, bIndent);
 		
 	}
 }
