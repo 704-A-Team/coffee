@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>JPA 02 회원 조회</h1>
+<div class="nav">
+	<form action="/members/search" method="get">
+	회원검색이름 : <input type="text" name="name" placeholder="회원검색 이름을 입력하세요">
+	<button type="submit">검색</button><p>
+	</form>
+</div>
+
+<div class="nav">
+	<form action="/findByListMembers" method="get">
+		회원검색 id 큰것 : <input type="text" name="id" placeholder="회원검색 id를 입력하세요"><p>
+		회원검색 급여 큰것 : <input type="text" name="sal" placeholder="회원검색 sal을 입력하세요"><p>
+		<button type="submit">검색</button>
+	</form>
+</div>
+
+<div class="container">
+	<div>
+		<table border="1">
+			<thead>
+			<tr>
+				<td>no </td>
+				<td>회원 이름 </td>
+				<td>팀 이름 </td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="member : ${memberList}">
+				<td th:text= "${member.id}"></td>
+				<td><a th:href="@{/memberModifyForm(id=${member.id})}" th:text="${member.name}"></a></td>
+				<td th:text= "${member.team.name}"></td>
+			</tr>
+			</tbody>
+		</table>	
+	</div>
+</div> <!-- /container -->
+</body>
+</html>
