@@ -28,6 +28,26 @@ public class MemberService {
 		Long id = memberRepository.save(member);
 		return id;
 	}
+
+	public Member findByMember(Long memberId) {
+		System.out.println("MemberService findByMember start");
+		Member member = memberRepository.findByMember(memberId);
+		return member;
+	}
 	
+	public void updateMember(Long id, String name, Long sal) {
+		Member member = new Member();
+		member.setId(id);
+		member.setName(name);
+		member.setSal(sal);
+		System.out.println("MemberService updateMember member->"+member);
+		memberRepository.updateByMember(member);
+		return;
+	}
+
+	public void deleteMember(Long id) {
+		System.out.println("MemberService deleteMember id->"+id);
+		memberRepository.deleteById(id);
+	}
 	
 }

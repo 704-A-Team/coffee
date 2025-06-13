@@ -7,16 +7,21 @@ import java.util.stream.Collectors;
 import javax.naming.spi.DirStateFactory.Result;
 
 import org.slf4j.Logger;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.oBootJpaApi01.domain.Member;
 import com.oracle.oBootJpaApi01.service.MemberService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -93,6 +98,9 @@ public class JpaRestApiController {
 		return new Result(memberCollect.size(),memberCollect);
 	}
 	
+	// postman ---> Body --> raw---> JSON	 
+    //  예시    {	    "name" : "kkk222"	    }
+	// @RequestBody : Json(member)으로 온것을  --> Member member Setting
 	// 저장은 post 매핑   4:30 6/12
 	@PostMapping("/restApi/v1/memberSave")
 	public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
@@ -102,6 +110,82 @@ public class JpaRestApiController {
 		
 		Long id = memberService.saveMember(member);
 		return new CreateMemberResponse(id);
+	}
+	
+	// 목적  : Entity Member member --> 직접 화면이나 API위한 Setting 금지
+	// 예시  : @NotEmpty  -->	@Column(name = "userName")
+	@PostMapping("/restApi/v2/memberSave")
+	public CreateMemberResponse saveMemberV2(@RequestBody @Valid CreateMemberRequest cMember) {
+		System.out.println("JpaRestApiController api/v2/memberSave cMember->"+cMember);
+		log.info("member.getName()->", cMember.getName());
+		log.info("member.getSal()->", cMember.getSal());
+		// 원하는 것들만 세팅해서 다시 Member에 입력   ( 기존(위)에는 Member 그대로 받아서 입력했지만 CreateMemberRequest 한번 걸쳐준것 -> 보안 )
+		Member member = new Member();
+		member.setName(cMember.getName());
+		member.setSal(cMember.getSal());
+		
+		Long id = memberService.saveMember(member);
+		return new CreateMemberResponse(id);
+	}
+	
+	/*
+	 *   단일 Id 조회 API
+	 *   URI 상에서 '{ }' 로 감싸여있는 부분과 동일한 변수명을 사용하는 방법
+	 *   해당 데이터가 있으면 업데이트를 하기에 
+	 *   Get요청이 여러번 실행되어도 해당 데이터는 같은 상태이기에 멱등
+	 */
+	
+	//@PathVariable -> uri에 있는 값을 받는것 --> path값을 변수값으로 받겠다
+	@GetMapping("/restApi/v15/members/{id}")
+	public Member membersVer15(@PathVariable("id") Long id) {
+		System.out.println("JpaRestApiController /restApi/v15/members/{id}->"+id);
+		// DML 작업 할 것 아니면 DTO로 돌려주는 것이 맞다
+		Member findMember = memberService.findByMember(id);
+		System.out.println("JpaRestApiController /restApi/v15/members/ findMember->"+findMember);
+		
+		return findMember;
+	}
+	
+	// UPDATE          ( @PutMapping , @DELETEMAPPINT -> REST 일때 쓴다 보통은 겟, 포스트 )
+	@PutMapping("/restApi/v21/members/{id}")
+	public UpdateMemberResponse updateMemberV21 (@PathVariable("id") Long id,
+			@RequestBody @Valid UpdateMemberRequest uMember) {
+		System.out.println("JpaRestApiController updateMemberV21 id -> "+id);
+		System.out.println("JpaRestApiController updateMemberV21 uMember -> "+uMember);
+		memberService.updateMember(id, uMember.getName(), uMember.getSal());
+		Member findMember = memberService.findByMember(id);
+		return new UpdateMemberResponse(findMember.getId(), findMember.getName(), findMember.getSal());
+	}
+	
+	@DeleteMapping("/restApi/v21/deleteMembers/{id}")
+	public CreateMemberResponse deleteMemberV21(@PathVariable("id") Long id) {
+		System.out.println("JpaRestApiController deleteMemberV21 id->"+id);
+		memberService.deleteMember(id);
+		return new CreateMemberResponse(id);
+	}
+	
+	
+	@Data 
+	// 12:17 static 권장 이유 : 독립적으로 쓸때
+	static class UpdateMemberRequest {
+		@NotEmpty
+		private String name;
+		private Long sal;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	class UpdateMemberResponse {
+		private Long id;
+		private String name;
+		private Long sal;
+	}
+	
+	@Data
+	static class CreateMemberRequest {
+		@NotEmpty
+		private String name;
+		private Long sal;
 	}
 	
 	@Data
