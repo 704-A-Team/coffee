@@ -6,5 +6,42 @@
 	<select id="empTotal" resultType="int">
 		SELECT Count(*) FROM emp
 	</select>
+	
+	<select id="tkEmpListAll" parameterType="Emp" resultType="Emp">
+		SELECT *
+		FROM 
+		(
+			SELECT rownum rn, a.*
+			FROM
+				(select * from EMP Order by empno) a	
+		
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="tkEmpSelOne" parameterType="int" resultType="Emp">
+		SELECT *
+		FROM EMP
+		WHERE empno = #{empno}
+	</select>
+	
+	<update id="tkEmpUpdate" parameterType="Emp">
+		UPDATE Emp
+		SET 		ename 	 = #{ename} , 
+					job 	 = #{job} 	 , 
+					sal 	 = #{sal} 	 , 
+					hiredate = #{hiredate} , 
+					<if test="#{comm} != null"> comm = #{comm} </if> ,
+					mgr 	 = #{mgr}	,
+					deptno 	 = #{deptno}
+		WHERE empno = #{empno}
+	</update>
+	
+	<select id="tkSelectManager" resultType="Emp">
+		SELECT *
+		FROM EMP
+		WHERE empno in (select mgr from emp)
+	</select>
+	
 
 </mapper>
