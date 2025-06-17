@@ -66,5 +66,44 @@ public class EmpServiceImpl implements EmpService {
 		return deptList;
 	}
 
+	@Override
+	public int insertEmp(Emp emp) {
+		System.out.println("EmpServiceImpl insertEmp Start");
+		int insertEmp = 0;
+		insertEmp = ed.insertEmp(emp);
+		return insertEmp;
+	}
+
+	@Override
+	public int deleteEmp(int empno) {
+		int result = 0;
+		System.out.println("EmpServiceImpl deleteEmp Start");
+		System.out.println("empno->"+empno);
+		try {
+			result = ed.deleteEmp(empno);
+		} catch (Exception e) {
+			System.out.println("EmpServiceImpl deleteEmp e.getMessage()->"+e.getMessage());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int condTotalEmp(Emp emp) {
+		System.out.println("EmpServiceImpl condTotalEmp Start");
+		int totEmpCnt = ed.condTotalEmp(emp);
+		System.out.println("EmpServiceImpl condTotalEmp totEmpCnt->"+totEmpCnt);
+		return totEmpCnt;
+	}
+
+	@Override
+	public List<Emp> listSearchEmp(Emp emp) {
+		System.out.println("EmpServiceImpl listSearchEmp Start");
+		List<Emp> listSearchEmp = null;
+		listSearchEmp = ed.listSearchEmp(emp);
+		System.out.println("EmpServiceImpl listSearchEmp listSearchEmp.size()->"+listSearchEmp.size());
+		return listSearchEmp;
+	}
+
 
 }

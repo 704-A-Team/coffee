@@ -17,7 +17,12 @@ public class DeptDaoImpI implements DeptDao {
 	@Override
 	public List<Dept> deptSelect() {
 		List<Dept> deptList = null;
-		deptList = session.selectList("");
+		System.out.println("DeptDaoImpI deptSelect Start!");
+		try {
+			deptList = session.selectList("tkSelectDept");
+		} catch (Exception e) {
+			System.out.println("DeptDaoImpI deptSelect e.getMessage()" +e.getMessage());
+		}
 		return deptList;
 	}
 

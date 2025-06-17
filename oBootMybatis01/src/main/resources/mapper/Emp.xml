@@ -7,7 +7,9 @@
 		SELECT Count(*) FROM emp
 	</select>
 	
+	
 	<select id="tkEmpListAll" parameterType="Emp" resultType="Emp">
+	<![CDATA[
 		SELECT *
 		FROM 
 		(
@@ -16,8 +18,11 @@
 				(select * from EMP Order by empno) a	
 		
 		)
-		WHERE rn BETWEEN #{start} AND #{end}
+		WHERE rn >= #{start}
+		and   rn <= #{end}
+	]]>
 	</select>
+	
 	
 	<select id="tkEmpSelOne" parameterType="int" resultType="Emp">
 		SELECT *
@@ -43,5 +48,99 @@
 		WHERE empno in (select mgr from emp)
 	</select>
 	
+	<insert id="insertEmp" parameterType="Emp">
+		Insert into EMP (empno, ename, job, mgr, sal, hiredate, comm, deptno) 
+			Values (#{empno}, #{ename}, #{job}, #{mgr}, #{sal}, #{hiredate}, #{comm}, #{deptno})
+	</insert>
 
+	<select id="tkEmpListAll3" parameterType="Emp" resultType="Emp">
+		SELECT *
+		FROM 
+		(
+			SELECT rownum rn, a.*
+			FROM
+				(select * from EMP Order by empno) a	
+		
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<delete id="deleteEmp" parameterType="int">
+		Delete From EMP WHERE empno = #{empno}
+	</delete>
+	
+	<select id="condEmpTotal" parameterType="Emp" resultType="int">
+		SELECT Count(*) FROM Emp
+		<choose>
+			<when test="search == 's_job'">
+				WHERE job LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="search == 's_ename'">
+				WHERE ename LIKE '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+				WHERE job LIKE '%'
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="tkEmpSearchList3" parameterType="Emp" resultType="Emp">
+		Select * 
+		From 
+		(
+			Select rownum rn, a.* 
+			From 
+				(
+					Select * 
+					From emp
+					<choose>
+			        	<when test="search == 's_job'">
+			        		WHERE job LIKE '%' || #{keyword} || '%'
+			        	</when>
+			        	<when test="search == 's_ename'">
+			        		WHERE ename LIKE '%' || #{keyword} || '%'
+			        	</when>
+			        	<otherwise>
+			        		WHERE job LIKE '%'
+			        	</otherwise>
+		            </choose>
+					order by empno
+				 ) a
+				
+		)
+        WHERE rn BETWEEN #{start} AND #{end}
+        	
+	</select>
+	
+	<select id="tkEmpSearchList5" parameterType="Emp" resultType="Emp">
+		Select * 
+		From 
+		(
+			Select rownum rn, a.* 
+			From 
+				(
+					Select * 
+					From emp
+					
+					<choose>
+		        		<when test="search == 's_job'">
+		        			WHERE job LIKE '%' || #{keyword} || '%'
+		        		</when>
+		        		<when test="search == 's_ename'">
+		        			WHERE ename LIKE '%' || #{keyword} || '%'
+		        		</when>
+		        		<otherwise>
+		        			WHERE job LIKE '%'
+		        		</otherwise>
+		        	</choose>
+		        		  
+					order by empno
+				
+				 ) a 
+		)
+        WHERE rn BETWEEN #{start} AND #{end}
+        	
+	</select>
+	
+	
 </mapper>

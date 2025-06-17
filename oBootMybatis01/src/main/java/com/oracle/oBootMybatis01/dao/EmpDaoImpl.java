@@ -83,4 +83,57 @@ public class EmpDaoImpl implements EmpDao {
 		return empList;
 	}
 
+	@Override
+	public int insertEmp(Emp emp) {
+		System.out.println("EmpDaoImpl insertEmp Start");
+		int insertEmp = 0;
+		try {
+			insertEmp = session.insert("insertEmp", emp);
+			System.out.println("EmpDaoImpl insertEmp->"+insertEmp);
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl insertEmp e.getMessage()"+e.getMessage());
+		}
+		return insertEmp;
+	}
+
+	@Override
+	public int deleteEmp(int empno) {
+		int result = 0;
+		System.out.println("EmpDaoImpl deleteEmp Start");
+		try {
+			result = session.delete("deleteEmp", empno);
+			System.out.println("EmpDaoImpl deleteEmp result->"+result);
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl deleteEmp e.getMessage()-> "+e.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public int condTotalEmp(Emp emp) {
+		int condEmpCount = 0;
+		System.out.println("EmpDaoImpl condTotalEmp Start");
+		try {
+			condEmpCount = session.selectOne("condEmpTotal",emp);
+			System.out.println("EmpDaoImpl condTotalEmp condEmpCount->"+condEmpCount);
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl condTotalEmp e.getMessage()->"+e.getMessage());
+		}
+		return condEmpCount;
+	}
+
+	@Override
+	public List<Emp> listSearchEmp(Emp emp) {
+		List<Emp> listSearchEmp = null;
+		System.out.println("EmpDaoImpl listSearchEmp Start");
+		try {
+			// keyword 검색
+			// Naming Rule
+			listSearchEmp = session.selectList("tkEmpSearchList3", emp);
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl listSearchEmp e.getMessage()->"+e.getMessage());
+		}
+		return listSearchEmp;
+	}
+
 }

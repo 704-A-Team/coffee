@@ -1,10 +1,12 @@
 package com.oracle.oBootMybatis01.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
 public class Emp {
 	private int empno;
+	@NotEmpty(message = "나 Valid : 이름은 필수입니다")
 	private String ename;
 	private String job;
 	private int mgr;

@@ -27,8 +27,6 @@
 		<button type="submit">keyword 검색</button><p>
 	</form>
 	
-	<form>
-	</form>
 	<c:set var="num" value="${page.total-page.start+1 }"></c:set>
 	<table>
 		<tr><th>번호</th><th>사번</th><th>이름</th><th>업무</th><th>급여</th></tr>
@@ -41,13 +39,13 @@
 	</table>
 	
 	<c:if test="${page.startPage > page.pageBlock }">
-		<a href="listEmp?currentPage=${page.startPage - page.pageBlock }">[이전]</a>
+		<a href="listSearch3?currentPage=${page.startPage - page.pageBlock }">[이전]</a>
 	</c:if>
 	<c:forEach var="i" begin="${page.startPage }" end="${page.endPage }">
-		<a href="listEmp?currentPage=${i}">[${i }]</a>
+		<a href="listSearch3?currentPage=${i}">[${i }]</a>
 	</c:forEach>
 	<c:if test="${page.endPage < page.totalPage }">
-		<a href="listEmp?currentPage=${page.startPage + page.pageBlock }">[다음]</a>
+		<a href="listSearch3?currentPage=${page.startPage + page.pageBlock }">[다음]</a>
 	</c:if>
 </body>
 </html>
