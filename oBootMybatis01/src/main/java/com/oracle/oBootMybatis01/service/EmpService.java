@@ -1,9 +1,12 @@
 package com.oracle.oBootMybatis01.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.oracle.oBootMybatis01.dto.Dept;
+import com.oracle.oBootMybatis01.dto.DeptVO;
 import com.oracle.oBootMybatis01.dto.Emp;
+import com.oracle.oBootMybatis01.dto.EmpDept;
 
 public interface EmpService {
 	int					totalEmp();
@@ -16,4 +19,7 @@ public interface EmpService {
 	int 				deleteEmp(int empno);
 	int 				condTotalEmp(Emp emp);
 	List<Emp> 			listSearchEmp(Emp emp);
+	List<EmpDept> 		listEmpDept();
+	void 				insertDept(DeptVO deptVO);
+	void 				selListDept(HashMap<String, Object> map);
 }

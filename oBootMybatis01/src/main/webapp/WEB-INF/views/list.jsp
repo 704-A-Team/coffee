@@ -40,6 +40,11 @@
 		</c:forEach>
 	</table>
 	
+	
+	
+	
+	
+	
 	<c:if test="${page.startPage > page.pageBlock }">
 		<a href="listEmp?currentPage=${page.startPage - page.pageBlock }">[이전]</a>
 	</c:if>

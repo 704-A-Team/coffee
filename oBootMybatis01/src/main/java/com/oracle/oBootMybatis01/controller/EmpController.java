@@ -1,7 +1,10 @@
 package com.oracle.oBootMybatis01.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,10 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.oracle.oBootMybatis01.dto.Dept;
+import com.oracle.oBootMybatis01.dto.DeptVO;
 import com.oracle.oBootMybatis01.dto.Emp;
+import com.oracle.oBootMybatis01.dto.EmpDept;
 import com.oracle.oBootMybatis01.service.EmpService;
+import com.oracle.oBootMybatis01.service.MemberJpaService;
 import com.oracle.oBootMybatis01.service.Paging;
 
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +33,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmpController {
 	private final EmpService es;
+	
+	// 메일을 쓰기 위함
+	// MIME(마임 / 영어: Multipurpose Internet Mail Extensions)는 전자 우편을 위한 인터넷 표준 포맷
+	// 			  다목적의 인터넷 메일 확장
+	private final JavaMailSender mailSender;
+	
+	// Member 조인 , JPA 사용 가능 여부 알아보기
+	private final MemberJpaService js;
+	
 	
 	@RequestMapping(value = "/listEmpStart")
 	public String listEmpStart(Emp emp, Model model) {
@@ -271,5 +288,108 @@ public class EmpController {
 		
 		return "list3";
 	}
+	
+	/////////////////////////////////////////////////////////  6/18
+	@GetMapping(value = "listEmpDept")
+	public String listEmpDept (Model model) {
+		System.out.println("EmpController listEmpDept Start");
+		// 활동 : Emp  / DEPT 테이블 조인  -->> EmpDept DTO
+		// Service ,DAO -> listEmpDept
+		// Mapper만 ->EmpDept.xml(tkListEmpDept)   맵퍼 분리
+		
+		List<EmpDept> listEmpDept = es.listEmpDept();
+		
+		model.addAttribute("listEmpDept", listEmpDept);
+	
+		return "listEmpDept";
+	}
+	
+	@RequestMapping("/mailTransport")
+	public String mailTransport(HttpServletRequest request, Model model)  {
+		System.out.println("EmpController mailTransport Sending");
+		String tomail = "nogangsss@naver.com";    // 받는 사람 이메일
+		System.out.println(tomail);
+		String setfrom = "nogangsss@gmail.com";	  // 이메일 주소 바꿔도 야물 세팅으로 간다
+		String title = "mailTransport 입니다";		  // 제목 (없으면 스팸메일됨)
+		try {
+			// Mime 전자우편 Internet 표준 Format
+			MimeMessage message = mailSender.createMimeMessage();
+				// 빈 편지지 준비
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+				// 편지지 객체, multipart 허용(첨부파일 허융), 인코딩 방식
+			messageHelper.setFrom(setfrom); // 보내는사람 생략하거나 하면 정상작동을 안함
+			messageHelper.setTo(tomail);	// 받는사람 이메일
+			messageHelper.setSubject(title); // 메일제목은 생략이 가능하다
+			String tempPassword = (int)(Math.random() *999999) + 1 + "";
+			messageHelper.setText("임시 비밀번호입니다 : " + tempPassword);	 // 메일 내용
+			System.out.println("임시 비밀번호입니다 : " + tempPassword);
+				// 편지지 작성
+			mailSender.send(message);       // 편지지 발송
+			model.addAttribute("check", 1); // 정상 전달
+			// DB Logic
+			
+		} catch (Exception e) {
+			System.out.println("mailTransport e.getMessage()"+e.getMessage());
+			model.addAttribute("check", 2); // 메일 정달 실패
+		}
+		
+		
+		return "maliResult";
+	}
+	
+	
+	/////////////////////////////////////////////////////////////////////
+	
+	// Procedure Test 입력화면
+	@RequestMapping("/writeDeptIn")
+	public String writeDeptIn(Model model) {
+		System.out.println("EmpController writeDeptIn Start");
+		return "writeDept3";
+	}
+	
+	@PostMapping("/writeDept")
+	public String writeDept(DeptVO deptVO , Model model) {
+		es.insertDept(deptVO);
+		if( deptVO == null ) {
+			System.out.println("deptVO Null");
+		} else {
+			System.out.println("deptVO.getOdeptno()->"+deptVO.getOdeptno());
+			System.out.println("deptVO.getOdname() ->"+deptVO.getOdname());
+			System.out.println("deptVO.getOloc()   ->"+deptVO.getOloc());
+			model.addAttribute("msg", "정상 입력 되었습니다 ^^");
+			model.addAttribute("dept",deptVO);
+		}
+		return "writeDept3";
+	}
+	
+	///////////////////////////////////////////////////////////////////
+	
+	@RequestMapping("/writeDeptCursor")
+	public String writeDeptCursor(Model model)  {
+		System.out.println("EmpController writeDeptCursor Start");
+		// Map 적용 ( 보통 dto 지만)
+		// 부서범위 조회  3:23
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("sDeptno", 10);
+		map.put("eDeptno", 55);
+		
+		es.selListDept(map);
+		List<Dept> deptLists = (List<Dept>) map.get("dept");
+		for(Dept dept : deptLists) {
+			System.out.println("writeDeptCursor dept->"+dept);
+		}
+		System.out.println("deptLists.size()->"+deptLists.size());
+		model.addAttribute("deptList", deptLists);
+		
+		return "writeDeptCursor";
+	}
+	
+	///////////////////////////////////////////////////////////////
+	
+	// Mybatis랑 JPA 섞어써도 된다 -> MemberJpaContoller에서 시작
+	
+	//////////////////////////////////////////////////////////////
+	
+	
 	
 }
