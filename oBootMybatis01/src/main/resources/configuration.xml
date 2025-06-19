@@ -9,5 +9,6 @@
  		<typeAlias alias="Dept" type="com.oracle.oBootMybatis01.dto.Dept" />
  		<typeAlias alias="EmpDept" type="com.oracle.oBootMybatis01.dto.EmpDept"/>
  		<typeAlias alias="DeptVO" type="com.oracle.oBootMybatis01.dto.DeptVO"/>
+ 		<typeAlias alias="Member1" type="com.oracle.oBootMybatis01.dto.Member1"/>
  	</typeAliases>
  </configuration>

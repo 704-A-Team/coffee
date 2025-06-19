@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.oracle.oBootMybatis01.dao.DeptDao;
 import com.oracle.oBootMybatis01.dao.EmpDao;
+import com.oracle.oBootMybatis01.dao.Member1Dao;
 import com.oracle.oBootMybatis01.dto.Dept;
 import com.oracle.oBootMybatis01.dto.DeptVO;
 import com.oracle.oBootMybatis01.dto.Emp;
 import com.oracle.oBootMybatis01.dto.EmpDept;
+import com.oracle.oBootMybatis01.dto.Member1;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmpServiceImpl implements EmpService {
 	// 나누는 이유는 각각의 DAO가 자기 객체(DTO)만 담당하는 DB 코드를 가지면 깔꼬롬하고 유지보수를 위해서이다
-	private final EmpDao	ed;
-	private final DeptDao	dd;
+	private final EmpDao		ed;
+	private final DeptDao		dd;
+	private final Member1Dao	md;
 	
 	@Override
 	public int totalEmp() {
@@ -130,6 +133,20 @@ public class EmpServiceImpl implements EmpService {
 		System.out.println("EmpServiceImpl selListDept Start");
 		dd.selListDept(map);
 		
+	}
+
+	@Override
+	public int memCount(String id) {
+		System.out.println("EmpServiceImpl memCount Start");
+		return md.memCount(id);
+	}
+
+	@Override
+	public List<Member1> listMem() {
+		System.out.println("EmpServiceImpl listMem Start");
+		List<Member1> listMem = md.listMem();
+		System.out.println("EmpServiceImpl listMem->"+listMem);
+		return listMem;
 	}
 
 	

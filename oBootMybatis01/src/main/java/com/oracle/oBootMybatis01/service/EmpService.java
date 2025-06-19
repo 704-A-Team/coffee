@@ -7,6 +7,7 @@ import com.oracle.oBootMybatis01.dto.Dept;
 import com.oracle.oBootMybatis01.dto.DeptVO;
 import com.oracle.oBootMybatis01.dto.Emp;
 import com.oracle.oBootMybatis01.dto.EmpDept;
+import com.oracle.oBootMybatis01.dto.Member1;
 
 public interface EmpService {
 	int					totalEmp();
@@ -22,4 +23,6 @@ public interface EmpService {
 	List<EmpDept> 		listEmpDept();
 	void 				insertDept(DeptVO deptVO);
 	void 				selListDept(HashMap<String, Object> map);
+	int 				memCount(String id);
+	List<Member1> 			listMem();
 }

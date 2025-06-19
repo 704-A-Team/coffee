@@ -18,6 +18,7 @@ import com.oracle.oBootMybatis01.dto.Dept;
 import com.oracle.oBootMybatis01.dto.DeptVO;
 import com.oracle.oBootMybatis01.dto.Emp;
 import com.oracle.oBootMybatis01.dto.EmpDept;
+import com.oracle.oBootMybatis01.dto.Member1;
 import com.oracle.oBootMybatis01.service.EmpService;
 import com.oracle.oBootMybatis01.service.MemberJpaService;
 import com.oracle.oBootMybatis01.service.Paging;
@@ -390,6 +391,59 @@ public class EmpController {
 	
 	//////////////////////////////////////////////////////////////
 	
+	// 6/19 12:30 interCeptor  	
+	
+	// interCeptor 시작화면
+	@RequestMapping("/interCeptorForm")
+	public String interCeptorForm(Model model) {
+		System.out.println("EmpController interCeptorForm Start");
+		return "interCeptorForm";
+	}
+	
+	// interCeptor 2
+	@RequestMapping("/interCeptor")
+	public String interCeptor(Member1 member1, Model model) {
+		
+		System.out.println("EmpController interCeptor Test START");
+		System.out.println("EmpController interCeptor  id->"+member1.getId());
+		// 존재 : 1, 비존재 : 0
+		int memCnt = es.memCount(member1.getId());
+		
+		System.out.println("EmpController interCeptor  memCnt->"+memCnt);
+		
+		model.addAttribute("id", member1.getId());
+		model.addAttribute("memCnt", memCnt);
+		System.out.println("interCeptor Test End");
+		// 3번 실행
+		
+		return "interCeptor"; // User 존재하면 User 이용 조회 Page
+	}
+	
+	// SampleInterCeptor 내용을 받아 처리 Case 1
+	@RequestMapping("/doMemberWrite")
+	public String doMemberWrite(Model model , HttpServletRequest request ) {
+		String ID = (String) request.getSession().getAttribute("ID");
+		System.out.println("doMemberWrite 부터 하세요");
+		model.addAttribute("id", ID);
+		return "doMemberWrite";
+	}
+	
+	// SampleInterCeptor 내용을 받아 처리 Case 2
+	@RequestMapping("/doMemberList")
+	public String doMemberList(Model model, HttpServletRequest request) {
+		String ID = (String) request.getSession().getAttribute("ID");
+		System.out.println("doMemberWrite Test Start ID->"+ID);
+		Member1 member1 = null;
+		// Member1 List Get Service
+		// Service	--> listMem (EmpService es)
+		// DAO 		--> listMem	(Member1DaoImpl)
+		// Mapper 	--> "listMember1"(Member1)
+		// Member1 모든 Row Get
+		List<Member1> listMem = es.listMem();
+		model.addAttribute("ID", ID);
+		model.addAttribute("listMem", listMem);
+		return "doMemberList"; // User 존재하면 User 이용 조회 Page
+	}
 	
 	
 }
