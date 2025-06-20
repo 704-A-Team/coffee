@@ -149,6 +149,14 @@ public class EmpServiceImpl implements EmpService {
 		return listMem;
 	}
 
+	@Override
+	public String deptName(int deptno) {
+		System.out.println("EmpServiceImpl deptName Start");
+		String deptName = dd.deptName(deptno);
+		// return dd.deptName(deptno);
+		return deptName;
+	}
+
 	
 
 

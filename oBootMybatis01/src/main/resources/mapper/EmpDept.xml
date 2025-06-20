@@ -22,6 +22,8 @@
 		order by 	empno
 	</select>
 
-
+	<select id="tkDeptName" parameterType="int" resultType="String">
+		Select dname From DEPT WHERE deptno = #{deptno}
+	</select>
 
 </mapper>

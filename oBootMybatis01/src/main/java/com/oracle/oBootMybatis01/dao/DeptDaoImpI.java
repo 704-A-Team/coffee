@@ -52,4 +52,18 @@ public class DeptDaoImpI implements DeptDao {
 		}
 	}
 
+	@Override
+	public String deptName(int deptno) {
+		System.out.println("DeptDaoImpI deptName Start!");
+		String deptName = "";
+		try {
+			System.out.println("DeptDaoImpI deptno->"+deptno);
+			deptName = session.selectOne("tkDeptName",deptno);
+			System.out.println("DeptDaoImpI deptName->"+deptName);
+		} catch (Exception e) {
+			System.out.println("DeptDaoImpI deptName e.getMessage()->"+e.getMessage());
+		}
+		return deptName;
+	}
+
 }
