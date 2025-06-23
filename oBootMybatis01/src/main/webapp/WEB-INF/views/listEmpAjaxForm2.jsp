@@ -38,7 +38,7 @@
 		 */   // 결과를 객체로 받음 
 		$.ajax(
 			{
-				url:"/empnoDelete",
+				url:"/empnoDelete03",
 				data: {
 					empno : selEmpno
 				   ,ename : selEname
@@ -57,6 +57,32 @@
 			}		
 		
 		)
+	}
+	
+	function getListDept()  {
+		alert('getListDept Run');
+		var str  = "";
+		var str2 = "";
+		
+		$.ajax({
+			url:"/sendVO3",
+			dataType:'json',
+			success:function(deptList){
+				var jsonStr = JSON.stringify(deptList);
+				alert("jsonStr-> " + jsonStr);
+				$('#dept_list_str').append(jsonStr);
+				str += "<select name = 'dept'>";
+				$(deptList).each(
+					function(){
+						str2 = "<option value='"+this.deptno + "'> " + this.dname + "</option>";
+						str += str2;
+					}		
+				)
+				str += "</select><p>";
+				alert("combobox str-> " + str);
+				$('#dept_list_combobox').append(str);
+			}
+		})
 	}
 
 

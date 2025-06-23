@@ -18,6 +18,7 @@
 	여기서 부터 진짜 / 서버랑 클라이언트 어떻게 연동되는지 배우기 2:05 <p>
 	<a href="/listEmpAjaxForm">listEmpAjaxForm(aJax JSP 연동)</a><p>
 	<a href="/listEmpAjaxForm2">listEmpAjaxForm2(aJax JSP 객체리스트 Get multRow)</a><p>
+	<a href="/listEmpAjaxForm3">/listEmpAjaxForm3(aJax List를 Controller로 전송) 6/23 10:46 사용이유</a><p>
 	
 </body>
 </html>

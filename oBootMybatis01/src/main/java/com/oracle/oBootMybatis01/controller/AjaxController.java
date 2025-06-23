@@ -71,7 +71,7 @@ public class AjaxController {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		System.out.println("EmpController empSerializeWrite wirteResult-> " + writeResult);
-		
+		// DTO -> 여러번 사용할 때 전달 / MAP -> 한번만 쓸 때 전달
 		resultMap.put("writeResult", writeResult);
 		resultMap.put("anyResult", "anyR");
 		return resultMap;
@@ -90,4 +90,67 @@ public class AjaxController {
 	    return "listEmpAjaxForm2";
     }
 	
+	// 결과 --> String
+		@ResponseBody
+		@RequestMapping("/empnoDelete")
+		public String empnoDelete(Emp emp)  {
+			System.out.println("empnoDelete03 Start");
+			System.out.println("empnoDelete03 emp->"+emp);
+			int delStatus = es.deleteEmp(emp.getEmpno());
+			String delStatusStr = Integer.toString(delStatus);
+			return delStatusStr;
+		}
+	
+	// 결과 --> 객체
+	@ResponseBody
+	@RequestMapping("/empnoDelete03")
+	public Map<String, Object> empnoDelete03(Emp emp)  {
+		System.out.println("empnoDelete03 Start");
+		System.out.println("empnoDelete03 emp->"+emp);
+		int delStatus = es.deleteEmp(emp.getEmpno());
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("delStatus", delStatus);
+		return resultMap;
+	}
+	
+	@RequestMapping("/listEmpAjaxForm3")
+	public String listEmpAjaxForm3(Model model) {
+		System.out.println("listEmpAjaxForm3 start");
+		Emp emp = new Emp();
+		emp.setStart(1);
+		emp.setEnd(15);
+		List<Emp> listEmp = es.listEmp(emp);
+		System.out.println(""+listEmp.size());
+		model.addAttribute("listEmp", listEmp);
+		return "listEmpAjaxForm3";
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/empListUpdate")
+	public Map<String, Object> empListUpdate(@RequestBody @Valid List<Emp> listEmp)  {
+		System.out.println("EmpController empListUpdate Start");
+		int updateResult = 1;
+		
+		for(Emp emp : listEmp)  {
+			System.out.println("emp->" + emp);
+			// int writeRsult = kkk.listUpdateEmp(emp);
+		}
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("updateResult", updateResult);
+		return resultMap;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "transactionInsertUpdate")
+	public String transactionInsertUpdate(Emp emp, Model model)  {
+		System.out.println("transactionInsertUpdate Start");
+		// member Insert 성공과 실패
+		int returnMember = es.transactionInsertUpdate();
+		System.out.println("transactionInsertUpdate returnMember-> "+returnMember);
+		String returnMemberString = String.valueOf(returnMember);
+		
+		return returnMemberString;
+	}
 }
