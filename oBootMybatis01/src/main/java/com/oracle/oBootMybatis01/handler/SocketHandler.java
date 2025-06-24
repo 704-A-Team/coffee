@@ -1,8 +1,9 @@
 package com.oracle.oBootMybatis01.handler;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,6 +18,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	// 웹소켓 세션을 담아둘 맵
 	HashMap<String, WebSocketSession> sessionMap = new HashMap<>();
+	//{"sessionId":"d189baa5-2445-4dd8-7a43-50810a74f229", wss 1}
+	
 	
 	// 웹소켓 세션 ID과 Member을 담아둘 맵
 	HashMap<String, String> sessionUserMap = new HashMap<>();
@@ -69,8 +72,8 @@ public class SocketHandler extends TextWebSocketHandler {
 					e.printStackTrace();
 				}
 				// 나에게도 보내줘
-				String meName = (String) jsonObj.get("sessionID");
-				WebSocketSession wss2 = sessionMap.get(yourName);
+				String meName = (String) jsonObj.get("sessionId");
+				WebSocketSession wss2 = sessionMap.get(meName);
 				System.out.println("개인 전송 대상자 나--> "+meName);
 				try {
 					wss2.sendMessage(new TextMessage(jsonObj.toJSONString()));
@@ -82,7 +85,61 @@ public class SocketHandler extends TextWebSocketHandler {
 		break;
 			// sessionUserMap에 User 등록
 		case "userSave":
+			// sessionUserMap에 sessionId와 userName 등록
+			String sessionId 	= (String) jsonObj.get("sessionId");
+			String userName 	= (String) jsonObj.get("userName");
+			String saveStatus 	= (String) jsonObj.get("saveStatus");
+			// 신규 등록
+			if (saveStatus.equals("Create") ) {
+				sessionUserMap.put(sessionId, userName);
+	     	    System.out.println("=================================================");
+	     	    System.out.println("== sessionUserMap 저장내용 조회하여 arrayJsonUser에   ==");
+	     	    System.out.println("==  각각의 JSONObject jsonUser로  변환              ==");
+	     	    System.out.println("== 1. type : userSave                          ==");
+	     	    System.out.println("== 2. sessionId : sessionUserMap.sessionId     ==");
+	     	    System.out.println("== 3. userName  : sessionUserMap.userName      ==");
+	     	    System.out.println("=================================================");
+	     	    
+			} else { // Delete
+				System.out.println("handleTextMessage UserDelete start");
+				System.out.println("handleTextMessage UserDelete session.getId()->" + session.getId());
+				
+				// 웹소켓 종료
+				sessionMap.remove(session.getId());
+				// sessionUserMap 종료
+				sessionUserMap.remove(session.getId());
+				// break;
+			}
 			
+			JSONArray arrayJsonUser = new JSONArray();
+			System.out.println("== 1. type : userSave                          ==");
+     	    Iterator<String> mapIter = sessionUserMap.keySet().iterator();
+			System.out.println("== 2. sessionId : sessionUserMap.sessionId     ==");
+     	    System.out.println("== 3. userName  : sessionUserMap.userName      ==");
+	     	while (mapIter.hasNext()) {
+				String key = mapIter.next();
+				String value = sessionUserMap.get(key);
+				System.out.println("Key : Value --> " + key + " : " + value);
+				jsonUser = new JSONObject();
+				jsonUser.put("type", "userSave");
+				jsonUser.put("sessionId", key);
+				jsonUser.put("userName", value);
+				arrayJsonUser.add(jsonUser);
+			}
+	     	System.out.println("====== session를 Get하여 User 내용 전송 ============");
+	     	System.out.printf("arrayJsonUser : %s", arrayJsonUser);
+	     	
+	     	// 전체에 User등록을 하게 함
+	     	for(String key : sessionMap.keySet()) {
+	     		WebSocketSession wss = sessionMap.get(key);
+	     		try {
+					wss.sendMessage(new TextMessage(arrayJsonUser.toJSONString()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	     	}
+     	    break;
+     	    
 		case "userDelete":
 			
 		}

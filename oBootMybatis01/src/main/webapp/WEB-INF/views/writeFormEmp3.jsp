@@ -32,6 +32,7 @@
 				<input type="text" 		name="ename">
 				<form:errors path="ename"></form:errors>
 			</td>
+			
 		</tr>
 		<tr><th>직업</th><td><input type="text" 		name="job" 		required="required"></td></tr>
 		<tr><th>급여</th><td><input type="number" 	name="sal" 		required="required"></td></tr>
