@@ -58,6 +58,7 @@
         var wsUri  = "ws://" + location.host + "${pageContext.request.contextPath}/chating";
         // WebSocket 프로토콜을 사용하여 통신하기 위해서는 WebSocket객체를 생성. 
         // 객체는 자동으로 서버로의 연결
+        alert(wsUri);
  		ws = new WebSocket(wsUri);
 		wsEvt();
  		
@@ -73,16 +74,18 @@
 		}	
 		//메시지를 받으면 동작
        ws.onmessage = function(data) {
+			// 서버에서 온 메시지에서 실제 문자열만 꺼냄
 			var msg = data.data;
 			var memberSave = false;
 			alert("ws.onmessage->"+msg)
 			if(msg != null && msg.trim() != ''){
 				memberSave = false;
 				// JSON 오브젝트를 자바스크립트 오브젝트로 변환
+				// JSON 문자열 → JS 객체로 변환
 			    var jsonMsg = JSON.parse(msg);
 				// msg가 배열이고, 2개이상의 Count이면 , member 등록 대상 
-                if (Array.isArray(jsonMsg)) {
-                	if (Object.keys(jsonMsg).length > 1) {
+                if (Array.isArray(jsonMsg)) {	// 배열 판단
+                	if (Object.keys(jsonMsg).length > 1) {	// jsonMsg의 속성(Key)의 개수
                     	memberSave = true;
                        	alert("JSONArray jsonMsg Count->"+ Object.keys(jsonMsg).length);
                 	}

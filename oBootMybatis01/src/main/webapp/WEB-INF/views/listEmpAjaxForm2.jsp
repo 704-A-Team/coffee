@@ -127,16 +127,5 @@
 	<div id="dept_list_combobox"></div>
 		
 	<h1>The End </h1>
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
