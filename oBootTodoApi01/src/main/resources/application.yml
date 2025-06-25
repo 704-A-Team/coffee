@@ -1,0 +1,23 @@
+server:
+  port: 8481
+#Oracle Connect
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: scottJpa
+    password: tiger
+
+# JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      
+logging.level:
+  org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL
+  
+# Mybatis
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mapper/*.xml
