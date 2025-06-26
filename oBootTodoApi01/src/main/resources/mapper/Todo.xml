@@ -5,7 +5,23 @@
 	<select id="todoTotal" resultType="int">
 		SELECT Count(*) From tbl_todo
 	</select>
-
-
+	
+	<select id="tkTodoListAll" parameterType="TodoDTO" resultType="TodoDTO">
+		SELECT * FROM 
+					( SELECT rownum rn, a.* FROM 
+							( ( SELECT * FROM tbl_todo ORDER BY tno ) a )) 
+				 WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="tkTodoListAll3" parameterType="TodoDTO" resultType="TodoDTO">
+		<![CDATA[
+		SELECT * FROM 
+					( SELECT rownum rn, a.* FROM 
+							( ( SELECT * FROM tbl_todo ORDER BY tno ) a )) 
+				 WHERE rn >= #{start}
+				 and   rn <= #{end}
+		]]>
+	</select>
+	
 
 </mapper>

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oracle.oBootTodoApi01.dto.PageRequestDTO;
+import com.oracle.oBootTodoApi01.dto.PageResponseDTO;
 import com.oracle.oBootTodoApi01.dto.TodoDTO;
+import com.oracle.oBootTodoApi01.service.Paging;
 import com.oracle.oBootTodoApi01.service.TodoService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,11 +35,31 @@ public class TodoController {
 	
 		return Map.of("TNO",tno);
 	}
-	
+	// 식별자를 갖고 들어오면 uri
 	@GetMapping("/{tno}")
 	public TodoDTO get(@PathVariable(name = "tno") Long tno) {
 		System.out.println("TodoController tno->"+tno);
 		return todoService.get(tno);
+	}
+	
+	@GetMapping("/list")
+	public PageResponseDTO<TodoDTO> list(PageRequestDTO pageRequestDTO) {
+		System.out.println("TodoController list start");
+		System.out.println("TodoController list pageRequestDTO-> "+pageRequestDTO);
+		
+		int totalCount = todoService.todoTotal();
+		System.out.println("TodoController list totalCount-> "+totalCount);
+		
+		// Paging 작업
+		Paging page = new Paging(totalCount, pageRequestDTO.getPage());
+		// Parameter emp --> Page만 추가 Setting
+		pageRequestDTO.setStart(page.getStart());
+		pageRequestDTO.setEnd(page.getEnd());
+		
+		System.out.println("TodoController list page after pageRequestDTO-> "+pageRequestDTO);
+		log.info(pageRequestDTO);
+		
+		return todoService.list(pageRequestDTO);
 	}
 
 }
