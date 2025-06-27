@@ -25,7 +25,7 @@ public class TodoDTO {
 //  private LocalDate dueDate;: LocalDate 타입의 dueDate라는 필드를 선언
 //  이 코드는 Java 객체가 JSON으로 직렬화되거나 JSON에서 역직렬화될 때, dueDate 필드가 "2025-06-25"와 같은 형식의 문자열로 처리
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate	dueDate;
+	private LocalDate	due_date;
 	
 	// 조회용
 	private String pageNum;

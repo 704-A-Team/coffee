@@ -50,7 +50,7 @@ public class TodoController {
 		int totalCount = todoService.todoTotal();
 		System.out.println("TodoController list totalCount-> "+totalCount);
 		
-		// Paging 작업
+		// Paging 작업								현재 페이지
 		Paging page = new Paging(totalCount, pageRequestDTO.getPage());
 		// Parameter emp --> Page만 추가 Setting
 		pageRequestDTO.setStart(page.getStart());

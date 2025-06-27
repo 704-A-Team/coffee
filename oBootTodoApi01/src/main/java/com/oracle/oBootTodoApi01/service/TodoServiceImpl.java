@@ -60,9 +60,10 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public PageResponseDTO<TodoDTO> list(PageRequestDTO pageRequestDTO) {
 		// JPA로 페이징 작업 힘듦 -> 마이바티스 사용
+		// rownum BETWEEN start And end
 		List<TodoDTO> dtoList = todoDao.listTodo(pageRequestDTO);
 		System.out.println("TodoServiceImpl list dtoList->"+dtoList);
-		//총개수
+		//총개수 Select Count(*)
 		int totalCount = todoDao.totalTodo();
 		
 		PageResponseDTO<TodoDTO> responseDTO = 
