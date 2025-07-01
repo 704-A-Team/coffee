@@ -3,9 +3,11 @@ package com.oracle.oBootTodoApi01.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,6 +62,27 @@ public class TodoController {
 		log.info(pageRequestDTO);
 		
 		return todoService.list(pageRequestDTO);
+	}
+	
+	@PutMapping("/modify/{tno}")
+	public Map<String, String> modify(@PathVariable(name = "tno") Long tno
+									, @RequestBody TodoDTO todoDTO) {
+		todoDTO.setTno(tno);
+		log.info("Modify : " + todoDTO);
+		
+		todoService.modify(todoDTO);
+		
+		return Map.of("RESULT","SUCCESS");
+	}
+	
+	@DeleteMapping("/remove/{tno}")
+	public Map<String, String> remove(@PathVariable(name = "tno") Long tno) {
+		
+		log.info("Remove : "+tno);
+		
+		todoService.remove(tno);
+		
+		return Map.of("RESULT","SUCCESS");
 	}
 
 }

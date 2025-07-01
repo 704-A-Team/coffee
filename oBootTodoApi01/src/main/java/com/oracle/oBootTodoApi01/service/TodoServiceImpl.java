@@ -60,10 +60,12 @@ public class TodoServiceImpl implements TodoService {
 	@Override
 	public PageResponseDTO<TodoDTO> list(PageRequestDTO pageRequestDTO) {
 		// JPA로 페이징 작업 힘듦 -> 마이바티스 사용
-		// rownum BETWEEN start And end
+		
+			// rownum BETWEEN start And end
 		List<TodoDTO> dtoList = todoDao.listTodo(pageRequestDTO);
 		System.out.println("TodoServiceImpl list dtoList->"+dtoList);
-		//총개수 Select Count(*)
+		
+			//총개수 Select Count(*)
 		int totalCount = todoDao.totalTodo();
 		
 		PageResponseDTO<TodoDTO> responseDTO = 
@@ -74,6 +76,25 @@ public class TodoServiceImpl implements TodoService {
 									.build()
 									;
 		return responseDTO;
+	}
+
+	@Override
+	public void modify(TodoDTO todoDTO) {
+		Optional<Todo> maybeTodo = todoRepository.findById(todoDTO.getTno());
+		Todo todo = maybeTodo.orElseThrow();
+		todo.changeTitle(todoDTO.getTitle());
+		todo.changeWriter(todoDTO.getWriter());
+		todo.changeDueDate(todoDTO.getDue_date());
+		todo.changeComplete(todoDTO.isComplete()); // boolean 일때는 is로 제공
+		System.out.println("TodoServiceImpl modify todo : "+todo);
+		
+		todoRepository.save(todo); // entity 로 넘겨줘야 하니까 todo로 하였다
+	}
+
+	@Override
+	public void remove(Long tno) {
+		todoRepository.deleteById(tno);
+		
 	}
 
 }
