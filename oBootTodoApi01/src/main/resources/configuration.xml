@@ -5,6 +5,8 @@
  
  <configuration>
  	<typeAliases>
- 		<typeAlias alias="TodoDTO" type="com.oracle.oBootTodoApi01.dto.TodoDTO" />
+ 		<typeAlias alias="TodoDTO" 	  type="com.oracle.oBootTodoApi01.dto.TodoDTO" />
+ 		<typeAlias alias="ProductDTO" type="com.oracle.oBootTodoApi01.dto.ProductDTO" />
+ 		<typeAlias alias="ProductImageDTO" type="com.oracle.oBootTodoApi01.dto.ProductImageDTO" />
  	</typeAliases>
  </configuration>
