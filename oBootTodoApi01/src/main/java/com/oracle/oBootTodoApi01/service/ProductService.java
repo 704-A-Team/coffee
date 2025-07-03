@@ -10,4 +10,6 @@ public interface ProductService {
 	PageResponseDTO<ProductDTO> getList(PageRequestDTO pageRequestDTO);
 	ProductDTO 					get(Long pno);
 	void 						remove(Long pno);
+	void 						modify(ProductDTO productDTO);
+	
 }

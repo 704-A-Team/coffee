@@ -79,7 +79,7 @@ public class CustomFileUtil {
 	public void deleteFiles(List<String> fileNames) {
 		if(fileNames == null || fileNames.size() == 0 ) return;
 		
-		// stream 없어도 쓰네?
+		// stream 없어도 쓰네?  --> collect에서도 forEach 있다
 		fileNames.forEach(fileName -> {
 			// 섬네일 만들어 뒀으니 삭제하기
 			String 	thumbnailFileName = "s_" + fileName;    // 선언

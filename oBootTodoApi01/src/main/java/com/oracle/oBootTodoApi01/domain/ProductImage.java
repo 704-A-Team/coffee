@@ -21,7 +21,12 @@ public class ProductImage {
 	//간단한 구조: 복잡한 연관관계 없이 컬렉션 관리 가능
 	//자동 영속성 전이: Product가 저장/삭제되면 ProductImage도 함께 저장/삭제됨
 	private String 	fileName;
-	private int 	ord;	// 상품 이미지 순서
+	private int 	ord;
+	
+	
+	
+	
+	// 상품 이미지 순서
 	
 	public void setOrd(int ord) {
 		this.ord = ord;

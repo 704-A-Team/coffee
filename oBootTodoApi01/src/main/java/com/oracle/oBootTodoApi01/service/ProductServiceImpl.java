@@ -112,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
 										  ;
 		
 		// 이미지
+		//                         이미지리스트를 가져올 수 있는 이유 : 도메인에서 element해뒀기 때문에 내부적으로 가져올 수 있다
 		List<ProductImage> imageList = product.getImageList();
 		
 		if(imageList == null || imageList.size() == 0) return productDTO;
@@ -131,6 +132,31 @@ public class ProductServiceImpl implements ProductService {
 	public void remove(Long pno) {
 		// 삭제가 아닌 업데이트 ( 목적: 실적이 사라지는 것을 방지 )
 		productRepository.updateToDelete(pno, true);
+	}
+
+	@Override
+	public void modify(ProductDTO productDTO) {
+		// 컨트롤러는 이미지 업로드 / 서비스는 DB 이미지 업로드
+		Optional<Product> maybeProduct = productRepository.findById(productDTO.getPno());
+		
+		Product product = maybeProduct.orElseThrow();
+		
+		// change pname, pdesc, price
+		product.changePname(productDTO.getPname());
+		product.changePdesc(productDTO.getPdesc());
+		product.changePrice(productDTO.getPrice());	
+		product.changeKeyword(productDTO.getKeyword());
+		
+		//upload File -- clear first
+		product.clearList();
+		// DB-->Image String
+		List<String> uploadFileNames = productDTO.getUploadFileNames();
+		
+		if(uploadFileNames != null || uploadFileNames.size()> 0) {
+			uploadFileNames.stream()
+						   .forEach(uploadName -> product.addImageString(uploadName));
+		}
+		productRepository.save(product);
 	}
 
 }
