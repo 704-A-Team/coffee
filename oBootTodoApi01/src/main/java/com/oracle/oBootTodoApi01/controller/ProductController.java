@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +53,26 @@ public class ProductController {
 		
 		return Map.of("result", pno);
 	}
+	
+	@PostMapping("/register1")
+	public Map<String, Long> register1(ProductDTO productDTO) {
+		log.info("register: " + productDTO);
+		// MultipartFile 해야 이미지를 받을 수 있다
+		List<MultipartFile> files = productDTO.getFiles();
+		// 이미지를 이미지리스트화
+		
+		// 파일을 업로드 File Upload
+		List<String> uploadFileNames = fileUtil.saveFiles(files);
+		productDTO.setUploadFileNames(uploadFileNames);
+		log.info(uploadFileNames);
+		
+		// File Upload + Product 내용을 -> DB의 tbl_product에 INSERT ( 파일을 업로드 하고 나서 DB에 인서트 해야한다) 마이바티스에서 설명한 적 有
+		
+		Long pno = productService.register(productDTO);
+		
+		return Map.of("result", pno);
+	}
+	
 	
 	@GetMapping("/list")
 	public PageResponseDTO<ProductDTO> list(PageRequestDTO pageRequestDTO) {
@@ -147,6 +169,14 @@ public class ProductController {
 			//-----------------------------------------------------------------------	
 		}
 		return Map.of("RESULT","SUCCESS");
+	}
+	
+	// ResponseEntity는 사용자의 HttpRequest에 대한 응답 데이터를 포함하는 클래스.
+    // HttpStatus, HttpHeaders, HttpBody를 포함
+	@GetMapping("/view/{fileName}")
+	public ResponseEntity<Resource> viewFileGET(@PathVariable(name = "fileName") String fileName) {
+		System.out.println("ProductController viewFileGET fileName : " + fileName);
+		return fileUtil.getFile(fileName);
 	}
 	
 }

@@ -88,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
 							  .pageRequestDTO(pageRequestDTO)
 							  .build()
 							  ;
-	}
+	} // 빌더로 리턴하면 객체이고 객체는 RESTController 만나면 JSON 형태로 반환
 
 	@Override
 	public ProductDTO get(Long pno) {

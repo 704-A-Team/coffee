@@ -12,6 +12,10 @@ import java.util.UUID;
 import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +28,7 @@ import net.coobird.thumbnailator.Thumbnails;
 @Log4j2
 @RequiredArgsConstructor
 public class CustomFileUtil {
-	
+	// 파일 유틸 클래스 : 파일 업로드 + 섬네일 처리 + 삭제 + 응답 처리 담당
 	@Value("${com.oracle.oBootTodoApi01.upload.path}")
 	private String uploadPath; // 위에 경로에 파일을 생성해 준다 11:22
 	
@@ -94,4 +98,29 @@ public class CustomFileUtil {
 		});
 		
 	}
+	// Resource: 이미지, 파일과 같은 실질의 자원 7/4 12:15
+	public ResponseEntity<Resource> getFile(String fileName) {
+		// 어떤 os(원도우, 리눅스 등)에도 올릴 수 있다
+		Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+		
+		System.out.println("ResponseEntity<Resource> getFile-> " + resource);
+		
+		if(!resource.exists()) {
+			// File.separator --> os에 맞는 경로 구분자
+			// 요청 파일 없으면 default.jpeg 보여줘
+			resource = new FileSystemResource(uploadPath + File.separator + "default.jpg");
+		}
+		// 응답 Header 생성후 Content-Type 적용
+		HttpHeaders headers = new HttpHeaders();
+		
+		try {
+			headers.add("Content-Type", Files.probeContentType(resource.getFile().toPath())); // Content-Type: image/jpeg 등
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+		// 최종적 200 상태코드 +  응답 Header + 파일 Resource 전달
+	    // 주요 목적 : File D/L 또는 Image 보여줄때
+		return ResponseEntity.ok().headers(headers).body(resource);                          // 파일 내용 (Resource)
+	} // 최종적으로 리턴하는 값은 "파일 자체(Resource 객체)를 리턴해준다
+	  // JSON이 아니라 진짜 jpg, png, pdf, zip 같은 실제 파일 자체를 브라우저에 보내줘
 }
