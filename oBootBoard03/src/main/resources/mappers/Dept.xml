@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootBoard03.DeptMapper">
+
+	<select id="totalDept" resultType="int">
+		select Count(*) from dept Where DEPT_GUBUN = 0
+	</select>
+
+	<select id="deptList" parameterType="DeptDTO" resultType="DeptDTO">
+		select * From (
+		    select rownum rn, a.* From
+		        (select * from dept order by dept_code) a
+		    )
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	
+	
+</mapper>

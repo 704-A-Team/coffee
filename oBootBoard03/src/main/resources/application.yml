@@ -1,0 +1,44 @@
+server:
+  port: 8388
+#Oracle Connect
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: person01
+    password: tiger
+
+# JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      
+      
+# View Resolver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+# Mail 보낼때
+# gmail Transfer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nogangsss@gmail.com
+    password: gwge gnpo krde ehzq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+      
+logging.level:
+  org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL
+  
+# Mybatis
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
