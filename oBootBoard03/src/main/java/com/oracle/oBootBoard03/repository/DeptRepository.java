@@ -12,4 +12,5 @@ public interface DeptRepository {
 	Dept 			deptModify(int dept_code);
 	int 			deptUpdate(Dept dept);
 	int 			deptDelete(int dept_code);
+	List<Dept> 		findAllDept();
 }

@@ -45,7 +45,7 @@
 			          </a>
 			          <ul class="dropdown-menu">
 			            <li><a class="dropdown-item" href="/emp/list">사원 조회</a></li>
-			            <li><a class="dropdown-item" href="#">사원 등록</a></li>
+			            <li><a class="dropdown-item" href="/emp/empInForm">사원 등록</a></li>
 			          </ul>
 			        </li>
 			        

@@ -17,4 +17,9 @@ public class DeptDTO {
 	private int 		end;
 	private String 		pageNum;
 	private String		currentPage;
+	
+	public DeptDTO(int dept_code, String dept_name){
+		this.dept_code = dept_code;
+		this.dept_name = dept_name;
+	}
 }

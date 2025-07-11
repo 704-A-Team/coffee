@@ -7,6 +7,12 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521/xe
     username: person01
     password: tiger
+  # 최대 파일 개수 제한 늘리기 (예: 10개)
+  # 최대 파일 크기 제한 (예: 10MB)
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 # JPA Setting
   jpa:
@@ -34,6 +40,8 @@ spring:
           auth: true
           starttls.enable: true
 
+#upload Folder
+com.oracle.oBootTodoApi01.upload.path : upload
       
 logging.level:
   org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL

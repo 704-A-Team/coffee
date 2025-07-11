@@ -145,5 +145,12 @@ public class DeptRepositoryImpl implements DeptRepository {
 		return result;
 	}
 
+	@Override
+	public List<Dept> findAllDept() {
+		log.info("findAllDept Start");
+		List<Dept> deptList = em.createQuery("select d From Dept d Where dept_gubun=false").getResultList();
+		return deptList;
+	}
+
 	
 }

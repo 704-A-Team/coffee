@@ -1,6 +1,7 @@
 package com.oracle.oBootBoard03.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class Emp {
 					generator = "emp_seq_gen"
 			)
 	private int 		emp_no;
+	private String		emp_id;
 	private String		emp_password;
 	private String 		emp_name;
 	private String 		email;
@@ -41,7 +43,7 @@ public class Emp {
 	private long 		sal;
 	private boolean 	del_status;
 	private int 		dept_code;
-	private LocalDate 	in_date;
+	private LocalDateTime 	in_date;
 	
 	@ElementCollection
 	@Builder.Default

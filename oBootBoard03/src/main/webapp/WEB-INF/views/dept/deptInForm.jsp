@@ -32,14 +32,14 @@
 		            <!-- 부서 이름 입력 필드 -->
 		            <div class="mb-3">
 		                <label for="deptName" class="form-label">부서 이름</label>
-		                <!-- <input type="text" class="form-control" id="dept_name" name="dept_name" placeholder="부서 이름을 입력하세요 (예: 개발팀)" required> -->
-		                <select class="form-select" id="dept_name" name="dept_name" required>
+		                <input type="text" class="form-control" id="dept_name" name="dept_name" placeholder="부서 이름을 입력하세요 (예: 개발팀)" required>
+		             <!--    <select class="form-select" id="dept_name" name="dept_name" required>
 					        <option value="회계팀">회계팀</option>
 					        <option value="개발팀">개발팀</option>
 					        <option value="디자인팀">디자인팀</option>
 					        <option value="마케팅팀">마케팅팀</option>
 					        <option value="인사팀">인사팀</option>
-					    </select>
+					    </select> -->
 		            </div>
 		            
 		            <!-- 부서 위치 입력 필드 -->

@@ -11,5 +11,6 @@ public interface DeptService {
 	DeptDTO 		deptModify(DeptDTO deptDTO);
 	void 			deptUpdate(DeptDTO deptDTO);
 	void 			deptDelete(int dept_code);
+	List<DeptDTO> 	findAllDept();
 	
 }

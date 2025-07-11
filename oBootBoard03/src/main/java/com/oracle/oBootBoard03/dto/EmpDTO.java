@@ -1,16 +1,29 @@
 package com.oracle.oBootBoard03.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmpDTO {
 	private int 		emp_no;
+	private String		emp_id;
 	private String		emp_password;
 	private String 		emp_name;
 	private String 		email;
@@ -18,6 +31,19 @@ public class EmpDTO {
 	private long 		sal;
 	private boolean 	del_status;
 	private int 		dept_code;
-	private LocalDate 	in_date;
-
+	@Builder.Default
+	private LocalDateTime in_date = LocalDateTime.now();
+	
+	// 조회용
+	private String simage;  // 대표 사진 1장
+	private String pageNum;
+	private int start;
+	private int end;
+	// Page 정보
+	private String currentPage;
+	// File
+	@Builder.Default
+	private List<MultipartFile> file = new ArrayList<>();
+	@Builder.Default
+	private List<String> uploadFileNames = new ArrayList<>();
 }

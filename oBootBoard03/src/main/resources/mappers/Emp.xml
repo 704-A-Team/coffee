@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootBoard03.EmpMapper">
+
+	<select id="empList" parameterType="EmpDTO" resultType="EmpDTO">
+		SELECT * FROM (
+		    select rownum rn, a.* FROM (
+		        select e.*, img.filename simage FROM 
+		                (select * from emp where del_status = 0) e ,
+		                (select * from emp_image_list where ORDER_NUM = 0) img
+		            where e.emp_no = img.emp_emp_no(+)
+		            order by emp_no
+		            ) a
+		    ) WHERE rn BETWEEN  #{start} and #{end}
+	
+	</select>
+	
+</mapper>

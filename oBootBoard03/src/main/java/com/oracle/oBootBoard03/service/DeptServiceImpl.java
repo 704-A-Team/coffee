@@ -2,6 +2,7 @@ package com.oracle.oBootBoard03.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,16 @@ public class DeptServiceImpl implements DeptService {
 		log.info("deptDelete Start");
 		int result = deptRepository.deptDelete(dept_code);
 		
+	}
+
+	@Override
+	public List<DeptDTO> findAllDept() {
+		List<Dept> deptList = deptRepository.findAllDept();
+		
+		return deptList.stream()
+					   .map(dept->new DeptDTO(dept.getDept_code(), dept.getDept_name()))
+					   .collect(Collectors.toList())
+					   ;
 	}
 
 	
