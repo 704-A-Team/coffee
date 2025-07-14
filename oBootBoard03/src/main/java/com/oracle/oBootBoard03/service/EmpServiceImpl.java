@@ -1,12 +1,15 @@
 package com.oracle.oBootBoard03.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.oracle.oBootBoard03.dao.EmpDao;
 import com.oracle.oBootBoard03.domain.Emp;
+import com.oracle.oBootBoard03.domain.EmpImage;
 import com.oracle.oBootBoard03.dto.EmpDTO;
 import com.oracle.oBootBoard03.repository.EmpRepository;
 
@@ -32,11 +35,13 @@ public class EmpServiceImpl implements EmpService {
 	@Override
 	public List<EmpDTO> empList(EmpDTO empDTO) {
 		log.info("empList Start");
-		List<EmpDTO> empList = empDao.empList(empDTO);
+	//	List<EmpDTO> empList = empDao.empList(empDTO);
+		List<EmpDTO> empList1 = empRepository.empList1(empDTO);
+		log.info("Repository use empList1->"+empList1 );
 		System.out.println("이미지 경로 확인: /upload/" + empDTO.getSimage());
 		System.out.println("파일 실제 위치 확인: C:/spring/springSrc17/oBootBoard03/upload/" + empDTO.getSimage());
-
-		return empList;
+		// Repository use
+		return empList1;
 	}
 
 	@Override
@@ -74,6 +79,43 @@ public class EmpServiceImpl implements EmpService {
 					   ;
 		
 		return emp;
+	}
+
+	@Override
+	public EmpDTO detail(int emp_no) {
+		Optional<Emp> maybeEmp = empRepository.detail(emp_no);
+		Emp emp = maybeEmp.orElseThrow();
+		EmpDTO empDTO = EntityToDto(emp);
+		return empDTO;
+	}
+
+	private EmpDTO EntityToDto(Emp emp) {
+		EmpDTO empDTO = EmpDTO.builder()
+							  .emp_no(emp.getEmp_no())
+							  .emp_id(emp.getEmp_id())
+							  .emp_password(emp.getEmp_password())
+							  .emp_name(emp.getEmp_name())
+							  .email(emp.getEmail())
+							  .emp_tel(emp.getEmp_tel())
+							  .sal(emp.getSal())
+							  .del_status(emp.isDel_status())
+							  .dept_code(emp.getDept_code())
+							  .in_date(emp.getIn_date())
+							  .build()
+							  ;
+		// 이미지
+		if(emp.getImageList() == null || emp.getImageList().size() == 0) {
+			return empDTO;
+		}
+		
+		List<EmpImage> imageList = emp.getImageList();
+		List<String> uploadFileNames = imageList.stream()
+												.map(empImage->empImage.getFilename())
+												.toList()
+												;
+		empDTO.setUploadFileNames(uploadFileNames);
+		
+		return empDTO;
 	}
 
 }

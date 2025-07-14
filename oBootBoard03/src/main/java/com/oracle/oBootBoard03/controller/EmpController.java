@@ -73,6 +73,16 @@ public class EmpController {
 		return "emp/list";
 	}
 	
+	// 상세보기
+	@GetMapping("/detail")
+	public String detail(EmpDTO empDTO, Model model) {
+		log.info("datail start with emp_no:"+empDTO.getEmp_no());
+		EmpDTO empDTO1 = empService.detail(empDTO.getEmp_no());
+		log.info("empDTO1: "+empDTO1);
+		model.addAttribute("emp",empDTO1);
+		return "emp/detail";
+	}
+	
 	
 
 }

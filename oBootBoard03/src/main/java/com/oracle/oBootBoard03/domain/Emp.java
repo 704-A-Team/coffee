@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,8 +45,10 @@ public class Emp {
 	private boolean 	del_status;
 	private int 		dept_code;
 	private LocalDateTime 	in_date;
-	
+	// @ElementCollection => JPA에서 JOIN 없이도 가져올 수 있다
 	@ElementCollection
+	//         mappedBy = "N쪽 필드명", "나는 주인이 아니에요~"라고 표시
+	//@OneToMany(mappedBy = "emp")
 	@Builder.Default
 	private List<EmpImage> imageList = new ArrayList<>();
 	

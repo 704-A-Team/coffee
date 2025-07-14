@@ -1,5 +1,6 @@
 package com.oracle.oBootBoard03.dto;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,4 +47,19 @@ public class EmpDTO {
 	private List<MultipartFile> file = new ArrayList<>();
 	@Builder.Default
 	private List<String> uploadFileNames = new ArrayList<>();
+	
+	public EmpDTO(Object[] empRow) {
+	    this.emp_no       = ((Number) empRow[0]).intValue();         //  // 배열에 get() 없da!
+	    this.emp_id       = (String) empRow[1];
+	    this.emp_password = (String) empRow[2];
+	    this.emp_name     = (String) empRow[3];
+	    this.email        = (String) empRow[4];
+	    this.emp_tel      = (String) empRow[5];
+	    this.sal          = ((Number) empRow[6]).longValue();
+	    this.del_status   = ((Number) empRow[7]).intValue() == 1;
+	    this.dept_code    = ((Number) empRow[8]).intValue();
+	    Timestamp date	  = (Timestamp) empRow[9];
+	    this.in_date      = (date != null) ? date.toLocalDateTime() : null;
+	    this.simage       = (String) empRow[10];
+	}
 }

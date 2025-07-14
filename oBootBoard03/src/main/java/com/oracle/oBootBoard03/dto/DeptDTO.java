@@ -2,8 +2,12 @@ package com.oracle.oBootBoard03.dto;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeptDTO {
 	private int 		dept_code;
 	private String 		dept_name;

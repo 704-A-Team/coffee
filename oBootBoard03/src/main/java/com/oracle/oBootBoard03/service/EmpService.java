@@ -8,4 +8,5 @@ public interface EmpService {
 	int				totalEmp();
 	List<EmpDTO>	empList(EmpDTO empDTO);
 	int 			empSave(EmpDTO empDTO);
+	EmpDTO 			detail(int emp_no);
 }

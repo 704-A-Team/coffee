@@ -44,32 +44,35 @@
 		<c:forEach var="emp" items="${empList}">
 			<div class="col">
 				<div class="card">
-					<!-- 대표 이미지 -->
-					<c:choose>
-						<c:when test="${not empty emp.simage}">
-							<img src="${pageContext.request.contextPath}/upload/${emp.simage}" class="card-img-top" alt="직원 이미지">
-						</c:when>
-						<c:otherwise>
-							<img src="/images/default-profile.png" class="card-img-top" alt="기본 이미지">
-						</c:otherwise>
-					</c:choose>
-
-					<div class="card-body">
-						<h5 class="card-title">${emp.emp_name}</h5>
-						<p class="card-text">
-							<strong>아이디:</strong> ${emp.emp_id}<br/>
-							<strong>이메일:</strong> ${emp.email}<br/>
-							<strong>전화번호:</strong> ${emp.emp_tel}<br/>
-							<strong>급여:</strong> ${emp.sal} 원<br/>
-							<strong>입사일:</strong> 
-							  <tf:formatDateTime value="${emp.in_date}"  pattern="yyyy-MM-dd" />
-						</p>
-
-						<!-- 히든 필드 -->
-						<input type="hidden" name="emp_no" value="${emp.emp_no}" />
-						<input type="hidden" name="del_status" value="${emp.del_status}" />
-						<input type="hidden" name="dept_code" value="${emp.dept_code}" />
-					</div>
+					<a href="${pageContext.request.contextPath}/emp/detail?emp_no=${emp.emp_no}" style="text-decoration:none; color:inherit;">
+					<!-- 카드 내용 -->
+						<!-- 대표 이미지 -->
+						<c:choose>
+							<c:when test="${not empty emp.simage}">
+								<img src="${pageContext.request.contextPath}/upload/s_${emp.simage}" class="card-img-top" alt="직원 이미지">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/default-profile.png" class="card-img-top" alt="기본 이미지">
+							</c:otherwise>
+						</c:choose>
+	
+						<div class="card-body">
+							<h5 class="card-title">${emp.emp_name}</h5>
+							<p class="card-text">
+								<strong>아이디:</strong> ${emp.emp_id}<br/>
+								<strong>이메일:</strong> ${emp.email}<br/>
+								<strong>전화번호:</strong> ${emp.emp_tel}<br/>
+								<strong>급여:</strong> ${emp.sal} 원<br/>
+								<strong>입사일:</strong> 
+								  <tf:formatDateTime value="${emp.in_date}"  pattern="yyyy-MM-dd" />
+							</p>
+	
+							<!-- 히든 필드 -->
+							<input type="hidden" name="emp_no" value="${emp.emp_no}" />
+							<input type="hidden" name="del_status" value="${emp.del_status}" />
+							<input type="hidden" name="dept_code" value="${emp.dept_code}" />
+						</div>
+					</a>
 				</div>
 			</div>
 		</c:forEach>

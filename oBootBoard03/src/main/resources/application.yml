@@ -1,5 +1,7 @@
 server:
   port: 8388
+  tomcat:
+    max-part-count: 30
 #Oracle Connect
 spring:
   datasource:
