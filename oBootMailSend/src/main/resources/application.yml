@@ -1,0 +1,54 @@
+server:
+  port: 8310
+  tomcat:
+    max-part-count: 30
+#Oracle Connect
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: mail
+    password: tiger
+  # 최대 파일 개수 제한 늘리기 (예: 10개)
+  # 최대 파일 크기 제한 (예: 10MB)
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+# JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      
+      
+# View Resolver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+# Mail 보낼때
+# gmail Transfer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nogangsss@gmail.com
+    password: gwge gnpo krde ehzq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+#upload Folder
+com.oracle.oBootTodoApi01.upload.path : upload
+      
+logging.level:
+  org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL
+  
+# Mybatis
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
