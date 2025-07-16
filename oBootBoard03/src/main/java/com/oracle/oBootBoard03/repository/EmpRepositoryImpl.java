@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.oracle.oBootBoard03.domain.Dept;
 import com.oracle.oBootBoard03.domain.Emp;
 import com.oracle.oBootBoard03.domain.EmpImage;
 import com.oracle.oBootBoard03.dto.EmpDTO;
@@ -80,13 +81,58 @@ public class EmpRepositoryImpl implements EmpRepository {
 	}
 
 	@Override
-	public Optional<Emp> detail(int emp_no) {
+	public EmpDTO detail(int emp_no) {
 		log.info("detail start");
 		Emp emp = em.find(Emp.class, emp_no);
-		// .ofNullable -> null일 수도 있는 값을 안전하게 감싸주는 역할
-		return Optional.ofNullable(emp);
+		Dept dept = em.find(Dept.class, emp.getDept_code());
+			
+		log.info("emp->"+emp);
+		
+		EmpDTO empDTO = EntityToDto(emp, dept);
+		
+		
+		return empDTO; 
+	}
+	
+	private EmpDTO EntityToDto(Emp emp, Dept dept) {
+		EmpDTO empDTO = EmpDTO.builder()
+							  .emp_no(emp.getEmp_no())
+							  .emp_id(emp.getEmp_id())
+							  .emp_password(emp.getEmp_password())
+							  .emp_name(emp.getEmp_name())
+							  .email(emp.getEmail())
+							  .emp_tel(emp.getEmp_tel())
+							  .sal(emp.getSal())
+							  .del_status(emp.isDel_status())
+							  .dept_code(emp.getDept_code())
+							  .dept_name(dept.getDept_name())
+							  .in_date(emp.getIn_date())
+							  .build()
+							  ;
+		// 이미지
+		if(emp.getImageList() == null || emp.getImageList().size() == 0) {
+			return empDTO;
+		}
+		
+		List<EmpImage> imageList = emp.getImageList();
+		List<String> uploadFileNames = imageList.stream()
+												.map(empImage->empImage.getFilename())
+												.toList()
+												;
+		empDTO.setUploadFileNames(uploadFileNames);
+		
+		return empDTO;
 	}
 
+	@Override
+	public void delete(int emp_no) {
+		// 업데이트
+		Emp emp = em.find(Emp.class, emp_no);
+		emp.changeDel_status(true);	// 이 변경은 DB에 반영됨!
+	}
+	
+	// .ofNullable -> null일 수도 있는 값을 안전하게 감싸주는 역할
+	//  Optional.ofNullable(emp)
 
 	
 	

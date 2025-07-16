@@ -55,7 +55,7 @@
                     <strong>전화번호:</strong> ${emp.emp_tel}<br/>
                     <strong>급여:</strong> ${emp.sal} 만 원<br/>
                     <strong>입사일:</strong> <tf:formatDateTime value="${emp.in_date}" pattern="yyyy-MM-dd" /><br/>
-                    <strong>부서코드:</strong> ${emp.dept_code}<br/>
+                    <strong>부서코드:</strong> ${emp.dept_name}<br/>
                     <strong>상태:</strong> 
                     <c:choose>
                         <c:when test="${emp.del_status}">🟥 삭제됨</c:when>
@@ -86,6 +86,29 @@
         </div>
     </div>
 </c:if>
+
+<!-- 버튼 영역 -->
+<div class="d-flex justify-content-end gap-2 mb-4">
+    <!-- 수정하기 버튼 (링크로 수정 페이지 이동) -->
+    <a href="${pageContext.request.contextPath}/emp/update?emp_no=${emp.emp_no}" class="btn btn-primary">
+        <i class="bi bi-pencil-square"></i> 수정하기
+    </a>
+
+    <!-- 삭제 버튼 -->
+    <form action="${pageContext.request.contextPath}/emp/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+        <input type="hidden" name="emp_no" value="${emp.emp_no}">
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> 삭제하기
+        </button>
+    </form>
+
+    <!-- 목록으로 -->
+    <a href="${pageContext.request.contextPath}/emp/list" class="btn btn-secondary">
+        <i class="bi bi-list"></i> 목록으로
+    </a>
+</div>
+
+
 
 </div>
 

@@ -51,6 +51,9 @@ public class CustomFileUtil {
 			return null;
 		}
 		
+		// Paths.get(...)는 단순히 **경로 정보(Path 객체)**를 생성해줄 뿐
+		// 실제 파일이나 폴더의 존재 여부와는 관계 없어!
+		
 		List<String> uploadFileNames = new ArrayList<>();
 		
 		for(MultipartFile files : file) {
@@ -76,6 +79,42 @@ public class CustomFileUtil {
 		
 		return uploadFileNames;
 	}
+	
+	// delete
+	public void deleteFiles(List<String> oldFileNames) {
+		if(oldFileNames == null || oldFileNames.size() == 0) return;
+		int result = 0;
+		oldFileNames.forEach(oldFile -> {
+			String thumnailFilename = "s_" + oldFileNames;
+			Path thunmailPath = Paths.get(uploadPath,thumnailFilename);
+			Path filePath	  = Paths.get(uploadPath, oldFile);
+			// real delete
+			try {
+				Files.deleteIfExists(thunmailPath);
+				Files.deleteIfExists(filePath);
+				// local variable result defined in an enclosing scope must be final or effectively final
+				// 람다 안에서 지역변수는 읽기만 가능하다
+				// 즉, final 처럼 값을 바꾸지 못한다
+				// result = 1;
+				System.out.println("delete result->"+result);
+			} catch (IOException e) {
+				// 입출력 작업 중 예외 : "외부 환경"에서 나온 에러(파일이 없다, 등)
+				throw new RuntimeException(e.getMessage());
+			}
+			
+		});
+		
+	}
+	
+	// File은 파일 + 경로 + 기능을 다 혼자 가짐 (올인원)
+	// Path는 단순히 경로만 표현하는 객체
+	// Files는 그 Path를 가지고 **기능(읽기, 삭제 등)**을 수행
+	// ➡ 둘을 분리함으로써 "유연성"이 생긴 거야!
+	
+	// File → Java 1.0 / 단순하지만 기능 제한 / 유지보수 코드에 많음
+	// Files + Path → Java 7부터 도입된 NIO.2 / 최신 프로젝트에서는 이게 표준!
+
+
 	
 	
 	

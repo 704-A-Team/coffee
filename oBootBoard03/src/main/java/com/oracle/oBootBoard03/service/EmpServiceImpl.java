@@ -83,39 +83,20 @@ public class EmpServiceImpl implements EmpService {
 
 	@Override
 	public EmpDTO detail(int emp_no) {
-		Optional<Emp> maybeEmp = empRepository.detail(emp_no);
-		Emp emp = maybeEmp.orElseThrow();
-		EmpDTO empDTO = EntityToDto(emp);
+		EmpDTO empDTO = empRepository.detail(emp_no);
+
+	//	EmpDTO empDTO = EntityToDto(emp);
 		return empDTO;
 	}
 
-	private EmpDTO EntityToDto(Emp emp) {
-		EmpDTO empDTO = EmpDTO.builder()
-							  .emp_no(emp.getEmp_no())
-							  .emp_id(emp.getEmp_id())
-							  .emp_password(emp.getEmp_password())
-							  .emp_name(emp.getEmp_name())
-							  .email(emp.getEmail())
-							  .emp_tel(emp.getEmp_tel())
-							  .sal(emp.getSal())
-							  .del_status(emp.isDel_status())
-							  .dept_code(emp.getDept_code())
-							  .in_date(emp.getIn_date())
-							  .build()
-							  ;
-		// 이미지
-		if(emp.getImageList() == null || emp.getImageList().size() == 0) {
-			return empDTO;
-		}
+	
+
+	@Override
+	public void delete(int emp_no) {
+		log.info("delete Start");
+		empRepository.delete(emp_no);
 		
-		List<EmpImage> imageList = emp.getImageList();
-		List<String> uploadFileNames = imageList.stream()
-												.map(empImage->empImage.getFilename())
-												.toList()
-												;
-		empDTO.setUploadFileNames(uploadFileNames);
 		
-		return empDTO;
 	}
 
 }

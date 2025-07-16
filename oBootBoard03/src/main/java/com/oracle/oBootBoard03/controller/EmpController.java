@@ -83,6 +83,46 @@ public class EmpController {
 		return "emp/detail";
 	}
 	
+	// 상세보기 > 수정하기 화면 보여주기
+	@GetMapping("/update")
+	public String update(EmpDTO empDTO, Model model) {
+		log.info("update start with emp_no:"+empDTO.getEmp_no());
+		EmpDTO empDTO1 = empService.detail(empDTO.getEmp_no());
+		List<DeptDTO> deptList = deptService.findAllDept();
+		model.addAttribute("deptList",deptList);
+		log.info("empDTO1: "+empDTO1);
+		model.addAttribute("emp",empDTO1);
+		return "emp/update";
+	}
+	
+	// 삭제
+	@PostMapping("/delete")
+	public String delete(EmpDTO empDTO) {
+		log.info("delete empDTO.EMP_NO"+empDTO.getEmp_no());
+		
+		List<String> oldFileNames = empService.detail(empDTO.getEmp_no()).getUploadFileNames();
+		log.info("delete oldFileNames"+oldFileNames);
+		
+		// 1. DB 날리기( upload )
+		empService.delete(empDTO.getEmp_no());
+		// 2. file Server 데이터 삭제
+		utilFile.deleteFiles(oldFileNames);
+		
+		return "redirect:/emp/list";
+	}
+	
+	// 수정(업데이트)
+	@PostMapping(value = "/modify")
+	public String modify(EmpDTO empDTO) {
+		// file에 새로 추가된 이미지 ,uploadFileNames에 개별 리스트 삭제된 이미지 리스트
+		System.out.println("EmpDTO empDTO = "+empDTO);
+		List<String> oldfileNames = empService.detail(empDTO.getEmp_no()).getUploadFileNames();
+		System.out.println("oldfileNames = "+oldfileNames);
+		
+		// 새로 업로드 해야 하는 파일들
+		
+		return "redirect:/emp/list";
+	}
 	
 
 }

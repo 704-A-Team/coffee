@@ -11,6 +11,7 @@ public interface EmpRepository {
 	Emp 			empSave(Emp emp);
 	int 			totalEmp();
 	List<EmpDTO> 	empList1(EmpDTO empDTO);
-	Optional<Emp> 	detail(int emp_no);
+	EmpDTO 			detail(int emp_no);
+	void 			delete(int emp_no);
 
 }

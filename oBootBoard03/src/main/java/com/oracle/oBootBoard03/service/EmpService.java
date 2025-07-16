@@ -9,4 +9,5 @@ public interface EmpService {
 	List<EmpDTO>	empList(EmpDTO empDTO);
 	int 			empSave(EmpDTO empDTO);
 	EmpDTO 			detail(int emp_no);
+	void 			delete(int emp_no);
 }

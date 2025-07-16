@@ -32,6 +32,7 @@ public class EmpDTO {
 	private long 		sal;
 	private boolean 	del_status;
 	private int 		dept_code;
+	private String		dept_name;
 	@Builder.Default
 	private LocalDateTime in_date = LocalDateTime.now();
 	
