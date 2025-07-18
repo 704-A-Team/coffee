@@ -1,6 +1,8 @@
 package com.oracle.oBootBoard03.controller;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,7 +121,35 @@ public class EmpController {
 		List<String> oldfileNames = empService.detail(empDTO.getEmp_no()).getUploadFileNames();
 		System.out.println("oldfileNames = "+oldfileNames);
 		
-		// 새로 업로드 해야 하는 파일들
+		// 새로 업로드 해야 하는 파일
+		List<MultipartFile> files = empDTO.getFile();
+		log.info("files" +files);
+		
+		// 새로 업로드 되어 만들어진 파일 이름들
+		List<String> currentUploadFileNames = utilFile.save(files);
+		log.info("currentUploadFileNames" +currentUploadFileNames);
+		
+		// 화면에서 변화 없이 계속 유지된 파일들
+		List<String> uploadFileNames = empDTO.getUploadFileNames();
+		log.info("uploadFileNames" +uploadFileNames);
+		
+		if(currentUploadFileNames != null && currentUploadFileNames.size() > 0) {
+			uploadFileNames.addAll(currentUploadFileNames);
+			// .addAll:  currentUploadFileNames에 있는 모든 요소를 추가
+		}
+		log.info("modify empDTO" +empDTO);
+		
+		// 1. 데이터베이스 수정
+		empService.modify(empDTO);
+		// 2. 기존이미지 삭제
+		if( oldfileNames != null && oldfileNames.size() >0) {
+			List<String> removeFile = oldfileNames.stream()
+												  .filter(fileName -> uploadFileNames.indexOf(fileName) == -1)
+												  .collect(Collectors.toList());
+			log.info("removeFile" +removeFile);
+			
+			utilFile.deleteFiles(removeFile);
+		}
 		
 		return "redirect:/emp/list";
 	}

@@ -23,12 +23,6 @@ public class EmpRepositoryImpl implements EmpRepository {
 	private final EntityManager em;
 
 	@Override
-	public List<Emp> findAllEmp() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Emp empSave(Emp emp) {
 		log.info("empSave Start");
 		em.persist(emp);
@@ -135,5 +129,19 @@ public class EmpRepositoryImpl implements EmpRepository {
 	//  Optional.ofNullable(emp)
 
 	
+	@Override
+	public Optional<Emp> findByIdEmp(int emp_no) {
+		log.info("findByIdEmp start");
+		Emp emp = em.find(Emp.class, emp_no);
+		return Optional.ofNullable(emp);
+	}
+
+	@Override
+	public List<Emp> findAllEmp() {
+		List<Emp> empName = em.createQuery("Select e From Emp e", Emp.class).getResultList();
+		
+		return empName;
+	}
+
 	
 }

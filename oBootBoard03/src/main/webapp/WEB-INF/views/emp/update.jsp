@@ -35,7 +35,8 @@
     <!-- 직원 수정 Form -->
     <form action="${pageContext.request.contextPath}/emp/modify" method="post" enctype="multipart/form-data">
         <input type="hidden" name="emp_no" value="${emp.emp_no}" />
-
+		<input type="hidden" name="emp_password" value="${emp.emp_password}" />
+		
         <div class="mb-3">
             <label for="emp_name" class="form-label">이름</label>
             <input type="text" class="form-control" id="emp_name" name="emp_name" value="${emp.emp_name}" required>

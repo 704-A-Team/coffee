@@ -3,5 +3,18 @@
 
 <mapper namespace="com.oracle.oBootBoard03.BoardMapper">
 	
+	<insert id="insertBoard" parameterType="BoardDTO">
+		Insert into Board 
+		(BOARD_NO, TITLE, CONTENT ,EMP_NO ,READ_COUNT ,REF ,RE_STEP ,RE_LVL ,IN_DATE) 
+			values(BOARD_SEQ_GEN.nextval,#{title}, #{content}, #{emp_no}, 0, BOARD_SEQ_GEN.nextval, 0, 0 , sysdate )
+	</insert>
+	
+	<select id="totalBoard" resultType="Int">
+	 	Select count(*) From Board
+	</select>
+	
+	<select id="boardList" parameterType="BoardDTO" resultType="BoardDTO">
+		
+	</select>
 	
 </mapper>

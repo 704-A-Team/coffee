@@ -22,8 +22,26 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public int insertBoard(BoardDTO boardDTO) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = session.insert("insertBoard",boardDTO);
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int totalBoard() {
+		int total = session.selectOne("totalBoard");
+		return total;
+	}
+
+	@Override
+	public List<BoardDTO> boardList(BoardDTO boardDTO) {
+		List<BoardDTO> boardList = session.selectList("boardList",boardDTO);
+		return boardList;
 	}
 
 }

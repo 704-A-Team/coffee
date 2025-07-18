@@ -57,6 +57,11 @@ public class CustomFileUtil {
 		List<String> uploadFileNames = new ArrayList<>();
 		
 		for(MultipartFile files : file) {
+			
+			// 수정 작업 시 -> 빈 파일이 들어온다 따라서 컨티뉴로 건너뛰기
+			if(files.getOriginalFilename().isEmpty()) continue;
+			
+			
 			String savedName = UUID.randomUUID().toString() + "_" + files.getOriginalFilename();
 			Path   savePath	 = Paths.get(uploadPath, savedName);
 			//                               경로에 이름으로 저장할 준비
@@ -83,7 +88,7 @@ public class CustomFileUtil {
 	// delete
 	public void deleteFiles(List<String> oldFileNames) {
 		if(oldFileNames == null || oldFileNames.size() == 0) return;
-		int result = 0;
+	//	int result = 0;
 		oldFileNames.forEach(oldFile -> {
 			String thumnailFilename = "s_" + oldFileNames;
 			Path thunmailPath = Paths.get(uploadPath,thumnailFilename);
@@ -96,7 +101,7 @@ public class CustomFileUtil {
 				// 람다 안에서 지역변수는 읽기만 가능하다
 				// 즉, final 처럼 값을 바꾸지 못한다
 				// result = 1;
-				System.out.println("delete result->"+result);
+				// System.out.println("delete result->"+result);
 			} catch (IOException e) {
 				// 입출력 작업 중 예외 : "외부 환경"에서 나온 에러(파일이 없다, 등)
 				throw new RuntimeException(e.getMessage());

@@ -10,4 +10,6 @@ public interface EmpService {
 	int 			empSave(EmpDTO empDTO);
 	EmpDTO 			detail(int emp_no);
 	void 			delete(int emp_no);
+	void 			modify(EmpDTO empDTO);
+	List<EmpDTO> 			findAllEmp();
 }

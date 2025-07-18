@@ -2,30 +2,46 @@ package com.oracle.oBootBoard03.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.oracle.oBootBoard03.dao.BoardDao;
+import com.oracle.oBootBoard03.domain.Board;
 import com.oracle.oBootBoard03.dto.BoardDTO;
+import com.oracle.oBootBoard03.repository.BoardRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@Transactional
 public class BoardServiceImpl implements BoardService {
 	
 	private final BoardDao boardDao;
+	private final BoardRepository boardRepository;
+	private final ModelMapper mapper;
 
 	@Override
 	public int totalBoard() {
-		// TODO Auto-generated method stub
-		return 0;
+		int total = boardDao.totalBoard();
+		return total;
 	}
 
 	@Override
 	public List<BoardDTO> boardList(BoardDTO boardDTO) {
-		// TODO Auto-generated method stub
+		List<BoardDTO> boardList = boardDao.boardList(boardDTO);
 		return null;
+	}
+
+	@Override // 게시글 내용 저장
+	public void Boardwrite(BoardDTO boardDTO) {
+		Board board = mapper.map(boardDTO, Board.class);
+		log.info("mapper board->"+board);
+	//	boardRepository.Boardwrite(board);
+		boardDao.insertBoard(boardDTO);
+		log.info("insertBoard boardDTO->"+boardDTO);
 	}
 
 }

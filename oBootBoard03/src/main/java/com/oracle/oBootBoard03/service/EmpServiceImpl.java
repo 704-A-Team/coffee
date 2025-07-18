@@ -3,6 +3,7 @@ package com.oracle.oBootBoard03.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -98,5 +99,54 @@ public class EmpServiceImpl implements EmpService {
 		
 		
 	}
+
+	@Override
+	public void modify(EmpDTO empDTO) {
+		// delete하고 save할 생각이었는데 delete가 진짜 delete가 아니고 gubun 업데이트
+		// 흐름 : pk 사용하여 가져오면 change로 값 바꿔서 save
+		log.info("modify empDTO" +empDTO);
+		
+		Optional<Emp> maybeEmp = empRepository.findByIdEmp(empDTO.getEmp_no());
+		Emp emp = maybeEmp.orElseThrow();
+		emp.changeDept_code(empDTO.getDept_code());
+		emp.changeEmail(empDTO.getEmail());
+		emp.changeEmp_name(empDTO.getEmp_name());
+		emp.changeEmp_no(empDTO.getEmp_no());
+		emp.changeEmp_password(empDTO.getEmp_password());
+		emp.changeEmp_tel(empDTO.getEmp_tel());
+		emp.changeSal(empDTO.getSal());
+		emp.changeIn_date(empDTO.getIn_date());
+		
+		// 빈파일 건너뛰기
+		
+		emp.clearList();
+		
+		List<String> uploadFileName = empDTO.getUploadFileNames();
+		if(uploadFileName != null && uploadFileName.size() >0) {
+			uploadFileName.stream()
+						  .forEach(file->emp.imageAddString(file));
+		}
+		
+		log.info("modify change emp->" +emp);
+		empRepository.empSave(emp);
+		
+	}
+
+	@Override
+	public List<EmpDTO> findAllEmp() {
+		log.info("findAllEmp Start");
+		List<Emp> empList = empRepository.findAllEmp();
+		List<EmpDTO> empName = empList.stream()
+								  .map(emp -> EmpDTO.builder()
+										  			.emp_no(emp.getEmp_no())
+										  			.emp_name(emp.getEmp_name())
+										  			.build()
+								   )
+								  .collect(Collectors.toList())
+								  ;
+		return empName;
+	}
+	
+
 
 }

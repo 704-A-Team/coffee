@@ -7,11 +7,12 @@ import com.oracle.oBootBoard03.domain.Emp;
 import com.oracle.oBootBoard03.dto.EmpDTO;
 
 public interface EmpRepository {
-	List<Emp>		findAllEmp();
 	Emp 			empSave(Emp emp);
 	int 			totalEmp();
 	List<EmpDTO> 	empList1(EmpDTO empDTO);
 	EmpDTO 			detail(int emp_no);
 	void 			delete(int emp_no);
+	Optional<Emp> 	findByIdEmp(int emp_no);
+	List<Emp> 		findAllEmp();
 
 }

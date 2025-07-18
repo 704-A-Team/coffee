@@ -8,4 +8,5 @@ import com.oracle.oBootBoard03.dto.PageRequestDTO;
 public interface BoardService {
 	int				totalBoard();
 	List<BoardDTO> 	boardList(BoardDTO boardDTO);
+	void 			Boardwrite(BoardDTO boardDTO);
 }

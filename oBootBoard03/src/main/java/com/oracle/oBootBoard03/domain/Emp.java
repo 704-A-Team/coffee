@@ -76,6 +76,9 @@ public class Emp {
 	public void changeDept_code(int dept_code) {
 		this.dept_code = dept_code;
 	}
+	public void changeIn_date(LocalDateTime in_date) {
+		this.in_date = in_date;
+	}
 	
 	public void imageAddString(String filename1) {
 		// 빌더의 목적 : EmpImage 객체 만들기
@@ -98,6 +101,7 @@ public class Emp {
 	public void clearList() {
 		this.imageList.clear();
 	}
+	
 	
 	
 }
