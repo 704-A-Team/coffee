@@ -37,6 +37,7 @@
                             <option>ROLE_USER</option>
                             <option>ROLE_MANAGER</option>
                             <option>ROLE_ADMIN</option>
+                            <option>ROLE_GUEST</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Sign Up</button>

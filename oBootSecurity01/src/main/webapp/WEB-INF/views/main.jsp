@@ -31,6 +31,12 @@
 	          <a class="nav-link active" aria-current="page" href="admanager">admanager</a>
 	        </li>
 	        <li class="nav-item">
+	          <a class="nav-link active" aria-current="page" href="guest1">guest1</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link active" aria-current="page" href="guest3">guest3</a>
+	        </li>
+	        <li class="nav-item">
 	          <a class="nav-link active" aria-current="page" href="login">login</a>
 	        </li>
 	        <li class="nav-item">
