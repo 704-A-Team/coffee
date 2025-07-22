@@ -50,7 +50,7 @@ public class BoardController {
 		boardDTO.setStart(page.getStart());
 		boardDTO.setEnd(page.getEnd());
 		List<BoardDTO> boardList = boardService.boardList(boardDTO);
-		
+		model.addAttribute("boardList", boardList);
 		return "list";
 	}
 

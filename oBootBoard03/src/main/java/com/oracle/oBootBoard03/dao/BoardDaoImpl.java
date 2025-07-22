@@ -1,6 +1,8 @@
 package com.oracle.oBootBoard03.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -40,7 +42,11 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public List<BoardDTO> boardList(BoardDTO boardDTO) {
-		List<BoardDTO> boardList = session.selectList("boardList",boardDTO);
+		Map<String, Object> board = new HashMap<>();
+		board.put("start", boardDTO.getStart());
+		board.put("end", boardDTO.getEnd());
+		board.put("board", null);
+		List<BoardDTO> boardList = session.selectList("boardList",board);
 		return boardList;
 	}
 

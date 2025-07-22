@@ -32,7 +32,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardDTO> boardList(BoardDTO boardDTO) {
 		List<BoardDTO> boardList = boardDao.boardList(boardDTO);
-		return null;
+		return boardList;
 	}
 
 	@Override // 게시글 내용 저장
