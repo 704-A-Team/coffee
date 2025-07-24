@@ -9,4 +9,5 @@ public interface BoardService {
 	int				totalBoard();
 	List<BoardDTO> 	boardList(BoardDTO boardDTO);
 	void 			Boardwrite(BoardDTO boardDTO);
+	BoardDTO 		detail(BoardDTO boardDTO1);
 }

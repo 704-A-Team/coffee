@@ -16,7 +16,7 @@
 	
 	<div id="contents" class="container mt-4">
 	  <h3 class="mb-3">📋 게시판</h3>
-	  <c:set var="num" value="${page.total - page.start + 1}" />
+	  <c:set var="num" value="${page.total - page.start + 1}"></c:set>
 	
 	  <table class="table table-striped table-bordered table-hover text-center align-middle">
 	    <thead class="table-primary">
@@ -48,12 +48,13 @@
 	    </tbody>
 	  </table>
 	
+	  
 	  <!-- 페이징 -->
 	  <nav aria-label="Page navigation">
 	    <ul class="pagination justify-content-center">
 	      <c:if test="${page.startPage > page.pageBlock}">
 	        <li class="page-item">
-	          <a class="page-link" href="/board/list?currentPage=${page.startPage - page.pageBlock}" aria-label="Previous">
+	          <a class="page-link" href="/dept/list?currentPage=${page.startPage - page.pageBlock}" aria-label="Previous">
 	            &laquo; 이전
 	          </a>
 	        </li>
@@ -61,13 +62,13 @@
 	
 	      <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
 	        <li class="page-item ${i == page.currentPage ? 'active' : ''}">
-	          <a class="page-link" href="/board/list?currentPage=${i}">${i}</a>
+	          <a class="page-link" href="/dept/list?currentPage=${i}">${i}</a>
 	        </li>
 	      </c:forEach>
 	
 	      <c:if test="${page.endPage < page.totalPage}">
 	        <li class="page-item">
-	          <a class="page-link" href="/board/list?currentPage=${page.startPage + page.pageBlock}" aria-label="Next">
+	          <a class="page-link" href="/dept/list?currentPage=${page.startPage + page.pageBlock}" aria-label="Next">
 	            다음 &raquo;
 	          </a>
 	        </li>

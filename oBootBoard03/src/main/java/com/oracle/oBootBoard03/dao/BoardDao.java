@@ -10,4 +10,5 @@ public interface BoardDao {
 	int				insertBoard(BoardDTO boardDTO);
 	int 			totalBoard();
 	List<BoardDTO> 	boardList(BoardDTO boardDTO);
+	BoardDTO 		detail(BoardDTO boardDTO1);
 }

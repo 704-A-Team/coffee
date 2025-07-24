@@ -35,6 +35,7 @@ public class BoardController {
 		return "board/write_view";
 	}
 	
+	// 게시글 등록
 	@PostMapping("/write")
 	public String write(BoardDTO boardDTO) {
 		log.info("board write boardDTO->"+boardDTO);
@@ -43,15 +44,29 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	// 게시글 목록
 	@GetMapping("/list")
 	public String BoardList(BoardDTO boardDTO, Model model) {
 		int total = boardService.totalBoard();
+		
 		Paging page = new Paging(total, boardDTO.getCurrentPage());
 		boardDTO.setStart(page.getStart());
 		boardDTO.setEnd(page.getEnd());
+		
 		List<BoardDTO> boardList = boardService.boardList(boardDTO);
 		model.addAttribute("boardList", boardList);
-		return "list";
+		model.addAttribute("page",page);
+		return "board/list";
+	}
+	
+	// 게시글 상세조회 + 조회수
+	@GetMapping("/detail")
+	public String detail(BoardDTO boardDTO1, Model model) {
+		// 게시글 상세보기
+		System.out.println("board_no :" +boardDTO1.getBoard_no());
+		BoardDTO boardDTO = boardService.detail(boardDTO1);
+		model.addAttribute("board",boardDTO);
+		return "board/detail";
 	}
 
 }

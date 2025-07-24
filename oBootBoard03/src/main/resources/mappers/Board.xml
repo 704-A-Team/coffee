@@ -19,7 +19,7 @@
 				#{start, mode=IN,  jdbcType=INTEGER}
 			   ,#{end,   mode=IN,  jdbcType=INTEGER}
 			   ,#{board, mode=OUT, jdbcType=CURSOR,
-			   					   javaType=java.ResultSet,
+			   					   javaType=java.sql.ResultSet,
 			   					   resultMap = BoardList}
 			)
 		}
@@ -36,5 +36,23 @@
 	    <result property="re_lvl" 	column="re_lvl" />
 	    <result property="in_date" 	column="in_date" />
 	</resultMap>
+	
+	<select id="board" parameterType="BoardDTO" resultType="BoardDTO">
+		 select BOARD_NO, TITLE, content, EMP_NO, READ_COUNT, ref, RE_STEP, RE_LVL, IN_DATE 
+	        from (
+	            select rownum rn, a.* from (
+	                select BOARD_NO, TITLE, content, EMP_NO, READ_COUNT, ref, RE_STEP, RE_LVL, IN_DATE 
+	                from board 
+	                order by board_no desc, RE_STEP ASC ) a
+	            ) where rn between #{start} and #{end}
+	</select>
+	
+	<update id="boardHitUp" parameterType="BoardDTO">
+		UPDATE Board Set read_count = read_count + 1 Where Board_no = #{board_no}
+	</update>
+	
+	<select id="BoardDetail" parameterType="BoardDTO" resultType="BoardDTO">
+		SELECT * FROM Board Where board_no = #{board_no}
+	</select>
 	
 </mapper>

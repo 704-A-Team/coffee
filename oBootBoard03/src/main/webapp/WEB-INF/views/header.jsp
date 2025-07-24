@@ -54,7 +54,7 @@
 			            게시판 관리
 			          </a>
 			          <ul class="dropdown-menu">
-			            <li><a class="dropdown-item" href="#">게시판 조회</a></li>
+			            <li><a class="dropdown-item" href="/board/list">게시판 조회</a></li>
 			            <li><a class="dropdown-item" href="/board/write_view">게시판 등록</a></li>
 			            <li><a class="dropdown-item" href="#">개인정보 수정</a></li>
 			          </ul>

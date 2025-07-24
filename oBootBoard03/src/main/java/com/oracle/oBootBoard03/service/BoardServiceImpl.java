@@ -44,4 +44,11 @@ public class BoardServiceImpl implements BoardService {
 		log.info("insertBoard boardDTO->"+boardDTO);
 	}
 
+	// 게시글 상세보기
+	@Override
+	public BoardDTO detail(BoardDTO boardDTO1) {
+		BoardDTO boardDTO = boardDao.detail(boardDTO1);
+		return boardDTO;
+	}
+
 }

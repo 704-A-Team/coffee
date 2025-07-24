@@ -39,15 +39,30 @@ public class BoardDaoImpl implements BoardDao {
 		int total = session.selectOne("totalBoard");
 		return total;
 	}
-
+	
+	// 게시글 목록
 	@Override
 	public List<BoardDTO> boardList(BoardDTO boardDTO) {
 		Map<String, Object> board = new HashMap<>();
 		board.put("start", boardDTO.getStart());
 		board.put("end", boardDTO.getEnd());
 		board.put("board", null);
-		List<BoardDTO> boardList = session.selectList("boardList",board);
+		session.selectList("boardList",board);   // 프로시저
+		List<BoardDTO> boardList = (List<BoardDTO>) board.get("board");
+		
+		
+	//	List<BoardDTO> boardList = session.selectList("board",boardDTO); 
+		
 		return boardList;
+	}
+	
+	// 게시글 상세보기 + 조회수 증가
+	@Override
+	public BoardDTO detail(BoardDTO boardDTO1) {
+		// 조회수를 올리고 조회하기
+		session.update("boardHitUp",boardDTO1);		 					// 조회수 증가
+		BoardDTO boardDTO = session.selectOne("BoardDetail",boardDTO1);	// 증가된 후 데이터 조회해서 리턴
+		return boardDTO;
 	}
 
 }
