@@ -47,10 +47,13 @@
 				<div class="mt-4 text-end">
 					<a href="/board/list" class="btn btn-outline-primary btn-sm">목록으로</a>
 					<a href="/board/modify?board_no=${board.board_no}" class="btn btn-outline-success btn-sm">수정</a>
-					<a href="/board/delete?board_no=${board.board_no}" class="btn btn-outline-danger btn-sm"
-					   onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+					<form action="/board/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+					    <input type="hidden" name="board_no" value="${board.board_no}">
+					    <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
+					</form>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 

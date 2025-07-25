@@ -42,7 +42,8 @@
 	        from (
 	            select rownum rn, a.* from (
 	                select BOARD_NO, TITLE, content, EMP_NO, READ_COUNT, ref, RE_STEP, RE_LVL, IN_DATE 
-	                from board 
+	                from board
+	                where re_step = 0 
 	                order by board_no desc, RE_STEP ASC ) a
 	            ) where rn between #{start} and #{end}
 	</select>

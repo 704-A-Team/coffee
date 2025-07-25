@@ -11,4 +11,5 @@ public interface BoardDao {
 	int 			totalBoard();
 	List<BoardDTO> 	boardList(BoardDTO boardDTO);
 	BoardDTO 		detail(BoardDTO boardDTO1);
+	void 			delete(int board_no);
 }

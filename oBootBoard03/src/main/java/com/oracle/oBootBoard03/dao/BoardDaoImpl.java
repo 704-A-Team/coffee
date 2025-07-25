@@ -42,6 +42,9 @@ public class BoardDaoImpl implements BoardDao {
 	
 	// 게시글 목록
 	@Override
+	
+	
+	
 	public List<BoardDTO> boardList(BoardDTO boardDTO) {
 		Map<String, Object> board = new HashMap<>();
 		board.put("start", boardDTO.getStart());
@@ -63,6 +66,12 @@ public class BoardDaoImpl implements BoardDao {
 		session.update("boardHitUp",boardDTO1);		 					// 조회수 증가
 		BoardDTO boardDTO = session.selectOne("BoardDetail",boardDTO1);	// 증가된 후 데이터 조회해서 리턴
 		return boardDTO;
+	}
+	
+	@Override
+	public void delete(int board_no) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

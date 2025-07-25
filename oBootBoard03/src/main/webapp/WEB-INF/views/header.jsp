@@ -23,6 +23,7 @@
 	<nav class="navbar navbar-expand-lg"> <!-- bg-body-tertiary 제거: bg color -->
 		  <div class="container-fluid">
 		    <a class="navbar-brand" href="/main">Navbar</a>
+	
 		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 		      <span class="navbar-toggler-icon"></span>
 		    </button>
@@ -30,6 +31,7 @@
 			      <ul class="navbar-nav">
 			      
 			        <li class="nav-item dropdown">
+
 			          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 			           	부서 관리
 			          </a>

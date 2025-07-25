@@ -10,4 +10,5 @@ public interface BoardService {
 	List<BoardDTO> 	boardList(BoardDTO boardDTO);
 	void 			Boardwrite(BoardDTO boardDTO);
 	BoardDTO 		detail(BoardDTO boardDTO1);
+	void 			delete(int board_no);
 }

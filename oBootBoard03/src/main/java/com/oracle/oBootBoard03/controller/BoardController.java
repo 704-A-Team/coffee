@@ -28,8 +28,8 @@ public class BoardController {
 	
 	@GetMapping(value = "/write_view")
 	public String writeVeiw(Model model) {
-		List<EmpDTO> empName = empService.findAllEmp();
 		// EmpDTO로 받아온 emp_no, emp_name  -> 작성자를 드롭박스로 표현하려한다
+		List<EmpDTO> empName = empService.findAllEmp();
 		log.info("empName"+empName);
 		model.addAttribute("empName",empName);
 		return "board/write_view";
@@ -59,7 +59,7 @@ public class BoardController {
 		return "board/list";
 	}
 	
-	// 게시글 상세조회 + 조회수
+	// 게시글 상세조회 + 조회수 올리기
 	@GetMapping("/detail")
 	public String detail(BoardDTO boardDTO1, Model model) {
 		// 게시글 상세보기
@@ -67,6 +67,18 @@ public class BoardController {
 		BoardDTO boardDTO = boardService.detail(boardDTO1);
 		model.addAttribute("board",boardDTO);
 		return "board/detail";
+	}
+	
+	// 답글 : 모든 사용자(본인포함)가 달 수 있다
+	
+	
+	// 수정, 삭제 : 게시글 작성자만 가능하다
+	@PostMapping("/delete")
+	public String delete(BoardDTO boardDTO) {
+		System.out.println("board_no"+boardDTO.getBoard_no());
+		boardService.delete(boardDTO.getBoard_no());
+		
+		return "redirect:/board/list";
 	}
 
 }

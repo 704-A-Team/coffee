@@ -50,5 +50,12 @@ public class BoardServiceImpl implements BoardService {
 		BoardDTO boardDTO = boardDao.detail(boardDTO1);
 		return boardDTO;
 	}
+	
+	// 게시글 삭제하기
+	@Override
+	public void delete(int board_no) {
+		boardDao.delete(board_no);
+		
+	}
 
 }

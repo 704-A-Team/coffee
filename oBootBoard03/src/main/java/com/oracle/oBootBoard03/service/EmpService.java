@@ -11,5 +11,5 @@ public interface EmpService {
 	EmpDTO 			detail(int emp_no);
 	void 			delete(int emp_no);
 	void 			modify(EmpDTO empDTO);
-	List<EmpDTO> 			findAllEmp();
+	List<EmpDTO> 	findAllEmp();
 }
