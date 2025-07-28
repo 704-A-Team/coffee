@@ -20,3 +20,7 @@ spring:
     user:
       name: test
       password: test
+
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
