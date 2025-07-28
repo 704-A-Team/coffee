@@ -1,0 +1,22 @@
+server:
+  port: 8383
+
+spring:
+  application-name: Coffee
+  # Oracle DB
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: person01
+    password: tiger
+
+  # View Resolver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+  security:
+    user:
+      name: test
+      password: test
