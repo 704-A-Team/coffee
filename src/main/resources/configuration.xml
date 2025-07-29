@@ -5,7 +5,9 @@
 <configuration>
 
 	<typeAliases>
-	
+		<typeAlias alias="ProductDTO" type="com.oracle.coffee.dto.km.ProductDTO"/>
+		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>
+		
 	</typeAliases>
 	
 </configuration>

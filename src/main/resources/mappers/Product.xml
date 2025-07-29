@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.ProductMapper">
+	<insert id="wanRegister" parameterType="ProductDTO" useGeneratedKeys="true" keyProperty="product_code">
+		insert into product(PRODUCT_CODE , PRODUCT_NAME , PRODUCT_CONTENTS , PRODUCT_UNIT ,
+							PRODUCT_TYPE , PRODUCT_YIELD , PRODUCT_WEIGHT , PRODUCT_ISORDER , PRODUCT_PACK ,
+							PRODUCT_ISDEL , PRODUCT_REG_CODE , PRODUCT_REG_DATE)
+							values (
+								PRODUCT_SEQ.nextval, #{product_name}, #{product_contents}, #{product_unit},
+								#{product_type}, #{product_yield}, #{product_weight}, #{product_isorder}, #{product_pack},
+								#{product_isdel}, #{product_reg_code}, #{product_reg_date}	)
+		<selectKey keyProperty="product_code" resultType="Int" order="AFTER">
+			select PRODUCT_SEQ.CURRVAL From dual
+		</selectKey>
+	</insert>
+	
+	<insert id="priceRegister" parameterType="ProductPriceDTO">
+		insert into product_price(PRODUCT_CODE , TO_DATE , PRICE_REG_CODE , FROM_DATE , PRICE , PRICE_REG_DATE)
+			values (#{product_code} , #{to_date}, #{price_reg_code}, #{from_date}, #{price}, #{price_reg_date} )
+	</insert>
+	
+	<select id="countTotal" resultType="Int">
+		select count(*) from product where product_isdel = 0 and product_type = 1
+	</select>
+	
+	<select id="wonList" resultType="ProductDTO">
+		select * from product where product_type = 0
+	</select>
+	
+</mapper>
