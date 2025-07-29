@@ -3,9 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-
 	<typeAliases>
-	
+		<typeAlias alias="InventoryDto" type="com.oracle.coffee.dto.InventoryDto"/>
 	</typeAliases>
-	
 </configuration>

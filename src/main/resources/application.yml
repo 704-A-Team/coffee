@@ -7,8 +7,9 @@ spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521/xe
-    username: S202507A
-    password: 704A
+    username: s202507a
+    password: 704a
+    
 
   # View Resolver
   mvc:

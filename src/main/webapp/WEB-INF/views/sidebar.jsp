@@ -63,16 +63,24 @@
 		
 		<!-- 재고 메뉴 -->
 		<li class="mb-3">
-			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#prd-collapse" aria-expanded="false">
-				<i class="bi bi-caret-right-fill me-2"></i>재고관리
-			</button>
-			<div class="collapse" id="prd-collapse">
-				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">마감</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">마감</a></li>
-				</ul>
-			</div>
-		</li>
+	<!-- "재고관리" 버튼 자체를 클릭 시 inventory로 이동 -->
+	<a href="${pageContext.request.contextPath}/inventory" class="btn btn-toggle text-light rounded collapsed">
+		<i class="bi bi-caret-right-fill me-2"></i>재고관리
+	</a>
+
+	<!-- 또는: 버튼 클릭 시 하위 메뉴가 펼쳐지게 하고, 하위 메뉴에 링크를 걸 수도 있음 -->
+	<div class="collapse" id="prd-collapse">
+		<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+			<li class="mt-2">
+				<a href="${pageContext.request.contextPath}/inventory?mode=close" class="link-light rounded menu-small">마감</a>
+			</li>
+			<li class="mt-2">
+				<a href="${pageContext.request.contextPath}/inventory?mode=open" class="link-light rounded menu-small">마감해제</a>
+			</li>
+		</ul>
+	</div>
+</li>
+
 		
 		<!-- 판매 메뉴 -->
 		<li class="mb-3">
