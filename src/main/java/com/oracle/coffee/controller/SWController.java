@@ -91,6 +91,7 @@ public class SWController {
 		System.out.println("SWController wonProductModify Strart...");
 		
 		int wonProduct_code = productService.wonProductModify(productDto);
+		System.out.println("SWController wonProductModify wonProduct_code : " + wonProduct_code);
 		
 		return "redirect:/sw/wonProductList";
 	}
@@ -103,6 +104,10 @@ public class SWController {
 		
 		return "redirect:/sw/wonProductList";
 	}
+	
+	
+	
+	
 	
 	
 }

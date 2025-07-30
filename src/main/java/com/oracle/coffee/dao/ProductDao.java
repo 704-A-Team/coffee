@@ -13,5 +13,6 @@ public interface ProductDao {
 	ProductDto 			wonProductDetail(int product_code);
 	int 				wonProductModify(ProductDto productDto);
 	void 				wonProductDelete(ProductDto productDto);
+	List<ProductDto> 	getProductInfo(int product_type);
 	
 }

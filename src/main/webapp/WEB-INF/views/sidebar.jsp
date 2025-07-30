@@ -42,10 +42,9 @@
 			</button>
 			<div class="collapse" id="pch-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">원재료 조회</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">원재료 등록</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">원재료 가격 내역</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">발주 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideList" class="link-light rounded menu-small">원재료 조회</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/purchase/purchaseInForm" class="link-light rounded menu-small">발주 등록</a></li>
 					<li class="mt-2"><a href="#" class="link-light rounded menu-small">입고 현황</a></li>
 				</ul>
 			</div>

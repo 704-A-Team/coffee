@@ -75,5 +75,14 @@ public class ProductDaoImpl implements ProductDao {
 		
 		session.update("wonProductDelete", productDto);
 	}
+
+	@Override
+	public List<ProductDto> getProductInfo(int product_type) {
+		System.out.println("ProductDaoImpl wonProductDelete start...");
+		
+		List<ProductDto> productList = session.selectList("productInfo", product_type);
+		
+		return productList;
+	}
 	
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.ProvideMapper">
+
+	<insert id="provideSave" parameterType="ProvideDto">
+		<selectKey keyProperty="provide_code" resultType="int" order="BEFORE">
+            SELECT PROVIDE_SEQ.NEXTVAL FROM DUAL <!-- Oracle -->
+            <!-- MySQL 또는 auto-increment 사용 시: SELECT LAST_INSERT_ID() -->
+        </selectKey>
+        insert into provide
+        (
+        	 provide_code
+        	,product_won_code
+        	,provide_client_code
+        	,provide_amount
+        	,current_danga
+        	,provide_isdel
+        	,provide_reg_date
+        )
+        values
+        (
+        	 #{provide_code}
+        	,${product_won_code}
+        	,${provide_client_code}
+        	,${provide_amount}
+        	,${current_danga}
+        	,${provide_isdel}
+        	,sysdate
+        )
+	</insert>
+	
+	<select id="totalProvide" resultType="int">
+		select 	count(*) 
+		from 	provide
+	</select>
+
+	<select id="provideList" parameterType="ProvideDto" resultType="ProvideDto">
+		select *
+		from (
+		    select rownum rn, a.*
+		    from (
+		        select 
+		            p.*, 
+		            pt.product_name as productName,
+		            ct.client_name  as clientName
+		        from provide p
+		        left join product pt 
+		        	ON p.product_won_code = pt.product_code
+		        left join client_tb ct 
+		        	ON p.provide_client_code = ct.client_code
+		        order by p.provide_code desc
+		    ) a
+		)
+		where rn between #{start} and #{end}
+	</select>
+
+	<select id="provideDetail" parameterType="int" resultType="ProvideDto">
+		select  p.*, 
+	            pt.product_name as productName,
+		        ct.client_name  as clientName,
+		        bu.cd_contents  as unitName
+	   	from 	provide p
+		left join product pt 
+			ON p.product_won_code = pt.product_code
+		left join bunryu bu
+			ON pt.product_unit = bu.mcd and bu.bcd = 750
+		left join client_tb ct
+			ON p.provide_client_code = ct.client_code
+		where p.provide_code = #{provide_code}
+	</select>
+
+	<update id="provideModify" parameterType="ProvideDto">
+		update provide
+	    set product_won_code 	= #{product_won_code},
+	        provide_client_code = #{provide_client_code},
+	        provide_amount		= #{provide_amount},
+	        current_danga		= #{current_danga},
+	        provide_isdel		= #{provide_isdel}
+	    where provide_code = #{provide_code}
+	</update>
+	
+	<update id="provideDelete" parameterType="ProvideDto">
+		update provide
+	    set provide_isdel = #{provide_isdel}
+	    where provide_code = #{provide_code}
+	</update>
+	
+</mapper>

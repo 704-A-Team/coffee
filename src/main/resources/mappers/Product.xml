@@ -35,10 +35,10 @@
         )
 	</insert>
 	
-	<select id="totalProduct" resultType="int">
+	<!-- <select id="totalProduct" resultType="int">
 		select 	count(*) 
 		from 	product
-	</select>
+	</select> -->
 	
 	<select id="totalWonProduct" resultType="int">
 		select 	count(*) 
@@ -101,14 +101,15 @@
 	
 	<update id="wonProductDelete" parameterType="ProductDto">
 	    update product
-	    set product_name     = #{product_name},
-	        product_unit     = #{product_unit},
-	        product_type     = #{product_type},
-	        product_weight   = #{product_weight},
-	        product_isorder  = #{product_isorder},
-	        product_isdel    = #{product_isdel}
+	    set product_isdel    = #{product_isdel}
 	    where product_code   = #{product_code}
 	</update>
 
+	<select id="productInfo" parameterType="int" resultType="ProductDto" >
+		select product_code, product_name
+		from product
+		where product_type = #{product_type}
+	</select>
+	
 	
 </mapper>
