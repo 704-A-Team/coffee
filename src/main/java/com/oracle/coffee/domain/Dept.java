@@ -41,7 +41,6 @@ public class Dept {
 	private String 				dept_name;
 	private String 				dept_tel;
 	@ColumnDefault("0")				//default column 구분: 0->부서 존재, 1->부서 사라짐
-	// @Column(name = "DEPT_ISDEL")
 	private Boolean 			dept_isdel;
 	@CreatedDate	
 	private LocalDateTime	 	dept_reg_date;
