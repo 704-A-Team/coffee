@@ -1,4 +1,4 @@
-package com.oracle.coffee.service;
+package com.oracle.coffee.service;	
 
 import java.util.List;
 
@@ -8,7 +8,13 @@ public interface DeptService {
 
 	Long 			totalDept();
 	List<DeptDto> 	deptList(DeptDto deptDto);
-	List<DeptDto>   deptAllList(); 
+	List<DeptDto>   deptAllList();
+	int 			deptSave(DeptDto deptDto);
+	DeptDto 		getSingleDept(int dept_code);
+	DeptDto 		deptUpdate(DeptDto deptDto);
+	void 			deptDelete(int dept_code);
+	
+
 
 
 }

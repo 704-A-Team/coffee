@@ -41,19 +41,20 @@ public class Dept {
 	private String 				dept_name;
 	private String 				dept_tel;
 	@ColumnDefault("0")				//default column 구분: 0->부서 존재, 1->부서 사라짐
-	@Column(name = "DEPT_ISDEL")
-	private boolean 			dept_isDel;
+	// @Column(name = "DEPT_ISDEL")
+	private Boolean 			dept_isdel;
 	@CreatedDate	
 	private LocalDateTime	 	dept_reg_date;
 	
 	public void changeDept_name(String dept_name) {
 		this.dept_name = dept_name;
 	}
+	
 	public void changeDept_tel(String dept_tel) {
 		this.dept_tel = dept_tel;
 	}
-	public void changeDept_isDel(boolean dept_isDel) {
-		this.dept_isDel = dept_isDel;
+	public void changeDept_isdel(boolean dept_isdel) {
+		this.dept_isdel = dept_isdel;
 	}
 	public void changeDept_reg_date(LocalDateTime dept_reg_date) {
 		this.dept_reg_date = dept_reg_date;

@@ -1,6 +1,7 @@
 package com.oracle.coffee.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -34,8 +35,8 @@ public class DeptRepositoryImpl implements DeptRepository {
 		
 	@Override
 	public Long deptTotalcount() {
-		TypedQuery<Long> query = 
-				em.createQuery("select count(d) from Dept d where d.dept_isDel = false", Long.class); 
+		TypedQuery<Long> query = 	
+				em.createQuery("select count(d) from Dept d where d.dept_isdel = false", Long.class); 
 		Long totalCountLong = query.getSingleResult();
 
 		return totalCountLong;
@@ -68,6 +69,33 @@ public class DeptRepositoryImpl implements DeptRepository {
  		                               .collect(Collectors.toList());
  System.out.println("DeptRepositoryImplfindPageDept deptDtoList->"+deptDtoList);
  return deptDtoList;	
+	}
+
+	@Override
+	public Dept deptSave(Dept dept) {
+		em.persist(dept);
+		return dept;
+	}
+
+	@Override
+	public Dept findByDept_code(int dept_code) {
+		Dept dept = em.find(Dept.class, dept_code);
+		return dept;
+	}
+
+	@Override
+	public Optional<Dept> findByDept_codeUpdate(int dept_code) {
+		Dept foundDept = em.find(Dept.class, dept_code);
+		
+		Optional<Dept> updatedDept = Optional.ofNullable(foundDept);
+		return updatedDept;
+	}
+
+	@Override
+	public void deptDelete(int dept_code) {
+		Dept dept = em.find(Dept.class, dept_code);
+		dept.changeDept_isdel(true);
+		
 	}
 
 

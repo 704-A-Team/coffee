@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.oracle.coffee.dto.DeptDto;
@@ -46,8 +47,39 @@ public class DeptController {
 		return "dept/deptInForm";
 	}
 
+	@PostMapping("/saveDept")
+	public String saveDept(DeptDto deptDto) {
+		deptService.deptSave(deptDto);
+		return "redirect:deptList";
+	}
 	
 
+	@GetMapping("/deptDetail")
+	public String deptDetail (DeptDto deptDto, Model model) {
+		DeptDto deptDetail = deptService.getSingleDept(deptDto.getDept_code());
+		model.addAttribute("deptDto", deptDetail);
+
+		return "dept/deptDetail";
+	}
 	
+	@GetMapping("/modifyForm")
+	public String deptModify (DeptDto deptDto, Model model) {
+		DeptDto deptModify = deptService.getSingleDept(deptDto.getDept_code());
+		model.addAttribute("deptDto", deptModify);
+		
+		return "dept/deptModifyForm";
+	}
 	
+	@PostMapping("/deptUpdate")
+	public String deptUpdate(DeptDto deptDto) {
+		DeptDto deptUpdateDto = deptService.deptUpdate(deptDto);
+		return "redirect:deptList";
+	}
+	
+	@GetMapping("/deptDelete")
+	public String deptDelete(DeptDto deptDto, Model model) {
+		deptService.deptDelete(deptDto.getDept_code());
+		
+		return "redirect:deptList";
+	}
 }
