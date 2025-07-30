@@ -2,10 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>재고관리</title>
-    <!-- 부트스트랩 CSS CDN 링크 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- 부트스트랩 및 아이콘 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <style>
         .disabled-button {
             pointer-events: none;
@@ -16,8 +19,9 @@
             margin-left: 10px;
         }
     </style>
+
     <script>
-        let isClosed = false;
+        let isClosed = ${isClosed == true ? 'true' : 'false'};
 
         function toggleClose(state) {
             isClosed = state;
@@ -29,9 +33,19 @@
                     btn.classList.remove("disabled-button");
                 }
             });
+
+            // 히스토리 조작으로 상태 유지
+            const url = new URL(window.location.href);
+            url.searchParams.set('isClosed', isClosed);
+            window.history.replaceState({}, '', url);
         }
+
+        window.onload = function () {
+            toggleClose(isClosed); // 초기 마감 상태 반영
+        };
     </script>
 </head>
+
 <body>
     <div class="container mt-4">
         <div class="d-flex justify-content-end mb-3">
@@ -51,59 +65,67 @@
                     <th>기본 중량</th>
                     <th>납품여부</th>
                     <th>생산단위</th>
-                    <th>삭제구분</th>
                     <th>사원코드</th>
                     <th>등록일</th>
-                    <th>작업</th>
-                </tr>
+                                  </tr>
             </thead>
             <tbody>
-                <c:forEach var="item" items="${inventoryList}">
-                    <tr>
-                        <td>${item.productCode}</td>
-                        <td>${item.productName}</td>
-                        <td>${item.productDesc}</td>
-                        <td>${item.unit}</td>
-                        <td>${item.productType}</td>
-                        <td>${item.yield}</td>
-                        <td>${item.baseWeight}</td>
-                        <td>${item.deliverable}</td>
-                        <td>${item.productionUnit}</td>
-                        <td>${item.delFlag}</td>
-                        <td>${item.empCode}</td>
-                        <td>${item.regDate}</td>
-                        <td>
-                            <button class="btn btn-success action-btn">수주</button>
-                            <button class="btn btn-warning action-btn">발주</button>
-                            <button class="btn btn-info action-btn">생산</button>
-                        </td>
-                    </tr>
-                </c:forEach>
+                <c:choose>
+                    <c:when test="${not empty inventoryList}">
+                        <c:forEach var="item" items="${inventoryList}">
+                            <tr>
+                                <td>${item.product_code}</td>
+                                <td>${item.product_name}</td>
+                                <td>${item.product_contents}</td>
+                                <td>${item.product_unit}</td>
+                                <td>${item.product_type}</td>
+                                <td>${item.product_yield}</td>
+                                <td>${item.product_weight}</td>
+                                <td>${item.product_isorder}</td>
+                                <td>${item.product_pack}</td>
+                                <td>${item.product_reg_code}</td>
+                                <td>${item.product_reg_date}</td>
+                                <td>
+                                    <button class="btn btn-success action-btn">수주</button>
+                                    <button class="btn btn-warning action-btn">발주</button>
+                                    <button class="btn btn-info action-btn">생산</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                            <td colspan="13">표시할 데이터가 없습니다.</td>
+                        </tr>
+                    </c:otherwise>
+                </c:choose>
             </tbody>
         </table>
 
         <!-- 페이징 영역 -->
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <c:if test="${page.startPage > page.pageBlock}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page.startPage - page.pageBlock}">이전</a>
-                    </li>
-                </c:if>
+        <c:if test="${not empty page}">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <c:if test="${page.startPage > page.pageBlock}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=${page.startPage - page.pageBlock}&isClosed=${isClosed}">이전</a>
+                        </li>
+                    </c:if>
 
-                <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-                    <li class="page-item ${i == page.currentPage ? 'active' : ''}">
-                        <a class="page-link" href="?page=${i}">${i}</a>
-                    </li>
-                </c:forEach>
+                    <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+                        <li class="page-item ${i == page.currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&isClosed=${isClosed}">${i}</a>
+                        </li>
+                    </c:forEach>
 
-                <c:if test="${page.endPage < page.totalPage}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page.startPage + page.pageBlock}">다음</a>
-                    </li>
-                </c:if>
-            </ul>
-        </nav>
+                    <c:if test="${page.endPage < page.totalPage}">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=${page.startPage + page.pageBlock}&isClosed=${isClosed}">다음</a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
+        </c:if>
     </div>
 </body>
 </html>

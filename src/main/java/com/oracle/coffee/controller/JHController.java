@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oracle.coffee.dto.InventoryDto;
 import com.oracle.coffee.service.JHservice;
@@ -22,14 +23,15 @@ public class JHController {
 	
 	private final JHservice jHservice;
 
-    @RequestMapping(value = "jhInventoryInForm")
-    public String inventoryPage(InventoryDto inventoryDto , Model model) {
+    @GetMapping(value = "/inventoryList")
+    public String inventoryPage(@RequestParam(value="page", defaultValue="1") int currentPage,
+    		InventoryDto inventoryDto , Model model) {
     	System.out.println("jh/jhInventoryInForm Start...");
     	
     	int totalInventoryDto = jHservice.totalInventoryDto();
-    	String currentPage = "1";
+    	//String currentPage = "1";
     	
-    	Paging page = new Paging(totalInventoryDto, currentPage);
+    	Paging page = new Paging(totalInventoryDto, String.valueOf(currentPage));
 		// Parameter emp --> Page만 추가 Setting
 		inventoryDto.setStart(page.getStart());   // 시작시 1
 		inventoryDto.setEnd(page.getEnd());       // 시작시 10 
@@ -40,6 +42,7 @@ public class JHController {
     	model.addAttribute("totalInventoryDto", totalInventoryDto);
     	model.addAttribute("inventoryList", inventoryList);
     	model.addAttribute("page", page);
+
     	
         return "jh/inventoryList";
     }

@@ -17,6 +17,7 @@ public class InventoryDto {
 	private boolean 		product_isdel;
 	private int 			product_weight;
 	private boolean 		product_isorder;
+	private int 			product_pack;
 	private int 			product_reg_code;
 	private LocalDateTime 	product_reg_date;
 	

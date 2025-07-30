@@ -7,7 +7,8 @@
     <title>Insert title here</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
-	
+	<!-- main.jsp의 컨텐츠 영역 예시 -->
+		
 	<!-- HEADER -->
 	<%@ include file="header.jsp" %>
 	
@@ -25,6 +26,8 @@
 			<!-- FOOTER -->
 			<%@ include file="footer.jsp" %>
 		</div>
+		
+		
 	</div>
 	
 </body>

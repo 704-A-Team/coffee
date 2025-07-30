@@ -1,5 +1,6 @@
 package com.oracle.coffee.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,12 +26,19 @@ public class JHserviceImpl implements JHservice {
 
 	@Override
 	public List<InventoryDto> inventoryList(InventoryDto inventoryDto) {
-		List<InventoryDto> listInventory = null;
-		System.out.println("JHserviceImpl inventoryList start...");
-		
-		listInventory = inventoryDao.inventoryList(inventoryDto);
-		System.out.println("JHserviceImpl inventoryList listInventory.size : "+listInventory.size());
-		return null;
+	    System.out.println("JHserviceImpl inventoryList start...");
+
+	    List<InventoryDto> listInventory = inventoryDao.inventoryList(inventoryDto);
+
+	    // 방어 코드 추가
+	    if (listInventory == null) {
+	        listInventory = new ArrayList<>();
+	        System.out.println("JHserviceImpl inventoryList returned null, replaced with empty list.");
+	    }
+
+	    System.out.println("JHserviceImpl inventoryList listInventory.size : " + listInventory.size());
+	    return listInventory;
 	}
+
 
 }

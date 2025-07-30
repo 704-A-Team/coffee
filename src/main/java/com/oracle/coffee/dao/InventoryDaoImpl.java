@@ -1,5 +1,6 @@
 package com.oracle.coffee.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -29,16 +30,25 @@ public class InventoryDaoImpl implements InventoryDao {
 
 	@Override
 	public List<InventoryDto> inventoryList(InventoryDto inventoryDto) {
-		List<InventoryDto> listInventory = null;
-		System.out.println("InventoryDaoImpl inventoryList start...");
-		
-		try {
-			listInventory = sqlSession.selectList("jhInvAll", inventoryDto);
-			System.out.println("InventoryDaoImpl inventoryList listInventory.size() : "+listInventory.size());
-		} catch (Exception e) {
-			System.out.println("InventoryDaoImpl inventoryList e.getmessage"+e.getMessage());
-		}
-		return listInventory;
+	    System.out.println("InventoryDaoImpl inventoryList start...");
+
+	    List<InventoryDto> listInventory = new ArrayList<>(); // 초기화
+
+	    try {
+	    	listInventory = sqlSession.selectList("com.oracle.coffee.InventoryMapper.jhInvAll", inventoryDto);
+
+	        if (listInventory == null) {
+	            listInventory = new ArrayList<>();
+	            System.out.println("InventoryDaoImpl returned null from MyBatis, replaced with empty list.");
+	        }
+
+	        System.out.println("InventoryDaoImpl inventoryList listInventory.size() : " + listInventory.size());
+	    } catch (Exception e) {
+	        System.out.println("InventoryDaoImpl inventoryList e.getMessage: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+
+	    return listInventory;
 	}
 
 }
