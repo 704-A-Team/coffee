@@ -1,0 +1,81 @@
+package com.oracle.oBootDbConnect.repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+
+public class JdbcMemberRepository implements MemberRepository {
+
+	// JDBC 사용
+	private final DataSource dataSource;
+	@Autowired
+	public JdbcMemberRepository(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	private Connection getConnection() {
+		// Connection kConn = DataSourceUtils.getConnection(dataSource);
+		// return kConn;
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
+	@Override
+	public Member7 save(Member7 meber7) {
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		String sql = "";
+		ResultSet rs = null;
+		try {
+		conn = getConnection();
+			
+			return meber7;
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		} finally {
+			close(conn, ptmt, rs);
+		}
+		return null;
+	}
+
+	// close 메소드 2개 있는데 이건 뭐야 ? -> 메소드 오버로딩 (파라메터 타입이 다르다)
+	private void close(Connection conn, PreparedStatement ptmt, ResultSet rs) {
+		try {
+			if(rs != null) rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(ptmt != null) ptmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			if(conn != null) close(conn);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void close(Connection conn) throws SQLException {
+		DataSourceUtils.releaseConnection(conn, dataSource);
+		
+	}
+
+	@Override
+	public List<Member7> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

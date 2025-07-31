@@ -1,0 +1,9 @@
+package com.oracle.oBootHello.service;
+
+import com.oracle.oBootHello.repository.MemberLegacyRepository;
+import com.oracle.oBootHello.repository.MemberLegacyRepositoryImpl;
+
+public class MemberLegacyService {
+	// 1. 전통적인 방식
+	MemberLegacyRepository memberLegacyRepository = new MemberLegacyRepositoryImpl();
+}

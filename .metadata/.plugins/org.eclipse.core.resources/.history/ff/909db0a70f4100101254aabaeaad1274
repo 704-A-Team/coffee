@@ -1,0 +1,21 @@
+package com.oracle.oBootHello.repository;
+
+import java.util.List;
+
+import com.oracle.oBootHello.dto.Member1;
+
+public class MemoryMemberRepository implements MemberRepository {
+
+	@Override
+	public Member1 save(Member1 member1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Member1> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

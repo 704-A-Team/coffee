@@ -1,0 +1,6 @@
+package com.oracle.oBootHello.dto;
+
+public class Emp {
+	private String empno;
+	private String ename;
+}

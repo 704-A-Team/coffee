@@ -1,0 +1,99 @@
+package com.oracle.oBootDbConnect.repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+
+public class JdbcMemberRepository implements MemberRepository {
+
+	// JDBC 사용
+	private final DataSource dataSource;
+	@Autowired
+	public JdbcMemberRepository(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	private Connection getConnection() {
+		// Connection kConn = DataSourceUtils.getConnection(dataSource);
+		// return kConn;
+		return DataSourceUtils.getConnection(dataSource);
+	}
+	
+	@Override
+	public Member7 save(Member7 meber7) {
+		Connection conn = null;
+		PreparedStatement ptmt = null;
+		String sql1 = "Select Member7_seq.nextval From Member7";
+		String sql2 = "Insert Into Member7 values( ? , ? )";
+		ResultSet rs = null;
+
+		// Long num = 0L;
+		// meber7.setId(++num);
+		try {
+			conn = getConnection();
+			// sequence 발행
+			ptmt = conn.prepareStatement(sql1);
+			rs = ptmt.executeQuery();
+			rs.next();
+			Long num = rs.getLong(1);
+			rs.close();
+			ptmt.close();
+			
+			// 값 넣어주기
+			ptmt = conn.prepareStatement(sql2);
+
+			ptmt.setLong(1, meber7.getId());
+			ptmt.setString(2, meber7.getName());
+			System.out.println("JdbcMemberRepository ptmt.executeUpdate After");
+			return meber7;
+			
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		} finally {
+			close(conn, ptmt, rs);
+		}
+
+	}
+
+	// close 메소드 2개 있는데 이건 뭐야 ? -> 메소드 오버로딩 (파라메터 타입이 다르다)
+	private void close(Connection conn, PreparedStatement ptmt, ResultSet rs) {
+		try {
+			if(rs != null) rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(ptmt != null) ptmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			if(conn != null) close(conn);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void close(Connection conn) throws SQLException {
+		DataSourceUtils.releaseConnection(conn, dataSource);
+		
+	}
+
+	@Override
+	public List<Member7> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

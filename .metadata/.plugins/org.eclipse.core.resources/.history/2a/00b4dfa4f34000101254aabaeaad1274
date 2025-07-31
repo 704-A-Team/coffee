@@ -1,0 +1,17 @@
+package com.oracle.oBootHello.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+
+@Controller
+public class HelloController {
+	public String hello(Model model)  {
+		System.out.println("HelloController hello start");
+		
+		
+		
+		return "hello";
+	}
+	
+	
+}

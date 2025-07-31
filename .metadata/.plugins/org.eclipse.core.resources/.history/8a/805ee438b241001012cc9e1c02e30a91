@@ -1,0 +1,4 @@
+spring.application.name=oBootDbConnect
+server.port=8382
+#Oracle Connect
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver

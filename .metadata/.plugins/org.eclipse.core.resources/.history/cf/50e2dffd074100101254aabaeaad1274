@@ -1,0 +1,7 @@
+package com.oracle.oBootHello.repository;
+
+import com.oracle.oBootHello.dto.Member1;
+
+public interface MemberLegacyRepository {
+	Member1 save(Member1 member1);
+}

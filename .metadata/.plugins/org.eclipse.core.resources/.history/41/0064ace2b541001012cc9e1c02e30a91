@@ -1,0 +1,24 @@
+package com.oracle.oBootDbConnect.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.oracle.oBootDbConnect.domain.Member7;
+import com.oracle.oBootDbConnect.repository.MemberRepository;
+
+public class MemberService {
+	private final MemberRepository memberRepository;
+	
+	@Autowired
+	// 생성자를 만들어서 memberRepository야 오류 해결 ? -- 11:34 6/5
+	public MemberService(MemberRepository memberRepository) {
+		this.memberRepository = memberRepository;
+	}
+	
+	// 회원가입 
+	public Long memberSave(Member7 member7) {
+		memberRepository.save(member7);
+	}
+	
+	
+	// 전체 회원 조회
+}

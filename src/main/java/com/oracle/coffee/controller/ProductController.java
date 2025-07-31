@@ -11,12 +11,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coffee.dto.km.ProductDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
+import com.oracle.coffee.dto.km.RecipeDTO;
+import com.oracle.coffee.dto.km.WanAndRecipeDTO;
 import com.oracle.coffee.service.km.Paging;
 import com.oracle.coffee.service.km.ProductService;
+import com.oracle.coffee.util.km.CustomFileUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +36,7 @@ import lombok.extern.log4j.Log4j2;
 public class ProductController {
 	
 	private final ProductService productService;
+	private final CustomFileUtil fileUtil;
 	
 	@GetMapping("/productInForm")
 	public String productInForm() {
@@ -62,17 +71,22 @@ public class ProductController {
 		// productDTO의 등록일 컬럼("현재시간")을 priceDTO "가격변동시작일, 등록일" 에 저장
 		LocalDateTime date = productDTO.getProduct_reg_date();
 		String reg_date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
 		priceDTO.setPrice_reg_date(date);	// 등록일(Date)
-		priceDTO.setTo_date(reg_date);		// 가격변동일자(String)
+		priceDTO.setStart_date(reg_date);	// 가격변동일자(String)
 		
-		log.info("productDTO->"+productDTO);
-		log.info("priceDTO->"+priceDTO);
+		
+		// File 저장
+		List<MultipartFile> file = productDTO.getFile();
+		List<String> uploadFileNames = fileUtil.saveFiles(file);
+		productDTO.setUploadFileNames(uploadFileNames);
+		log.info("productDTO1->"+productDTO);
+		log.info("priceDTO1->"+priceDTO);
+	
 		
 		productService.wanRegister(productDTO,priceDTO);
 		
-		log.info("productService productDTO->"+productDTO);
-		log.info("productService priceDTO->"+priceDTO);
+		log.info("productService productDTO3->"+productDTO);
+		log.info("productService priceDTO3->"+priceDTO);
 		// 완제품 등록 -->> 레시피 등록 (제품 코드 필요, 제품명)
 		redirectAttributes.addAttribute("product_code",productDTO.getProduct_code());
 		redirectAttributes.addAttribute("product_name",productDTO.getProduct_name());
@@ -96,12 +110,30 @@ public class ProductController {
 		model.addAttribute("product_pack", product_pack);
 		return "productWan/wanRecipeInForm";
 	}
+	
 	// 완제품 레시피에 원재료 수량 저장
 	@PostMapping("/wanRecipeSave")
 	public String wanRecipeSave(@RequestParam("materialsJson") String materialsJson) {
 		// 레시피 등록 폼에 작성된 내용 save
 		
+		log.info("materialsJson->" + materialsJson);
+		ObjectMapper objectMapper = new ObjectMapper();
 		
+		try {
+			List<RecipeDTO> recipeList = objectMapper.readValue(materialsJson, new TypeReference<List<RecipeDTO>>(){});
+			
+			for(RecipeDTO recipe : recipeList) {
+				productService.wanRecipeSave(recipe);
+				log.info("recipeDTO->"+recipe);
+			}
+			
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "redirect:/km/wanList";
 	}
 	
@@ -115,9 +147,23 @@ public class ProductController {
 		productDTO.setStart(page.getStart());
 		productDTO.setEnd(page.getEnd());
 		
-	//	List<ProductDTO> wanProductList = productService.wanList(productDTO);
-		
+		List<ProductDTO> wanProductList = productService.wanList(productDTO);
+		model.addAttribute("wanProductList" , wanProductList);
+		model.addAttribute("page",page);
 		return "productWan/wanList";
+	}
+	
+	// 완제품 수정 폼
+	@GetMapping("/wanProductModifyInForm")
+	public String wanProductModifyInForm(WanAndRecipeDTO wanAndRecipeDTO , Model model) {
+		log.info("wanProductModifyInForm 'product_code'->"+wanAndRecipeDTO.getProduct_code());
+		
+		// 완제품 코드(IN) --> 완제품과 레시피Dto(OUT)
+		List<WanAndRecipeDTO> wanAndRcpModifyDTO = productService.wanProductModifyInForm(wanAndRecipeDTO.getProduct_code());
+		System.out.println("wanProductModifyInForm wanAndRcpModifyDTO->"+wanAndRcpModifyDTO);
+		
+		model.addAttribute("wanAndRcpModifyDTO" , wanAndRcpModifyDTO);
+		return "productWan/wanProductModifyInForm";
 	}
 	
 	

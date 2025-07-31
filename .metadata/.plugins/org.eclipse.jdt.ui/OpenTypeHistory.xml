@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+    <typeInfo handle="=oBootHello/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.oBootHello.repository{MemberLegacyRepository.java[MemberLegacyRepository" modifiers="513" timestamp="1749017271489"/>
+    <typeInfo handle="=oBootHello/C:\/Users\/user\/.gradle\/caches\/modules-2\/files-2.1\/net.bytebuddy\/byte-buddy\/1.17.5\/88450f120903b7e72470462cdbd2b75a3842223c\/byte-buddy-1.17.5.jar=/gradle_used_by_scope=/test=/=/test=/true=/&lt;net.bytebuddy.description(ByteCodeElement$Member.class[Member" modifiers="1545" timestamp="1749004419387"/>
+    <typeInfo handle="=oBootHello/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;com.oracle.oBootHello.repository{MemberRepository.java[MemberRepository" modifiers="513" timestamp="1749019275884"/>
+    <typeInfo handle="=oBootHello/C:\/Users\/user\/.gradle\/caches\/modules-2\/files-2.1\/org.mockito\/mockito-core\/5.17.0\/f5fe5a2f94eb65f4f83ca0607bfe13ec0d9c6f3b\/mockito-core-5.17.0.jar=/gradle_used_by_scope=/test=/=/test=/true=/&lt;org.mockito.plugins(MemberAccessor.class[MemberAccessor" modifiers="1537" timestamp="1749004418105"/>
+</typeInfoHistroy>

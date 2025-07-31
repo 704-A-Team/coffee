@@ -1,0 +1,7 @@
+package com.oracle.oBootDbConnect.service;
+
+import com.oracle.oBootDbConnect.repository.MemberRepository;
+
+public class MemberService {
+	private final MemberRepository memberRepository;
+}

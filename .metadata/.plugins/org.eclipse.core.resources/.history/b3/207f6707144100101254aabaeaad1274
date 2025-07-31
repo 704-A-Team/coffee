@@ -1,0 +1,29 @@
+package com.oracle.oBootHello.repository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.oracle.oBootHello.dto.Member1;
+
+@Repository
+public class MemoryMemberRepository implements MemberRepository {
+	
+	private static Map<Long, Member1> store = new HashMap<Long, Member1>();
+	private static Long sequence = 0L;
+	
+	@Override
+	public Member1 save(Member1 member1) {
+		member1.setId(++sequence);
+		return null;
+	}
+
+	@Override
+	public List<Member1> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

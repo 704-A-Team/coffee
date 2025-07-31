@@ -1,18 +1,24 @@
 package com.oracle.coffee.service.km;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.oracle.coffee.dao.km.ProductDao;
 import com.oracle.coffee.dto.km.ProductDTO;
+import com.oracle.coffee.dto.km.ProductImgDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
+import com.oracle.coffee.dto.km.RecipeDTO;
+import com.oracle.coffee.dto.km.WanAndRecipeDTO;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 //@Transactionals
 public class ProductServiceImpl implements ProductService {
 	
@@ -26,8 +32,24 @@ public class ProductServiceImpl implements ProductService {
 		
 		// 1. 완제품 등록  --> 제품 코드 받기
 		productDao.wanRegister(productDTO);
-		// 2. 가격 등록 --> 동일 제품 코드로 입력
+		// 2. 완제품 이미지 등록
+		List<ProductImgDTO> productImgList = new ArrayList<>();
+	//	List<String> file = productDTO.getUploadFileNames();
+		for(int i = 0 ; i < productDTO.getUploadFileNames().size(); i++) {
+			String file_name = productDTO.getUploadFileNames().get(i);
+			
+			ProductImgDTO pImgDTO = new ProductImgDTO();
+			pImgDTO.setFile_name(file_name);
+			pImgDTO.setOrd(i); // 0부터 시작
+			pImgDTO.setProduct_code(productDTO.getProduct_code());
+			log.info("pImgDTO->"+pImgDTO);
+			productImgList.add(pImgDTO);
+		}
+		System.out.println("ProductServiceImpl wanRegister productImgList->"+productImgList);
+		productDao.wanImgRegister(productImgList);
+		// 3. 가격 등록 --> 동일 제품 코드로 입력
 		priceDTO.setProduct_code(productDTO.getProduct_code());
+		System.out.println("ProductServiceImpl wanRegister priceDTO->"+priceDTO);
 		result = productDao.priceRegister(priceDTO);
 		return result;
 	}
@@ -38,11 +60,32 @@ public class ProductServiceImpl implements ProductService {
 		return total;
 	}
 	
-	// 레시피 등록 > 원재료 드롭다운 박스 > 원재료 리스트
+	// 레시피 등록 폼에서 필요한 > 원재료 드롭다운 박스 > 원재료 리스트
 	@Override
 	public List<ProductDTO> wonList() {
 		List<ProductDTO> wonList = productDao.wonList();
 		return wonList;
+	}
+	
+	// 레시피 등록
+	@Override
+	public void wanRecipeSave(RecipeDTO recipe) {
+		productDao.wanRecipeSave(recipe);
+		
+	}
+	
+	// 완제품 List 가져오기 ( 3개 Table Join )
+	@Override
+	public List<ProductDTO> wanList(ProductDTO productDTO) {
+		List<ProductDTO> wanList = productDao.wanList(productDTO);
+		return wanList;
+	}
+	
+	// 완제품 코드(IN) --> 완제품 Dto(OUT)
+	@Override
+	public List<WanAndRecipeDTO> wanProductModifyInForm(int product_code) {
+		List<WanAndRecipeDTO> wanModifyDTO = productDao.wanProductModifyInForm(product_code);
+		return wanModifyDTO;
 	}
 
 }

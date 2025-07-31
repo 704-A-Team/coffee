@@ -15,9 +15,30 @@
 		</selectKey>
 	</insert>
 	
+	<insert id="wanImgRegister3" parameterType="ProductImgDTO">
+		insert into PRODUCT_IMG (product_code , ord , file_name) 
+			values (#{product_code} , #{ord} , #{file_name} )
+	</insert>
+	
+	<!-- 예시 DTO: ProductDto (id, name, price) -->
+    <!-- List<ProductDto>를 한 번에 저장 -->
+    <insert id="wanImgRegister" parameterType="java.util.List">
+		    INSERT ALL 
+		    <foreach collection="list" item="imgDto" separator=" "> <!-- item 이름을 imgDto 등으로 변경 -->
+		    INTO  PRODUCT_IMG (product_code, ord, file_name) VALUES
+		        (
+		            #{imgDto.product_code},
+		            #{imgDto.ord},
+		            #{imgDto.file_name}
+		        )
+		    </foreach>
+		    SELECT 1 FROM DUAL
+	</insert>
+	
+	
 	<insert id="priceRegister" parameterType="ProductPriceDTO">
-		insert into product_price(PRODUCT_CODE , TO_DATE , PRICE_REG_CODE , FROM_DATE , PRICE , PRICE_REG_DATE)
-			values (#{product_code} , #{to_date}, #{price_reg_code}, #{from_date}, #{price}, #{price_reg_date} )
+		insert into product_price(PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
+			values (#{product_code} , #{start_date}, #{price_reg_code}, #{end_date}, #{price}, #{price_reg_date} )
 	</insert>
 	
 	<select id="countTotal" resultType="Int">
@@ -27,5 +48,99 @@
 	<select id="wonList" resultType="ProductDTO">
 		select * from product where product_type = 0
 	</select>
+	
+	<insert id="wanRecipeSave" parameterType="RecipeDTO">
+		insert into recipe (product_wan_code, product_won_code, recipe_amount) values
+				(#{product_wan_code} , #{product_won_code} , #{recipe_amount})
+	</insert>
+	
+	<select id="wanList" parameterType="ProductDTO" resultType="ProductDTO">
+	SELECT * FROM (
+	    SELECT ROWNUM rw , wanAll.* FROM (
+	              SELECT pd.* , img.file_name simage    , pp_latest.price , pp_latest.start_date
+	              FROM (
+	                      SELECT * FROM product 
+	                      WHERE   product_isdel = 0 AND  product_type = 1
+	                    ) pd 
+	              LEFT OUTER JOIN  ( SELECT * FROM product_img WHERE ord = 0) img
+	              ON pd.product_code = img.product_code
+	              LEFT OUTER JOIN  ( SELECT pp.*
+	                                 FROM product_price pp ,
+	                                      (
+	                                       SELECT product_code, max_price_date(product_code) max_start_date
+	                                       FROM   product_price
+	                                       GROUP BY product_code
+	                                       ) p_max_date
+	                                 
+	                                 WHERE pp.product_code = p_max_date.product_code
+	                                 AND   pp.start_date      = p_max_date.max_start_date
+	                                 ) pp_latest     
+	              ON pd.product_code = pp_latest.product_code
+	              ORDER BY pd.product_code
+	    ) wanAll
+	)
+	WHERE rw BETWEEN #{start} AND #{end}
+		    
+	</select>
+	
+	<select id="wanAndRcpModify" parameterType="Int" resultMap="wanAndRecipe">
+	SELECT  
+		pp.product_code       AS product_code,
+        pp.product_name       AS product_name,
+        pp.product_contents   AS product_contents,
+        pp.product_unit       AS product_unit,
+        pp.product_type       AS product_type,
+        pp.product_yield      AS product_yield,
+        pp.product_weight     AS product_weight,
+        pp.product_isorder    AS product_isorder,
+        pp.product_pack       AS product_pack,
+        pp.product_isdel      AS product_isdel,
+        pp.product_reg_code   AS product_reg_code,
+       
+        rcp.product_wan_code  AS product_wan_code,
+        rcp.product_won_code  AS product_won_code,
+        rcp.recipe_amount     AS recipe_amount,
+    
+        img.product_code      AS img_product_code,
+        img.ord               AS ord,
+        img.file_name         AS file_name 
+        
+        FROM PRODUCT pp 
+        LEFT OUTER JOIN RECIPE rcp 
+            ON pp.product_code = rcp.product_wan_code
+        LEFT OUTER JOIN PRODUCT_IMG img
+            ON pp.product_code = img.product_code
+
+        WHERE pp.product_code = #{product_code}
+        
+	</select>
+	
+	<resultMap type="WanAndRecipeDTO" id="wanAndRecipe">
+		<id property="product_code" column="product_code"/>
+		<result property="product_name" column="product_name"/>
+		<result property="product_contents" column="product_contents"/>
+		<result property="product_unit" column="product_unit"/>
+		<result property="product_type" column="product_type"/>
+		<result property="product_yield" column="product_yield"/>
+		<result property="product_weight" column="product_weight"/>
+		<result property="product_isorder" column="product_isorder"/>
+		<result property="product_pack" column="product_pack"/>
+		<result property="product_isdel" column="product_isdel"/>
+		<result property="product_reg_code" column="product_reg_code"/>
+		<result property="product_reg_date" column="product_reg_date"/>
+		
+	    <!-- 레시피 리스트 매핑 -->
+		<collection property="recipeList" ofType="RecipeDTO">
+			<id property="product_won_code" column="product_won_code"/>
+			<id property="product_wan_code" column="product_wan_code"/>
+			<result property="recipe_amount" column="recipe_amount"/>
+		</collection>	
+		<!-- 이미지 리스트 매핑 -->
+		<collection property="wanImgList" ofType="ProductImgDTO">
+			<id property="file_name" column="file_name"/>
+			<result property="product_code" column="img_product_code"/>
+			<result property="ord" column="ord"/>
+		</collection>
+	</resultMap>
 	
 </mapper>

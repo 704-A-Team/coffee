@@ -1,0 +1,8 @@
+package com.oracle.oBootDbConnect.config;
+
+import org.springframework.context.annotation.Configuration;
+// 설정 파일에는 MUST --> @Configuration
+@Configuration
+public class SpringConfig {
+	
+}

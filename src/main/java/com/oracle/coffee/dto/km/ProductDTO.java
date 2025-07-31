@@ -26,7 +26,7 @@ public class ProductDTO {	// 제품
 	@Builder.Default
 	private int			product_weight 	= 1; // 기본 중량
 	@Builder.Default
-	private boolean 	product_isorder = false; // 제품납품여부 ( 납품 안함 0)
+	private boolean 	product_isorder = true; // 제품납품여부 ( 납품 안함 0 , 납품 1)
 	private int			product_pack;		 // 완제품 생산 단위
 	@Builder.Default
 	private boolean 	product_isdel 	= false; // 삭제 구분 (기본 0)
@@ -35,12 +35,19 @@ public class ProductDTO {	// 제품
 	private LocalDateTime 	product_reg_date = LocalDateTime.now();	 // 등록일 (현재 날짜)
 	
 	private String simage;
+	private int    price;
+	private String start_date;
+	
 	private String pageNum;
 	private int start;
 	private int end;
 	private String currentPage;
 	
+	// Files
 	@Builder.Default
 	private List<MultipartFile> file = new ArrayList<>();
+	@Builder.Default
+	private List<String> uploadFileNames = new ArrayList<>();
+	
 	
 }

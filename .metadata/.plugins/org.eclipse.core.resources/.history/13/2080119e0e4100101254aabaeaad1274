@@ -1,0 +1,12 @@
+package com.oracle.oBootHello.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class MemberController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
+	
+	// 2. Boot 방식으로-> Service를 연결
+}
