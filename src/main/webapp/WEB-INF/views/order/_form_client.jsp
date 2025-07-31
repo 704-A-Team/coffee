@@ -5,13 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<%@ include file="style_funcs.jsp" %>
+<%@ include file="funcs.jsp" %>
+
 </head>
 <body>
 <form id="orderForm" method="post" onsubmit="return setOrderDetails()">
 <div class="doc-wrapper">
-	<h4 class="text-center mb-4 fw-bold">수주서</h4>
-	<input type="hidden" name="orders_client_code" value="${orders_client_code }">
+	<h4 class="text-center mb-4 fw-bold">발주서</h4>
+	<input type="hidden" name="orders_client_code" value="${client_code }">
 	
 	<!-- 상단 박스 (정보) -->
 	<div class="row mb-4">
@@ -27,7 +28,7 @@
         				<div class="form-control form-control-sm bg-light">요청 전</div>
     				</c:when>
     				<c:otherwise>
-        				<div class="form-control form-control-sm bg-light">요청 완료(승인 전)</div>
+        				<div class="form-control form-control-sm bg-light">요청 완료 (승인 전)</div>
     				</c:otherwise>
 				</c:choose>
 		    </div>
@@ -40,19 +41,24 @@
     		</c:if>
 	      	<div class="mb-2">
 		        <label class="form-label">등록일</label>
-		        <div class="form-control form-control-sm bg-light">${nowDate }</div>
+		        <div class="form-control form-control-sm bg-light">
+		        	<c:choose>
+		        		<c:when test="${empty order }">${nowDate }</c:when>
+		        		<c:otherwise>${order.order_reg_date }</c:otherwise>
+		        	</c:choose>
+		        </div>
 	        </div>
 	      	<div class="mb-2">
 		        <label class="form-label">담당자명</label>
 		        <div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
 	      	<div class="mb-2">
-		        <label class="form-label">전화번호</label>
+		        <label class="form-label">담당자 연락처</label>
 		        <div class="form-control form-control-sm bg-light" >####</div>
 	      	</div>
 	      	<div class="mb-2">
 		        <label class="form-label">비고</label>
-		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요"></textarea>
+		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요">${order.order_note }</textarea>
 	      	</div>
     	</div>
     	</div>
@@ -80,15 +86,16 @@
 	      	</div>
 	    </div>
 	</div>
-
     <!-- 하단 박스 (품목 리스트) -->
 	<div class="row">
 		<div class="col-12 border p-3 ">
 	  	<div id="item-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
 			    <div class="col-3">품목명</div>
+			    <div class="col-2">단가</div>
 			    <div class="col-2">수량</div>
-			    <div class="col-4">납기일</div>
+			    <div class="col-2">공급가액</div>
+			    <div class="col-2">납기일</div>
 			</div>
 		</div>
 
@@ -101,23 +108,30 @@
 	<!-- 저장/요청 버튼 -->
 	<br><br>
   	<div class="d-flex justify-content-end gap-2 pe-0">
-  		<!-- 내용 저장 -->
-  		<button type="submit" class="btn btn-md btn-secondary fw-bold" onclick="submitReq('/order/save')">
-  			<c:choose>
-  				<c:when test="${empty order or order.order_status == 0}">임시저장</c:when>
-  				<c:otherwise>발주변경</c:otherwise>
-  			</c:choose>
-  		</button>
-
-  		<!-- 발주 요청/취소 -->
-  		<c:choose>
- 			<c:when test="${empty order or order.order_status == 0}">
-				<button type="submit" class="btn btn-md btn-primary fw-bold" onclick="submitReq('/order/request')">발주요청</button>
-			</c:when>
- 			<c:otherwise>
-				<button type="submit" class="btn btn-md btn-danger fw-bold" onclick="submitReq('/order/xxxxxxxx')">발주취소</button>
-			</c:otherwise>
-  		</c:choose>
+	<c:choose>
+  		<c:when test="${empty order or order.order_status == 0}">
+  			<!-- 임시 내용 저장 -->
+  			<button type="submit" class="btn btn-md btn-secondary fw-bold" onclick="submitReq('/order/save')">임시저장</button>
+  			<!-- 발주 요청 -->
+  			<button type="submit" class="btn btn-md btn-primary fw-bold" onclick="submitReq('/order/request')">발주요청</button>
+  		</c:when>
+  		<c:otherwise>
+  			<div class="card border-0 pe-0">
+  				<div class="alert alert-info d-flex align-items-center" role="alert">
+			  		<i class="bi bi-info-circle-fill me-2"></i>
+			  		<div>
+			    		발주가 <strong>승인</strong> 또는 <strong>반려</strong>되기 전까지 <u>내용을 수정하거나 요청을 취소</u>할 수 있습니다.
+			  		</div>
+				</div>
+				<div class="d-flex justify-content-end gap-2 pe-0">
+					<!-- 발주 내용 저장 -->
+  					<button type="submit" class="btn btn-md btn-secondary fw-bold" onclick="submitReq('/order/save')">발주수정</button>
+  					<!-- 발주 취소 -->
+  					<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/refuse'">발주취소</button>
+				</div>
+			</div>
+  		</c:otherwise>
+  	</c:choose>
   	</div>
 </div>
 </form>

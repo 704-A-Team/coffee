@@ -1,7 +1,15 @@
 package com.oracle.coffee.servie;
 
-import com.oracle.coffee.dto.order.OrdersDto;
+import java.util.List;
+
+import com.oracle.coffee.dto.orders.OrdersDto;
+import com.oracle.coffee.dto.orders.OrdersProductDto;
 
 public interface OrdersService {
-	public int upsert(OrdersDto order);
+	public List<OrdersProductDto> getProducts();
+	public int upsertImpormation(OrdersDto order);
+	public OrdersDto get(int orderCode);
+	public int approve(int orderCode);
+	public int refuseOrCancel(int orderCode);
+	public int request(OrdersDto order);
 }
