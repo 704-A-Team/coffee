@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
@@ -21,38 +21,57 @@
     </style>
 
     <script>
-        let isClosed = ${isClosed == true ? 'true' : 'false'};
+    let isClosed = ${isClosed == true ? 'true' : 'false'};
 
-        function toggleClose(state) {
-            isClosed = state;
+    // 마감 상태에 따라 버튼을 토글하는 함수
+    function toggleClose(state) {
+        isClosed = state;
 
-            document.querySelectorAll(".action-btn").forEach(btn => {
-                if (isClosed) {
-                    btn.classList.add("disabled-button");
-                } else {
-                    btn.classList.remove("disabled-button");
-                }
-            });
+        document.querySelectorAll(".action-btn").forEach(btn => {
+            if (isClosed) {
+                btn.classList.add("disabled-button");
+            } else {
+                btn.classList.remove("disabled-button");
+            }
+        });
 
-            // 히스토리 조작으로 상태 유지
-            const url = new URL(window.location.href);
-            url.searchParams.set('isClosed', isClosed);
-            window.history.replaceState({}, '', url);
+        // URL에 상태 반영
+        const url = new URL(window.location.href);
+        url.searchParams.set('isClosed', isClosed);
+        window.history.replaceState({}, '', url);
+    }
+
+    // 23시 59분 이후면 자동 마감
+    function checkTimeAndClose() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+
+        if (hours === 23 && minutes >= 59) {
+            toggleClose(true); // 자동 마감
+        } else {
+            toggleClose(isClosed); // 기존 상태 유지
         }
+    }
 
-        window.onload = function () {
-            toggleClose(isClosed); // 초기 마감 상태 반영
-        };
-    </script>
+    window.onload = function () {
+        checkTimeAndClose();
+    };
+</script>
+
 </head>
 
 <body>
-    <div class="container mt-4">
+<body class="d-flex flex-column min-vh-100">
+    <%@ include file="../header.jsp" %>
+
+    <div class="d-flex flex-grow-1">
+        <%@ include file="../sidebar.jsp" %>
+    <div class="container mt-4 flex-grow-1 p-4">
         <div class="d-flex justify-content-end mb-3">
             <button class="btn btn-danger me-2" onclick="toggleClose(true)">마감</button>
             <button class="btn btn-secondary" onclick="toggleClose(false)">마감해제</button>
         </div>
-
         <table class="table table-bordered text-center">
             <thead class="table-primary">
                 <tr>
@@ -95,7 +114,7 @@
                     </c:when>
                     <c:otherwise>
                         <tr>
-                            <td colspan="13">표시할 데이터가 없습니다.</td>
+                            <td colspan="12">표시할 데이터가 없습니다.</td>
                         </tr>
                     </c:otherwise>
                 </c:choose>
@@ -126,6 +145,7 @@
                 </ul>
             </nav>
         </c:if>
+        <%@ include file="../footer.jsp" %>
     </div>
 </body>
 </html>

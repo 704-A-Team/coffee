@@ -16,7 +16,7 @@ public class InventoryDaoImpl implements InventoryDao {
 	private final SqlSession sqlSession;
 
 	@Override
-	public int totalInventoryDto() {
+	public int totalInventoryDao() {
 		int totInvCnt = 0;
 		System.out.println("InventoryDaoImpl totalInventoryDto start...");
 		try {

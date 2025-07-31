@@ -12,7 +12,7 @@ public class InventoryDto {
 	private String 			product_name;
 	private String  		product_contents;
 	private int     		product_unit;
-	private boolean 		product_type;
+	private int 			product_type;
 	private Long 			product_yield;
 	private boolean 		product_isdel;
 	private int 			product_weight;
@@ -25,12 +25,12 @@ public class InventoryDto {
 	private int InventoryCount;
 	
 	// 조회용
-	private String search;
-	private String pageNum;
-	private int start;
-	private String keyword;
-	private int end;
+	private String 	search;
+	private String 	pageNum;
+	private int 	start;
+	private String 	keyword;
+	private int 	end;
 	
 	// Page 정보 
-	private String currentPage;
+	private String 	currentPage;
 }

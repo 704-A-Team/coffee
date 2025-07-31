@@ -26,12 +26,12 @@ public class JHController {
     @GetMapping(value = "/inventoryList")
     public String inventoryPage(@RequestParam(value="page", defaultValue="1") int currentPage,
     		InventoryDto inventoryDto , Model model) {
-    	System.out.println("jh/jhInventoryInForm Start...");
+    	System.out.println("jh/JHController Start...");
     	
-    	int totalInventoryDto = jHservice.totalInventoryDto();
+    	int totalInventory = jHservice.totalInventory();
     	//String currentPage = "1";
     	
-    	Paging page = new Paging(totalInventoryDto, String.valueOf(currentPage));
+    	Paging page = new Paging(totalInventory, String.valueOf(currentPage));
 		// Parameter emp --> Page만 추가 Setting
 		inventoryDto.setStart(page.getStart());   // 시작시 1
 		inventoryDto.setEnd(page.getEnd());       // 시작시 10 
@@ -39,7 +39,7 @@ public class JHController {
     	List<InventoryDto> inventoryList = jHservice.inventoryList(inventoryDto);
     	System.out.println("JHController InventoryList.size : "+inventoryList.size());
     	
-    	model.addAttribute("totalInventoryDto", totalInventoryDto);
+    	model.addAttribute("totalInventory", totalInventory);
     	model.addAttribute("inventoryList", inventoryList);
     	model.addAttribute("page", page);
 

@@ -69,10 +69,10 @@
 			<div class="collapse" id="order-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 				    <li class="mt-2">
-  						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">월 마감</a>
+  						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">재고 관리</a>
 					</li>
 					<li class="mt-2">
-  						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">일 마감</a>
+  						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 현황</a>
 					</li>
 
 

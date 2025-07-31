@@ -6,7 +6,7 @@ import com.oracle.coffee.dto.InventoryDto;
 
 public interface InventoryDao {
 
-	int 				totalInventoryDto();
+	int 				totalInventoryDao();
 	List<InventoryDto> 	inventoryList(InventoryDto inventoryDto);
 
 }
