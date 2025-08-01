@@ -14,7 +14,4 @@ public interface DeptService {
 	DeptDto 		deptUpdate(DeptDto deptDto);
 	void 			deptDelete(int dept_code);
 	
-
-
-
 }

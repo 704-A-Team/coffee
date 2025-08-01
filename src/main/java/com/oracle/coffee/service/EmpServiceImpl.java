@@ -1,7 +1,6 @@
 package com.oracle.coffee.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -53,24 +52,16 @@ public class EmpServiceImpl implements EmpService {
 
 	@Override
 	public EmpDto getSingleEmp(int emp_code) {
-			Emp emp = empRepository.findByEmp_code(emp_code);
-			EmpDto singleEmp = modelMapper.map(emp, EmpDto.class);
-			
-			return singleEmp;
+		
+	    return empRepository.findByEmp_code(emp_code); 
 	}
-
+	
 	@Override
 	public EmpDto empUpdate(EmpDto empDto) {
-		Optional<Emp> updatedEmp = empRepository.findByEmp_codeUpdate(empDto.getEmp_code());
-		Emp emp = updatedEmp.orElseThrow();
-		emp.changeEmp_name(empDto.getEmp_name());
-		emp.changeEmp_tel(empDto.getEmp_tel());
-	    Emp empUpdateEntity = empRepository.empSave(emp);
-		EmpDto empRtnDto = modelMapper.map(empUpdateEntity, EmpDto.class );
-		
-		return empRtnDto;
-	}
 
+		    return empRepository.updateEmp(empDto);
+	}
+	
 	@Override
 	public void empDelete(int emp_code) {
 		empRepository.empDelete(emp_code);

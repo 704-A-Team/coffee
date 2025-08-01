@@ -1,7 +1,6 @@
 package com.oracle.coffee.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -53,24 +52,14 @@ public class DeptServiceImpl implements DeptService {
 
 	@Override
 	public DeptDto getSingleDept(int dept_code) {
-		Dept dept = deptRepository.findByDept_code(dept_code);
-		DeptDto singleDept = modelMapper.map(dept, DeptDto.class);
-		
-		return singleDept;
+			
+		return  deptRepository.findByDept_code(dept_code);
 	}
 
-	@Override
 	public DeptDto deptUpdate(DeptDto deptDto) {
-		Optional<Dept> updatedDept = deptRepository.findByDept_codeUpdate(deptDto.getDept_code());
-		Dept dept = updatedDept.orElseThrow();
-		dept.changeDept_name(deptDto.getDept_name());
-		dept.changeDept_tel(deptDto.getDept_tel());
-	    Dept deptUpdateEntity = deptRepository.deptSave(dept);
-		DeptDto deptRtnDto = modelMapper.map(deptUpdateEntity, DeptDto.class );
-		
-		return deptRtnDto;
-    
-	}
+
+	    return deptRepository.updateDept(deptDto);
+}
 
 	@Override
 	public void deptDelete(int dept_code) {
