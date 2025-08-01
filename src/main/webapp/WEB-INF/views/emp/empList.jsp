@@ -41,11 +41,11 @@
                     <div class="col-1">사번</div>
                     <div class="col-2">이름</div>
                     <div class="col-2">전화번호</div>
-                    <div class="col-1">부서코드</div>
+                    <div class="col-1">소속 부서</div>
                     <div class="col-1">직급</div>
                     <div class="col-1">급여</div>
                     <div class="col-2">이메일</div>
-                    <div class="col-2">등록일</div>
+                    <div class="col-2">입사일</div>
                 </div>
 
                 <!-- Data List -->

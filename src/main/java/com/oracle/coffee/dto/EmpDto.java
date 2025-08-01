@@ -23,37 +23,13 @@ public class EmpDto {
 	private boolean 			emp_isDel; 					//퇴직여부
 	private int 				emp_register; 				//등록자(사원코드)
 	private LocalDateTime 		emp_reg_date; 				//등록일
-	private String				dept_code;					//joint한 부서코드					
+	
+	//join
+	private String				dept_code;					//부서코드
+	private String 				emp_grade_detail;			//직급분류
     
-	//직급
-	public String 				getEmp_grade_detail() {
-        
-    		switch (this.emp_grade) {
-            
-            case 2: return "과장";
-            case 3: return "부장";
-            case 4: return "이사";
-            case 5: return "사장";
-            case 6: return "시스템";
-            default: return "사원";
-        }
-    }
 	
-	public String getEmp_dept_code_detail() {
-		
-		switch (this.emp_dept_code) {
-		
-		case 1000: return "영업팀";
-		case 1001: return "생산관리팀";
-		case 1002: return "재고팀";
-		case 1003: return "인사팀";
-		case 1004: return "구매팀";
-		case 1005: return "판매팀";
-		default: return null;
-		
-		}
-	}
-	
+
 	// 페이징 관련 
 	private String      pageNum;  
 	private int 		start; 		 	   

@@ -1,7 +1,6 @@
 package com.oracle.coffee.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -35,9 +34,10 @@ public class EmpRepositoryImpl implements EmpRepository {
 			    "    SELECT ROWNUM rn, e.* FROM ( " +
 			    "        SELECT emp.emp_code, emp.emp_name, emp.emp_tel, emp.emp_dept_code, emp.emp_grade, " +
 			    "               emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, " +
-			    "               d.dept_name " +
+			    "               d.dept_name, b.cd_contents" +
 			    "        FROM emp " +
 			    "        JOIN dept d ON emp.emp_dept_code = d.dept_code " +
+			    "        LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
 			    "        WHERE emp.emp_isdel = 0 " +
 			    "        ORDER BY emp.emp_code " +
 			    "    ) e " +
@@ -64,6 +64,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 		    dto.setEmp_register(((Number) row[9]).intValue());
 		    dto.setEmp_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
 		    dto.setDept_code((String) row[11]); // join된 부서명
+		    dto.setEmp_grade_detail((String) row[12]); //join된 직급
 		    return dto;
 		}).collect(Collectors.toList());
 
@@ -91,23 +92,69 @@ public class EmpRepositoryImpl implements EmpRepository {
 	}
 
 	@Override
-	public Emp findByEmp_code(int emp_code) {
-			Emp emp = em.find(Emp.class, emp_code);
-			return emp;
-	}
+	public EmpDto findByEmp_code(int emp_code) {
+	    String sql =
+	        "SELECT emp.emp_code, emp.emp_name, emp.emp_tel, emp.emp_dept_code, emp.emp_grade, " +
+	        "       emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, " +
+	        "       d.dept_name, b.cd_contents " +
+	        "FROM emp " +
+	        "JOIN dept d ON emp.emp_dept_code = d.dept_code " +
+	        "LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
+	        "WHERE emp.emp_code = :emp_code";
 
-	@Override
-	public Optional<Emp> findByEmp_codeUpdate(int emp_code) {
-		Emp foundEmp = em.find(Emp.class, emp_code);
-		
-		Optional<Emp> updatedEmp = Optional.ofNullable(foundEmp);
-		return updatedEmp;
-	}
+	    Object[] row = (Object[]) em.createNativeQuery(sql)
+	                                .setParameter("emp_code", emp_code)
+	                                .getSingleResult();
 
+	    EmpDto dto = new EmpDto();
+	    dto.setEmp_code(((Number) row[0]).intValue());
+	    dto.setEmp_name((String) row[1]);
+	    dto.setEmp_tel((String) row[2]);
+	    dto.setEmp_dept_code(((Number) row[3]).intValue());
+	    dto.setEmp_grade(((Number) row[4]).intValue());
+	    dto.setEmp_sal(((Number) row[5]).intValue());
+	    dto.setEmp_email((String) row[6]);
+	    dto.setEmp_isDel(((Number) row[7]).intValue() == 1);
+	    dto.setEmp_register(((Number) row[8]).intValue());
+	    dto.setEmp_reg_date(((java.sql.Timestamp) row[9]).toLocalDateTime());
+	    dto.setDept_code((String) row[10]); // 부서명
+	    dto.setEmp_grade_detail((String) row[11]); // 직급명
+
+	    return dto;
+	}
+	
 	@Override
 	public void empDelete(int emp_code) {
 		Emp emp = em.find(Emp.class, emp_code);
 		emp.changeEmp_isdel(true);
 	}
+
+	@Override
+	public EmpDto updateEmp(EmpDto empDto) {
+	    String updateSql =
+	        "UPDATE emp SET " +
+	        "  emp_name = :name, " +
+	        "  emp_tel  = :tel, " +
+	        "  emp_dept_code = :dept, " +
+	        "  emp_grade = :grade, " +
+	        "  emp_sal = :sal, " +
+	        "  emp_email = :email, " +
+	        "  emp_isdel = :del " +
+	        "WHERE emp_code = :code";
+
+	    em.createNativeQuery(updateSql)
+	      .setParameter("name", empDto.getEmp_name())
+	      .setParameter("tel", empDto.getEmp_tel())
+	      .setParameter("dept", empDto.getEmp_dept_code())
+	      .setParameter("grade", empDto.getEmp_grade())
+	      .setParameter("sal", empDto.getEmp_sal())
+	      .setParameter("email", empDto.getEmp_email())
+	      .setParameter("del", empDto.isEmp_isDel())
+	      .setParameter("code", empDto.getEmp_code())
+	      .executeUpdate();
+
+	    return findByEmp_code(empDto.getEmp_code());
+	}
+
 
 }

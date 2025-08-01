@@ -1,7 +1,6 @@
 package com.oracle.coffee.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -78,18 +77,40 @@ public class DeptRepositoryImpl implements DeptRepository {
 	}
 
 	@Override
-	public Dept findByDept_code(int dept_code) {
+	public DeptDto findByDept_code(int dept_code) {
 		Dept dept = em.find(Dept.class, dept_code);
-		return dept;
+		
+		return new DeptDto(dept);
 	}
 
+	/*
+	 * @Override public Optional<Dept> findByDept_codeUpdate(int dept_code) { Dept
+	 * foundDept = em.find(Dept.class, dept_code);
+	 * 
+	 * Optional<Dept> updatedDept = Optional.ofNullable(foundDept); return
+	 * updatedDept; }
+	 */
+
 	@Override
-	public Optional<Dept> findByDept_codeUpdate(int dept_code) {
-		Dept foundDept = em.find(Dept.class, dept_code);
+	public DeptDto updateDept(DeptDto deptDto) {
+		 String updateSql =
+			        "UPDATE dept SET " +
+			        "  dept_name = :name, " +
+			        "  dept_tel  = :tel, " +
+			        "  dept_isdel = :del " +
+			        "WHERE dept_code = :code";
+
+			    em.createNativeQuery(updateSql)
+			      .setParameter("name", deptDto.getDept_name())
+			      .setParameter("tel", deptDto.getDept_tel())
+			      .setParameter("del", deptDto.isDept_isdel())
+			      .setParameter("code", deptDto.getDept_code())
+			      .executeUpdate();
 		
-		Optional<Dept> updatedDept = Optional.ofNullable(foundDept);
-		return updatedDept;
+		return findByDept_code(deptDto.getDept_code());
 	}
+
+
 
 	@Override
 	public void deptDelete(int dept_code) {
@@ -97,6 +118,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 		dept.changeDept_isdel(true);
 		
 	}
+
 
 
 

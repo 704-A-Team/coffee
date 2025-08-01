@@ -58,7 +58,7 @@ public class EmpController {
 	@GetMapping("/empDetail")
 	public String empDetail (EmpDto empDto, Model model) {
 		EmpDto empDetail = empService.getSingleEmp(empDto.getEmp_code());
-		model.addAttribute("EmpDto", empDetail);
+		model.addAttribute("empDto", empDetail);
 
 		return "emp/empDetail";
 	}
@@ -73,7 +73,7 @@ public class EmpController {
 	
 	@PostMapping("/empUpdate")
 	public String empUpdate(EmpDto empDto) {
-		EmpDto empUpdateDto = empService.empUpdate(empDto);
+		empService.empUpdate(empDto);
 		return "redirect:empList";
 	}
 	

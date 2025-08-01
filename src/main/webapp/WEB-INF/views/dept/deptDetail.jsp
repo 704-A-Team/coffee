@@ -69,16 +69,16 @@
                     <div class="d-flex gap-2 mt-4 justify-content-center">
                         <button type="button" class="btn btn-primary btn-lg"
                             onclick="location.href='${pageContext.request.contextPath}/dept/modifyForm?dept_code=${deptDto.dept_code}'">
-                            수정하기
+                            부서정보 수정
                         </button>
 
                         <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
-                            삭제하기
+                            부서 삭제
                         </button>
 
                         <button type="button" class="btn btn-secondary btn-lg"
                             onclick="location.href='${pageContext.request.contextPath}/dept/deptList'">
-                            목록으로
+                            부서 목록으로
                         </button>
                     </div>
 
@@ -91,14 +91,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    진정 이 부서 정보를 삭제하시겠습니까? 삭제된 정보는 되돌릴 수 없습니다.
+                                    이 부서를 삭제하시겠습니까? 삭제된 정보는 되돌릴 수 없습니다.
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                    <button type="button" class="btn btn-danger"
-                                        onclick="location.href='${pageContext.request.contextPath}/dept/deptDelete?dept_code=${deptDto.dept_code}'">
-                                        삭제
-                                    </button>
+                                    
                                 </div>
                             </div>
                         </div>
