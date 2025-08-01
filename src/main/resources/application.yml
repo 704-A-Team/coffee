@@ -3,21 +3,22 @@ server:
 
 spring:
   application-name: coffee
+
+  # Oracle DB
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@172.30.1.87:1521/xe
+    username: s202507a
+    password: 704A
+
   servlet:
     multipart:
       enabled: true
       max-file-size: 50MB
       max-request-size: 200MB
       file-size-threshold: 2KB # 파일 크기 임계값 설정 (이 크기를 초과하면 디스크에 저장)
-   
-    
-    
-  # Oracle DB
-  datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@127.30.1.26:1521/xe
-    username: s202507a
-    password: 704a
+
+
 
   #Jpa Setting
   jpa:
@@ -44,9 +45,7 @@ logging.level:
 mybatis:
   config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/*.xml
+
   
 #upload Folder
 com.oracle.coffee.upload.path: upload   
-  
-
-

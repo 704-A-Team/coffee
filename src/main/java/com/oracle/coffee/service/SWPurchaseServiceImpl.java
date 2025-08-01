@@ -1,0 +1,52 @@
+package com.oracle.coffee.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.oracle.coffee.dao.ClientMapper;
+import com.oracle.coffee.dao.SWPurchaseDao;
+import com.oracle.coffee.dto.PurchaseDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+@Service
+//@Transactional
+@Log4j2
+@RequiredArgsConstructor
+public class SWPurchaseServiceImpl implements SWPurchaseService {
+	private final SWPurchaseDao		swPurchaseDao;
+
+	// 원본 
+	@Override
+	public int purchaseSave(PurchaseDto purchaseDto) {
+		System.out.println("SWPurchaseServiceImpl purchaseSave start...");
+		
+		int purchase_code = swPurchaseDao.purchaseSave(purchaseDto);
+		
+		return purchase_code;
+	}
+
+	@Override
+	public int totalPurchaseCnt() {
+		System.out.println("SWPurchaseServiceImpl totalPurchaseCnt start...");
+		
+		int totalPurchaseCnt = swPurchaseDao.totalPurchaseCnt();
+		
+		return totalPurchaseCnt;
+	}
+
+	@Override
+	public List<PurchaseDto> purchaseList(PurchaseDto purchaseDto) {
+		System.out.println("SWPurchaseServiceImpl purchaseList start...");
+		
+		List<PurchaseDto> purchaseList = swPurchaseDao.purchaseList(purchaseDto);
+		System.out.println("SWPurchaseServiceImpl purchaseList purchaseList.size() : " + purchaseList.size());
+		
+		return purchaseList;
+	}
+	
+	
+}
