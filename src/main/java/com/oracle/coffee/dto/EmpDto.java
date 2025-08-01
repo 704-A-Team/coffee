@@ -1,6 +1,7 @@
 package com.oracle.coffee.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.oracle.coffee.domain.Emp;
 
@@ -52,7 +53,16 @@ public class EmpDto {
 		this.emp_reg_date = emp.getEmp_reg_date();
 		
 	
-							}						
+		}
+	
+	//날짜 패턴 yyyy-MM-dd로 변경
+		public String getEmpRegDateFormatted() {
+			if (emp_reg_date != null) {
+				return emp_reg_date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			} else {
+				return "";
+			}
+		}
 	
 
 }

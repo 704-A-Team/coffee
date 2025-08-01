@@ -61,7 +61,7 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">등록일</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" value="${deptDto.dept_reg_date}" disabled>
+                            <input type="text" class="form-control" value="${deptDto.deptRegDateFormatted}" disabled>
                         </div>
                     </div>
 

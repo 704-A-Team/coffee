@@ -60,7 +60,7 @@
                                 <div class="col-1">${empDto.emp_grade_detail}</div>
                                 <div class="col-1">${empDto.emp_sal}</div>
                                 <div class="col-2">${empDto.emp_email}</div>
-                                <div class="col-2">${empDto.emp_reg_date}</div>
+                                <div class="col-2">${empDto.empRegDateFormatted}</div>
                             </div>
                         </a>
                     </c:forEach>

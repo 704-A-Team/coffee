@@ -1,6 +1,7 @@
 package com.oracle.coffee.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.oracle.coffee.domain.Dept;
 
@@ -33,5 +34,14 @@ public class DeptDto {
 		this.dept_tel = dept.getDept_tel();
 		this.dept_isdel = dept.getDept_isdel();
 		this.dept_reg_date = dept.getDept_reg_date();
+	}
+	
+	//날짜 패턴 yyyy-MM-dd로 변경
+	public String getDeptRegDateFormatted() {
+		if (dept_reg_date != null) {
+			return dept_reg_date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		} else {
+			return "";
+		}
 	}
 }
