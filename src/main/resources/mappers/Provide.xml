@@ -87,4 +87,11 @@
 	    where provide_code = #{provide_code}
 	</update>
 	
+	<select id="getProvideInfo" parameterType="ProvideDto" resultType="ProvideDto">
+		select 	*
+		from 	provide
+	  	where 	product_won_code = #{product_won_code}
+		and 	provide_client_code = #{provide_client_code}	  	
+	</select>
+	
 </mapper>

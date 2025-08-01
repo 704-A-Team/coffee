@@ -16,5 +16,6 @@ public interface ProvideService {
 	ProvideDto 				provideDetail(int provide_code);
 	int						provideModify(ProvideDto provideDto);
 	void 					provideDelete(int provide_code);
+	ProvideDto 				getProvideInfo(ProvideDto provideDto);
 
 }

@@ -1,0 +1,83 @@
+package com.oracle.coffee.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+import com.oracle.coffee.dto.PurchaseDto;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class SWPurchaseDaoImpl implements SWPurchaseDao {
+
+	private final PlatformTransactionManager transactionManager;
+	private final SqlSession 	session;
+
+	@Override
+	public int purchaseSave(PurchaseDto purchaseDto) {
+		System.out.println("SWPurchaseDaoImpl purchaseSave start...");
+		
+		System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto : " + purchaseDto);
+		int purchase_result = 0;
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		try {
+			purchase_result = session.insert("purchaseSave", purchaseDto);
+			System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto->"+purchaseDto);
+				
+			session.insert("purchaseDetailSave", purchaseDto);
+				
+			transactionManager.commit(txStatus);
+			purchase_result = 1;
+		} catch (Exception e) {
+		    transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseSave Exception : " + e.getMessage());
+			purchase_result = 0;
+		}
+		
+		return purchase_result;
+	}
+
+	@Override
+	public int totalPurchaseCnt() {
+		System.out.println("SWPurchaseDaoImpl totalPurchaseCnt start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		int totalPurchaseCnt = 0;
+		
+		try {
+			totalPurchaseCnt = session.selectOne("totalPurchaseCnt");
+			transactionManager.commit(txStatus);
+
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl totalPurchaseCnt Exception : " + e.getMessage());
+		}
+		return totalPurchaseCnt;
+	}
+
+	@Override
+	public List<PurchaseDto> purchaseList(PurchaseDto purchaseDto) {
+		System.out.println("SWPurchaseDaoImpl purchaseList start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		List<PurchaseDto> purchaseList = null;
+		try {
+			purchaseList = session.selectList("purchaseList", purchaseDto);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseList Exception : " + e.getMessage());
+		}
+		return purchaseList;
+	}
+
+}

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.oracle.coffee.dao.ProductDao;
+import com.oracle.coffee.dao.SWProductDao;
 import com.oracle.coffee.dto.ProductDto;
 
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,9 @@ import lombok.extern.log4j.Log4j2;
 @Transactional
 @Log4j2
 @RequiredArgsConstructor
-public class ProductServiceImpl implements ProductService {
+public class SWProductServiceImpl implements SWProductService {
 	
-	private final ProductDao productDao;
+	private final SWProductDao productDao;
 	
 	@Override
 	public int wonProductSave(ProductDto productDto) {
@@ -82,6 +82,13 @@ public class ProductServiceImpl implements ProductService {
 		wonProductDetail.setProduct_isdel(1);
 		
 		productDao.wonProductDelete(wonProductDetail);
+	}
+
+	@Override
+	public List<ProductDto> productIsList(int product_type) {
+		log.info("ProductServiceImpl productAllList start...");
+		
+		return productDao.productIsList(product_type);
 	}
 
 }

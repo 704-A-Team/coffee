@@ -100,16 +100,22 @@
 	</update>
 	
 	<update id="wonProductDelete" parameterType="ProductDto">
-	    update product
-	    set product_isdel    = #{product_isdel}
-	    where product_code   = #{product_code}
+	    update 	product
+	    set 	product_isdel    = #{product_isdel}
+	    where 	product_code   = #{product_code}
 	</update>
 
 	<select id="productInfo" parameterType="int" resultType="ProductDto" >
-		select product_code, product_name
-		from product
-		where product_type = #{product_type}
+		select 	product_code, product_name
+		from 	product
+		where 	product_type = #{product_type}
 	</select>
 	
+	<select id="productIsList" parameterType="int" resultType="ProductDto">
+		select  product_code, product_name
+		from 	product
+		where 	product_type = #{product_type}
+		and 	product_isdel = 0
+	</select>
 	
 </mapper>

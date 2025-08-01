@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.service.Paging;
-import com.oracle.coffee.service.ProductService;
+import com.oracle.coffee.service.SWProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,19 +20,19 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/sw")
-public class SWController {
-	private final ProductService 	productService;
+public class SWProductController {
+	private final SWProductService 	productService;
 	
 	@GetMapping("/wonProductInForm")
 	public String wonProductInForm() {
-		System.out.println("SWController wonProductInForm Strart...");
+		System.out.println("SWProductController wonProductInForm Strart...");
 		
 		return "sw/product/wonInForm";
 	}
 	
 	@PostMapping("/wonProductSave")
 	public String wonProductSave(ProductDto productDto) {
-		System.out.println("SWController wonProductSave Strart...");
+		System.out.println("SWProductController wonProductSave Strart...");
 		
 		int wonProduct_code = productService.wonProductSave(productDto);
 		log.info("Save wonProduct_code : ", wonProduct_code);
@@ -42,20 +42,20 @@ public class SWController {
 	
 	@GetMapping("/wonProductList")
 	public String wonProductListPage(ProductDto productDto, Model model) {
-		System.out.println("SWController wonProductListPage Strart...");
+		System.out.println("SWProductController wonProductListPage Strart...");
 		
 		int totalWonCount = productService.totalWonProduct();
-		System.out.println("SWController wonProductListPage totalCount : " + totalWonCount);
+		System.out.println("SWProductController wonProductListPage totalCount : " + totalWonCount);
 		
 		Paging page = new Paging(totalWonCount, productDto.getCurrentPage());
 		
 		productDto.setStart(page.getStart());
 		productDto.setEnd(page.getEnd()); 
-		System.out.println("SWController wonProductListPage productDto : "+productDto);
+		System.out.println("SWProductController wonProductListPage productDto : "+productDto);
 		
 		productDto.setProduct_type(0);
 		List<ProductDto> wonProductDtoList = productService.productList(productDto);
-		System.out.println("SWController wonProductListPage wonProductDtoList.size() : " + wonProductDtoList.size());
+		System.out.println("SWProductController wonProductListPage wonProductDtoList.size() : " + wonProductDtoList.size());
 		
 		model.addAttribute("totalWonCount", totalWonCount);
 		model.addAttribute("wonProductDtoList", wonProductDtoList);
@@ -66,7 +66,7 @@ public class SWController {
 	
 	@GetMapping("/wonProductDetail")
 	public String wonProductDetailPage(@RequestParam("product_code") int product_code, Model model) {
-		System.out.println("SWController wonProductDetailPage Strart...");
+		System.out.println("SWProductController wonProductDetailPage Strart...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
 		
@@ -77,7 +77,7 @@ public class SWController {
 	
 	@GetMapping("/wonProductModifyForm")
 	public String wonProductModifyForm(@RequestParam("product_code") int product_code, Model model) {
-		System.out.println("SWController wonProductModifyForm Strart...");
+		System.out.println("SWProductController wonProductModifyForm Strart...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
 		
@@ -88,17 +88,17 @@ public class SWController {
 	
 	@PostMapping("/wonProductModify")
 	public String wonProductModify(ProductDto productDto) {
-		System.out.println("SWController wonProductModify Strart...");
+		System.out.println("SWProductController wonProductModify Strart...");
 		
 		int wonProduct_code = productService.wonProductModify(productDto);
-		System.out.println("SWController wonProductModify wonProduct_code : " + wonProduct_code);
+		System.out.println("SWProductController wonProductModify wonProduct_code : " + wonProduct_code);
 		
 		return "redirect:/sw/wonProductList";
 	}
 	
 	@PostMapping("/wonProductDelete")
 	public String wonProductDelete(@RequestParam("product_code") int product_code) {
-		System.out.println("SWController wonProductDelete Strart...");
+		System.out.println("SWProductController wonProductDelete Strart...");
 		
 		productService.wonProductDelete(product_code);
 		

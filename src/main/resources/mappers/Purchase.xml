@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.PurchaseMapper">
+
+	<insert id="purchaseSave" parameterType="PurchaseDto">
+		<selectKey keyProperty="purchase_code" resultType="int" order="BEFORE">
+            SELECT PURCHASE_SEQ.NEXTVAL FROM DUAL <!-- Oracle -->
+            <!-- MySQL 또는 auto-increment 사용 시: SELECT LAST_INSERT_ID() -->
+        </selectKey>
+        insert into purchase
+        (
+        	 purchase_code
+        	,purchase_client_code
+        	,purchase_status
+        	,purchase_reg_code
+        	,purchase_reg_date 
+        )
+        values
+        (
+        	 #{purchase_code}
+        	,#{purchase_client_code}
+        	,#{purchase_status}
+        	,#{purchase_reg_code}
+        	,sysdate
+        )
+	</insert>
+	
+	<insert id="purchaseDetailSave" parameterType="PurchaseDto">
+        insert into purchase_detail
+        (
+        	 purchase_code
+        	,product_won_code
+        	,purchase_amount
+        	,purchase_danga 
+        )
+        values
+        (
+        	 #{purchase_code}
+        	,#{product_won_code}
+        	,#{purchase_amount}
+        	,#{purchase_danga}
+        )
+	</insert>
+
+	<select id="totalPurchaseCnt" resultType="int">
+		select 	count(*) 
+		from 	purchase
+	</select>
+	
+	<select id="purchaseList" parameterType="PurchaseDto" resultType="PurchaseDto">
+		select *
+		<!-- from (
+		    select rownum rn, a.*
+		    from (
+		        select 
+		            p.*, 
+		            bu.cd_contents as unitName,
+		            bt.cd_contents as typeName,
+		            bi.cd_contents as isorderName
+		        from purchase p
+		        left join bunryu bu 
+		        	ON p.product_unit = bu.mcd and bu.bcd = 750
+		        left join bunryu bt 
+		        	ON p.product_type = bt.mcd and bt.bcd = 700
+		        left join bunryu bi 
+		        	ON p.product_isorder = bi.mcd and bi.bcd = 800
+		        where p.product_type = #{product_type}
+		        order by p.product_code desc
+		    ) a
+		)
+		where rn between #{start} and #{end} -->
+		from purchase
+	</select>
+</mapper>
+

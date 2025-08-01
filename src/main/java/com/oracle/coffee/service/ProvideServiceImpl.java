@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.oracle.coffee.dao.ClientDao;
-import com.oracle.coffee.dao.ProductDao;
+import com.oracle.coffee.dao.SWProductDao;
 import com.oracle.coffee.dao.ProvideDao;
 import com.oracle.coffee.dto.SWClientDto;
 import com.oracle.coffee.dto.ProductDto;
@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class ProvideServiceImpl implements ProvideService {
 	private final ProvideDao provideDao;
-	private final ProductDao productDao;
+	private final SWProductDao productDao;
 	private final ClientDao	 clientDao;
 
 
@@ -92,6 +92,13 @@ public class ProvideServiceImpl implements ProvideService {
 		provideDetail.setProvide_isdel(1);;
 		
 		provideDao.provideDelete(provideDetail);
+	}
+
+	@Override
+	public ProvideDto getProvideInfo(ProvideDto provideDto) {
+		System.out.println("ProvideServiceImpl getProvideInfo start...");
+		
+		return provideDao.getProvideInfo(provideDto);
 	}
 
 

@@ -1,11 +1,11 @@
-package com.oracle.coffee.dao;
+package com.oracle.coffee.service;
 
 import java.util.List;
 
 import com.oracle.coffee.dto.SWClientDto;
 
-public interface ClientDao {
-	List<SWClientDto> 		getClientInfo(int client_type);
+public interface SWClientService {
+
 	List<SWClientDto> 		getClientsByProduct(int product_code);
 
 }

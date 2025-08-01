@@ -9,6 +9,13 @@
 		from client_tb
 		where client_type = #{client_type}
 	</select>
-
+	
+	<select id="getClientsByProduct" parameterType="int" resultType="SWClientDto">
+		select client_code, client_name
+		from provide p
+		join client_tb c 
+			ON p.provide_client_code = c.client_code
+		where p.product_won_code = #{product_code}
+	</select>
 
 </mapper>
