@@ -29,8 +29,12 @@
 			</button>
 			<div class="collapse" id="client-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">가맹점</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">가맹점</a></li>
+				     <li class="mt-2">
+ 			 <a href="${pageContext.request.contextPath}/client/clientList" class="link-light rounded menu-small">거래처 목록</a>
+				</li>
+					<li class="mt-2">
+  			 <a href="${pageContext.request.contextPath}/client/clientInForm" class="link-light rounded menu-small">거래처 등록</a>
+				</li>
 				</ul>
 			</div>
 		</li>
@@ -57,6 +61,8 @@
 			</button>
 			<div class="collapse" id="mf-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+					<li class="mt-2"><a href="${pageContext.request.contextPath}/km/productInForm" class="link-light rounded menu-small">완제품 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/km/wanList" class="link-light rounded menu-small">완제품 리스트</a></li>
 					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductList" class="link-light rounded menu-small">제품 조회</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">제품 등록</a></li>
 				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">완제품 등록</a></li>
@@ -65,18 +71,26 @@
 			</div>
 		</li>
 		
-		<!-- 재고 메뉴 -->
+		<!--재고 관리-->
 		<li class="mb-3">
-			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#prd-collapse" aria-expanded="false">
+			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#order-collapse" aria-expanded="false">
 				<i class="bi bi-caret-right-fill me-2"></i>재고관리
 			</button>
-			<div class="collapse" id="prd-collapse">
+			<div class="collapse" id="order-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">마감</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">마감</a></li>
+				    <li class="mt-2">
+  						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">재고 관리</a>
+					</li>
+					<li class="mt-2">
+  						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 현황</a>
+					</li>
+
+
 				</ul>
 			</div>
 		</li>
+
+
 		
 		<!-- 판매 메뉴 -->
 		<li class="mb-3">
@@ -98,12 +112,32 @@
 			</button>
 			<div class="collapse" id="hr-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">부서</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">부서</a></li>
+				   <li class="mt-2">
+ 			 <a href="${pageContext.request.contextPath}/emp/empList" class="link-light rounded menu-small">사원 목록</a>
+				</li>
+					<li class="mt-2">
+  			 <a href="${pageContext.request.contextPath}/emp/empInForm" class="link-light rounded menu-small">사원 등록</a>
+				</li>
 				</ul>
 			</div>
 		</li>
 		
+		<!-- 부서 메뉴 -->
+		<li class="mb-3">
+			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dept-collapse" aria-expanded="false">
+				<i class="bi bi-caret-right-fill me-2"></i>부서관리
+			</button>
+			<div class="collapse" id="dept-collapse">
+				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+				     <li class="mt-2">
+ 			 <a href="${pageContext.request.contextPath}/dept/deptList" class="link-light rounded menu-small">부서 목록</a>
+				</li>
+					<li class="mt-2">
+  			 <a href="${pageContext.request.contextPath}/dept/deptInForm" class="link-light rounded menu-small">부서 등록</a>
+				</li>
+				</ul>
+			</div>
+		</li>	
     </ul>
   </nav>
 

@@ -5,11 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainController {
-
     @GetMapping("/")
     public String mainPage() {
-    	System.out.println("main Start...");
-    	
+
         return "main";
     }
 }

@@ -24,7 +24,6 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		
 		return purchase_code;
 	}
-	
 	@Override
 	public int totalPurchaseCnt() {
 		System.out.println("SWPurchaseServiceImpl totalPurchaseCnt start...");

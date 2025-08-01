@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.InventoryMapper">
+
+  <!-- 전체 개수 조회 -->
+  <select id="InvTotal" resultType="int">
+    SELECT COUNT(*) 
+      FROM product 
+     WHERE product_isdel = 0
+  </select>
+  
+  <!-- 전체 리스트 조회 (페이징 제거) -->
+  <select id="jhInvAll" resultType="com.oracle.coffee.dto.InventoryDto">
+    <![CDATA[
+    SELECT *
+    FROM
+    (
+    	SELECT rownum rn , a.*
+    	FROM
+    			(select * from product order by product_code)a
+    )
+    WHERE rn >= #{start}
+    and   rn <= #{end}
+    ]]> 
+  </select>
+
+</mapper>
