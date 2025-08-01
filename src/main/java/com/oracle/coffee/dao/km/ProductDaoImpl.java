@@ -72,15 +72,22 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<WanAndRecipeDTO> wanProductModifyInForm(int product_code) {
-		List<WanAndRecipeDTO> wanModifyDTO = null;
+	public WanAndRecipeDTO wanAndRcpDetailInForm(int product_code) {
+		WanAndRecipeDTO wanAndRcpDTO = null;
 		try {
-			wanModifyDTO = session.selectList("wanAndRcpModify" , product_code);
-			System.out.println("wanAndRcpModify->"+wanModifyDTO);
+			wanAndRcpDTO = session.selectOne("wanAndRcpDetail" , product_code);
+			System.out.println("wanAndRcpDetail->"+wanAndRcpDTO);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return wanModifyDTO;
+		return wanAndRcpDTO;
+	}
+
+	@Override
+	public WanAndRecipeDTO wanModifyInForm(int product_code) {
+		WanAndRecipeDTO wanModifyDTO1 = session.selectOne("wanModifyInForm" , product_code);
+		System.out.println("wanModifyDTO1->" + wanModifyDTO1);
+		return wanModifyDTO1;
 	}
 
 

@@ -28,6 +28,7 @@ public class WanAndRecipeDTO {
 		private boolean 	product_isdel;		 // 삭제 구분 (기본 0)
 		private int			product_reg_code;	 // 사원코드 (등록자)
 		private LocalDateTime 	product_reg_date;// 등록일 (현재 날짜)
+		private int			wan_price;			 // 완제품 최근 가격 
 		
 		private String 		simage;
 		

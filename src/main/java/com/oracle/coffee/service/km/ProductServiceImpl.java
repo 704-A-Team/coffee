@@ -83,8 +83,15 @@ public class ProductServiceImpl implements ProductService {
 	
 	// 완제품 코드(IN) --> 완제품 Dto(OUT)
 	@Override
-	public List<WanAndRecipeDTO> wanProductModifyInForm(int product_code) {
-		List<WanAndRecipeDTO> wanModifyDTO = productDao.wanProductModifyInForm(product_code);
+	public WanAndRecipeDTO wanAndRcpDetailInForm(int product_code) {
+		WanAndRecipeDTO wanModifyDTO = productDao.wanAndRcpDetailInForm(product_code);
+		return wanModifyDTO;
+	}
+	
+	// 완제품 코드(IN) --> 수정할 완제품 Dto(OUT) 
+	@Override
+	public WanAndRecipeDTO wanModifyInForm(int product_code) {
+		WanAndRecipeDTO wanModifyDTO = productDao.wanModifyInForm(product_code);
 		return wanModifyDTO;
 	}
 

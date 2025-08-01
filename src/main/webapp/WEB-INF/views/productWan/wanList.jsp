@@ -7,6 +7,14 @@
     <title>완제품 리스트</title>
  
 <style>
+  .form-section-title {
+      border-left: 4px solid #0d6efd;
+      padding-left: 10px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 2rem;
+  }
+
   .btn-light-primary {
     background-color: #cce5ff !important;
     color: #004085 !important;
@@ -36,6 +44,26 @@
     background-color: #f1b0b7 !important;
     color: #491217 !important;
   }
+
+  .card-title {
+    font-weight: 700;
+  }
+  .product-info-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem; 
+  }
+  .product-info-list li {
+    display: flex;
+    margin-bottom: 6px;
+  }
+  .product-info-list li strong {
+    width: 40%;      
+    /* opacity: 0.7;      */
+  }
+  .product-info-list li span {
+    width: 60%;      
+  }
 </style>
 
        
@@ -54,9 +82,10 @@
 			<!-- 본문 -->
 			<main class="flex-grow-1 p-4">
 		    <div class="container">
-		        <h1 class="text-center mb-4">완제품 리스트</h1>
+		    	<div class="container mt-3">
+		        <div class="form-section-title">완제품 리스트</div>
 		
-		        <div class="row">
+		   		        <div class="row">
 		            <c:forEach var="product" items="${wanProductList}">
 		                <div class="col-md-6 mb-4">
 		                    <div class="card h-100">
@@ -77,17 +106,29 @@
 		                                    <p class="card-text text-truncate" title="${product.product_contents}">
 		                                        ${product.product_contents}
 		                                    </p>
-		                                    <ul class="list-unstyled mb-3">
-		                                        <li><strong>예상 수율:</strong> ${product.product_yield}%</li>
-		                                        <li><strong>생산 단위:</strong> ${product.product_pack}</li>
-		                                        <li><strong>가격:</strong> ${product.price}원</li>
-		                                        <li><strong>최근 등록일:</strong> ${product.start_date != null ? product.start_date : '정보 없음'}</li>
+		                                    <ul class="product-info-list">
+		                                        <li><strong>예상 수율</strong> <span>${product.product_yield}%</span></li>
+		                                        <li><strong>생산 단위</strong> <span>${product.product_pack}</span></li>
+		                                        <li>
+													<strong>가격</strong>
+													<span>
+												    <c:choose>
+												        <c:when test="${product.price == 0}">
+												            <span style="color: red; font-weight: bold;">가격 조정 필요</span>
+												        </c:when>
+												        <c:otherwise>
+												            ${product.price}원
+												        </c:otherwise>
+												    </c:choose>
+												    </span>
+												</li>
+		                                        <li><strong>최근 등록일</strong> <span>${product.start_date != null ? product.start_date : '정보 없음'}</span></li>
 		                                    </ul>
 		
 		       								<div class="d-flex gap-2 mt-auto">
-												  <form action="/km/wanProductModifyInForm" method="get" style="flex-grow:1;">
+												  <form action="/km/wanAndRcpDetailInForm" method="get" style="flex-grow:1;">
 												    <input type="hidden" name="product_code" value="${product.product_code}" />
-												    <button type="submit" class="btn btn-light-primary btn-sm w-100">수정</button>
+												    <button type="submit" class="btn btn-light-primary btn-sm w-100">상세 보기</button>
 												  </form>
 												
 												  <form action="/km/wanPriceModifyInForm" method="get" style="flex-grow:1;">
@@ -135,7 +176,8 @@
 		                </c:if>
 		            </ul>
 		        </nav>
-		    </div>
+		     </div>
+		   </div>
 		</main>
 
 			

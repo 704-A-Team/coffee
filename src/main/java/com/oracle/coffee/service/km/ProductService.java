@@ -19,6 +19,8 @@ public interface ProductService {
 
 	List<ProductDTO> 		wanList(ProductDTO productDTO);
 	// 완제품 코드(IN) --> 완제품과 레시피Dto(OUT)
-	List<WanAndRecipeDTO> 	wanProductModifyInForm(int product_code);
+	WanAndRecipeDTO 		wanAndRcpDetailInForm(int product_code);
+
+	WanAndRecipeDTO 		wanModifyInForm(int product_code);
 
 }

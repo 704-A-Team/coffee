@@ -37,7 +37,7 @@
 			
 			<!-- 본문 -->
 			<main class="flex-grow-1 p-4">
-				<div class="container mt-5">
+				<div class="container mt-3">
 				  <div class="form-section-title">완제품 등록</div>
 				  <form action="${pageContext.request.contextPath}/km/wanRegister" method="post" enctype="multipart/form-data">
 				    

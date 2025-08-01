@@ -32,7 +32,7 @@
     <div class="d-flex flex-column flex-grow-1">
         <!-- 본문 -->
         <main class="flex-grow-1 p-4">
-            <div class="container mt-5">
+            <div class="container mt-3">
                 <div class="form-section-title">레시피 등록</div>
 
                 <div>

@@ -153,17 +153,43 @@ public class ProductController {
 		return "productWan/wanList";
 	}
 	
-	// 완제품 수정 폼
-	@GetMapping("/wanProductModifyInForm")
-	public String wanProductModifyInForm(WanAndRecipeDTO wanAndRecipeDTO , Model model) {
-		log.info("wanProductModifyInForm 'product_code'->"+wanAndRecipeDTO.getProduct_code());
+	// 완제품 상세보기
+	@GetMapping("/wanAndRcpDetailInForm")
+	public String wanAndRcpDetailInForm(WanAndRecipeDTO wanAndRecipeDTO , Model model) {
+		log.info("wanAndRcpDetailInForm 'product_code'->"+wanAndRecipeDTO.getProduct_code());
 		
-		// 완제품 코드(IN) --> 완제품과 레시피Dto(OUT)
-		List<WanAndRecipeDTO> wanAndRcpModifyDTO = productService.wanProductModifyInForm(wanAndRecipeDTO.getProduct_code());
-		System.out.println("wanProductModifyInForm wanAndRcpModifyDTO->"+wanAndRcpModifyDTO);
+		// 완제품 코드(IN) --> 완제품과 레시피Dto(OUT)  단일 객체 , List 안필요하긴 했었어
+		WanAndRecipeDTO wanAndRcpDetailDTO = productService.wanAndRcpDetailInForm(wanAndRecipeDTO.getProduct_code());
+		System.out.println("wanAndRcpDetailInForm wanAndRcpDetailDTO->"+wanAndRcpDetailDTO);
+		// wanAndRecipeDTO-> date 없다 wanAndRcpDetailDTO 있다
+		LocalDateTime date = wanAndRcpDetailDTO.getProduct_reg_date();
+		String wan_reg_date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
-		model.addAttribute("wanAndRcpModifyDTO" , wanAndRcpModifyDTO);
-		return "productWan/wanProductModifyInForm";
+		model.addAttribute("wanAndRcpDetailDTO" , wanAndRcpDetailDTO);
+		model.addAttribute("wan_reg_date", wan_reg_date);
+		return "productWan/wanAndRcpDetailInForm";
+	}
+	
+	// 상세보기/완제품 수정 폼
+	@GetMapping("/wanModifyInForm")
+	public String wanModifyInForm(WanAndRecipeDTO wanAndRecipeDTO, Model model) {
+		log.info("wanModifyInForm product_code->"+wanAndRecipeDTO.getProduct_code());
+		WanAndRecipeDTO wanModifyDTO = productService.wanModifyInForm(wanAndRecipeDTO.getProduct_code());
+		
+		model.addAttribute("wanModifyDTO" , wanModifyDTO);
+		log.info("wanModifyDTO->"+wanModifyDTO);
+		return "productWan/wanModifyInForm";
+	}
+	
+	// 완제품 수정
+	@PostMapping("/wanModify")
+	public String wanModify(ProductDTO productDTO, RedirectAttributes redirectAttributes) {
+		log.info("wanModify productDTO->"+productDTO);
+		
+		
+		
+		redirectAttributes.addAttribute("product_code",productDTO.getProduct_code());
+		return "redirect:/km/wanAndRcpDetailInForm";
 	}
 	
 	

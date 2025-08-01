@@ -24,7 +24,9 @@ public interface ProductDao {
 
 	List<ProductDTO> 		wanList(ProductDTO productDTO);
 
-	List<WanAndRecipeDTO> 	wanProductModifyInForm(int product_code);
+	WanAndRecipeDTO 		wanAndRcpDetailInForm(int product_code);
+
+	WanAndRecipeDTO 		wanModifyInForm(int product_code);
 
 
 }
