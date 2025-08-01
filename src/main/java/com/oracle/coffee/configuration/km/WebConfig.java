@@ -1,4 +1,4 @@
-package com.oracle.coffee.km.configuration;
+package com.oracle.coffee.configuration.km;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
