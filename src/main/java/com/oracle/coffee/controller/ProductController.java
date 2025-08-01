@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oracle.coffee.dto.km.ProductDTO;
+import com.oracle.coffee.dto.km.ProductWanDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
 import com.oracle.coffee.dto.km.WanAndRecipeDTO;
@@ -48,7 +48,7 @@ public class ProductController {
 	// 페이지/기능
 	// productInForm/완제품 등록
 	@PostMapping("/wanRegister")
-	public String wanRegister(@ModelAttribute ProductDTO 	  productDTO
+	public String wanRegister(@ModelAttribute ProductWanDTO 	  productDTO
 							, @ModelAttribute ProductPriceDTO priceDTO
 							, RedirectAttributes redirectAttributes) {
 		// 완제품 등록 -->> 레시피 등록 하고 싶을 때 RedirectAttributes 사용
@@ -101,7 +101,7 @@ public class ProductController {
 								  @RequestParam("product_pack") String product_pack ,
 								  Model model) {
 		// 원재료 드롭다운 박스
-		List<ProductDTO> wonList = productService.wonList();
+		List<ProductWanDTO> wonList = productService.wonList();
 		model.addAttribute("wonList", wonList);
 		
 		// 제품코드 : redirect로 받은 제품코드
@@ -140,14 +140,14 @@ public class ProductController {
 	
 	// 리스트
 	@GetMapping("/wanList")
-	public String wanList(ProductDTO productDTO, Model model) {
+	public String wanList(ProductWanDTO productDTO, Model model) {
 		
 		int total = productService.countTotal();
 		Paging page = new Paging(total, productDTO.getCurrentPage());
 		productDTO.setStart(page.getStart());
 		productDTO.setEnd(page.getEnd());
 		
-		List<ProductDTO> wanProductList = productService.wanList(productDTO);
+		List<ProductWanDTO> wanProductList = productService.wanList(productDTO);
 		model.addAttribute("wanProductList" , wanProductList);
 		model.addAttribute("page",page);
 		return "productWan/wanList";
@@ -183,7 +183,7 @@ public class ProductController {
 	
 	// 완제품 수정
 	@PostMapping("/wanModify")
-	public String wanModify(ProductDTO productDTO, RedirectAttributes redirectAttributes) {
+	public String wanModify(ProductWanDTO productDTO, RedirectAttributes redirectAttributes) {
 		log.info("wanModify productDTO->"+productDTO);
 		
 		

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.oracle.coffee.dao.km.ProductDao;
-import com.oracle.coffee.dto.km.ProductDTO;
+import com.oracle.coffee.dto.km.ProductWanDTO;
 import com.oracle.coffee.dto.km.ProductImgDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	// 완제품 등록(완제품, 가격 동시 등록)
 	@Override
-	public int wanRegister(ProductDTO productDTO, ProductPriceDTO priceDTO) {
+	public int wanRegister(ProductWanDTO productDTO, ProductPriceDTO priceDTO) {
 		System.out.println("wanRegister Start");
 		int result = 0;
 		
@@ -62,8 +62,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	// 레시피 등록 폼에서 필요한 > 원재료 드롭다운 박스 > 원재료 리스트
 	@Override
-	public List<ProductDTO> wonList() {
-		List<ProductDTO> wonList = productDao.wonList();
+	public List<ProductWanDTO> wonList() {
+		List<ProductWanDTO> wonList = productDao.wonList();
 		return wonList;
 	}
 	
@@ -76,8 +76,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	// 완제품 List 가져오기 ( 3개 Table Join )
 	@Override
-	public List<ProductDTO> wanList(ProductDTO productDTO) {
-		List<ProductDTO> wanList = productDao.wanList(productDTO);
+	public List<ProductWanDTO> wanList(ProductWanDTO productDTO) {
+		List<ProductWanDTO> wanList = productDao.wanList(productDTO);
 		return wanList;
 	}
 	

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.oracle.coffee.ProductMapper">
-	<insert id="wanRegister" parameterType="ProductDTO" useGeneratedKeys="true" keyProperty="product_code">
+<mapper namespace="com.oracle.coffee.ProductWanMapper">
+	<insert id="wanRegister" parameterType="ProductWanDTO" useGeneratedKeys="true" keyProperty="product_code">
 		insert into product(PRODUCT_CODE , PRODUCT_NAME , PRODUCT_CONTENTS , PRODUCT_UNIT ,
 							PRODUCT_TYPE , PRODUCT_YIELD , PRODUCT_WEIGHT , PRODUCT_ISORDER , PRODUCT_PACK ,
 							PRODUCT_ISDEL , PRODUCT_REG_CODE , PRODUCT_REG_DATE)
@@ -45,7 +45,7 @@
 		select count(*) from product where product_isdel = 0 and product_type = 1
 	</select>
 	
-	<select id="wonList" resultType="ProductDTO">
+	<select id="wonList" resultType="ProductWanDTO">
 		select * from product where product_type = 0
 	</select>
 	
@@ -54,7 +54,7 @@
 				(#{product_wan_code} , #{product_won_code} , #{recipe_amount})
 	</insert>
 	
-	<select id="wanList" parameterType="ProductDTO" resultType="ProductDTO">
+	<select id="wanList" parameterType="ProductWanDTO" resultType="ProductWanDTO">
 		SELECT * FROM (
 		    SELECT ROWNUM rw , wanAll.* FROM (
 		              SELECT pd.* , img.file_name simage    , pp_latest.price , pp_latest.start_date
@@ -158,5 +158,4 @@
 			<result property="ord" column="ord"/>
 		</collection>
 	</resultMap>
-	
 </mapper>

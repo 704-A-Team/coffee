@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {	// 제품
+public class ProductWanDTO {	// 제품
 	private int 		product_code;		 // 제품코드
 	private String  	product_name;		 // 제품명
 	private String  	product_contents;	 // 제품설명

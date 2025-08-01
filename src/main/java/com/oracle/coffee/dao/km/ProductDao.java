@@ -2,7 +2,7 @@ package com.oracle.coffee.dao.km;
 
 import java.util.List;
 
-import com.oracle.coffee.dto.km.ProductDTO;
+import com.oracle.coffee.dto.km.ProductWanDTO;
 import com.oracle.coffee.dto.km.ProductImgDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
@@ -10,7 +10,7 @@ import com.oracle.coffee.dto.km.WanAndRecipeDTO;
 
 public interface ProductDao {
 
-	void 					wanRegister(ProductDTO productDTO);
+	void 					wanRegister(ProductWanDTO productDTO);
 	
 	void 					wanImgRegister(List<ProductImgDTO> productImgDTO);
 
@@ -18,11 +18,11 @@ public interface ProductDao {
 
 	int 					countTotal();
 
-	List<ProductDTO> 		wonList();
+	List<ProductWanDTO> 		wonList();
 
 	void 					wanRecipeSave(RecipeDTO recipe);
 
-	List<ProductDTO> 		wanList(ProductDTO productDTO);
+	List<ProductWanDTO> 		wanList(ProductWanDTO productDTO);
 
 	WanAndRecipeDTO 		wanAndRcpDetailInForm(int product_code);
 

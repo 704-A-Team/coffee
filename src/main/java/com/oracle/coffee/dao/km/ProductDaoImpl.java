@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.oracle.coffee.dto.km.ProductDTO;
+import com.oracle.coffee.dto.km.ProductWanDTO;
 import com.oracle.coffee.dto.km.ProductImgDTO;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
@@ -20,7 +20,7 @@ public class ProductDaoImpl implements ProductDao {
 	private final SqlSession session;
 
 	@Override
-	public void wanRegister(ProductDTO productDTO) {
+	public void wanRegister(ProductWanDTO productDTO) {
 		session.insert("wanRegister",productDTO);
 	}
 
@@ -51,8 +51,8 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<ProductDTO> wonList() {
-		List<ProductDTO> wonList = session.selectList("wonList");
+	public List<ProductWanDTO> wonList() {
+		List<ProductWanDTO> wonList = session.selectList("wonList");
 		return wonList;
 	}
 
@@ -63,9 +63,9 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<ProductDTO> wanList(ProductDTO productDTO) {
-		List<ProductDTO> wanList = session.selectList("wanList", productDTO);
-		for(ProductDTO pDto : wanList) {
+	public List<ProductWanDTO> wanList(ProductWanDTO productDTO) {
+		List<ProductWanDTO> wanList = session.selectList("wanList", productDTO);
+		for(ProductWanDTO pDto : wanList) {
 			System.out.println("wanList->"+pDto);
 		}
 		return wanList;
