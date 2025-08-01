@@ -18,7 +18,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class SWPurchaseServiceImpl implements SWPurchaseService {
 	private final SWPurchaseDao		swPurchaseDao;
-	private final ClientMapper      clientMapper;
 
 	// 원본 
 	@Override
@@ -28,21 +27,6 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		int purchase_code = swPurchaseDao.purchaseSave(purchaseDto);
 		
 		return purchase_code;
-	}
-	
-	@Transactional
-	@Override
-	public int purchaseSavetest(PurchaseDto purchaseDto) {
-		System.out.println("SWPurchaseServiceImpl purchaseSave start...");
-        clientMapper.purchaseSave(purchaseDto);
-        System.out.println("SWPurchaseServiceImpl purchaseDto=>"+purchaseDto);
-        // 예외 발생 시 전체 롤백
-        if (clientMapper.getClass()== null) {
-            throw new IllegalArgumentException("purchaseSave not be null");
-        }
-        purchaseDto.setPurchase_code(1);
-        clientMapper.purchaseDetailSave(purchaseDto);		
-		return 1;
 	}
 
 	@Override
