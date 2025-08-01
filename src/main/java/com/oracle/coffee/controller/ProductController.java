@@ -24,7 +24,7 @@ import com.oracle.coffee.dto.km.RecipeDTO;
 import com.oracle.coffee.dto.km.WanAndRecipeDTO;
 import com.oracle.coffee.service.km.Paging;
 import com.oracle.coffee.service.km.ProductService;
-import com.oracle.coffee.util.km.CustomFileUtil;
+import com.oracle.coffee.util.CustomFileUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
