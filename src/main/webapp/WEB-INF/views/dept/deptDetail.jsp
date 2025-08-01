@@ -95,7 +95,9 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                    
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="location.href='${pageContext.request.contextPath}/dept/deptDelete?dept_code=${deptDto.dept_code}'">
+                                    삭제</button>
                                 </div>
                             </div>
                         </div>
