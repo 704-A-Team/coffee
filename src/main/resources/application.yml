@@ -3,24 +3,30 @@ server:
 
 spring:
   application-name: coffee
+
   # Oracle DB
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@172.30.1.87:1521/xe
-    username: S202507A
+    username: s202507a
     password: 704A
-#    url: jdbc:oracle:thin:@localhost:1521/xe
-#    username: person01
-#    password: tiger
     
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.OracleDialect
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
+  #Jpa Setting
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 200MB
+      file-size-threshold: 2KB # 파일 크기 임계값 설정 (이 크기를 초과하면 디스크에 저장)
+ 
   # View Resolver
   mvc:
     view:
@@ -31,7 +37,15 @@ spring:
     user:
       name: test
       password: test
-
+      
+logging.level:
+  org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL 
+  
+  
 mybatis:
   config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/*.xml
+
+  
+#upload Folder
+com.oracle.coffee.upload.path: upload   

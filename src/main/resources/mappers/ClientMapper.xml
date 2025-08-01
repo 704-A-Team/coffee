@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.dao.ClientMapper">
+
+	<insert id="purchaseSavetest" parameterType="PurchaseDto">
+		<selectKey keyProperty="purchase_code" resultType="int" order="BEFORE">
+            SELECT PURCHASE_SEQ.NEXTVAL FROM DUAL <!-- Oracle -->
+            <!-- MySQL 또는 auto-increment 사용 시: SELECT LAST_INSERT_ID() -->
+        </selectKey>
+        insert into purchase
+        (
+        	 purchase_code
+        	,purchase_client_code
+        	,purchase_status
+        	,purchase_reg_code
+        	,purchase_reg_date 
+        )
+        values
+        (
+        	 #{purchase_code}
+        	,#{purchase_client_code}
+        
+        	,#{purchase_status}
+        	,#{purchase_reg_code}
+        	,sysdate
+        )
+	</insert>
+	
+	<insert id="purchaseDetailSavetest" parameterType="PurchaseDto">
+        insert into purchase_detail
+        (
+        	 purchase_code
+        	,product_won_code
+        	,purchase_amount
+        	,purchase_danga 
+        )
+        values
+        (
+        	 #{purchase_code}
+        	,#{product_won_code}
+        	,#{purchase_amount}
+        	,#{purchase_danga}
+        )
+	</insert>
+
+
+
+</mapper>
+
