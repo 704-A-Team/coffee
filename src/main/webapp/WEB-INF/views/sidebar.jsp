@@ -46,8 +46,10 @@
 			</button>
 			<div class="collapse" id="pch-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">발주</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">발주</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideList" class="link-light rounded menu-small">원재료 조회</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseInForm" class="link-light rounded menu-small">발주 등록</a></li>
+					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseList" class="link-light rounded menu-small">입고 현황</a></li>
 				</ul>
 			</div>
 		</li>
@@ -59,8 +61,10 @@
 			</button>
 			<div class="collapse" id="mf-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">완제품</a></li>
-				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">완제품</a></li>
+					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductList" class="link-light rounded menu-small">제품 조회</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">제품 등록</a></li>
+				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">완제품 등록</a></li>
+				    <li class="mt-2"><a href="#" class="link-light rounded menu-small">가격 등록</a></li>
 				</ul>
 			</div>
 		</li>
