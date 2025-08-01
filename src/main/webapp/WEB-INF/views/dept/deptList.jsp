@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,7 +56,7 @@
                                 <div class="col-2">${deptDto.dept_code}</div>
                                 <div class="col-4">${deptDto.dept_name}</div>
                                 <div class="col-3">${deptDto.dept_tel}</div>
-                                <div class="col-3">${deptDto.dept_reg_date}</div> <%-- 수정됨 --%>
+                                <div class="col-3">${deptDto.deptRegDateFormatted}</div> <%-- 수정됨 --%>
                             </div>
                         </a>
                     </c:forEach>

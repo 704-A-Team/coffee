@@ -108,7 +108,11 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">입사일</label>
                         <div class="col-sm-8">
+<<<<<<< HEAD
                             <input type="text" class="form-control" value="${empDto.emp_reg_date}" disabled>
+=======
+                            <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
+>>>>>>> 28d6f6f843e13ced61a54fa4689b4a1bc196681f
                         </div>
                     </div>
 

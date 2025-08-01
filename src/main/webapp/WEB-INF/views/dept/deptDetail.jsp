@@ -61,7 +61,7 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">등록일</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" value="${deptDto.dept_reg_date}" disabled>
+                            <input type="text" class="form-control" value="${deptDto.deptRegDateFormatted}" disabled>
                         </div>
                     </div>
 
@@ -97,8 +97,7 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                                     <button type="button" class="btn btn-danger"
                                         onclick="location.href='${pageContext.request.contextPath}/dept/deptDelete?dept_code=${deptDto.dept_code}'">
-                                        삭제
-                                    </button>
+                                    삭제</button>
                                 </div>
                             </div>
                         </div>
