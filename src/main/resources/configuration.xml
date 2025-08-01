@@ -4,6 +4,12 @@
 
 <configuration>
 	<typeAliases>
+		<typeAlias alias="ProductWanDTO" type="com.oracle.coffee.dto.km.ProductWanDTO"/>
+		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>
+		<typeAlias alias="RecipeDTO" type="com.oracle.coffee.dto.km.RecipeDTO"/>
+		<typeAlias alias="ProductImgDTO" type="com.oracle.coffee.dto.km.ProductImgDTO"/>
+		<typeAlias alias="WanAndRecipeDTO" type="com.oracle.coffee.dto.km.WanAndRecipeDTO"/>
+	
 		<typeAlias alias="InventoryDto" type="com.oracle.coffee.dto.InventoryDto"/>
 		<typeAlias alias="MagamDto" type="com.oracle.coffee.dto.MagamDto"/>
 
