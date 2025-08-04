@@ -104,15 +104,19 @@
                         </div>
                     </div>
  --%>
-                    <!-- 입사일 -->
+                    <!-- 등록일 -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">등록일</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
+                        </div>
+                    </div>
+
+			       <!-- 입사일 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">입사일</label>
                         <div class="col-sm-8">
-<<<<<<< HEAD
-                            <input type="text" class="form-control" value="${empDto.emp_reg_date}" disabled>
-=======
-                            <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
->>>>>>> 28d6f6f843e13ced61a54fa4689b4a1bc196681f
+                            <input type="text" class="form-control" value="${empDto.emp_ipsa_date}" disabled>
                         </div>
                     </div>
 

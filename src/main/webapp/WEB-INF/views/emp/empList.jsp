@@ -45,7 +45,8 @@
                     <div class="col-1">직급</div>
                     <div class="col-1">급여</div>
                     <div class="col-2">이메일</div>
-                    <div class="col-2">입사일</div>
+                    <div class="col-1">등록일</div>
+                    <div class="col-1">입사일</div>
                 </div>
 
                 <!-- Data List -->
@@ -60,7 +61,8 @@
                                 <div class="col-1">${empDto.emp_grade_detail}</div>
                                 <div class="col-1">${empDto.emp_sal}</div>
                                 <div class="col-2">${empDto.emp_email}</div>
-                                <div class="col-2">${empDto.empRegDateFormatted}</div>
+                                <div class="col-1">${empDto.empRegDateFormatted}</div>
+                                <div class="col-1">${empDto.emp_ipsa_date}</div>
                             </div>
                         </a>
                     </c:forEach>

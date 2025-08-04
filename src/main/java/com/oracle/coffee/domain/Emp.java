@@ -1,6 +1,7 @@
 package com.oracle.coffee.domain;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,6 +49,7 @@ public class Emp {
 	private int emp_register;
 	@CreatedDate
 	private LocalDateTime emp_reg_date;
+	private Date emp_ipsa_date;
 	
 	public void changeEmp_name(String emp_name) {
 		this.emp_name = emp_name;
@@ -75,6 +77,9 @@ public class Emp {
 	}
 	public void changeEmp_reg_date(LocalDateTime emp_reg_date) {
 		this.emp_reg_date = emp_reg_date;
+	}
+	public void changeEmp_ipsa_date(Date emp_ipsa_date) {
+		this.emp_ipsa_date = emp_ipsa_date;
 	}
 	
 }

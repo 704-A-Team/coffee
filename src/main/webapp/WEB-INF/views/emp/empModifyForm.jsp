@@ -96,6 +96,14 @@
                         </div>
                     </div>
 
+					<!-- 입사일 -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">입사일</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" name="emp_ipsa_date" value="${empDto.emp_ipsa_date}" required />
+                        </div>
+                    </div>
+                    
                     <!-- 재직 여부 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">재직 여부</label>
