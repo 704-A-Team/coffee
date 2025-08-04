@@ -1,4 +1,4 @@
-package com.oracle.coffee.servie;
+package com.oracle.coffee.service;
 
 import java.util.List;
 
