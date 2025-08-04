@@ -38,7 +38,7 @@
 
                 <!-- Header -->
                 <div class="row fw-bold py-2 border-bottom bg-primary text-white">
-                    <div class="col-1">사번</div>
+                    <div class="col-1">사원 번호</div>
                     <div class="col-2">이름</div>
                     <div class="col-2">전화번호</div>
                     <div class="col-1">소속 부서</div>

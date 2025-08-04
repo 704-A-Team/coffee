@@ -30,6 +30,7 @@ import lombok.ToString;
 		allocationSize = 1
 		
 		)
+
 @EntityListeners(AuditingEntityListener.class) 
 public class Emp {
 	@Id

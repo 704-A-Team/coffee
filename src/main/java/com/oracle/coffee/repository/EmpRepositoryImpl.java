@@ -45,7 +45,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 			    "WHERE rn BETWEEN :start AND :end";
 
 
-		Query query = em.createNativeQuery(nativeSql); // ← 여기만 바꿈
+		Query query = em.createNativeQuery(nativeSql);
 		query.setParameter("start", empDto.getStart());
 		query.setParameter("end", empDto.getEnd());
 
