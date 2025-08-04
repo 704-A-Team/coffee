@@ -6,7 +6,6 @@ import com.oracle.coffee.dto.PurchaseDto;
 
 public interface SWPurchaseService {
 	int 				purchaseSave(PurchaseDto purchaseDto);
-	int 				purchaseSavetest(PurchaseDto purchaseDto);
 	int 				totalPurchaseCnt();
 	List<PurchaseDto> 	purchaseList(PurchaseDto purchaseDto);
 

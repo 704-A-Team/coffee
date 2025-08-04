@@ -24,9 +24,14 @@ public class JHController {
 	private final JHservice jHservice;
 
     @GetMapping(value = "/inventoryList")
-    public String inventoryPage(@RequestParam(value="page", defaultValue="1") int currentPage,
-    		InventoryDto inventoryDto , Model model) {
+    public String inventoryPage(
+    		@RequestParam(value="page", defaultValue="1") int currentPage,
+    		@RequestParam(value="isClosed", defaultValue="false") boolean isClosed,
+    		InventoryDto inventoryDto,
+    		Model model
+    		) {
     	System.out.println("jh/JHController Start...");
+    	log.info(">>> isClosed received = {}", isClosed);
     	
     	int totalInventory = jHservice.totalInventory();
     	//String currentPage = "1";
@@ -42,6 +47,7 @@ public class JHController {
     	model.addAttribute("totalInventory", totalInventory);
     	model.addAttribute("inventoryList", inventoryList);
     	model.addAttribute("page", page);
+    	model.addAttribute("isClosed", isClosed);
 
     	
         return "jh/inventoryList";

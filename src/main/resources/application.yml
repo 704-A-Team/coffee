@@ -10,8 +10,6 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521/xe
     username: s202507a
     password: 704a
-    
-
 
   servlet:
     multipart:
@@ -52,4 +50,3 @@ mybatis:
   
 #upload Folder
 com.oracle.coffee.upload.path: upload   
-

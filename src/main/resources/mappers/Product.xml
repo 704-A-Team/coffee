@@ -1,121 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.oracle.coffee.ProductMapper">
-
-	<insert id="wonProductSave" parameterType="ProductDto">
-		<selectKey keyProperty="product_code" resultType="int" order="BEFORE">
-            SELECT PRODUCT_SEQ.NEXTVAL FROM DUAL <!-- Oracle -->
-            <!-- MySQL 또는 auto-increment 사용 시: SELECT LAST_INSERT_ID() -->
-        </selectKey>
-        insert into product
-        (
-        	 product_code
-        	,product_name
-        	,product_unit
-        	,product_type
-        	,product_weight
-        	,product_isorder
-        	,product_isdel
-        	,product_reg_code
-        	,product_reg_date 
-        )
-        values
-        (
-        	 #{product_code}
-        	,#{product_name}
-        	,#{product_unit}
-        	,#{product_type}
-        	,#{product_weight}
-        	,#{product_isorder}
-        	,#{product_isdel}
-        	,#{product_reg_code}
-        	,sysdate
-        )
+<mapper namespace="com.oracle.coffee.ProductWanMapper">
+	<insert id="wanRegister" parameterType="ProductWanDTO" useGeneratedKeys="true" keyProperty="product_code">
+		insert into product(PRODUCT_CODE , PRODUCT_NAME , PRODUCT_CONTENTS , PRODUCT_UNIT ,
+							PRODUCT_TYPE , PRODUCT_YIELD , PRODUCT_WEIGHT , PRODUCT_ISORDER , PRODUCT_PACK ,
+							PRODUCT_ISDEL , PRODUCT_REG_CODE , PRODUCT_REG_DATE)
+							values (
+								PRODUCT_SEQ.nextval, #{product_name}, #{product_contents}, #{product_unit},
+								#{product_type}, #{product_yield}, #{product_weight}, #{product_isorder}, #{product_pack},
+								#{product_isdel}, #{product_reg_code}, #{product_reg_date}	)
+		<selectKey keyProperty="product_code" resultType="Int" order="AFTER">
+			select PRODUCT_SEQ.CURRVAL From dual
+		</selectKey>
 	</insert>
 	
-	<!-- <select id="totalProduct" resultType="int">
-		select 	count(*) 
-		from 	product
-	</select> -->
+	<insert id="wanImgRegister3" parameterType="ProductImgDTO">
+		insert into PRODUCT_IMG (product_code , ord , file_name) 
+			values (#{product_code} , #{ord} , #{file_name} )
+	</insert>
 	
-	<select id="totalWonProduct" resultType="int">
-		select 	count(*) 
-		from 	product
-		where 	product_type = 0
+	<!-- 예시 DTO: ProductDto (id, name, price) -->
+    <!-- List<ProductDto>를 한 번에 저장 -->
+    <insert id="wanImgRegister" parameterType="java.util.List">
+		    INSERT ALL 
+		    <foreach collection="list" item="imgDto" separator=" "> <!-- item 이름을 imgDto 등으로 변경 -->
+		    INTO  PRODUCT_IMG (product_code, ord, file_name) VALUES
+		        (
+		            #{imgDto.product_code},
+		            #{imgDto.ord},
+		            #{imgDto.file_name}
+		        )
+		    </foreach>
+		    SELECT 1 FROM DUAL
+	</insert>
+	
+	
+	<insert id="priceRegister" parameterType="ProductPriceDTO">
+		insert into product_price(PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
+			values (#{product_code} , #{start_date}, #{price_reg_code}, #{end_date}, #{price}, #{price_reg_date} )
+	</insert>
+	
+	<select id="countTotal" resultType="Int">
+		select count(*) from product where product_isdel = 0 and product_type = 1
 	</select>
 	
-	<select id="wonProductList" parameterType="ProductDto" resultType="ProductDto">
-		select *
-		from (
-		    select rownum rn, a.*
-		    from (
-		        select 
-		            p.*, 
-		            bu.cd_contents as unitName,
-		            bt.cd_contents as typeName,
-		            bi.cd_contents as isorderName
-		        from product p
-		        left join bunryu bu 
-		        	ON p.product_unit = bu.mcd and bu.bcd = 750
-		        left join bunryu bt 
-		        	ON p.product_type = bt.mcd and bt.bcd = 700
-		        left join bunryu bi 
-		        	ON p.product_isorder = bi.mcd and bi.bcd = 800
-		        where p.product_type = #{product_type}
-		        order by p.product_code desc
-		    ) a
+	<select id="wonList" resultType="ProductWanDTO">
+		select * from product where product_type = 0
+	</select>
+	
+	<insert id="wanRecipeSave" parameterType="RecipeDTO">
+		insert into recipe (product_wan_code, product_won_code, recipe_amount) values
+				(#{product_wan_code} , #{product_won_code} , #{recipe_amount})
+	</insert>
+	
+	<select id="wanList" parameterType="ProductWanDTO" resultType="ProductWanDTO">
+		SELECT * FROM (
+		    SELECT ROWNUM rw , wanAll.* FROM (
+		              SELECT pd.* , img.file_name simage    , pp_latest.price , pp_latest.start_date
+		              FROM (
+		                      SELECT * FROM product 
+		                      WHERE   product_isdel = 0 AND  product_type = 1
+		                    ) pd 
+		              LEFT OUTER JOIN  ( SELECT * FROM product_img WHERE ord = 0) img
+		              ON pd.product_code = img.product_code
+		              LEFT OUTER JOIN  ( SELECT pp.*
+		                                 FROM product_price pp ,
+		                                      (
+		                                       SELECT product_code, max_price_date(product_code) max_start_date
+		                                       FROM   product_price
+		                                       GROUP BY product_code
+		                                       ) p_max_date
+		                                 
+		                                 WHERE pp.product_code = p_max_date.product_code
+		                                 AND   pp.start_date      = p_max_date.max_start_date
+		                                 ) pp_latest     
+		              ON pd.product_code = pp_latest.product_code
+		              ORDER BY pd.product_code
+		    ) wanAll
 		)
-		where rn between #{start} and #{end}
+		WHERE rw BETWEEN #{start} AND #{end}
+		    
 	</select>
 	
-	<select id="wonProductDetail" parameterType="int" resultType="ProductDto">
-		select  p.*, 
-	            bu.cd_contents as unitName,
-	            bt.cd_contents as typeName,
-	            bi.cd_contents as isorderName,
-	            e.emp_name	   as regName
-	   	from 	product p
-	    left join bunryu bu 
-	    	ON p.product_unit = bu.mcd 		and bu.bcd = 750
-	    left join bunryu bt 
-	    	ON p.product_type = bt.mcd 		and bt.bcd = 700
-	    left join bunryu bi 
-	    	ON p.product_isorder = bi.mcd 	and bi.bcd = 800
-    	left join emp e
-    		ON p.product_reg_code = e.emp_code
-	    where product_code = #{product_code}
+	<select id="wanAndRcpDetail" parameterType="Int" resultMap="wanAndRecipe">
+		SELECT pp.* , price.price as wan_price , rcp.* , won.product_name as won_product_name , img.ord , img.file_name , img.product_code as img_product_code 
+	         FROM PRODUCT pp
+	         LEFT OUTER JOIN RECIPE rcp
+	            ON pp.product_code = rcp.product_wan_code
+	         LEFT OUTER JOIN product won
+	            ON rcp.product_won_code = won.product_code
+	         LEFT OUTER JOIN PRODUCT_IMG img
+	            ON pp.product_code = img.product_code
+	         LEFT OUTER JOIN PRODUCT_PRICE price
+	            ON  pp.product_code = price.product_code
+	            AND price.start_date = max_price_date(pp.product_code)
+	         WHERE pp.product_code = #{product_code}
+        
 	</select>
 	
-	<update id="wonProductModify" parameterType="ProductDto">
-	    update product
-	    set product_name     = #{product_name},
-	        product_unit     = #{product_unit},
-	        product_type     = #{product_type},
-	        product_weight   = #{product_weight},
-	        product_isorder  = #{product_isorder},
-	        product_isdel    = #{product_isdel}
-	    where product_code   = #{product_code}
-	</update>
+	<resultMap type="WanAndRecipeDTO" id="wanAndRecipe">
+		<id property="product_code" column="product_code"/>
+		<result property="product_name" column="product_name"/>
+		<result property="product_contents" column="product_contents"/>
+		<result property="product_unit" column="product_unit"/>
+		<result property="product_type" column="product_type"/>
+		<result property="product_yield" column="product_yield"/>
+		<result property="product_weight" column="product_weight"/>
+		<result property="product_isorder" column="product_isorder"/>
+		<result property="product_pack" column="product_pack"/>
+		<result property="product_isdel" column="product_isdel"/>
+		<result property="product_reg_code" column="product_reg_code"/>
+		<result property="product_reg_date" column="product_reg_date"/>
+		<result property="wan_price" column="wan_price"/>
+		
+	    <!-- 레시피 리스트 매핑 -->
+		<collection property="recipeList" ofType="RecipeDTO">
+			<result property="product_won_code" column="product_won_code"/>
+			<result property="product_wan_code" column="product_wan_code"/>
+			<result property="recipe_amount" column="recipe_amount"/>
+			<result property="won_product_name" column="won_product_name"/>
+		</collection>	
+		<!-- 이미지 리스트 매핑 -->
+		<collection property="wanImgList" ofType="ProductImgDTO">
+			<id property="file_name" column="file_name"/>
+			<result property="product_code" column="img_product_code"/>
+			<result property="ord" column="ord"/>
+		</collection>
+	</resultMap>
 	
-	<update id="wonProductDelete" parameterType="ProductDto">
-	    update 	product
-	    set 	product_isdel    = #{product_isdel}
-	    where 	product_code   = #{product_code}
-	</update>
-
-	<select id="productInfo" parameterType="int" resultType="ProductDto" >
-		select 	product_code, product_name
-		from 	product
-		where 	product_type = #{product_type}
+	<select id="wanModifyInForm" parameterType="Int" resultMap="wanImgModify">
+		SELECT pp.* , img.file_name , img.ord , img.product_code as img_product_code
+	         FROM product pp
+	         LEFT OUTER JOIN product_img img
+	         ON pp.product_code = img.product_code
+	         WHERE pp.product_code = #{product_code}
+	         ORDER BY img.ord
 	</select>
 	
-	<select id="productIsList" parameterType="int" resultType="ProductDto">
-		select  product_code, product_name
-		from 	product
-		where 	product_type = #{product_type}
-		and 	product_isdel = 0
-	</select>
-	
+	<resultMap type="WanAndRecipeDTO" id="wanImgModify">
+		<id property="product_code" column="product_code"/>
+		<result property="product_name" column="product_name"/>
+		<result property="product_contents" column="product_contents"/>
+		<result property="product_unit" column="product_unit"/>
+		<result property="product_type" column="product_type"/>
+		<result property="product_yield" column="product_yield"/>
+		<result property="product_weight" column="product_weight"/>
+		<result property="product_isorder" column="product_isorder"/>
+		<result property="product_pack" column="product_pack"/>
+		<result property="product_isdel" column="product_isdel"/>
+		<result property="product_reg_code" column="product_reg_code"/>
+		<result property="product_reg_date" column="product_reg_date"/>
+		
+		<collection property="wanImgList" ofType="ProductImgDTO">
+			<id property="file_name" column="file_name"/>
+			<result property="product_code" column="img_product_code"/>
+			<result property="ord" column="ord"/>
+		</collection>
+	</resultMap>
 </mapper>
