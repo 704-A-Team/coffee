@@ -109,8 +109,8 @@
                         <label class="col-sm-2 col-form-label">재직 여부</label>
                         <div class="col-sm-8">
                             <select class="form-select" name="emp_isDel">
-                                <option value="false" ${!empDto.emp_isDel ? 'selected' : ''}>재직중</option>
-                                <option value="true" ${empDto.emp_isDel ? 'selected' : ''}>퇴직</option>
+                        <option value="0" ${empDto.emp_isDel == 0 ? 'selected' : ''}>재직중</option>
+						<option value="1" ${empDto.emp_isDel == 1 ? 'selected' : ''}>퇴직</option>
                             </select>
                         </div>
                     </div>

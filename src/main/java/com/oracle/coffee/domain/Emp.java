@@ -45,7 +45,7 @@ public class Emp {
 	private int emp_sal;
 	private String emp_email;
 	@ColumnDefault("0")		//default column 구분: 0-> 재직, 1-> 퇴직
-	private Boolean emp_isdel;
+	private int emp_isdel;
 	private int emp_register;
 	@CreatedDate
 	private LocalDateTime emp_reg_date;
@@ -69,7 +69,7 @@ public class Emp {
 	public void changeEmp_email(String emp_email) {
 		this.emp_email = emp_email;
 	}
-	public void changeEmp_isdel(Boolean emp_isdel) {
+	public void changeEmp_isdel(int emp_isdel) {
 		this.emp_isdel = emp_isdel;
 	}
 	public void changeEmp_register(int emp_register) {

@@ -44,7 +44,7 @@ public class DeptServiceImpl implements DeptService {
 	@Override
 	public int deptSave(DeptDto deptDto) {
 		Dept dept = modelMapper.map(deptDto, Dept.class);
-		if(dept.getDept_isdel()==null)dept.changeDept_isdel(false);
+		if(dept.getDept_isdel()==1)dept.changeDept_isdel(0);
 		Dept saveDept = deptRepository.deptSave(dept);
 		
 		return saveDept.getDept_code();

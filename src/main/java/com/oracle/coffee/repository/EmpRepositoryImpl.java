@@ -21,7 +21,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	@Override
 	public Long empTotalcount() {
 		TypedQuery<Long> query = 	
-				em.createQuery("select count(e) from Emp e where e.emp_isdel = false", Long.class); 
+				em.createQuery("select count(e) from Emp e where e.emp_isdel = 0", Long.class); 
 		Long totalCountLong = query.getSingleResult();
 
 		return totalCountLong;
@@ -60,7 +60,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 		    dto.setEmp_grade(((Number) row[5]).intValue());
 		    dto.setEmp_sal(((Number) row[6]).intValue());
 		    dto.setEmp_email((String) row[7]);
-		    dto.setEmp_isDel(((Number) row[8]).intValue() == 1);
+		    dto.setEmp_isDel(((Number) row[8]).intValue());
 		    dto.setEmp_register(((Number) row[9]).intValue());
 		    dto.setEmp_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
 		    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[11]).getTime()));
@@ -116,7 +116,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	    dto.setEmp_grade(((Number) row[4]).intValue());
 	    dto.setEmp_sal(((Number) row[5]).intValue());
 	    dto.setEmp_email((String) row[6]);
-	    dto.setEmp_isDel(((Number) row[7]).intValue() == 1);
+	    dto.setEmp_isDel(((Number) row[7]).intValue());
 	    dto.setEmp_register(((Number) row[8]).intValue());
 	    dto.setEmp_reg_date(((java.sql.Timestamp) row[9]).toLocalDateTime());
 	    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[10]).getTime()));
@@ -129,7 +129,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	@Override
 	public void empDelete(int emp_code) {
 		Emp emp = em.find(Emp.class, emp_code);
-		emp.changeEmp_isdel(true);
+		emp.changeEmp_isdel(1);
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	      .setParameter("grade", empDto.getEmp_grade())
 	      .setParameter("sal", empDto.getEmp_sal())
 	      .setParameter("email", empDto.getEmp_email())
-	      .setParameter("del", empDto.isEmp_isDel())
+	      .setParameter("del", empDto.getEmp_isDel())
 	      .setParameter("code", empDto.getEmp_code())
 	      .setParameter("ipsa_date", empDto.getEmp_ipsa_date())
 	      .executeUpdate();
