@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
+import com.oracle.coffee.dto.orders.OrdersListDto;
+import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 
 import lombok.RequiredArgsConstructor;
@@ -82,8 +84,53 @@ public class OrdersDaoImpl implements OrdersDao {
 		try {
 			session.update("updateOrdersStatus", order);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void deleteOrders(int orderCode) {
+		try {
+			session.update("deleteOrders", orderCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int totalCount() {
+		int count = 0;
+
+		try {
+			count = session.update("totalCountOrders");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	@Override
+	public int totalCount(int clientCode) {
+		int count = 0;
+
+		try {
+			count = session.update("totalCountOrdersByClient", clientCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	@Override
+	public List<OrdersListDto> list(OrdersPageDto page) {
+		List<OrdersListDto> list = null;
+		
+		try {
+			list = session.selectList("listOrders", page);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

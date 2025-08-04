@@ -12,50 +12,58 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-
-	const ordersDetails = [
-		<c:forEach items="${order.orders_details }" var="detail">
-			{
-				product_code: "${detail.product_code}",
-				order_amount: "${detail.order_amount}",
-				order_ddate: "${detail.order_ddate}", // yyyy-MM-dd
-				
-				product_name: "${detail.product_name} (${detail.product_code})",
-				product_price: "${detail.price}"
-		    },
-		</c:forEach>
-	];
-    
-	$(function () {
-		// 새 발주서: 빈 제품 행 추가 / 조회: 기존 제품 행 추가
-		if (ordersDetails.length === 0) {
-		    addItem();
-		} else {
-			ordersDetails.forEach(detail => addItem(detail));
-		}
-		
-		// 선택한 제품에 따라 price 자동 추가
-		$('#item-list').on("change", '.prd-code', function () {
-			const $row = $(this).closest('.row');
-		    const price = $(this).find("option:selected").attr("price");
-		    $row.find(".prd-price").text(price);
-	    });
-		
-		// row 별 총액 계산
-	    $('#item-list').on("change", '.prd-count', function () {
-	    	const $row = $(this).closest('.row');
-	    	const count = $(this).val();
-	    	const price = $row.find(".prd-price").text() ?? 0;
-	    	$row.find(".prd-total-price").text(count * price);
-	    });
-		
-	    $('#item-list').on("change", '.prd-code', function () {
-	    	const $row = $(this).closest('.row');
-	    	const price = $(this).find("option:selected").attr("price");
-	    	const count = $row.find(".prd-count").val() ?? 0;
-	    	$row.find(".prd-total-price").text(count * price);
-	    });
-	});
+	
+	function getDetails() {
+		return [
+			<c:forEach items="${order.orders_details }" var="detail">
+				{
+					product_code: "${detail.product_code}",
+					order_amount: "${detail.order_amount}",
+					order_ddate: "${detail.order_ddate}", // yyyy-MM-dd
+					
+					product_name: "${detail.product_name} (${detail.product_code})",
+					product_price: "${detail.price}",
+					
+					can_order: ${detail.can_order},
+			    },
+			</c:forEach>
+		];
+	}
+	
+    const isFixedPage = ${isFixedPage};
+    if (!isFixedPage) {
+    	const details = getDetails();
+    	$(function () {
+    		// 새 발주서: 빈 제품 행 추가 / 조회: 기존 제품 행 추가
+    		if (details.length === 0) {
+    		    addItem();
+    		} else {
+    			details.forEach(detail => addItem(detail));
+    		}
+    		
+    		// 선택한 제품에 따라 price 자동 추가
+    		$('#item-list').on("change", '.prd-code', function () {
+    			const $row = $(this).closest('.row');
+    		    const price = $(this).find("option:selected").attr("price");
+    		    $row.find(".prd-price").text(price);
+    	    });
+    		
+    		// row 별 총액 계산
+    	    $('#item-list').on("change", '.prd-count', function () {
+    	    	const $row = $(this).closest('.row');
+    	    	const count = $(this).val();
+    	    	const price = $row.find(".prd-price").text() ?? 0;
+    	    	$row.find(".prd-total-price").text(count * price);
+    	    });
+    		
+    	    $('#item-list').on("change", '.prd-code', function () {
+    	    	const $row = $(this).closest('.row');
+    	    	const price = $(this).find("option:selected").attr("price");
+    	    	const count = $row.find(".prd-count").val() ?? 0;
+    	    	$row.find(".prd-total-price").text(count * price);
+    	    });
+    	});	
+    }
 
 	// 제품 목록 추가
 	function addItem(detail = null) {
@@ -101,7 +109,8 @@
 	    if (detail !== null) {
  	        if (nameInput) {
  	        	// 현재 가능한 products 목록(select태그의 value들)에 없으면
-				if (!$(nameInput).find('option[value="' + detail.product_code + '"]').length) {
+ 	        	if (!detail.can_order) {
+				// if (!$(nameInput).find('option[value="' + detail.product_code + '"]').length) {
 	 	        	const deletedOption = new Option('[❌불가] ' + detail.product_name, 0, true, true);
 	  				$(deletedOption).prop("disabled", true);
 	  				nameInput.append(deletedOption)
@@ -121,7 +130,8 @@
 	}
 	
 	// form submit전 제품 목록 리스트 생성 (payload)
-	function setOrderDetails() {
+	function setOrderDetails(orderCode) {
+		console.log(orderCode)
 		const rows = document.querySelectorAll('#item-list .item-list-item');
 		const detailsContainer = document.getElementById('ordersDetails');
 		detailsContainer.innerHTML = '';
@@ -145,11 +155,14 @@
 			const prdCount = row.querySelector('.prd-count')?.value?.trim();
 			const prdDdate = row.querySelector('.prd-ddate')?.value?.trim();
 
-			const fields = [
+			let fields = [
 				{ name: 'product_code', value: parseInt(prdCode) },
 				{ name: 'order_amount', value: parseInt(prdCount) },
 				{ name: 'order_ddate', value: prdDdate }
 			];
+			if (orderCode != 0) {
+				fields.push( { name: 'order_code', value: parseInt(orderCode) })
+			}
 
 			fields.forEach((field) => {
 				const input = document.createElement('input');
@@ -164,10 +177,15 @@
 		return true;
 	}
 	
-	// form submit
-	function submitReq(url) {
-		const form = document.getElementById('orderForm');
-	    form.action = url;
+	function reqOrder(orderCode) {
+		const details = getDetails();
+		for(detail of details) {
+			if (!detail.can_order) {
+				alert("발주 불가 품목이 존재합니다\n내용을 수정해주세요");
+				return false;
+			}
+		}
+		location.href("/order/request/" + orderCode);
 	}
   
 </script>

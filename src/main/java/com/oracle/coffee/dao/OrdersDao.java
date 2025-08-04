@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
+import com.oracle.coffee.dto.orders.OrdersListDto;
+import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 
 public interface OrdersDao {
@@ -14,4 +16,8 @@ public interface OrdersDao {
 	void updateOrdersNote(OrdersDto order);
 	void deleteOrdersDetails(int orderCode);
 	void updateOrdersStatus(OrdersDto order);
+	void deleteOrders(int orderCode);
+	int totalCount();
+	int totalCount(int clientCode);
+	List<OrdersListDto> list(OrdersPageDto page);
 }

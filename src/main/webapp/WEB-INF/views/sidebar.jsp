@@ -97,7 +97,7 @@
 			</button>
 			<div class="collapse" id="order-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				    <li class="mt-2"><a href="/order/new" class="link-light rounded menu-small">수주 목록</a></li>
+				    <li class="mt-2"><a href="/order/list" class="link-light rounded menu-small">수주 목록</a></li>
 				    <li class="mt-2"><a href="/order/new" class="link-light rounded menu-small">수주서 작성</a></li>
 				</ul>
 			</div>

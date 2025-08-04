@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
+import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 import com.oracle.coffee.service.OrdersService;
 
@@ -31,6 +32,8 @@ public class OrdersController {
 	// 새로운 수주서 페이지
 	@GetMapping("/new")
 	public String newOrderPage(Model model) {
+		// 본사 직원 생성 불가
+		
 		// 로그인한 가맹점 정보 조회
 		// model.addAttribute("client", client);
 		model.addAttribute("client_code", 3001);
@@ -40,25 +43,55 @@ public class OrdersController {
 		model.addAttribute("products", products);
 
 		model.addAttribute("nowDate", LocalDate.now());
+		model.addAttribute("isFixedPage", false);
 		return "order/form";
 	}
 	
 	// 리스트 조회
 	@GetMapping("/list")
-	public String listPage() {
+	public String listPage(PageRequestDto page, Model model) {
 		// 로그인한 정보 조회
+		// 본사/가맹점에 따라 리스트 조회
+		
+//		List<OrdersListDto> list = null;
+//		if (true) {
+//			list = ordersService.list(page);
+//		}
+//		else {
+//			int clientCode = 3001;
+//			list = ordersService.list(page, clientCode);
+//		}
+//		
+//		model.addAttribute("ordersList", list);
 		return "order/list";
 	}
 	
-	// 수주 상세보기
+	// 수주 상세보기 페이지
 	@GetMapping("/{order_code}")
 	public String detailPage(@PathVariable("order_code") int orderCode, Model model) {
 		// 수주 조회
 		OrdersDto order = ordersService.get(orderCode);
 		if (order == null) {}	// 404 예외처리
+
+		// 로그인한 가맹점/본사직원 정보 조회
+		// 권한 확인
 		
-		// 가명점 정보 조회
-		 
+		model.addAttribute("client_code", 3001); 
+		// model.addAttribute("client", client);
+		// model.addAttrubyte("loginUser", loginUser);
+		model.addAttribute("order", order);
+		
+		model.addAttribute("isFixedPage", true);
+		return "order/form";
+	}
+	
+	// 수주 수정 페이지
+	@GetMapping("/modify/{order_code}")
+	public String modifyPage(@PathVariable("order_code") int orderCode, Model model) {
+		// 수주 조회
+		OrdersDto order = ordersService.get(orderCode);
+		if (order == null) {}	// 404 예외처리
+		
 		// 로그인한 가맹점/본사직원 정보 조회
 		// 권한 확인
 		
@@ -70,33 +103,50 @@ public class OrdersController {
 		// model.addAttrubyte("loginUser", loginUser);
 		model.addAttribute("order", order);
 		model.addAttribute("products", products);
+		
+		model.addAttribute("isFixedPage", false);
 		return "order/form";
 	}
 	
-	// 수주 저장(생성+업데이트): 요청 단계에서만 가능
+	// 수주 저장(생성+업데이트): 요청 단계까지만 가능
 	@PostMapping("/save")
 	public String save(OrdersDto order) {
-		if (order.getOrder_code() != 0) {
-			// 권한 조회
-			// 임시저장/요청 상태 아니면 exception 처리
-		}
+		// 권한 조회
+		// 임시저장/요청 상태 아니면 exception 처리
 		
 		// 수주 저장
-		int orderCode = ordersService.upsertImpormation(order);
+		int orderCode = ordersService.upsertInformation(order);
 		return "redirect:/order/" + orderCode;
 	}
 
 	// 수주 요청
-	@PostMapping("/request")
-	public String register(OrdersDto order) {
+	@GetMapping("/request/{order_code}")
+	public String register(@PathVariable("order_code") int orderCode) {
 		// 수주 요청 상태로 변경
-		int orderCode = ordersService.request(order);
+		ordersService.request(orderCode);
 		return "redirect:/order/" + orderCode;
 	}
 	
-	// 수주 승인, 취소(반려): 요청 상태인 경우만 가능
-	@PostMapping("/refuse")
-	public String refuse() {
-		return "";
+	// 수주 임시저장 삭제
+	@GetMapping("/del/{order_code}")
+	public String delete(@PathVariable("order_code") int orderCode) {
+		ordersService.delete(orderCode);
+		return "redirect:/order/list";
+	}
+	
+	// 수주 취소(반려): 요청 상태인 경우만 가능
+	@GetMapping("/cancel/{order_code}")
+	public String cancel(@PathVariable("order_code") int orderCode) {
+		ordersService.refuseOrCancel(orderCode);
+		return "redirect:/order/" + orderCode;
+	}
+	
+	// 수주 승인: 요청 상태인 경우만 가능
+	@GetMapping("/approve/{order_code}")
+	public String approve(@PathVariable("order_code") int orderCode) {
+		// 로그인한 본사직원 정보 조회
+		// 권한 확인
+		ordersService.approve(orderCode);
+		return "redirect:/order/" + orderCode;
 	}
 }
