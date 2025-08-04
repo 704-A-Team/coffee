@@ -28,13 +28,12 @@ public class EmpDto {
 	private String 				emp_email; 					//이메일
 	private boolean 			emp_isDel; 					//퇴직여부
 	private int 				emp_register; 				//등록자(사원코드)
-	private LocalDateTime 		emp_reg_date; 				//등록일
+	private LocalDateTime 		emp_reg_date; 				//등록일		
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date				emp_ipsa_date;				//입사일
 	
 	//join
 	private String				dept_code;					//부서코드
-	@Transient
 	private String 				emp_grade_detail;			//직급분류
     
 	
