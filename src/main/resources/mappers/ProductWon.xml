@@ -40,34 +40,40 @@
 		from 	product
 	</select> -->
 	
-	<select id="totalWonProduct" resultType="int">
-		select 	count(*) 
-		from 	product
-		where 	product_type = 0
+	<select id="totalWonProduct" parameterType="ProductDto" resultType="int">
+	    select count(*)
+	    from product p
+	    where p.product_type = 0
+	    <if test="searchKeyword != null and searchKeyword != ''">
+	        and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	    </if>
 	</select>
 	
 	<select id="wonProductList" parameterType="ProductDto" resultType="ProductDto">
-		select *
-		from (
-		    select rownum rn, a.*
-		    from (
-		        select 
-		            p.*, 
-		            bu.cd_contents as unitName,
-		            bt.cd_contents as typeName,
-		            bi.cd_contents as isorderName
-		        from product p
-		        left join bunryu bu 
-		        	ON p.product_unit = bu.mcd and bu.bcd = 750
-		        left join bunryu bt 
-		        	ON p.product_type = bt.mcd and bt.bcd = 700
-		        left join bunryu bi 
-		        	ON p.product_isorder = bi.mcd and bi.bcd = 800
-		        where p.product_type = #{product_type}
-		        order by p.product_code desc
-		    ) a
-		)
-		where rn between #{start} and #{end}
+	    select *
+	    from (
+	        select rownum rn, a.*
+	        from (
+	            select 
+	                p.*, 
+	                bu.cd_contents as unitName,
+	                bt.cd_contents as typeName,
+	                bi.cd_contents as isorderName
+	            from product p
+	            left join bunryu bu 
+	                ON p.product_unit = bu.mcd and bu.bcd = 750
+	            left join bunryu bt 
+	                ON p.product_type = bt.mcd and bt.bcd = 700
+	            left join bunryu bi 
+	                ON p.product_isorder = bi.mcd and bi.bcd = 800
+	            where p.product_type = 0
+	            <if test="searchKeyword != null and searchKeyword != ''">
+	                and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	            </if>
+	            order by p.product_code desc
+	        ) a
+	    )
+	    where rn between #{start} and #{end}
 	</select>
 	
 	<select id="wonProductDetail" parameterType="int" resultType="ProductDto">

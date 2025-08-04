@@ -25,10 +25,10 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		return purchase_code;
 	}
 	@Override
-	public int totalPurchaseCnt() {
+	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl totalPurchaseCnt start...");
 		
-		int totalPurchaseCnt = swPurchaseDao.totalPurchaseCnt();
+		int totalPurchaseCnt = swPurchaseDao.totalPurchaseCnt(purchaseDto);
 		
 		return totalPurchaseCnt;
 	}
@@ -41,6 +41,15 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		System.out.println("SWPurchaseServiceImpl purchaseList purchaseList.size() : " + purchaseList.size());
 		
 		return purchaseList;
+	}
+	@Override
+	public PurchaseDto purchaseDetail(int purchase_code) {
+		System.out.println("SWPurchaseServiceImpl purchaseDetail start...");
+		
+		PurchaseDto purchaseDetail = swPurchaseDao.purchaseDetail(purchase_code);
+		System.out.println("SWPurchaseServiceImpl purchaseDetail : " + purchaseDetail);
+		
+		return purchaseDetail;
 	}
 	
 	

@@ -48,10 +48,10 @@ public class SWProductServiceImpl implements SWProductService {
 	}
 
 	@Override
-	public int totalWonProduct() {
+	public int totalWonProduct(ProductDto productDto) {
 		System.out.println("ProductServiceImpl totalWonProduct start...");
 		
-		int totalWonProduct = productDao.totalWonProduct();
+		int totalWonProduct = productDao.totalWonProduct(productDto);
 		
 		return totalWonProduct;
 	}

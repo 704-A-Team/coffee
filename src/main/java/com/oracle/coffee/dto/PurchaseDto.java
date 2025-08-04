@@ -29,4 +29,16 @@ public class PurchaseDto {
 	private int 		end;
 	private String      currentPage;
 	
+	private String 		productName;
+	private String 		clientName;
+	private String 		unitName;
+	private String 		statusName;
+	private int 		provideAmount;
+	private String		empPermName;
+	private String		empRegName;
+	//private int			totalPrice = purchase_danga*provideAmount/purchase_amount;
+	
+	private String 		searchType;
+	private String 		searchKeyword;
+	
 }

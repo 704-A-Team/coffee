@@ -66,7 +66,7 @@ public class SWProductDaoImpl implements SWProductDao {
 		List<ProductDto> productDtoList = null;
 		
 		try {
-			productDtoList = session.selectOne("totalProduct");
+			productDtoList = session.selectList("wonProductList", productDto);
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -77,14 +77,14 @@ public class SWProductDaoImpl implements SWProductDao {
 	}
 
 	@Override
-	public int totalWonProduct() {
+	public int totalWonProduct(ProductDto productDto) {
 		System.out.println("ProductDaoImpl totalWonProduct start...");
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		int totalWonProduct = 0;
 		try {
-			totalWonProduct = session.selectOne("totalWonProduct");
+			totalWonProduct = session.selectOne("totalWonProduct", productDto);
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -171,7 +171,7 @@ public class SWProductDaoImpl implements SWProductDao {
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		List<ProductDto> productIsList = null;
 		try {
-			session.selectList("productIsList", product_type);
+			productIsList = session.selectList("productIsList", product_type);
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
 			System.out.println("SWProductDaoImpl productIsList Exception : " + e.getMessage());

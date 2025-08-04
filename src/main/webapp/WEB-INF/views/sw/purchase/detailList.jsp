@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>원재료 상세 정보</title>
+    <title>발주 상세 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-section-title {
@@ -41,64 +41,84 @@
         <!-- 본문 -->
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
-                <div class="form-section-title">원재료 상세 정보</div>
+                <div class="form-section-title">발주 상세 정보</div>
 
                 <div class="card shadow-sm border-0">
                     <div class="card-header">
-                        ${provideDetail.productName} 공급 정보
+                        원재료명 : ${purchaseDetail.productName}
                     </div>
                     <div class="card-body text-black">
                         <table class="table table-borderless info-table">
                             <tbody>
                                 <tr>
-                                    <th>공급 코드</th>
-                                    <td>${provideDetail.provide_code}</td>
+                                    <th>발주 코드</th>
+                                    <td>${purchaseDetail.purchase_code}</td>
                                 </tr>
                                 <tr>
-                                    <th>제품명</th>
-                                    <td>${provideDetail.productName}</td>
+                                    <th>원재료명</th>
+                                    <td>${purchaseDetail.productName}</td>
                                 </tr>
                                 <tr>
                                     <th>거래처명</th>
-                                    <td>${provideDetail.clientName}</td>
+                                    <td>${purchaseDetail.clientName}</td>
                                 </tr>
                                 <tr>
-								    <th>공급 단위</th>
+								    <th>공급단위</th>
 								    <td>
-								        <fmt:formatNumber value="${provideDetail.provide_amount}" type="number" groupingUsed="true" />
+								    	<fmt:formatNumber value="${purchaseDetail.provideAmount}" type="number" groupingUsed="true"/>
 								    </td>
 								</tr>
                                 <tr>
                                     <th>단위</th>
-                                    <td>${provideDetail.unitName}</td>
+                                    <td>${purchaseDetail.unitName}</td>
                                 </tr>
                                 <tr>
-                                    <th>단가</th>
-                                    <td>
-								        <fmt:formatNumber value="${provideDetail.current_danga}" type="number" groupingUsed="true" />
+								    <th>단가</th>
+								    <td>
+								    	<fmt:formatNumber value="${purchaseDetail.purchase_danga}" type="number" groupingUsed="true"/>
 								    </td>
+								</tr>
+                                <tr>
+								    <th>발주수량</th>
+								    <td>
+								    	<fmt:formatNumber value="${purchaseDetail.purchase_amount}" type="number" groupingUsed="true"/>
+								    </td>
+								</tr>
+                                <tr>
+							    	<th>총금액</th>
+								    <td>
+								        <fmt:formatNumber value="${purchaseDetail.purchase_danga * purchaseDetail.purchase_amount / purchaseDetail.provideAmount}" type="number" groupingUsed="true"/>
+								    </td>
+								</tr>
+                                <tr>
+                                    <th>상태</th>
+                                    <td>${purchaseDetail.statusName}</td>
                                 </tr>
                                 <tr>
-                                    <th>삭제 구분</th>
-                                    <td>${provideDetail.provide_isdel}</td>
+                                    <th>승인자</th>
+                                    <td>${purchaseDetail.empPermName}</td>
+                                </tr>
+                                <tr>
+                                    <th>거부사유</th>
+                                    <td>${purchaseDetail.purchase_refuse}</td>
+                                </tr>
+                                <tr>
+                                    <th>등록자</th>
+                                    <td>${purchaseDetail.empRegName}</td>
                                 </tr>
                                 <tr>
                                     <th>등록일</th>
-                                    <td>${provideDetail.provide_reg_date}</td>
+                                    <td>${purchaseDetail.purchase_reg_date}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-                <!-- 버튼 영역 -->
-                <div class="d-flex gap-3 justify-content-end mt-4">
-                    <a href="${pageContext.request.contextPath}/provide/provideModifyForm?provide_code=${provideDetail.provide_code}" class="btn btn-primary">수정</a>
-                    <form action="${pageContext.request.contextPath}/provide/provideDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                        <input type="hidden" name="provide_code" value="${provideDetail.provide_code}">
-                        <button type="submit" class="btn btn-danger">삭제</button>
-                    </form>
-                </div>
+                <!-- 목록 버튼 -->
+				<div class="mt-4 text-end">
+				    <a href="javascript:history.back()" class="btn btn-secondary">목록보기</a>
+				</div>
+				<!-- 추가로 조건걸어서 본부장급이상이면 승인버튼 활성화 -->
             </div>
         </main>
 

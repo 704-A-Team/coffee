@@ -31,7 +31,9 @@ public class ProductDto {
 	private String 		typeName;      // 제품 유형명
 	private String 		isorderName;   // 납품 여부명
 	private String		regName;	   // 등록자명
-
+	
+	private String 		searchType;
+	private String 		searchKeyword;
 	
 	
 	

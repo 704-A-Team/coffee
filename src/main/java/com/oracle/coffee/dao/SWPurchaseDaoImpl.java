@@ -45,7 +45,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	}
 
 	@Override
-	public int totalPurchaseCnt() {
+	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseDaoImpl totalPurchaseCnt start...");
 		
 		TransactionStatus txStatus = 
@@ -53,7 +53,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		int totalPurchaseCnt = 0;
 		
 		try {
-			totalPurchaseCnt = session.selectOne("totalPurchaseCnt");
+			totalPurchaseCnt = session.selectOne("totalPurchaseCnt", purchaseDto);
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -78,6 +78,23 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 			System.out.println("SWPurchaseDaoImpl purchaseList Exception : " + e.getMessage());
 		}
 		return purchaseList;
+	}
+
+	@Override
+	public PurchaseDto purchaseDetail(int purchase_code) {
+		System.out.println("SWPurchaseDaoImpl purchaseDetail start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		PurchaseDto purchaseDetail = null;
+		try {
+			purchaseDetail = session.selectOne("purchaseDetail", purchase_code);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseDetail Exception : " + e.getMessage());
+		}
+		return purchaseDetail;
 	}
 
 }

@@ -31,9 +31,15 @@
         )
 	</insert>
 	
-	<select id="totalProvide" resultType="int">
-		select 	count(*) 
-		from 	provide
+	<select id="totalProvide" parameterType="ProvideDto" resultType="int">
+		select count(*)
+		from provide p
+		left join product pt 
+			ON p.product_won_code = pt.product_code
+		where 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+		</if>
 	</select>
 
 	<select id="provideList" parameterType="ProvideDto" resultType="ProvideDto">
@@ -50,11 +56,16 @@
 		        	ON p.product_won_code = pt.product_code
 		        left join client_tb ct 
 		        	ON p.provide_client_code = ct.client_code
+		        where 1=1
+		        <if test="searchKeyword != null and searchKeyword != ''">
+		            and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+		        </if>
 		        order by p.provide_code desc
 		    ) a
 		)
 		where rn between #{start} and #{end}
 	</select>
+
 
 	<select id="provideDetail" parameterType="int" resultType="ProvideDto">
 		select  p.*, 

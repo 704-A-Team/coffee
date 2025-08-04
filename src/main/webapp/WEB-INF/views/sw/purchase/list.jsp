@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>원재료 공급 리스트</title>
+    <title>발주 현황</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-section-title {
@@ -48,9 +48,9 @@
         <!-- 본문 -->
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
-                <div class="form-section-title">원재료 공급 리스트</div>
+                <div class="form-section-title">발주 현황</div>
                 
-                <c:if test="${empty provideList}">
+                <c:if test="${empty purchaseList}">
 			        <div class="col-12">
 			            <div class="alert alert-warning text-center" role="alert">
 			                <strong>해당 검색어에 부합하는 리스트가 없습니다.</strong>
@@ -59,35 +59,38 @@
 			    </c:if>
 
                 <div class="row">
-                    <c:forEach var="provide" items="${provideList}">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">${provide.productName}</h5>
-                                    <ul class="supply-info-list">
-                                        <li><strong>거래처</strong> <span>${provide.clientName}</span></li>
-                                        <li>
-										    <strong>공급 단위</strong>
-										    <span>
-										        <fmt:formatNumber value="${provide.provide_amount}" type="number" groupingUsed="true" />
-										    </span>
-										</li>
-                                        <li><strong>삭제 여부</strong> <span>${provide.provide_isdel}</span></li>
-                                        <li><strong>등록일</strong> <span>${provide.provide_reg_date}</span></li>
-                                    </ul>
-
-                                    <form action="${pageContext.request.contextPath}/provide/provideDetail" method="get" class="mt-auto">
-                                        <input type="hidden" name="provide_code" value="${provide.provide_code}" />
-                                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">상세 보기</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                    <!-- 목록 표시 -->
+					<table class="table table-bordered align-middle text-center">
+					    <thead class="table-primary">
+					        <tr>
+					            <th style="width: 30%;">제품명</th>
+					            <th style="width: 20%;">거래처</th>
+					            <th style="width: 20%;">상태</th>
+					            <th style="width: 20%;">등록일</th>
+					            <th style="width: 10%;">상세</th>
+					        </tr>
+					    </thead>
+					    <tbody>
+					        <c:forEach var="purchase" items="${purchaseList}">
+					            <tr>
+					                <td>${purchase.productName}</td>
+					                <td>${purchase.clientName}</td>
+					                <td>${purchase.statusName}</td>
+					                <td>${purchase.purchase_reg_date}</td>
+					                <td>
+					                    <form action="${pageContext.request.contextPath}/sw/purchaseDetail" method="get">
+					                        <input type="hidden" name="purchase_code" value="${purchase.purchase_code}" />
+					                        <button type="submit" class="btn btn-sm btn-outline-primary">보기</button>
+					                    </form>
+					                </td>
+					            </tr>
+					        </c:forEach>
+					    </tbody>
+					</table>
                 </div>
 				
 				<!-- 검색 -->
-				<form action="${pageContext.request.contextPath}/provide/provideList" method="get" class="row g-2 mb-4">
+				<form action="${pageContext.request.contextPath}/sw/purchaseList" method="get" class="row g-2 mb-4">
 				    <!-- searchType 고정 -->
 				    <input type="hidden" name="searchType" value="productName" />
 				    
@@ -106,19 +109,19 @@
                     <ul class="pagination justify-content-center mt-4">
                         <c:if test="${page.startPage > page.pageBlock}">
                             <li class="page-item">
-                                <a class="page-link" href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage - page.pageBlock}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/sw/purchaseList?currentPage=${page.startPage - page.pageBlock}">
                                     &laquo; 이전
                                 </a>
                             </li>
                         </c:if>
                         <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
                             <li class="page-item ${i == page.currentPage ? 'active' : ''}">
-                                <a class="page-link" href="${pageContext.request.contextPath}/provide/provideList?currentPage=${i}">${i}</a>
+                                <a class="page-link" href="${pageContext.request.contextPath}/sw/purchaseList?currentPage=${i}">${i}</a>
                             </li>
                         </c:forEach>
                         <c:if test="${page.endPage < page.totalPage}">
                             <li class="page-item">
-                                <a class="page-link" href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage + page.pageBlock}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/sw/purchaseList?currentPage=${page.startPage + page.pageBlock}">
                                     다음 &raquo;
                                 </a>
                             </li>

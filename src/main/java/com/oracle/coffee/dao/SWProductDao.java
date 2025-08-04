@@ -9,7 +9,7 @@ public interface SWProductDao {
 	int 				wonProductSave(ProductDto productDto);
 	int 				totalProduct();
 	List<ProductDto> 	productList(ProductDto productDto);
-	int 				totalWonProduct();
+	int 				totalWonProduct(ProductDto productDto);
 	ProductDto 			wonProductDetail(int product_code);
 	int 				wonProductModify(ProductDto productDto);
 	void 				wonProductDelete(ProductDto productDto);

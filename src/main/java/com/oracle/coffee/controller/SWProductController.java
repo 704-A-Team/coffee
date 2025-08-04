@@ -44,7 +44,7 @@ public class SWProductController {
 	public String wonProductListPage(ProductDto productDto, Model model) {
 		System.out.println("SWProductController wonProductListPage Strart...");
 		
-		int totalWonCount = productService.totalWonProduct();
+		int totalWonCount = productService.totalWonProduct(productDto);
 		System.out.println("SWProductController wonProductListPage totalCount : " + totalWonCount);
 		
 		Paging page = new Paging(totalWonCount, productDto.getCurrentPage());
