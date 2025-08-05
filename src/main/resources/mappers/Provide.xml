@@ -32,39 +32,68 @@
 	</insert>
 	
 	<select id="totalProvide" parameterType="ProvideDto" resultType="int">
-		select count(*)
-		from provide p
-		left join product pt 
-			ON p.product_won_code = pt.product_code
-		where 1=1
-		<if test="searchKeyword != null and searchKeyword != ''">
-			and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
-		</if>
+	    select count(*)
+	    from provide p
+	    left join product pt 
+	        on p.product_won_code = pt.product_code
+	    left join client_tb ct 
+	        on p.provide_client_code = ct.client_code
+	    where 1=1
+	    <if test="searchKeyword != null and searchKeyword != ''">
+	        <choose>
+	            <when test="searchType == 'productName'">
+	                and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	            </when>
+	            <when test="searchType == 'clientName'">
+	                and lower(ct.client_name) like '%' || lower(#{searchKeyword}) || '%'
+	            </when>
+	            <otherwise>
+	                and (
+	                    lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	                    or lower(ct.client_name) like '%' || lower(#{searchKeyword}) || '%'
+	                )
+	            </otherwise>
+	        </choose>
+	    </if>
 	</select>
 
 	<select id="provideList" parameterType="ProvideDto" resultType="ProvideDto">
-		select *
-		from (
-		    select rownum rn, a.*
-		    from (
-		        select 
-		            p.*, 
-		            pt.product_name as productName,
-		            ct.client_name  as clientName
-		        from provide p
-		        left join product pt 
-		        	ON p.product_won_code = pt.product_code
-		        left join client_tb ct 
-		        	ON p.provide_client_code = ct.client_code
-		        where 1=1
-		        <if test="searchKeyword != null and searchKeyword != ''">
-		            and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
-		        </if>
-		        order by p.provide_code desc
-		    ) a
-		)
-		where rn between #{start} and #{end}
+	    select *
+	    from (
+	        select rownum rn, a.*
+	        from (
+	            select 
+	                p.*, 
+	                pt.product_name as productName,
+	                ct.client_name  as clientName
+	            from provide p
+	            left join product pt 
+	                on p.product_won_code = pt.product_code
+	            left join client_tb ct 
+	                on p.provide_client_code = ct.client_code
+	            where 1=1
+	            <if test="searchKeyword != null and searchKeyword != ''">
+	                <choose>
+	                    <when test="searchType == 'productName'">
+	                        and lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	                    </when>
+	                    <when test="searchType == 'clientName'">
+	                        and lower(ct.client_name) like '%' || lower(#{searchKeyword}) || '%'
+	                    </when>
+	                    <otherwise>
+	                        and (
+	                            lower(pt.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	                            or lower(ct.client_name) like '%' || lower(#{searchKeyword}) || '%'
+	                        )
+	                    </otherwise>
+	                </choose>
+	            </if>
+	            order by p.provide_code desc
+	        ) a
+	    )
+	    where rn between #{start} and #{end}
 	</select>
+
 
 
 	<select id="provideDetail" parameterType="int" resultType="ProvideDto">

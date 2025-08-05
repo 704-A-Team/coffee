@@ -38,7 +38,7 @@ public class CustomFileUtil {
 		}
 		uploadPath = tempFolder.getAbsolutePath();
 		log.info("---------- CustomFileUtil uploadPath----------");
-		log.info(uploadPath);		
+		log.info(uploadPath);
 	}
 	
 	public List<String> saveFiles(List<MultipartFile> files) {
@@ -72,6 +72,7 @@ public class CustomFileUtil {
 				}
 				
 				uploadNames.add(savedName);
+				System.out.println(uploadPath);
 				
 			} catch (IOException e) {
 		          throw new RuntimeException(e.getMessage());
@@ -80,10 +81,6 @@ public class CustomFileUtil {
 		}  // end-For
 		
 		return uploadNames;
-
-		
-		
-		
 	}
 
 	public void deleteFiles(List<String> fileNames) {

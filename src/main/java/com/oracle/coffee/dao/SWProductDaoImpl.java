@@ -9,6 +9,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.oracle.coffee.dto.ProductDto;
+import com.oracle.coffee.dto.km.ProductImgDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -67,6 +68,8 @@ public class SWProductDaoImpl implements SWProductDao {
 		
 		try {
 			productDtoList = session.selectList("wonProductList", productDto);
+			System.out.println("ProductDaoImpl productList productDtoList : " + productDtoList);
+				
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -103,6 +106,10 @@ public class SWProductDaoImpl implements SWProductDao {
 		ProductDto wonProductDetail = null;
 		try {
 			wonProductDetail = session.selectOne("wonProductDetail", product_code);
+			
+			List<ProductImgDTO> imgList = session.selectList("wonProductImgList", product_code);
+	        wonProductDetail.setWonImgList(imgList);
+	        
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -114,19 +121,19 @@ public class SWProductDaoImpl implements SWProductDao {
 
 	@Override
 	public int wonProductModify(ProductDto productDto) {
-		System.out.println("ProductDaoImpl wonProductSave start...");
+		System.out.println("ProductDaoImpl wonProductModify start...");
 		
-		TransactionStatus txStatus = 
-				transactionManager.getTransaction(new DefaultTransactionDefinition());
+//		TransactionStatus txStatus = 
+//				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		int wonProduct_code = 0;
-		try {
+//		try {
 			wonProduct_code = session.update("wonProductModify", productDto);
-			transactionManager.commit(txStatus);
+//			transactionManager.commit(txStatus);
 
-		} catch (Exception e) {
-			transactionManager.rollback(txStatus);
-			System.out.println("SWProductDaoImpl wonProductModify Exception : " + e.getMessage());
-		}
+//		} catch (Exception e) {
+//			transactionManager.rollback(txStatus);
+//			System.out.println("SWProductDaoImpl wonProductModify Exception : " + e.getMessage());
+//		}
 		return wonProduct_code;
 	}
 
@@ -172,11 +179,46 @@ public class SWProductDaoImpl implements SWProductDao {
 		List<ProductDto> productIsList = null;
 		try {
 			productIsList = session.selectList("productIsList", product_type);
+			transactionManager.commit(txStatus);
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
 			System.out.println("SWProductDaoImpl productIsList Exception : " + e.getMessage());
 		}
 		return productIsList;
 	}
+
+	@Override
+	public void wonProductImgSave(List<ProductImgDTO> productImgList) {
+		System.out.println("ProductDaoImpl wonProductImgSave start...");
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		try {
+			session.insert("wonProductImgSave", productImgList);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("ProductDaoImpl wonProductImgSave Exception : " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void deleteProductImgs(int product_code) {
+	    System.out.println("ProductDaoImpl deleteProductImgs start...");
+	    
+        session.delete("deleteProductImgs", product_code);
+	}
+
+	@Override
+	public void insertProductImgs(List<ProductImgDTO> imgList) {
+		System.out.println("ProductDaoImpl insertProductImgs start...");
+	    
+	    if (imgList == null || imgList.isEmpty()) return;
+
+	    for (ProductImgDTO imgDto : imgList) {
+	        session.insert("insertProductImg", imgDto);
+	    }
+	}
+
+
 	
 }

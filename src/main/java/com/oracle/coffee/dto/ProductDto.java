@@ -1,6 +1,12 @@
 package com.oracle.coffee.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.oracle.coffee.dto.km.ProductImgDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +41,10 @@ public class ProductDto {
 	private String 		searchType;
 	private String 		searchKeyword;
 	
-	
+	private String 		simage;
+	//Files
+	private List<ProductImgDTO> wonImgList;
+	private List<MultipartFile> files = new ArrayList<>();
+	private List<String> uploadFileNames = new ArrayList<>();
 	
 }

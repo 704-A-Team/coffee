@@ -88,14 +88,20 @@
 				
 				<!-- 검색 -->
 				<form action="${pageContext.request.contextPath}/provide/provideList" method="get" class="row g-2 mb-4">
-				    <!-- searchType 고정 -->
-				    <input type="hidden" name="searchType" value="productName" />
-				    
-				    <!-- 검색어 입력 -->
-				    <div class="col-md-9">
-				        <input type="text" name="searchKeyword" value="${param.searchKeyword}" class="form-control" placeholder="제품명을 입력하세요" />
+				    <!-- 검색조건 콤보박스 -->
+				    <div class="col-md-3">
+				        <select name="searchType" class="form-select">
+				       		<option value="" ${empty param.searchType ? 'selected' : ''}>전체</option>
+				            <option value="productName" ${param.searchType == 'productName' ? 'selected' : ''}>제품명</option>
+				            <option value="clientName" ${param.searchType == 'clientName' ? 'selected' : ''}>거래처명</option>
+				        </select>
 				    </div>
-				    
+				
+				    <!-- 검색어 입력 -->
+				    <div class="col-md-6">
+				        <input type="text" name="searchKeyword" value="${param.searchKeyword}" class="form-control" placeholder="검색어를 입력하세요" />
+				    </div>
+				
 				    <div class="col-md-3">
 				        <button type="submit" class="btn btn-primary w-100">검색</button>
 				    </div>

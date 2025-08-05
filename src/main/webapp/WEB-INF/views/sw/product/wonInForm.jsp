@@ -30,7 +30,7 @@
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
                 <div class="form-section-title">제품(원재료) 등록</div>
-                <form action="${pageContext.request.contextPath}/sw/wonProductSave" method="post">
+                <form action="${pageContext.request.contextPath}/sw/wonProductSave" method="post" enctype="multipart/form-data">
                     
                     <!-- 제품명 -->
                     <div class="mb-3">
@@ -73,13 +73,18 @@
                         <input type="number" class="form-control" id="product_weight" name="product_weight" placeholder="숫자만 입력해주세요" required>
                     </div>
 
-                    <!-- 등록자 (required 없음) -->
-                    <div class="mb-4">
+                    <!-- 등록자 -->
+                    <!-- <div class="mb-4">
                         <label for="product_reg_code" class="form-label">등록자 (사원코드)</label>
                         <input type="text" class="form-control" id="product_reg_code" name="product_reg_code" placeholder="사원코드를 입력해주세요">
-                    </div>
+                    </div> -->
                     
-                    
+                    <!-- 이미지 -->
+                    <div class="mb-3">
+					  <label for="file" class="form-label">제품(원재료) 이미지 (최대 3개)</label>
+					  <input type="file" class="form-control" id="file" name="file" multiple>
+					  <div class="form-text text-danger">※ 최대 3개의 이미지만 업로드할 수 있습니다.</div>
+					</div>
 
                     <!-- 버튼 -->
                     <div class="text-center">

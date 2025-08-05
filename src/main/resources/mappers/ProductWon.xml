@@ -58,7 +58,8 @@
 	                p.*, 
 	                bu.cd_contents as unitName,
 	                bt.cd_contents as typeName,
-	                bi.cd_contents as isorderName
+	                bi.cd_contents as isorderName,
+	                img.file_name  as simage
 	            from product p
 	            left join bunryu bu 
 	                ON p.product_unit = bu.mcd and bu.bcd = 750
@@ -66,6 +67,10 @@
 	                ON p.product_type = bt.mcd and bt.bcd = 700
 	            left join bunryu bi 
 	                ON p.product_isorder = bi.mcd and bi.bcd = 800
+	            left join (select * 
+	            		   from product_img 
+	            		   where ord = 0) img
+	            	ON p.product_code = img.product_code
 	            where p.product_type = 0
 	            <if test="searchKeyword != null and searchKeyword != ''">
 	                and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
@@ -92,6 +97,13 @@
     	left join emp e
     		ON p.product_reg_code = e.emp_code
 	    where product_code = #{product_code}
+	</select>
+	
+	<select id="wonProductImgList" parameterType="int" resultType="ProductImgDTO">
+	    select * 
+	    from product_img
+	    where product_code = #{product_code}
+	    order by ord
 	</select>
 	
 	<update id="wonProductModify" parameterType="ProductDto">
@@ -123,5 +135,35 @@
 		where 	product_type = #{product_type}
 		and 	product_isdel = 0
 	</select>
+	
+	<insert id="wonProductImgSave" parameterType="List">
+		INSERT ALL 
+		    <foreach collection="list" item="imgDto" separator=" "> <!-- item 이름을 imgDto 등으로 변경 -->
+		    INTO  PRODUCT_IMG (product_code, ord, file_name) VALUES
+		        (
+		            #{imgDto.product_code},
+		            #{imgDto.ord},
+		            #{imgDto.file_name}
+		        )
+		    </foreach>
+		    SELECT 1 FROM DUAL
+	</insert>
+	
+	<insert id="insertProductImg" parameterType="ProductImgDTO">
+	    INSERT INTO product_img (
+	        product_code,
+	        ord,
+	        file_name
+	    ) VALUES (
+	        #{product_code},
+	        #{ord},
+	        #{file_name}
+	    )
+	</insert>
+	
+	<delete id="deleteProductImgs" parameterType="int">
+        DELETE FROM product_img
+        WHERE product_code = #{product_code}
+    </delete>
 	
 </mapper>
