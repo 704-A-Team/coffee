@@ -26,6 +26,8 @@
 
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
+        
+        
 
         <main class="flex-grow-1 p-4">
             <div class="form-container bg-primary bg-opacity-25">

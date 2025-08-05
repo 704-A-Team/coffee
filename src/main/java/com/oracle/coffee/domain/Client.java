@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +23,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "client_tb")
 @SequenceGenerator (
 		name = "client_seq",
 		sequenceName = "CLIENT_SEQ",
@@ -27,6 +31,8 @@ import lombok.ToString;
 		allocationSize = 1
 		
 		)
+
+@EntityListeners(AuditingEntityListener.class) 
 public class Client {
 	@Id
 	@GeneratedValue(
