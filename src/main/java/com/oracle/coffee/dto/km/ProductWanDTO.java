@@ -48,6 +48,9 @@ public class ProductWanDTO {	// 제품
 	private List<MultipartFile> file = new ArrayList<>();
 	@Builder.Default
 	private List<String> uploadFileNames = new ArrayList<>();
+	// 수정화면에서 올라올 파일들(기존파일에서 삭제되지 않고 유지되는 파일들)
+	@Builder.Default
+	private List<String> existingUploadFileNames = new ArrayList<>();
 	
 	
 }

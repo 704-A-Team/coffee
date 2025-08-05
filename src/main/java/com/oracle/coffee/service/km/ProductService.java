@@ -13,14 +13,24 @@ public interface ProductService {
 
 	int 					countTotal();
 
-	List<ProductWanDTO> 		wonList();
+	List<ProductWanDTO> 	wonList();
 
 	void 					wanRecipeSave(RecipeDTO recipe);
 
-	List<ProductWanDTO> 		wanList(ProductWanDTO productDTO);
+	List<ProductWanDTO> 	wanList(ProductWanDTO productDTO);
 	// 완제품 코드(IN) --> 완제품과 레시피Dto(OUT)
 	WanAndRecipeDTO 		wanAndRcpDetailInForm(int product_code);
 
 	WanAndRecipeDTO 		wanModifyInForm(int product_code);
+
+	ProductWanDTO 			getProductImg(int product_code);
+
+	ProductWanDTO 			wanModify(ProductWanDTO productDTO);
+
+	void 					recipeModify(List<RecipeDTO> recipeList);
+
+	void 					wanProductDel(ProductWanDTO productWanDTO);
+	
+
 
 }

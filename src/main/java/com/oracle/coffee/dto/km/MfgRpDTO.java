@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class MfgRpDTO {		// 생산보고
 	private int 		mfg_code;			// 생산신청코드
-	private int 		mfg_qty;			// 실제완료생산량(EA)
+	private int 		mfg_qty;			// 실제완료생산량(EA)	   (완제품 증가)
+	private String		mfg_end_date;		// 실제 생산 완료 날짜  (수불마감 시 필요)
 	private int 		mfg_mat;			// 실제 투입 원재료 총중량(g)
 	private int 		mfg_end;			// 실제 생산 완료  총중량(g)
 	private int 		yield;				// 실제 수율(%)
