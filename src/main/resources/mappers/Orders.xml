@@ -120,5 +120,18 @@
 			) a 
 		) where rn between #{start} and #{end}
 	</select>
+	
+	<select id="listOrdersByClient" parameterType="OrdersPageDto" resultType="OrdersListDto">
+		select * from (
+			select rownum rn, a.* from (
+				select o.*, b.cd_contents, c.client_name, e.emp_name from orders o, bunryu b, client_tb c, emp e 
+				where o.orders_client_code = #{client_code}
+				and o.orders_client_code = c.client_code
+				and c.client_emp_code = e.emp_code
+				and b.bcd = 200 and b.mcd = o.order_status
+				order by o.order_code desc
+			) a 
+		) where rn between #{start} and #{end}
+	</select>
 
 </mapper>

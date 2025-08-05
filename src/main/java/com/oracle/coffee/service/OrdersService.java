@@ -3,8 +3,10 @@ package com.oracle.coffee.service;
 import java.util.List;
 
 import com.oracle.coffee.dto.PageRequestDto;
+import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
+import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 
 public interface OrdersService {
@@ -16,6 +18,6 @@ public interface OrdersService {
 	public void refuseOrCancel(int orderCode);
 	public void request(int orderCode);
 	public void delete(int orderCode);
-	public List<OrdersListDto> list(PageRequestDto page);
-	public List<OrdersListDto> list(PageRequestDto page, int clientCode);
+	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page);
+	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page, int clientCode);
 }

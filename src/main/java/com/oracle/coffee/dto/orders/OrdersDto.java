@@ -18,6 +18,9 @@ public class OrdersDto {
 	private String order_refuse;
 	private int order_status;
 	private LocalDateTime order_reg_date;
+	private int order_final_price;
+	private LocalDateTime order_req_date;	// 수주 요청 시간
+	private LocalDateTime order_perm_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
 	
 	

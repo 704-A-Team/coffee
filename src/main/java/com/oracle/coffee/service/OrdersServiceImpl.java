@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.oracle.coffee.dao.OrdersDao;
 import com.oracle.coffee.dto.PageRequestDto;
+import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
@@ -110,21 +111,21 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<OrdersListDto> list(PageRequestDto page) {
+	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page) {
 		int totalCount = ordersDao.totalCount();
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd());
-		
-		return ordersDao.list(ordersPage);
+		List<OrdersListDto> list = ordersDao.list(ordersPage);
+		return new PageRespDto<OrdersListDto, Paging>(list, paging);
 	}
 
 	@Override
-	public List<OrdersListDto> list(PageRequestDto page, int clientCode) {
+	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page, int clientCode) {
 		int totalCount = ordersDao.totalCount(clientCode);
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd(), clientCode);
-		
-		return null;
+		List<OrdersListDto> list = ordersDao.list(ordersPage);
+		return new PageRespDto<OrdersListDto, Paging>(list, paging);
 	}
 
 }

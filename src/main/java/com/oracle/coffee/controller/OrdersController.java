@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.oracle.coffee.dto.PageRequestDto;
+import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 import com.oracle.coffee.service.OrdersService;
+import com.oracle.coffee.service.Paging;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,16 +55,17 @@ public class OrdersController {
 		// 로그인한 정보 조회
 		// 본사/가맹점에 따라 리스트 조회
 		
-//		List<OrdersListDto> list = null;
-//		if (true) {
-//			list = ordersService.list(page);
-//		}
-//		else {
-//			int clientCode = 3001;
-//			list = ordersService.list(page, clientCode);
-//		}
-//		
-//		model.addAttribute("ordersList", list);
+		PageRespDto<OrdersListDto, Paging> respData = null;
+		if (true) {
+			respData = ordersService.list(page);
+		}
+		else {
+			int clientCode = 3001;
+			respData = ordersService.list(page, clientCode);
+		}
+		
+		model.addAttribute("orders", respData.getList());
+		model.addAttribute("page", respData.getPage());
 		return "order/list";
 	}
 	

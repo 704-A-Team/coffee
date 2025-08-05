@@ -55,10 +55,6 @@
 		        <label class="form-label">담당자 연락처</label>
 		        <div class="form-control form-control-sm bg-light" >####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">비고</label>
-		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요">${order.order_note }</textarea>
-	      	</div>
     	</div>
     	</div>
 
@@ -83,6 +79,10 @@
 	        	<label class="form-label">전화번호</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
+	      	<div class="mb-2">
+		        <label class="form-label">비고</label>
+		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요">${order.order_note }</textarea>
+	      	</div>
 	    </div>
 	</div>
     <!-- 하단 박스 (품목 리스트) -->
@@ -96,6 +96,9 @@
 			    <div class="col-2">공급가액</div>
 			    <div class="col-2">납기일</div>
 			</div>
+		</div>
+		<div class="col text-end">
+			<strong>총액: </strong><span class="total-price">0</span> 원
 		</div>
 
 		<!-- 품목 추가 버튼 -->

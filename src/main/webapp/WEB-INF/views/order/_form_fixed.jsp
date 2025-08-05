@@ -41,10 +41,7 @@
 		        <label class="form-label">담당자 연락처</label>
 		        <div class="form-control form-control-sm bg-light" >####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">비고</label>
-		        <div class="form-control form-control-sm bg-light">${order.order_note }</div>
-	      	</div>
+	      	
     	</div>
     	</div>
 
@@ -69,6 +66,10 @@
 	        	<label class="form-label">전화번호</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
+	      	<div class="mb-2">
+		        <label class="form-label">비고</label>
+		        <div class="form-control form-control-sm bg-light">${order.order_note }</div>
+	      	</div>
 	    </div>
 	</div>
     <!-- 하단 박스 (품목 리스트) -->
@@ -84,7 +85,10 @@
 			    <div class="col-2">상태</div>
 			</div>
 		</div>
+		
+		<c:set var="totalPrice" value="0" />
 		<c:forEach items="${order.orders_details }" var="detail">
+			<c:set var="rowTotalPrice" value="${detail.price * detail.order_amount}" />
 			<div class="row g-2 mb-2 item-list-item">
 				<div class="col-3">
 					<div class="form-control form-control-sm bg-light">
@@ -98,7 +102,7 @@
 					<div class="form-control form-control-sm bg-light prd-count">${detail.order_amount }</div>
 				</div>
 				<div class="col-2">
-					<div class="form-control form-control-sm bg-light prd-total-price">${detail.price * detail.order_amount}</div>
+					<div class="form-control form-control-sm bg-light prd-total-price">${rowTotalPrice}</div>
 				</div>
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light">${detail.order_ddate }</div>
@@ -107,7 +111,11 @@
 					<div class="form-control form-control-sm bg-light">${detail.detail_cd_contents }</div>
 				</div>
 			</div>
+			<c:set var="totalPrice" value="${totalPrice + rowTotalPrice}" />
 		</c:forEach>
+		<div class="col text-end">
+			<strong>총액: </strong><span>${totalPrice }</span> 원
+		</div>
 		</div>
 	</div>
 
@@ -115,9 +123,11 @@
 	<br><br>
   	<div class="d-flex justify-content-end gap-2 pe-0">
   	<!-- 
-  		1. status가 요청상태이하(1이하)면 변경/취소 가능
-  		2. 아니면 버튼 없음 (조회만 가능)
+  		1. 가맹점: status가 요청상태이하(1이하)면 변경/취소 가능
+  		2. 본사: status가 요청상태(1)면 변경/반려/승인 가능
+  		2. 가맹점: 아니면 버튼 없음 (조회만 가능)
   	-->
+  	<!-- "loginUser가 가맹점이면": <c:if test="${loginUser.login_type == 0 }"></c:if> -->
   	<c:if test="${order.order_status <= 1 }">
 		<c:choose>
 			<c:when test="${order.order_status == 0}">
@@ -142,6 +152,7 @@
 			</c:otherwise>
 		</c:choose>
   	</c:if>
+  	
   	</div>
 </div>
 </body>

@@ -110,12 +110,12 @@
 			</button>
 			<div class="collapse" id="hr-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				   <li class="mt-2">
- 			 <a href="${pageContext.request.contextPath}/emp/empList" class="link-light rounded menu-small">사원 목록</a>
-				</li>
 					<li class="mt-2">
-  			 <a href="${pageContext.request.contextPath}/emp/empInForm" class="link-light rounded menu-small">사원 등록</a>
-				</li>
+ 			 			<a href="${pageContext.request.contextPath}/emp/empList" class="link-light rounded menu-small">사원 목록</a>
+					</li>
+					<li class="mt-2">
+  			 			<a href="${pageContext.request.contextPath}/emp/empInForm" class="link-light rounded menu-small">사원 등록</a>
+					</li>
 				</ul>
 			</div>
 		</li>
@@ -127,12 +127,12 @@
 			</button>
 			<div class="collapse" id="dept-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-				     <li class="mt-2">
- 			 <a href="${pageContext.request.contextPath}/dept/deptList" class="link-light rounded menu-small">부서 목록</a>
-				</li>
 					<li class="mt-2">
-  			 <a href="${pageContext.request.contextPath}/dept/deptInForm" class="link-light rounded menu-small">부서 등록</a>
-				</li>
+ 			 			<a href="${pageContext.request.contextPath}/dept/deptList" class="link-light rounded menu-small">부서 목록</a>
+					</li>
+					<li class="mt-2">
+  			 			<a href="${pageContext.request.contextPath}/dept/deptInForm" class="link-light rounded menu-small">부서 등록</a>
+					</li>
 				</ul>
 			</div>
 		</li>	

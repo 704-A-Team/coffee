@@ -62,6 +62,26 @@
     	    	const count = $row.find(".prd-count").val() ?? 0;
     	    	$row.find(".prd-total-price").text(count * price);
     	    });
+    	    
+    	    // 전체 총액 계산
+    	    $('#item-list').on("change", ".prd-code, .prd-count", function () {
+    	    	let total = 0;
+    	    	$('.prd-total-price').each(function () {
+    	    		total += parseFloat($(this).text()) || 0;
+    	    	});
+    	    	$('.total-price').text(total);
+    	    });
+    	    
+    	    // row 삭제 + 전체 총액 계산
+    	    $('#item-list').on("click", '.prd-del-btn', function () {
+    	    	this.closest('.row').remove();
+    	    	
+    	    	let total = 0;
+    	    	$('.prd-total-price').each(function () {
+    	    		total += parseFloat($(this).text()) || 0;
+    	    	});
+    	    	$('.total-price').text(total);
+    	    });
     	});	
     }
 
@@ -81,20 +101,20 @@
 		    </select>
 	      </div>
 	      <div class="col-2">
-	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단가"></div>
+	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단가">0</div>
 	      </div>
 	      <div class="col-2">
 	        <input type="number" min="1" class="form-control form-control-sm prd-count" required placeholder="수량">
 	      </div>
 	      <div class="col-2">
-	        <div class="form-control form-control-sm bg-light prd-total-price" placeholder="총액"></div>
+	        <div class="form-control form-control-sm bg-light prd-total-price" placeholder="총액">0</div>
 	      </div>
 	      <div class="col-2">
 	        <input type="date" class="form-control form-control-sm prd-ddate" required placeholder="납기일">
 	      </div>
 	      
 	      <div class="col-1 text-end pe-0">
-	        <button type="button" class="btn btn-outline-danger btn-sm fw-bold" onclick="this.closest('.row').remove()">삭제</button>
+	        <button type="button" class="btn btn-outline-danger btn-sm fw-bold prd-del-btn">삭제</button>
 	      </div>
 		`;
 	    container.appendChild(row);
@@ -102,7 +122,7 @@
 		const nameInput = row.querySelector('.prd-code');
         const countInput = row.querySelector('.prd-count');
         const priceInput = row.querySelector('.prd-price');
-        const totalPriceInput = row.querySelector('.prd-total-price');
+        const rowPriceInput = row.querySelector('.prd-total-price');
         const dateInput = row.querySelector('.prd-ddate');
 
 	    // 기존 orders_detail 정보 작성
@@ -118,8 +138,12 @@
 	        }
 	        if (countInput) $(countInput).val(detail.order_amount ?? 0);
 	        if (priceInput) $(priceInput).text(detail.product_price ?? 0);
-	        if (totalPriceInput) $(totalPriceInput).text(detail.order_amount * detail.product_price);
+	        const rowPrice = detail.order_amount * detail.product_price;
+	        if (rowPriceInput) $(rowPriceInput).text(rowPrice);
 	        if (dateInput) $(dateInput).val(detail.order_ddate ?? '');
+
+	        //let beforeTotal = parseFloat($('.total-price').text()) ?? 0;
+	        //$('.total-price').text(beforeTotal + rowPrice);
     	}
 	 	
 		// 제품명 select
