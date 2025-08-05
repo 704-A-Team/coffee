@@ -18,15 +18,29 @@ public interface ProductDao {
 
 	int 					countTotal();
 
-	List<ProductWanDTO> 		wonList();
+	List<ProductWanDTO> 	wonList();
 
 	void 					wanRecipeSave(RecipeDTO recipe);
 
-	List<ProductWanDTO> 		wanList(ProductWanDTO productDTO);
+	List<ProductWanDTO> 	wanList(ProductWanDTO productDTO);
 
 	WanAndRecipeDTO 		wanAndRcpDetailInForm(int product_code);
 
 	WanAndRecipeDTO 		wanModifyInForm(int product_code);
+
+	ProductWanDTO 			getProductImg(int product_code);
+
+	ProductWanDTO 			wanModify(ProductWanDTO productDTO);
+
+	ProductWanDTO 			delImgModify(ProductWanDTO productDTO);
+
+	void 					recipeDel(int pdwan_code);
+
+	void 					productDelUpdate(ProductWanDTO productWanDTO);
+
+	void 					priceBeforeEnd(ProductPriceDTO productPriceDTO);
+
+	ProductPriceDTO 		prePrice(ProductPriceDTO priceDTO);
 
 
 }
