@@ -30,7 +30,7 @@
                 <td>${order.client_name}</td>
                 <td>${order.emp_name}</td>
                 <td>
-                    <fmt:formatNumber value="${order.order_final_price}"pattern="#,###" />
+                    <fmt:formatNumber value="${order.order_final_price}" pattern="#,###" />
                 </td>
                 <td><c:choose>
                 	<c:when test="${order.order_status == 0}">
