@@ -205,6 +205,17 @@ public class ProductDaoImpl implements ProductDao {
 		return prePrice;
 	}
 
+	@Override
+	public void priceAfterStart(ProductPriceDTO priceDTO) {
+		try {
+			session.insert("priceAfterStart" , priceDTO);
+		} catch (Exception e) {
+			System.out.println("priceAfterStart Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
+	}
+
 
 
 
