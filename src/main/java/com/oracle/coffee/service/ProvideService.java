@@ -11,7 +11,7 @@ public interface ProvideService {
 	List<ProductDto> 		getProductInfo(int product_type);
 	List<SWClientDto> 		getClientInfo(int client_type);
 	int 					provideSave(ProvideDto provideDto);
-	int 					totalProvide();
+	int 					totalProvide(ProvideDto provideDto);
 	List<ProvideDto> 		provideList(ProvideDto provideDto);
 	ProvideDto 				provideDetail(int provide_code);
 	int						provideModify(ProvideDto provideDto);

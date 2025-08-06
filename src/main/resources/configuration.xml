@@ -23,5 +23,6 @@
 		<typeAlias alias="SWClientDto" type="com.oracle.coffee.dto.SWClientDto" />
 		<typeAlias alias="ProvideDto" type="com.oracle.coffee.dto.ProvideDto" />
 		<typeAlias alias="PurchaseDto" type="com.oracle.coffee.dto.PurchaseDto" />
+		
 	</typeAliases>
 </configuration>

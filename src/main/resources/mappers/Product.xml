@@ -46,7 +46,7 @@
 	</select>
 	
 	<select id="wonList" resultType="ProductWanDTO">
-		select * from product where product_type = 0
+		select * from product where product_type = 0 AND product_isdel = 0
 	</select>
 	
 	<insert id="wanRecipeSave" parameterType="RecipeDTO">
@@ -60,7 +60,7 @@
 		              SELECT pd.* , img.file_name simage    , pp_latest.price , pp_latest.start_date
 		              FROM (
 		                      SELECT * FROM product 
-		                      WHERE   product_isdel = 0 AND  product_type = 1
+		                      WHERE product_type = 1
 		                    ) pd 
 		              LEFT OUTER JOIN  ( SELECT * FROM product_img WHERE ord = 0) img
 		              ON pd.product_code = img.product_code
@@ -73,7 +73,7 @@
 		                                       ) p_max_date
 		                                 
 		                                 WHERE pp.product_code = p_max_date.product_code
-		                                 AND   pp.start_date      = p_max_date.max_start_date
+		                                 AND   pp.start_date   = p_max_date.max_start_date
 		                                 ) pp_latest     
 		              ON pd.product_code = pp_latest.product_code
 		              ORDER BY pd.product_code
@@ -158,4 +158,52 @@
 			<result property="ord" column="ord"/>
 		</collection>
 	</resultMap>
+	
+	<select id="productImgList" parameterType="Int" resultType="String">
+		Select file_name FROM Product_IMG WHERE product_code = #{product_code}
+	
+	</select>
+	
+	<update id="wanModify" parameterType="ProductWanDTO">
+		Update PRODUCT
+		SET product_name 		= #{product_name} ,
+			product_contents 	= #{product_contents} ,
+			product_yield 		= #{product_yield} , 
+			product_pack 		= #{product_pack}
+		WHERE product_code 		= #{product_code}
+	</update>
+	
+	<delete id="delImgModify" parameterType="ProductWanDTO">
+		DELETE FROM PRODUCT_IMG WHERE product_code = #{product_code}
+	</delete>
+	
+	<delete id="recipeDel" parameterType="Int">
+		DELETE FROM RECIPE WHERE product_wan_code = #{product_wan_code}
+	</delete>
+	
+	<update id="productDelUpdate" parameterType="ProductWanDTO">
+		UPDATE PRODUCT SET product_isdel = #{product_isdel} WHERE product_code = #{product_code}
+	</update>
+
+	<update id="priceBeforeEnd" parameterType="ProductPriceDTO">
+		UPDATE PRODUCT_PRICE SET end_date = #{end_date} 
+		WHERE product_code = #{product_code} AND end_date = '9999-12-31'
+	</update>
+	
+	<select id="prePrice" parameterType="ProductPriceDTO" resultType="ProductPriceDTO">
+		SELECT * 
+		FROM PRODUCT_PRICE 
+		WHERE product_code = #{product_code} 
+		    AND end_date = (
+		    SELECT MAX(end_date)
+		    FROM PRODUCT_PRICE
+		    WHERE product_code = #{product_code}
+		    )
+	</select>
+	
+	<insert id="priceAfterStart" parameterType="ProductPriceDTO">
+		INSERT INTO PRODUCT_PRICE (PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
+			values (#{product_code} ,  #{start_date} , #{price_reg_code}, '9999-12-31' , #{price}, #{price_reg_date} )
+	</insert>
+	
 </mapper>

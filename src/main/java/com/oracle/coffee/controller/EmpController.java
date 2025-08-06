@@ -44,12 +44,14 @@ public class EmpController {
 	
 	@GetMapping("/empInForm")
 	public String empInForm() {
+		
 		return "emp/empInForm";
 	}
 
 	@PostMapping("/saveEmp")
 	public String saveEmp(EmpDto empDto) {
 		empService.empSave(empDto);
+		
 		return "redirect:empList";
 	}
 	
@@ -74,6 +76,7 @@ public class EmpController {
 	@PostMapping("/empUpdate")
 	public String empUpdate(EmpDto empDto) {
 		empService.empUpdate(empDto);
+		
 		return "redirect:empList";
 	}
 	

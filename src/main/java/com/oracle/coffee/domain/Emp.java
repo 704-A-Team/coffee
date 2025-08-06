@@ -1,6 +1,7 @@
 package com.oracle.coffee.domain;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,6 +30,7 @@ import lombok.ToString;
 		allocationSize = 1
 		
 		)
+
 @EntityListeners(AuditingEntityListener.class) 
 public class Emp {
 	@Id
@@ -44,10 +46,11 @@ public class Emp {
 	private int emp_sal;
 	private String emp_email;
 	@ColumnDefault("0")		//default column 구분: 0-> 재직, 1-> 퇴직
-	private Boolean emp_isdel;
+	private int emp_isdel;
 	private int emp_register;
 	@CreatedDate
 	private LocalDateTime emp_reg_date;
+	private Date emp_ipsa_date;
 	
 	public void changeEmp_name(String emp_name) {
 		this.emp_name = emp_name;
@@ -67,7 +70,7 @@ public class Emp {
 	public void changeEmp_email(String emp_email) {
 		this.emp_email = emp_email;
 	}
-	public void changeEmp_isdel(Boolean emp_isdel) {
+	public void changeEmp_isdel(int emp_isdel) {
 		this.emp_isdel = emp_isdel;
 	}
 	public void changeEmp_register(int emp_register) {
@@ -75,6 +78,9 @@ public class Emp {
 	}
 	public void changeEmp_reg_date(LocalDateTime emp_reg_date) {
 		this.emp_reg_date = emp_reg_date;
+	}
+	public void changeEmp_ipsa_date(Date emp_ipsa_date) {
+		this.emp_ipsa_date = emp_ipsa_date;
 	}
 	
 }

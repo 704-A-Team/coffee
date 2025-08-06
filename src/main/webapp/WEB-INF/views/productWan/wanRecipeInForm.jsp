@@ -55,7 +55,7 @@
                         </label>
 
                         <label>소요량:
-                            <input type="number" id="recipe_amount" min="1" class="form-control d-inline w-auto" />
+                            <input type="number" id="recipe_amount" min="1" max="99999" class="form-control d-inline w-auto" />
                         </label>
 
                         <label>단위:
@@ -73,7 +73,7 @@
                                 <th>원재료명</th>
                                 <th>소요량</th>
                                 <th>단위</th>
-                                <th>비율</th> 
+                                <th>비율(%)</th> 
                                 <th>삭제</th>
                             </tr>
                         </thead>
@@ -110,15 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const code = selectedOption.value;
         const name = selectedOption.text.trim();
         const unit = selectedOption.getAttribute("data-unit");
-        const amount = document.getElementById("recipe_amount").value.trim();
+        const amount = Number(document.getElementById("recipe_amount").value.trim());
 
-        if (!amount || isNaN(amount) || amount <= 0) {
-            alert("소요량을 정확히 입력하세요.");
+        if (!amount || isNaN(amount) || amount <= 0 || amount > 99999) {
+            alert("소요량을 1 이상 99999 이하 범위로 입력하세요.");
             return;
         }
 
         selectedMaterials.push({ code, name, unit, amount });
         renderTable();
+        updateSelectOptions();  // 추가된 후 select 옵션 업데이트
     };
 
     function renderTable() {
@@ -151,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.textContent = "삭제";
+            btn.classList.add("btn", "btn-danger", "btn-sm");
             btn.onclick = () => removeMaterial(index);
             tdDelete.appendChild(btn);
 
@@ -171,7 +173,28 @@ document.addEventListener("DOMContentLoaded", () => {
     window.removeMaterial = function(index) {
         selectedMaterials.splice(index, 1);
         renderTable();
+        updateSelectOptions();  // 추가된 후 select 옵션 업데이트
     };
+    
+    function updateSelectOptions() {
+        const select = document.getElementById("product_won_code");
+        const addedCodes = selectedMaterials.map(mat => mat.code);
+
+        for (let i = 0; i < select.options.length; i++) {
+            const option = select.options[i];
+            if (addedCodes.includes(option.value)) {
+                option.disabled = true;
+                if (!option.text.includes("(추가된 원재료)")) {
+                    option.innerHTML = option.text + ' <small style="color:gray;">(추가된 원재료)</small>';
+                }
+            } else {
+                option.disabled = false;
+                // "(추가된 원재료)" 제거 (만약 있으면)
+                option.innerHTML = option.text.replace(/<small style="color:gray;">\(추가된 원재료\)<\/small>/g, '').trim();
+            }
+        }
+    }
+
 
     window.submitForm = function() {
         const form = document.getElementById("recipeForm");

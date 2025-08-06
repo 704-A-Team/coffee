@@ -122,6 +122,16 @@
 												    </c:choose>
 												    </span>
 												</li>
+												<li><strong>판매 여부</strong> 
+													  <c:choose>
+													    <c:when test="${product.product_isdel == false}">
+													      <span style="color:green;">판매중</span>
+													    </c:when>
+													    <c:otherwise>
+													      <span style="color:red;">판매 중지</span>
+													    </c:otherwise>
+													  </c:choose>
+												</li>
 		                                        <li><strong>최근 등록일</strong> <span>${product.start_date != null ? product.start_date : '정보 없음'}</span></li>
 		                                    </ul>
 		
