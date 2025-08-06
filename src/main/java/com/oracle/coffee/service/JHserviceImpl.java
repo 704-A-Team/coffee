@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.oracle.coffee.dao.InventoryDao;
-import com.oracle.coffee.dto.ClientDto;
 import com.oracle.coffee.dto.InventoryDto;
 
 import jakarta.persistence.EntityManager;
@@ -39,10 +38,22 @@ public class JHserviceImpl implements JHservice {
 	        listInventory = new ArrayList<>();
 	        System.out.println("JHserviceImpl inventoryList returned null, replaced with empty list.");
 	    }
-
 	    System.out.println("JHserviceImpl inventoryList listInventory.size : " + listInventory.size());
 	    return listInventory;
 	}
 	
+	@Override
+	public List<InventoryDto> mfgReqList(InventoryDto inventoryDto) {
+		System.out.println("JHserviceImpl mfgReqList start...");
+		
+		List<InventoryDto> listMfgReq = inventoryDao.mfgReqList(inventoryDto);
+		
+		if (listMfgReq == null) {
+			listMfgReq = new ArrayList<>();
+	        System.out.println("JHserviceImpl mfgReqList returned null, replaced with empty list.");
+	    }
+		System.out.println("JHserviceImpl mfgReqList listmfgReq.size : " + listMfgReq.size());
+		return listMfgReq;
+	}
 
 }

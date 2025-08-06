@@ -18,6 +18,9 @@ public class OrdersDto {
 	private String order_refuse;
 	private int order_status;
 	private LocalDateTime order_reg_date;
+	private int order_final_price;
+	private LocalDateTime order_req_date;	// 수주 요청 시간
+	private LocalDateTime order_perm_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
 	
 	
@@ -36,7 +39,6 @@ public class OrdersDto {
 	private int client_emp_code;	// 담당직원 코드
 	
 	// emp 테이블
-	private String emp_name;		// 담당직원 이름
-	private String emp_tel;			// 담당직원 연락처
+	private String emp_name;		// 승인자 이름
 	*/
 }

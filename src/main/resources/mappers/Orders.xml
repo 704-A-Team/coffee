@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.dto.order.ordersMapper">
+
+	<!-- product 테이블 select (join product_price) -->
+	<select id="selectOrdersProducts" resultType="OrdersProductDto">
+		select p.product_code, p.product_name, pp.price
+		from product p, product_price pp
+		where p.product_code = pp.product_code
+		and p.product_isdel = 0 and p.product_isorder = 1
+		and sysdate between to_date(pp.start_date, 'yyyy-mm-dd') and to_date(pp.end_date, 'yyyy-mm-dd')
+	</select>
+	
+	<!-- orders 테이블 insert -->
+	<insert id="insertOrders" statementType="CALLABLE" parameterType="OrdersDto">
+		call new_orders (
+			#{orders_client_code, mode=IN},
+			#{order_status, mode=IN},
+			#{order_note, mode=IN},
+			#{order_code, mode=OUT, jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<!-- orders_detail 테이블 insert all -->
+	<insert id="insertAllOrdersDetails" parameterType="java.util.List">
+		insert all
+		<foreach collection="list" item="item" separator=" ">
+			into orders_detail values (#{item.order_code}, #{item.product_code}, #{item.order_amount}, #{item.order_ddate}, #{item.order_datail_status})
+		</foreach>
+		select * from dual
+	</insert>
+	
+	<!--  orders 테이블 select (join orders_detail) -->
+	<resultMap type="OrdersDto" id="OrdersJoinDetail">
+		<result property="order_code" column="order_code"/>
+		<result property="orders_client_code" column="orders_client_code"/>
+		<result property="orders_perm_code" column="orders_perm_code"/>
+		<result property="order_note" column="order_note"/>
+		<result property="order_refuse" column="order_refuse"/>
+		<result property="order_status" column="order_status"/>
+		<result property="order_reg_date" column="order_reg_date"/>
+		<result property="cd_contents" column="cd_contents"/>
+		
+		<collection property="orders_details" ofType="OrdersDetailDto" notNullColumn="product_code">
+			<result property="order_code" column="order_code"/>
+			<result property="product_code" column="product_code"/>
+			<result property="order_amount" column="order_amount"/>
+			<result property="order_ddate" column="order_ddate"/>
+			<result property="order_datail_status" column="order_datail_status"/>
+			<result property="detail_cd_contents" column="detail_cd_contents"/>
+			<result property="product_name" column="product_name"/>
+			<result property="price" column="price"/>
+			<result property="can_order" column="can_order"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectOrderByCode" parameterType="int" resultMap="OrdersJoinDetail">
+		select a.*, bunryu.cd_contents
+		from (
+		    select o.*, od.product_code, od.order_amount, od.order_ddate, od.order_detail_status,
+		    	   p.product_name, pp.price, b.cd_contents as detail_cd_contents,
+		    	   CASE 
+        		   	 WHEN p.product_isorder = 1 AND p.product_isdel = 0 AND pp.price IS NOT NULL THEN 1
+        			 ELSE 0
+    			   END AS can_order
+		    from orders o, orders_detail od, product p, product_price pp, bunryu b
+		    where o.order_code = od.order_code(+)
+		    	  and od.product_code = p.product_code
+		    	  and od.product_code = pp.product_code(+)
+		    	  and o.order_code = #{code}
+		    	  and sysdate between to_date(pp.start_date(+), 'yyyy-mm-dd') and to_date(pp.end_date(+), 'yyyy-mm-dd')
+		    	  and b.bcd = 200 and b.mcd = od.order_detail_status
+		) a, bunryu
+		where bunryu.bcd = 200 and bunryu.mcd = a.order_status
+	</select>
+	
+	<!-- orders_detail 테이블 delete -->
+	<delete id="deleteAllOrdersDetails" parameterType="int">
+		delete from orders_detail where order_code = #{code}
+	</delete>
+	
+	<!-- orders 테이블 delete -->
+	<delete id="deleteOrders" parameterType="int">
+		delete from orders where order_code = #{code}
+	</delete>
+	
+	<!-- orders 테이블 update order_note -->
+	<update id="updateOrdersNote" parameterType="OrdersDto">
+		update orders set order_note = #{order_note} where order_code = #{order_code}
+	</update>
+	
+	<!-- orders 테이블 update order_status -->
+	<update id="updateOrdersStatus" parameterType="OrdersDto">
+		update orders set order_status = #{order_status} where order_code = #{order_code}
+	</update>
+	
+	<!-- orders 테이블 count -->
+	<select id="totalCountOrders" resultType="int">
+		select count(*) from orders
+		where order_status != 0
+	</select>
+	
+	<select id="totalCountOrdersByClient" resultType="int" parameterType="int">
+		select count(*) from orders
+		where orders_client_code = #{code}
+	</select>
+	
+	<!-- orders 테이블 list -->
+	<select id="listOrders" parameterType="OrdersPageDto" resultType="OrdersListDto">
+		select * from (
+			select rownum rn, a.* from (
+				select o.*, b.cd_contents, c.client_name, e.emp_name from orders o, bunryu b, client_tb c, emp e 
+				where o.order_status != 0
+				and o.orders_client_code = c.client_code
+				and c.client_emp_code = e.emp_code
+				and b.bcd = 200 and b.mcd = o.order_status
+				order by o.order_code desc
+			) a 
+		) where rn between #{start} and #{end}
+	</select>
+	
+	<select id="listOrdersByClient" parameterType="OrdersPageDto" resultType="OrdersListDto">
+		select * from (
+			select rownum rn, a.* from (
+				select o.*, b.cd_contents, c.client_name, e.emp_name from orders o, bunryu b, client_tb c, emp e 
+				where o.orders_client_code = #{client_code}
+				and o.orders_client_code = c.client_code
+				and c.client_emp_code = e.emp_code
+				and b.bcd = 200 and b.mcd = o.order_status
+				order by o.order_code desc
+			) a 
+		) where rn between #{start} and #{end}
+	</select>
+
+</mapper>

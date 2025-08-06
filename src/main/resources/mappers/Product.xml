@@ -191,12 +191,19 @@
 	</update>
 	
 	<select id="prePrice" parameterType="ProductPriceDTO" resultType="ProductPriceDTO">
-		SELECT * FROM PRODUCT_PRICE WHERE product_code = #{product_code} AND end_date = '9999-12-31'
+		SELECT * 
+		FROM PRODUCT_PRICE 
+		WHERE product_code = #{product_code} 
+		    AND end_date = (
+		    SELECT MAX(end_date)
+		    FROM PRODUCT_PRICE
+		    WHERE product_code = #{product_code}
+		    )
 	</select>
 	
-	<insert id="wanStFalse" parameterType="ProductWanDTO">
+	<insert id="priceAfterStart" parameterType="ProductPriceDTO">
 		INSERT INTO PRODUCT_PRICE (PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
-			values (#{product_code} ,  #{START_DATE} , #{price_reg_code}, #{end_date}, #{price}, #{price_reg_date} )
+			values (#{product_code} ,  #{start_date} , #{price_reg_code}, '9999-12-31' , #{price}, #{price_reg_date} )
 	</insert>
 	
 </mapper>

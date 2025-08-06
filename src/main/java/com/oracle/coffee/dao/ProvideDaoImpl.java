@@ -36,14 +36,14 @@ public class ProvideDaoImpl implements ProvideDao {
 	}
 
 	@Override
-	public int totalProvide() {
+	public int totalProvide(ProvideDto provideDto) {
 		System.out.println("ProvideDaoImpl totalProvide start...");
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		int totalProvideCount = 0;
 		try {
-			totalProvideCount = session.selectOne("totalProvide");
+			totalProvideCount = session.selectOne("totalProvide", provideDto);
 			transactionManager.commit(txStatus);
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
@@ -71,13 +71,15 @@ public class ProvideDaoImpl implements ProvideDao {
 
 	@Override
 	public ProvideDto provideDetail(int provide_code) {
-		System.out.println("ProvideDaoImpl provideList start...");
+		System.out.println("ProvideDaoImpl provideDetail start...");
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		ProvideDto provideDetail = null;
 		try {
-			session.selectOne("provideDetail", provide_code);
+			provideDetail = session.selectOne("provideDetail", provide_code);
+			System.out.println("ProvideDaoImpl provideDetail provide_code : " + provide_code);
+			System.out.println("ProvideDaoImpl provideDetail provideDetail : " + provideDetail);
 			transactionManager.commit(txStatus);
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);

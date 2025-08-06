@@ -45,7 +45,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	}
 
 	@Override
-	public int totalPurchaseCnt() {
+	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseDaoImpl totalPurchaseCnt start...");
 		
 		TransactionStatus txStatus = 
@@ -53,7 +53,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		int totalPurchaseCnt = 0;
 		
 		try {
-			totalPurchaseCnt = session.selectOne("totalPurchaseCnt");
+			totalPurchaseCnt = session.selectOne("totalPurchaseCnt", purchaseDto);
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {
@@ -78,6 +78,57 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 			System.out.println("SWPurchaseDaoImpl purchaseList Exception : " + e.getMessage());
 		}
 		return purchaseList;
+	}
+
+	@Override
+	public PurchaseDto purchaseDetail(int purchase_code) {
+		System.out.println("SWPurchaseDaoImpl purchaseDetail start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		PurchaseDto purchaseDetail = null;
+		try {
+			purchaseDetail = session.selectOne("purchaseDetail", purchase_code);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseDetail Exception : " + e.getMessage());
+		}
+		return purchaseDetail;
+	}
+
+	@Override
+	public void purchaseApprove(PurchaseDto purchaseApprove) {
+		System.out.println("SWPurchaseDaoImpl purchaseApprove start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		
+		try {
+			session.update("purchaseApprove", purchaseApprove);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			e.printStackTrace();
+			System.out.println("SWPurchaseDaoImpl purchaseApprove Exception : " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void purchaseRefuse(PurchaseDto purchaseRefuse) {
+		System.out.println("SWPurchaseDaoImpl purchaseRefuse start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		
+		try {
+			session.update("purchaseRefuse", purchaseRefuse);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			e.printStackTrace();
+			System.out.println("SWPurchaseDaoImpl purchaseRefuse Exception : " + e.getMessage());
+		}
 	}
 
 }

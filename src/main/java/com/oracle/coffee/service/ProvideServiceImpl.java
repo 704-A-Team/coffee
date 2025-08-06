@@ -20,9 +20,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 public class ProvideServiceImpl implements ProvideService {
-	private final ProvideDao provideDao;
-	private final SWProductDao productDao;
-	private final ClientDao	 clientDao;
+	private final ProvideDao 	provideDao;
+	private final SWProductDao 	productDao;
+	private final ClientDao	 	clientDao;
 
 
 	@Override
@@ -53,10 +53,10 @@ public class ProvideServiceImpl implements ProvideService {
 	}
 
 	@Override
-	public int totalProvide() {
+	public int totalProvide(ProvideDto provideDto) {
 		System.out.println("ProvideServiceImpl totalProvide start...");
 		
-		int totalProvideCount = provideDao.totalProvide();
+		int totalProvideCount = provideDao.totalProvide(provideDto);
 		
 		return totalProvideCount;
 	}

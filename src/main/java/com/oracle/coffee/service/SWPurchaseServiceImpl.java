@@ -3,9 +3,7 @@ package com.oracle.coffee.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.oracle.coffee.dao.ClientMapper;
 import com.oracle.coffee.dao.SWPurchaseDao;
 import com.oracle.coffee.dto.PurchaseDto;
 
@@ -13,27 +11,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
-//@Transactional
 @Log4j2
 @RequiredArgsConstructor
 public class SWPurchaseServiceImpl implements SWPurchaseService {
 	private final SWPurchaseDao		swPurchaseDao;
 
-	// 원본 
 	@Override
 	public int purchaseSave(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl purchaseSave start...");
 		
-		int purchase_code = swPurchaseDao.purchaseSave(purchaseDto);
+		int purchase_result = swPurchaseDao.purchaseSave(purchaseDto);
 		
-		return purchase_code;
+		return purchase_result;
 	}
-
 	@Override
-	public int totalPurchaseCnt() {
+	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl totalPurchaseCnt start...");
 		
-		int totalPurchaseCnt = swPurchaseDao.totalPurchaseCnt();
+		int totalPurchaseCnt = swPurchaseDao.totalPurchaseCnt(purchaseDto);
 		
 		return totalPurchaseCnt;
 	}
@@ -46,6 +41,31 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		System.out.println("SWPurchaseServiceImpl purchaseList purchaseList.size() : " + purchaseList.size());
 		
 		return purchaseList;
+	}
+	@Override
+	public PurchaseDto purchaseDetail(int purchase_code) {
+		System.out.println("SWPurchaseServiceImpl purchaseDetail start...");
+		
+		PurchaseDto purchaseDetail = swPurchaseDao.purchaseDetail(purchase_code);
+		System.out.println("SWPurchaseServiceImpl purchaseDetail : " + purchaseDetail);
+		
+		return purchaseDetail;
+	}
+	
+	@Override
+	public void purchaseApprove(PurchaseDto purchaseApprove) {
+		System.out.println("SWPurchaseServiceImpl purchaseApprove start...");
+		
+		swPurchaseDao.purchaseApprove(purchaseApprove);
+		System.out.println("SWPurchaseServiceImpl purchaseApprove : " + purchaseApprove);
+	}
+	
+	@Override
+	public void purchaseRefuse(PurchaseDto purchaseRefuse) {
+		System.out.println("SWPurchaseServiceImpl purchaseRefuse start...");
+		
+		swPurchaseDao.purchaseRefuse(purchaseRefuse);
+		System.out.println("SWPurchaseServiceImpl purchaseRefuse : " + purchaseRefuse);
 	}
 	
 	

@@ -1,5 +1,7 @@
 server:
   port: 8383
+  tomcat:
+    max-part-count: 20
 
 spring:
   application-name: coffee
@@ -45,6 +47,7 @@ logging.level:
 mybatis:
   config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/*.xml
+  
 
   
 #upload Folder
