@@ -112,15 +112,15 @@
   	<div class="d-flex justify-content-end gap-2 pe-0">
 	<c:choose>
   		<c:when test="${empty order or order.order_status == 0}">
-  			<button type="submit" class="btn btn-md btn-primary fw-bold">임시저장</button>
   			<c:choose>
   				<c:when test="${empty order}">
-  					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/list'">저장취소</button>
+  					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/list'">취소</button>
   				</c:when>
   				<c:otherwise>
   					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/${order.order_code }'">변경취소</button>
   				</c:otherwise>
   			</c:choose>
+  			<button type="submit" class="btn btn-md btn-primary fw-bold">저장</button>
   		</c:when>
   		<c:otherwise>
   			<div class="card border-0 pe-0">
@@ -131,8 +131,8 @@
 			  		</div>
 				</div>
 				<div class="d-flex justify-content-end gap-2 pe-0">
-  					<button type="submit" class="btn btn-md btn-primary fw-bold">발주저장</button>
 					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/${order.order_code }'">변경취소</button>
+  					<button type="submit" class="btn btn-md btn-primary fw-bold">발주저장</button>
 				</div>
 			</div>
   		</c:otherwise>

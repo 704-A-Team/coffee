@@ -30,8 +30,8 @@
 		];
 	}
 	
-    const isFixedPage = ${isFixedPage};
-    if (!isFixedPage) {
+    const isOrderFixedPage = ${isFixedPage};
+    if (!isOrderFixedPage) {
     	const details = getDetails();
     	$(function () {
     		// 새 발주서: 빈 제품 행 추가 / 조회: 기존 제품 행 추가
@@ -141,9 +141,9 @@
 	        const rowPrice = detail.order_amount * detail.product_price;
 	        if (rowPriceInput) $(rowPriceInput).text(rowPrice);
 	        if (dateInput) $(dateInput).val(detail.order_ddate ?? '');
-
-	        //let beforeTotal = parseFloat($('.total-price').text()) ?? 0;
-	        //$('.total-price').text(beforeTotal + rowPrice);
+	        
+	        const beforeTotal = $('.total-price').text() ?? 0;
+	        $('.total-price').text(parseInt(rowPrice) + parseInt(beforeTotal));
     	}
 	 	
 		// 제품명 select
@@ -209,7 +209,42 @@
 				return false;
 			}
 		}
-		location.href("/order/request/" + orderCode);
+		location.href = "/order/request/" + orderCode;
+	}
+
+	function cancelOrder(orderCode, isRefused) {
+		// 반려인경우 모달창
+		let reason = null;
+		
+		if (isRefused) {
+			reason = $('#orderRefuseReason').val();
+			console.log(reason)
+			
+			if (!reason?.trim()) {
+				alert("반려사유를 작성해주세요");
+				return false;
+			}
+			
+		}
+		
+		// post 요청
+		fetch('/order/cancel', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include', // 쿠키(세션ID) 포함
+			body: JSON.stringify({
+				order_code: orderCode,
+				reason: reason
+			})
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('요청 실패');
+			}
+			location.href = "/order/" + orderCode;
+		})
 	}
   
 </script>

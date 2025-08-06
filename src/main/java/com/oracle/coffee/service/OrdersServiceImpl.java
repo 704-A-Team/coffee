@@ -13,6 +13,7 @@ import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
+import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -80,8 +81,7 @@ public class OrdersServiceImpl implements OrdersService {
 			detail.setOrder_datail_status(targetStatus);
 		}
 		
-		ordersDao.updateOrdersStatus(order);
-		
+		ordersDao.requestOrders(order);
 	}
 
 	@Override
@@ -92,16 +92,21 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public void refuseOrCancel(int orderCode) {
+	public void refuseOrCancel(OrdersRefuseDto refuse) {
 		// 수주 취소/반려 상태로 변경 (요청 상태에서 가능)
 		// 취소(가맹점): 취소상태(3) + 승인자 null + order_refuse null
 		// 반려(본사): 취소상태(3) + 승인자 코드 존재 + 거부사유 존재
 		
-		OrdersDto order = ordersDao.findByCode(orderCode);
+		OrdersDto order = ordersDao.findByCode(refuse.getOrder_code());
 		
 		int targetStatus = 3;
 		order.setOrder_status(targetStatus);
-		ordersDao.updateOrdersStatus(order);
+		// 반려인 경우
+		order.setOrder_refuse(refuse.getReason());
+		order.setOrders_perm_code(refuse.getOrder_perm_code());
+		// 취소 당시 총액
+		order.setOrder_final_price(order.calculateTotalPrice());
+		ordersDao.refuseOrders(order);
 	}
 
 	@Override

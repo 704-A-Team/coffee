@@ -41,4 +41,12 @@ public class OrdersDto {
 	// emp 테이블
 	private String emp_name;		// 승인자 이름
 	*/
+	
+	public int calculateTotalPrice() {
+		int total = 0;
+		for(OrdersDetailDto detail : orders_details) {
+			total += detail.getPrice();
+		}
+		return total;
+	}
 }

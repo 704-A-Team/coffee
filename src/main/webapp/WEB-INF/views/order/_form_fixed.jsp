@@ -21,24 +21,32 @@
 	<div class="row mb-4">
     	<div class="col-6 d-flex border border-end-0 p-3">
     	<div class="flex-fill pe-3">
-    		<div class="mb-2">
-				<label class="form-label">상태</label>
+    		<div class="mb-2 d-flex">
+				<label class="form-label me-2 mb-0" style="white-space: nowrap;">상태</label>
    				<div class="form-control form-control-sm bg-light">${order.cd_contents }</div>
 		    </div>
-    		<div class="mb-2">
-		        <label class="form-label">등록 코드</label>
+    		<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">등록 코드</label>
 		        <div class="form-control form-control-sm bg-light">${order.order_code }</div>
 	        </div>
-	      	<div class="mb-2">
-		        <label class="form-label">등록일</label>
+	      	<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">등록일</label>
 		        <div class="form-control form-control-sm bg-light">${order.order_reg_date }</div>
 	        </div>
-	      	<div class="mb-2">
-		        <label class="form-label">담당자명</label>
+	        <div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">요청일</label>
+		        <div class="form-control form-control-sm bg-light">${order.order_req_date }</div>
+	        </div>
+	        <div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">확정일</label>
+		        <div class="form-control form-control-sm bg-light">${order.order_perm_date }</div>
+	        </div>
+	      	<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">담당자명</label>
 		        <div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">담당자 연락처</label>
+	      	<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">담당자 연락처</label>
 		        <div class="form-control form-control-sm bg-light" >####</div>
 	      	</div>
 	      	
@@ -46,24 +54,24 @@
     	</div>
 
 	    <div class="col-6 border p-3">
-	    	<div class="mb-2">
-	        	<label class="form-label">상호명</label>
+	    	<div class="mb-2 d-flex">
+	        	<label class="form-label me-2 mb-0" style="white-space: nowrap;">상호명</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
-	      	<div class="mb-2">
-	        	<label class="form-label">대표자명</label>
+	      	<div class="mb-2 d-flex">
+	        	<label class="form-label me-2 mb-0" style="white-space: nowrap;">대표자명</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">사업자등록번호</label>
+	      	<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">사업자등록번호</label>
 		        <div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">주소</label>
+	      	<div class="mb-2 d-flex">
+		        <label class="form-label me-2 mb-0" style="white-space: nowrap;">주소</label>
 		        <div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
-	      	<div class="mb-2">
-	        	<label class="form-label">전화번호</label>
+	      	<div class="mb-2 d-flex">
+	        	<label class="form-label me-2 mb-0" style="white-space: nowrap;">전화번호</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
 	      	<div class="mb-2">
@@ -146,14 +154,35 @@
 					</div>
 					<div class="d-flex justify-content-end gap-2 pe-0">
 						<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">발주변경</button>
-						<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/cancel/${order.order_code }'">발주취소</button>
+						<button type="button" class="btn btn-md btn-danger fw-bold" onclick="cancelOrder(${order.order_code}, false)">요청취소</button>
 					</div>
 				</div>
+				
+				<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려 테스트</button>
 			</c:otherwise>
 		</c:choose>
   	</c:if>
   	
   	</div>
+  	
+  	<!-- 반려 사유 작성 모달 -->
+  	<div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="myModalLabel">사유 작성</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <textarea rows="4" class="form-control form-control-sm" placeholder="반려 사유를 작성해주세요" id="orderRefuseReason"></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, true)">반려</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
 </body>
 </html>
