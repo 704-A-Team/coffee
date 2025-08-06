@@ -7,6 +7,8 @@
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersDto" alias="OrdersDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersDetailDto" alias="OrdersDetailDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersProductDto" alias="OrdersProductDto"/>
+		<typeAlias type="com.oracle.coffee.dto.orders.OrdersListDto" alias="OrdersListDto"/>
+		<typeAlias type="com.oracle.coffee.dto.orders.OrdersPageDto" alias="OrdersPageDto"/>
 
 		<typeAlias alias="ProductWanDTO" type="com.oracle.coffee.dto.km.ProductWanDTO"/>
 		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>

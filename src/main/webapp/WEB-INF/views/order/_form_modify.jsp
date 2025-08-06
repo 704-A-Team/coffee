@@ -9,9 +9,11 @@
 
 </head>
 <body>
-<form id="orderForm" method="post" onsubmit="return setOrderDetails()">
+<c:set var="reqOrderCode" value="${empty order ? 0 : order.order_code}" />
+<form id="orderForm" action="/order/save" method="post" onsubmit="return setOrderDetails(${reqOrderCode})">
 <div class="doc-wrapper">
 	<h4 class="text-center mb-4 fw-bold">발주서</h4>
+	
 	<input type="hidden" name="orders_client_code" value="${client_code }">
 	
 	<!-- 상단 박스 (정보) -->
@@ -22,13 +24,10 @@
 				<label class="form-label">상태</label>
 				<c:choose>
     				<c:when test="${empty order}">
-        				<div class="form-control form-control-sm bg-light">신규 작성</div>
-    				</c:when>
-    				<c:when test="${order.order_status == 0}">
-        				<div class="form-control form-control-sm bg-light">요청 전</div>
+        				<div class="form-control form-control-sm bg-light">신규작성</div>
     				</c:when>
     				<c:otherwise>
-        				<div class="form-control form-control-sm bg-light">요청 완료 (승인 전)</div>
+        				<div class="form-control form-control-sm bg-light">${order.cd_contents }</div>
     				</c:otherwise>
 				</c:choose>
 		    </div>
@@ -56,10 +55,6 @@
 		        <label class="form-label">담당자 연락처</label>
 		        <div class="form-control form-control-sm bg-light" >####</div>
 	      	</div>
-	      	<div class="mb-2">
-		        <label class="form-label">비고</label>
-		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요">${order.order_note }</textarea>
-	      	</div>
     	</div>
     	</div>
 
@@ -84,6 +79,10 @@
 	        	<label class="form-label">전화번호</label>
 	        	<div class="form-control form-control-sm bg-light">####</div>
 	      	</div>
+	      	<div class="mb-2">
+		        <label class="form-label">비고</label>
+		        <textarea class="form-control form-control-sm" name="order_note" rows="4" placeholder="비고를 작성해주세요">${order.order_note }</textarea>
+	      	</div>
 	    </div>
 	</div>
     <!-- 하단 박스 (품목 리스트) -->
@@ -98,6 +97,9 @@
 			    <div class="col-2">납기일</div>
 			</div>
 		</div>
+		<div class="col text-end">
+			<strong>총액: </strong><span class="total-price">0</span> 원
+		</div>
 
 		<!-- 품목 추가 버튼 -->
 		<button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="addItem()">+ 추가</button>
@@ -105,29 +107,32 @@
 		<div id="ordersDetails"></div>
 	</div>
 
-	<!-- 저장/요청 버튼 -->
+	<!-- 저장/리셋 버튼 -->
 	<br><br>
   	<div class="d-flex justify-content-end gap-2 pe-0">
 	<c:choose>
   		<c:when test="${empty order or order.order_status == 0}">
-  			<!-- 임시 내용 저장 -->
-  			<button type="submit" class="btn btn-md btn-secondary fw-bold" onclick="submitReq('/order/save')">임시저장</button>
-  			<!-- 발주 요청 -->
-  			<button type="submit" class="btn btn-md btn-primary fw-bold" onclick="submitReq('/order/request')">발주요청</button>
+  			<button type="submit" class="btn btn-md btn-primary fw-bold">임시저장</button>
+  			<c:choose>
+  				<c:when test="${empty order}">
+  					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/list'">저장취소</button>
+  				</c:when>
+  				<c:otherwise>
+  					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/${order.order_code }'">변경취소</button>
+  				</c:otherwise>
+  			</c:choose>
   		</c:when>
   		<c:otherwise>
   			<div class="card border-0 pe-0">
   				<div class="alert alert-info d-flex align-items-center" role="alert">
 			  		<i class="bi bi-info-circle-fill me-2"></i>
 			  		<div>
-			    		발주가 <strong>승인</strong> 또는 <strong>반려</strong>되기 전까지 <u>내용을 수정하거나 요청을 취소</u>할 수 있습니다.
+			    		발주가 <strong>승인</strong> 또는 <strong>반려</strong>되기 전까지 <u>내용을 변경하거나 요청을 취소</u>할 수 있습니다.
 			  		</div>
 				</div>
 				<div class="d-flex justify-content-end gap-2 pe-0">
-					<!-- 발주 내용 저장 -->
-  					<button type="submit" class="btn btn-md btn-secondary fw-bold" onclick="submitReq('/order/save')">발주수정</button>
-  					<!-- 발주 취소 -->
-  					<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/refuse'">발주취소</button>
+  					<button type="submit" class="btn btn-md btn-primary fw-bold">발주저장</button>
+					<button type="reset" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/${order.order_code }'">변경취소</button>
 				</div>
 			</div>
   		</c:otherwise>

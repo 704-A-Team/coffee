@@ -1,5 +1,7 @@
 server:
   port: 8383
+  tomcat:
+    max-part-count: 0
 
 spring:
   application-name: coffee
