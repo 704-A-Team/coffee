@@ -1,35 +1,72 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>제품 등록</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        :root {
+            --main-brown: #6f4e37;
+            --soft-brown: #bfa08e;
+            --danger-red: #a94442;
+        }
+
+        body {
+            background-color: #f9f5f1;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
         .form-section-title {
-            border-left: 4px solid #0d6efd;
-            padding-left: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 2rem;
+            border-left: 5px solid var(--main-brown);
+            padding-left: 12px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--main-brown);
+        }
+
+        .btn-brown {
+            background-color: var(--soft-brown) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .btn-brown:hover {
+            background-color: var(--main-brown) !important;
+        }
+
+        .btn-brown-outline {
+            border: 1px solid var(--main-brown) !important;
+            color: var(--main-brown) !important;
+            background-color: white !important;
+        }
+
+        .btn-brown-outline:hover {
+            background-color: var(--main-brown) !important;
+            color: white !important;
+        }
+
+        @media (max-width: 768px) {
+            .d-flex.justify-content-end {
+                justify-content: center !important;
+            }
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
 
-<!-- HEADER -->
+<body class="d-flex flex-column min-vh-100">
 <%@ include file="../../header.jsp" %>
 
 <div class="d-flex flex-grow-1">
-    <!-- SIDEBAR -->
     <%@ include file="../../sidebar.jsp" %>
 
     <div class="d-flex flex-column flex-grow-1">
-        <!-- 본문 -->
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
                 <div class="form-section-title">제품(원재료) 등록</div>
+
                 <form action="${pageContext.request.contextPath}/sw/wonProductSave" method="post" enctype="multipart/form-data">
                     
                     <!-- 제품명 -->
@@ -73,32 +110,24 @@
                         <input type="number" class="form-control" id="product_weight" name="product_weight" placeholder="숫자만 입력해주세요" required>
                     </div>
 
-                    <!-- 등록자 -->
-                    <!-- <div class="mb-4">
-                        <label for="product_reg_code" class="form-label">등록자 (사원코드)</label>
-                        <input type="text" class="form-control" id="product_reg_code" name="product_reg_code" placeholder="사원코드를 입력해주세요">
-                    </div> -->
-                    
                     <!-- 이미지 -->
                     <div class="mb-3">
-					  <label for="file" class="form-label">제품(원재료) 이미지 (최대 3개)</label>
-					  <input type="file" class="form-control" id="file" name="file" multiple>
-					  <div class="form-text text-danger">※ 최대 3개의 이미지만 업로드할 수 있습니다.</div>
-					</div>
-
-                    <!-- 버튼 -->
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg me-2">등록</button>
-                        <button type="reset" class="btn btn-secondary btn-lg">취소</button>
+                        <label for="files" class="form-label">제품(원재료) 이미지 (최대 3개)</label>
+                        <input type="file" class="form-control" id="files" name="files" multiple accept=".jpg,.jpeg,.png">
+                        <div class="form-text text-danger mt-1">※ 최대 3개의 이미지만 업로드할 수 있습니다.</div>
                     </div>
+
+                    <!-- 버튼 영역: 오른쪽 하단 정렬 + 텍스트 변경 없이 유지 -->
+                    <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+					    <button type="submit" class="btn btn-brown">등록</button>
+					    <button type="reset" class="btn btn-brown-outline">초기화</button>
+					</div>
                 </form>
             </div>
         </main>
 
-        <!-- FOOTER -->
         <%@ include file="../../footer.jsp" %>
     </div>
 </div>
-
 </body>
 </html>

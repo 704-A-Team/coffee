@@ -11,6 +11,7 @@ public class PurchaseDto {
 	private int 			purchase_code;
 	private int 			purchase_client_code;
 	private int 			purchase_status;
+	private LocalDateTime	purchase_ipgo_date;
 	private int 			purchase_perm_code;
 	private String 			purchase_refuse;
 	private int 			purchase_reg_code;

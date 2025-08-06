@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,7 +137,7 @@
                     const $select = $('#purchase_amount');
                     $select.empty().append('<option value="">-- 선택 --</option>');
                     for (let i = 1; i <= 50; i++) {
-                        const value = ajax_purchase_amount * i;
+                        const value = ajax_purchase_amount * i *10;
                         $select.append('<option value="' + value + '">' + numberWithCommas(value) + '</option>');
                     }
                 }
@@ -147,7 +146,7 @@
 
         $('#purchase_amount').change(function () {
             const ajax_amount = Number($('#purchase_amount option:eq(1)').val());
-            const ajax_i = Number($(this).val());
+            const ajax_i = 10 * Number($(this).val());
             const ajax_danga = Number($('#purchase_danga').val());
             if (!ajax_i || !ajax_danga) {
                 $('#total_price').val('');

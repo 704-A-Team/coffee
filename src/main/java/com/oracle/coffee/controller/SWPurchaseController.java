@@ -1,5 +1,7 @@
 package com.oracle.coffee.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -73,10 +75,10 @@ public class SWPurchaseController {
 		log.info("SWPurchaseController purchaseSave start...");
 		
 		purchaseDto.setPurchase_status(1);
-		int purchase_code = swPurchaseService.purchaseSave(purchaseDto);
-		System.out.println("save purchase_code : " + purchase_code);
+		int purchase_result = swPurchaseService.purchaseSave(purchaseDto);
+		System.out.println("save purchase_code : " + purchase_result);
 		
-		return "sw/purchase/list";
+		return "redirect:/sw/purchaseList";
 	}
 	
 	@GetMapping("/purchaseList")
@@ -112,5 +114,32 @@ public class SWPurchaseController {
 		
 		return "sw/purchase/detailList";
 	}
+	
+	@PostMapping("/purchaseApprove")
+	public String purchaseApprove(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+		System.out.println("SWPurchaseController purchaseApprove Strart...");
+		
+		PurchaseDto purchaseApprove = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
+		System.out.println("SWPurchaseController purchaseApprove purchaseApprove : " + purchaseApprove);
+		purchaseApprove.setPurchase_status(4);
+		swPurchaseService.purchaseApprove(purchaseApprove);
+		
+		return "redirect:/sw/purchaseList";
+
+	}
+	
+	@PostMapping("/purchaseRefuse")
+	public String purchaseRefuse(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+		System.out.println("SWPurchaseController purchaseRefuse Strart...");
+		
+		PurchaseDto purchaseRefuse = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
+		purchaseRefuse.setPurchase_status(3);
+		purchaseRefuse.setPurchase_refuse(purchaseDto.getPurchase_refuse());
+		swPurchaseService.purchaseRefuse(purchaseRefuse);	
+		
+		return "redirect:/sw/purchaseList";
+	}
+	
+	
 	
 }

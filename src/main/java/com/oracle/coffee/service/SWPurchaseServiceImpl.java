@@ -20,9 +20,9 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 	public int purchaseSave(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl purchaseSave start...");
 		
-		int purchase_code = swPurchaseDao.purchaseSave(purchaseDto);
+		int purchase_result = swPurchaseDao.purchaseSave(purchaseDto);
 		
-		return purchase_code;
+		return purchase_result;
 	}
 	@Override
 	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
@@ -50,6 +50,22 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		System.out.println("SWPurchaseServiceImpl purchaseDetail : " + purchaseDetail);
 		
 		return purchaseDetail;
+	}
+	
+	@Override
+	public void purchaseApprove(PurchaseDto purchaseApprove) {
+		System.out.println("SWPurchaseServiceImpl purchaseApprove start...");
+		
+		swPurchaseDao.purchaseApprove(purchaseApprove);
+		System.out.println("SWPurchaseServiceImpl purchaseApprove : " + purchaseApprove);
+	}
+	
+	@Override
+	public void purchaseRefuse(PurchaseDto purchaseRefuse) {
+		System.out.println("SWPurchaseServiceImpl purchaseRefuse start...");
+		
+		swPurchaseDao.purchaseRefuse(purchaseRefuse);
+		System.out.println("SWPurchaseServiceImpl purchaseRefuse : " + purchaseRefuse);
 	}
 	
 	

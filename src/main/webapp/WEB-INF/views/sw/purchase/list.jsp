@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,13 +49,13 @@
             <div class="container mt-3">
                 <div class="form-section-title">발주 현황</div>
                 
-                <c:if test="${empty purchaseList}">
-			        <div class="col-12">
-			            <div class="alert alert-warning text-center" role="alert">
-			                <strong>해당 검색어에 부합하는 리스트가 없습니다.</strong>
-			            </div>
-			        </div>
-			    </c:if>
+                <c:if test="${not empty param.searchKeyword and fn:length(fn:trim(param.searchKeyword)) > 0 and empty purchaseList}">
+				    <div class="col-12">
+				        <div class="alert alert-warning text-center" role="alert">
+				            <strong>해당 검색어에 부합하는 리스트가 없습니다.</strong>
+				        </div>
+				    </div>
+				</c:if>
 
                 <div class="row">
                     <!-- 목록 표시 -->

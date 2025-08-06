@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,6 +94,10 @@
                                     <td>${purchaseDetail.statusName}</td>
                                 </tr>
                                 <tr>
+                                    <th>입고일</th>
+                                    <td>${purchaseDetail.purchase_ipgo_date}</td>
+                                </tr>
+                                <tr>
                                     <th>승인자</th>
                                     <td>${purchaseDetail.empPermName}</td>
                                 </tr>
@@ -114,10 +117,47 @@
                         </table>
                     </div>
                 </div>
-                <!-- 목록 버튼 -->
+                <!-- 목록 / 승인 / 거부 버튼 -->
 				<div class="mt-4 text-end">
+				    <!-- 승인 버튼 -->
+				    <form action="${pageContext.request.contextPath}/sw/purchaseApprove" method="post" style="display: inline;">
+				        <input type="hidden" name="purchase_code" value="${purchaseDetail.purchase_code}" />
+				        <button type="submit" class="btn btn-success">승인</button>
+				    </form>
+				
+				    <!-- 거부 버튼 (모달 호출) -->
+				    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">
+				        거부
+				    </button>
+				    
 				    <a href="javascript:history.back()" class="btn btn-secondary">목록보기</a>
 				</div>
+				
+				<!-- 거부 사유 입력 모달 -->
+				<div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <form action="${pageContext.request.contextPath}/sw/purchaseRefuse" method="post">
+				        <div class="modal-content">
+				            <div class="modal-header bg-danger text-white">
+				                <h5 class="modal-title" id="refuseModalLabel">거부 사유 입력</h5>
+				                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+				            </div>
+				            <div class="modal-body">
+				                <input type="hidden" name="purchase_code" value="${purchaseDetail.purchase_code}" />
+				                <div class="mb-3">
+				                    <label for="purchase_refuse" class="form-label">거부 사유</label>
+				                    <textarea class="form-control" id="purchase_refuse" name="purchase_refuse" rows="4" required></textarea>
+				                </div>
+				            </div>
+				            <div class="modal-footer">
+				                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				                <button type="submit" class="btn btn-danger">거부 확정</button>
+				            </div>
+				        </div>
+				    </form>
+				  </div>
+				</div>
+				
 				<!-- 추가로 조건걸어서 본부장급이상이면 승인버튼 활성화 -->
             </div>
         </main>

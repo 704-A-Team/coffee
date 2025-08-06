@@ -9,5 +9,7 @@ public interface SWPurchaseService {
 	int 				totalPurchaseCnt(PurchaseDto purchaseDto);
 	List<PurchaseDto> 	purchaseList(PurchaseDto purchaseDto);
 	PurchaseDto 		purchaseDetail(int purchase_code);
+	void 				purchaseApprove(PurchaseDto purchaseApprove);
+	void 				purchaseRefuse(PurchaseDto purchaseRefuse);
 
 }

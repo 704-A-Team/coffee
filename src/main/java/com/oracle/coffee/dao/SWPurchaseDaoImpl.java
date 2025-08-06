@@ -97,4 +97,38 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		return purchaseDetail;
 	}
 
+	@Override
+	public void purchaseApprove(PurchaseDto purchaseApprove) {
+		System.out.println("SWPurchaseDaoImpl purchaseApprove start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		
+		try {
+			session.update("purchaseApprove", purchaseApprove);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			e.printStackTrace();
+			System.out.println("SWPurchaseDaoImpl purchaseApprove Exception : " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void purchaseRefuse(PurchaseDto purchaseRefuse) {
+		System.out.println("SWPurchaseDaoImpl purchaseRefuse start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		
+		try {
+			session.update("purchaseRefuse", purchaseRefuse);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			e.printStackTrace();
+			System.out.println("SWPurchaseDaoImpl purchaseRefuse Exception : " + e.getMessage());
+		}
+	}
+
 }

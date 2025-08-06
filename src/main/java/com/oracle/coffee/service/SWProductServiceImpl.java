@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.coffee.dao.SWProductDao;
@@ -15,7 +13,6 @@ import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.km.ProductImgDTO;
 import com.oracle.coffee.util.CustomFileUtil;
 
-import jakarta.transaction.TransactionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

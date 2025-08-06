@@ -145,8 +145,22 @@
 	    	on pt.product_unit = 		bu.mcd and bu.bcd = 750
 	    where pd.purchase_code = #{purchase_code}
 	</select>
-
-
-
+	
+	<update id="purchaseApprove" parameterType="PurchaseDto">
+		update 	purchase
+		set		purchase_ipgo_date 	= sysdate,
+				purchase_status 	= #{purchase_status}
+		where	purchase_code 		= #{purchase_code}
+	</update>
+	
+	<update id="purchaseRefuse" parameterType="PurchaseDto">
+		update 	purchase
+		set		purchase_refuse = #{purchase_refuse},
+				purchase_status = #{purchase_status}
+		where	purchase_code 	= #{purchase_code}
+	</update>
+	
+	
+	
 </mapper>
 

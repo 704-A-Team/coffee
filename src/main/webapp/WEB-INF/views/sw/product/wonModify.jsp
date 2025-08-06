@@ -1,80 +1,139 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>제품(원재료) 수정</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-        .form-section-title {
-            border-left: 4px solid #0d6efd;
-            padding-left: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 2rem;
+        :root {
+            --main-brown: #6f4e37;
+            --light-brown: #e6d3c1;
+            --dark-brown: #4e342e;
+            --soft-brown: #bfa08e;
+            --danger-red: #a94442;
         }
+
+        body {
+            background-color: #f9f5f1;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .form-section-title {
+            border-left: 5px solid var(--main-brown);
+            padding-left: 12px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--dark-brown);
+        }
+
         .image-thumb {
-            width: 100px;
+            width: 110px;
             height: auto;
             border-radius: 4px;
             border: 1px solid #ccc;
         }
+
+        .btn-brown {
+            background-color: var(--soft-brown) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .btn-brown:hover {
+            background-color: var(--main-brown) !important;
+        }
+
+        .btn-brown-outline {
+            border: 1px solid var(--main-brown) !important;
+            color: var(--main-brown) !important;
+            background-color: #fff !important;
+        }
+
+        .btn-brown-outline:hover {
+            background-color: var(--main-brown) !important;
+            color: white !important;
+        }
+
+        .btn-soft-danger {
+            background-color: var(--danger-red) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .btn-soft-danger:hover {
+            background-color: #922d2b !important;
+        }
+
+        @media (max-width: 768px) {
+            .d-flex.justify-content-end {
+                justify-content: center !important;
+            }
+        }
     </style>
+
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const fileInput = document.querySelector("#newFiles");
-        const existingFilesContainer = document.querySelector("#existingFiles");
-        const form = document.querySelector("form");
+        document.addEventListener("DOMContentLoaded", () => {
+            const fileInput = document.querySelector("#newFiles");
+            const existingFilesContainer = document.querySelector("#existingFiles");
+            const form = document.querySelector("form");
 
-        existingFilesContainer.addEventListener("click", function (e) {
-            if (e.target.classList.contains("remove-existing")) {
-                const fileDiv = e.target.closest(".existing-file");
-                fileDiv.remove();
-            }
-        });
+            existingFilesContainer.addEventListener("click", function (e) {
+                if (e.target.classList.contains("remove-existing")) {
+                    const fileDiv = e.target.closest(".existing-file");
+                    fileDiv.remove();
+                }
+            });
 
-        fileInput.addEventListener("change", function () {
-            const existingCount = document.querySelectorAll("#existingFiles .existing-file").length;
-            const newCount = this.files.length;
-            if (existingCount + newCount > 3) {
-                alert("기존 이미지와 새 이미지 합산 최대 3개까지만 가능합니다.");
-                this.value = "";
-            }
-        });
+            fileInput.addEventListener("change", function () {
+                const existingCount = document.querySelectorAll("#existingFiles .existing-file").length;
+                const newCount = this.files.length;
+                if (existingCount + newCount > 3) {
+                    alert("기존 이미지와 새 이미지 합산 최대 3개까지만 가능합니다.");
+                    this.value = "";
+                }
+            });
 
-        form.addEventListener("submit", function () {
-            document.querySelectorAll("input[name='uploadFileNames']").forEach(e => e.remove());
+            form.addEventListener("submit", function () {
+                document.querySelectorAll("input[name='uploadFileNames']").forEach(e => e.remove());
 
-            document.querySelectorAll(".existing-file").forEach(fileDiv => {
-                const filename = fileDiv.getAttribute("data-filename");
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "uploadFileNames";
-                input.value = filename;
-                form.appendChild(input);
-                console.log("✅ 유지 이미지 추가됨:", filename);
+                document.querySelectorAll(".existing-file").forEach(fileDiv => {
+                    const filename = fileDiv.getAttribute("data-filename");
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "uploadFileNames";
+                    input.value = filename;
+                    form.appendChild(input);
+                    console.log("✅ 유지 이미지 추가됨:", filename);
+                });
             });
         });
-    });
     </script>
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 <%@ include file="../../header.jsp" %>
+
 <div class="d-flex flex-grow-1">
     <%@ include file="../../sidebar.jsp" %>
+
     <div class="d-flex flex-column flex-grow-1">
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
                 <div class="form-section-title">제품(원재료) 수정</div>
+
                 <form action="${pageContext.request.contextPath}/sw/wonProductModify" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="product_code" value="${wonProductDetail.product_code}" />
 
+                    <!-- 제품명 -->
                     <div class="mb-3">
                         <label for="product_name" class="form-label">제품명</label>
                         <input type="text" class="form-control" id="product_name" name="product_name" value="${wonProductDetail.product_name}" required>
                     </div>
 
+                    <!-- 셀렉트박스 row -->
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label class="form-label">단위</label>
@@ -100,11 +159,13 @@
                         </div>
                     </div>
 
+                    <!-- 중량 -->
                     <div class="mb-3">
                         <label class="form-label">기본 중량 (g)</label>
                         <input type="number" class="form-control" name="product_weight" value="${wonProductDetail.product_weight}" required>
                     </div>
 
+                    <!-- 삭제 구분 -->
                     <div class="mb-4">
                         <label class="form-label">삭제 구분</label>
                         <select name="product_isdel" class="form-select">
@@ -113,31 +174,35 @@
                         </select>
                     </div>
 
+                    <!-- 이미지 -->
                     <div class="mb-3">
-                        <label class="form-label">제품 이미지 ( 기존 + 새규 합쳐 최대 3개)</label>
+                        <label class="form-label">제품 이미지 (기존 + 새 최대 3개)</label>
                         <div id="existingFiles" class="mb-3 d-flex flex-wrap gap-3">
                             <c:forEach var="img" items="${wonProductDetail.wonImgList}" varStatus="status">
                                 <div class="d-flex flex-column align-items-center existing-file" data-filename="${img.file_name}">
                                     <img src="${pageContext.request.contextPath}/upload/${img.file_name}" alt="img${status.index}" class="image-thumb mb-1">
-                                    <button type="button" class="btn btn-sm btn-outline-danger remove-existing">삭제</button>
+                                    <button type="button" class="btn btn-sm btn-soft-danger remove-existing">삭제</button>
                                 </div>
                             </c:forEach>
                         </div>
                         <input type="file" id="newFiles" name="files" multiple class="form-control" accept=".jpg,.jpeg,.png">
                         <div class="form-text text-danger mt-1">※ 기존 + 새 이미지 포함 최대 3개까지 등록 가능합니다.</div>
                     </div>
-                    
-                    <c:forEach var="img" items="${wonProductDetail.wonImgList}">
-					  <input type="hidden" name="uploadFileNames" value="${img.file_name}" />
-					</c:forEach>
 
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">수정 완료</button>
-                        <a href="${pageContext.request.contextPath}/sw/wonProductDetail?product_code=${wonProductDetail.product_code}" class="btn btn-secondary">취소</a>
+                    <!-- 서버로 넘길 기존 이미지 정보 -->
+                    <c:forEach var="img" items="${wonProductDetail.wonImgList}">
+                        <input type="hidden" name="uploadFileNames" value="${img.file_name}" />
+                    </c:forEach>
+
+                    <!-- 버튼 영역: 오른쪽 하단 정렬 -->
+                    <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+                        <button type="submit" class="btn btn-brown">수정 완료</button>
+                        <a href="${pageContext.request.contextPath}/sw/wonProductDetail?product_code=${wonProductDetail.product_code}" class="btn btn-brown-outline">취소</a>
                     </div>
                 </form>
             </div>
         </main>
+
         <%@ include file="../../footer.jsp" %>
     </div>
 </div>
