@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer{
 	   // 업로드 파일 경로를 application.properties에서 읽어옵니다.
 	   @Value("${com.oracle.coffee.upload.path}")
+
 	    private String uploadPath;
 	    
 	    @Override
@@ -16,4 +17,5 @@ public class WebConfig implements WebMvcConfigurer{
 	        registry.addResourceHandler("/upload/**")
 	                .addResourceLocations("file:///" + System.getProperty("user.dir") + "/" + uploadPath + "/");
 	    }
+
 }

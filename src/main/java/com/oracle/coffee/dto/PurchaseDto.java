@@ -11,6 +11,7 @@ public class PurchaseDto {
 	private int 			purchase_code;
 	private int 			purchase_client_code;
 	private int 			purchase_status;
+	private LocalDateTime	purchase_ipgo_date;
 	private int 			purchase_perm_code;
 	private String 			purchase_refuse;
 	private int 			purchase_reg_code;
@@ -28,5 +29,17 @@ public class PurchaseDto {
 	private int 		start; 		 	   
 	private int 		end;
 	private String      currentPage;
+	
+	private String 		productName;
+	private String 		clientName;
+	private String 		unitName;
+	private String 		statusName;
+	private int 		provideAmount;
+	private String		empPermName;
+	private String		empRegName;
+	//private int			totalPrice = purchase_danga*provideAmount/purchase_amount;
+	
+	private String 		searchType;
+	private String 		searchKeyword;
 	
 }

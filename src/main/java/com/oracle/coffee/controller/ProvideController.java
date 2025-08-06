@@ -54,7 +54,7 @@ public class ProvideController {
 	public String provideListPage(ProvideDto provideDto, Model model) {
 		System.out.println("ProvideController provideListPage Strart...");
 		
-		int totalProvideCount = provideService.totalProvide();
+		int totalProvideCount = provideService.totalProvide(provideDto);
 		System.out.println("ProvideController provideListPage totalProvideCount : " + totalProvideCount);
 		
 		Paging page = new Paging(totalProvideCount, provideDto.getCurrentPage());

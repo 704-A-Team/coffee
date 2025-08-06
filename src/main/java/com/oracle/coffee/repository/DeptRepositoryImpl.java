@@ -35,7 +35,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 	@Override
 	public Long deptTotalcount() {
 		TypedQuery<Long> query = 	
-				em.createQuery("select count(d) from Dept d where d.dept_isdel = false", Long.class); 
+				em.createQuery("select count(d) from Dept d where d.dept_isdel = 0", Long.class); 
 		Long totalCountLong = query.getSingleResult();
 
 		return totalCountLong;
@@ -83,13 +83,6 @@ public class DeptRepositoryImpl implements DeptRepository {
 		return new DeptDto(dept);
 	}
 
-	/*
-	 * @Override public Optional<Dept> findByDept_codeUpdate(int dept_code) { Dept
-	 * foundDept = em.find(Dept.class, dept_code);
-	 * 
-	 * Optional<Dept> updatedDept = Optional.ofNullable(foundDept); return
-	 * updatedDept; }
-	 */
 
 	@Override
 	public DeptDto updateDept(DeptDto deptDto) {
@@ -103,7 +96,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 			    em.createNativeQuery(updateSql)
 			      .setParameter("name", deptDto.getDept_name())
 			      .setParameter("tel", deptDto.getDept_tel())
-			      .setParameter("del", deptDto.isDept_isdel())
+			      .setParameter("del", deptDto.getDept_isdel())
 			      .setParameter("code", deptDto.getDept_code())
 			      .executeUpdate();
 		
@@ -115,7 +108,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 	@Override
 	public void deptDelete(int dept_code) {
 		Dept dept = em.find(Dept.class, dept_code);
-		dept.changeDept_isdel(true);
+		dept.changeDept_isdel(1);
 		
 	}
 
