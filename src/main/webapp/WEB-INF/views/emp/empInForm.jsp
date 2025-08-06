@@ -53,6 +53,7 @@
                                     <option value="1003">인사팀</option>
                                     <option value="1004">구매팀</option>
                                     <option value="1005">판매팀</option>
+                                    <option value="1006">경영팀</option>
                                 </select>
                             </div>
 
@@ -60,11 +61,11 @@
                             <div class="mb-3">
                                 <label for="emp_grade" class="form-label">직급</label>
                                 <select class="form-select" id="emp_grade" name="emp_grade">
-                                    <option value="1">사원</option>
-                                    <option value="2">대리</option>
-                                    <option value="3">과장</option>
-                                    <option value="4">차장</option>
-                                    <option value="5">부장</option>
+                                    <option value="0">사원</option>
+                                    <option value="1">과장</option>
+                                    <option value="2">부장</option>
+                                    <option value="3">이사</option>
+                                    <option value="4">사장</option>
                                 </select>
                             </div>
 
@@ -79,7 +80,14 @@
                                 <label for="emp_email" class="form-label">이메일</label>
                                 <input type="email" class="form-control" id="emp_email" name="emp_email" required>
                             </div>
-
+							
+							<!-- 입사일 -->
+							<div class="mb-3">
+						    <label for="emp_ipsa_date" class="form-label">입사일</label>
+						    <input type="date" class="form-control" id="emp_ipsa_date" name="emp_ipsa_date" required>
+							</div>	
+					
+							
                             <!-- 버튼 -->
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg">등록하기</button>

@@ -61,6 +61,7 @@
                                 <option value="1003" ${empDto.emp_dept_code == 1003 ? 'selected' : ''}>인사팀</option>
                                 <option value="1004" ${empDto.emp_dept_code == 1004 ? 'selected' : ''}>구매팀</option>
                                 <option value="1005" ${empDto.emp_dept_code == 1005 ? 'selected' : ''}>판매팀</option>
+                                <option value="1006" ${empDto.emp_dept_code == 1006 ? 'selected' : ''}>경영팀</option>
                             </select>
                         </div>
                     </div>
@@ -108,9 +109,9 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">재직 여부</label>
                         <div class="col-sm-8">
-                            <select class="form-select" name="emp_isDel">
-                        <option value="0" ${empDto.emp_isDel == 0 ? 'selected' : ''}>재직중</option>
-						<option value="1" ${empDto.emp_isDel == 1 ? 'selected' : ''}>퇴직</option>
+                            <select class="form-select" name="emp_isdel">
+                        <option value="0" ${empDto.emp_isdel == 0 ? 'selected' : ''}>재직중</option>
+						<option value="1" ${empDto.emp_isdel == 1 ? 'selected' : ''}>퇴직</option>
                             </select>
                         </div>
                     </div>
