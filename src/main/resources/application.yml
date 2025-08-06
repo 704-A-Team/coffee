@@ -7,9 +7,18 @@ spring:
   # Oracle DB
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@172.30.1.87:1521/xe
+    url: jdbc:oracle:thin:@172.30.1.98:1521/xe
     username: s202507a
     password: 704A
+    
+  #Jpa Setting
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
   servlet:
     multipart:
@@ -17,15 +26,6 @@ spring:
       max-file-size: 50MB
       max-request-size: 200MB
       file-size-threshold: 2KB # 파일 크기 임계값 설정 (이 크기를 초과하면 디스크에 저장)
-
-
-
-  #Jpa Setting
-  jpa:
-    # database-platform: org.hibernate.dialect.OracleDialect  # Jpa사용시 11g에 대한 방언 설정 --> Paging 작업 
-    show-sql: true
-    hibernate:
-      ddl-auto: update
  
   # View Resolver
   mvc:

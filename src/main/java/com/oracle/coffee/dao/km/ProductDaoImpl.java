@@ -21,7 +21,12 @@ public class ProductDaoImpl implements ProductDao {
 
 	@Override
 	public void wanRegister(ProductWanDTO productDTO) {
-		session.insert("wanRegister",productDTO);
+		try {
+			session.insert("wanRegister",productDTO);
+		} catch (Exception e) {
+			System.out.println("wanRegister Exception->"+e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
 	}
 
 	@Override
@@ -31,34 +36,59 @@ public class ProductDaoImpl implements ProductDao {
 		try {
 			session.insert("wanImgRegister", productImgList);
 		} catch (Exception e) {
-			e.getMessage();
 			System.err.println("상품 이미지 등록 중 오류 발생: " + e.getMessage());
 			System.out.println("DAO wanImgRegister e.getMessage()->"+e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
 		}
 		
 	}
 	
 	@Override
 	public int priceRegister(ProductPriceDTO priceDTO) {
-		int result = session.insert("priceRegister", priceDTO);
+		int result = 0;
+		try {
+			result = session.insert("priceRegister", priceDTO);
+		} catch (Exception e) {
+			System.out.println("priceRegister Exception->"+e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
 		return result;
 	}
 
 	@Override
 	public int countTotal() {
-		int countTotal = session.selectOne("countTotal");
+		int countTotal = 0;
+		try {
+			countTotal = session.selectOne("countTotal");
+		} catch (Exception e) {
+			System.out.println("countTotal Exception->"+e.getMessage());
+		}
+		
 		return countTotal;
 	}
 
 	@Override
 	public List<ProductWanDTO> wonList() {
-		List<ProductWanDTO> wonList = session.selectList("wonList");
+		List<ProductWanDTO> wonList = null;
+		try {
+			wonList = session.selectList("wonList");
+		} catch (Exception e) {
+			System.out.println("wonList Exception->"+e.getMessage());
+		}
+		
 		return wonList;
 	}
 
 	@Override
 	public void wanRecipeSave(RecipeDTO recipe) {
-		session.insert("wanRecipeSave",recipe);
+		try {
+			session.insert("wanRecipeSave",recipe);
+		} catch (Exception e) {
+			System.out.println("wanRecipeSave Exception->"+e.getMessage());
+			throw e;
+		}
+		
 		
 	}
 
@@ -89,6 +119,94 @@ public class ProductDaoImpl implements ProductDao {
 		System.out.println("wanModifyDTO1->" + wanModifyDTO1);
 		return wanModifyDTO1;
 	}
+
+	@Override
+	public ProductWanDTO getProductImg(int product_code) {
+		List<String> productImgList = null;
+		ProductWanDTO productWanDTO = new ProductWanDTO();
+
+		try {
+			productImgList = session.selectList("productImgList" , product_code);
+			productWanDTO.setUploadFileNames(productImgList);
+
+		} catch (Exception e) {
+			System.out.println("getProductImg Exception->" + e.getMessage());
+		}
+		return productWanDTO;
+	}
+
+	@Override
+	public ProductWanDTO wanModify(ProductWanDTO productDTO) {
+		try {
+			session.update("wanModify" , productDTO);
+			System.out.println("wanModify After->" + productDTO);
+		} catch (Exception e) {
+			System.out.println("wanModify Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		return productDTO;
+	}
+
+	@Override
+	public ProductWanDTO delImgModify(ProductWanDTO productDTO) {
+		try {
+			session.delete("delImgModify", productDTO);
+		} catch (Exception e) {
+			System.out.println("delImgModify Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		return productDTO;
+	}
+
+	@Override
+	public void recipeDel(int pdwan_code) {
+		try {
+			session.delete("recipeDel" , pdwan_code);
+		} catch (Exception e) {
+			System.out.println("recipeDel Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
+	}
+
+	@Override
+	public void productDelUpdate(ProductWanDTO productWanDTO) {
+		try {
+			session.update("productDelUpdate", productWanDTO);
+		} catch (Exception e) {
+			System.out.println("productDelUpdate Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
+	}
+
+
+	@Override
+	public void priceBeforeEnd(ProductPriceDTO productPriceDTO) {
+		try {
+			session.update("priceBeforeEnd" , productPriceDTO);
+		} catch (Exception e) {
+			System.out.println("priceBeforeEnd Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
+	}
+
+	@Override
+	public ProductPriceDTO prePrice(ProductPriceDTO priceDTO) {
+		ProductPriceDTO prePrice = null;
+		try {
+			prePrice = session.selectOne("prePrice" , priceDTO);
+		} catch (Exception e) {
+			System.out.println("prePrice Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		
+		return prePrice;
+	}
+
+
+
 
 
 }
