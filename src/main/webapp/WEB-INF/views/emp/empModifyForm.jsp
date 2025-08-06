@@ -96,13 +96,21 @@
                         </div>
                     </div>
 
+					<!-- 입사일 -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">입사일</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" name="emp_ipsa_date" value="${empDto.emp_ipsa_date}" required />
+                        </div>
+                    </div>
+                    
                     <!-- 재직 여부 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">재직 여부</label>
                         <div class="col-sm-8">
                             <select class="form-select" name="emp_isDel">
-                                <option value="false" ${!empDto.emp_isDel ? 'selected' : ''}>재직중</option>
-                                <option value="true" ${empDto.emp_isDel ? 'selected' : ''}>퇴직</option>
+                        <option value="0" ${empDto.emp_isDel == 0 ? 'selected' : ''}>재직중</option>
+						<option value="1" ${empDto.emp_isDel == 1 ? 'selected' : ''}>퇴직</option>
                             </select>
                         </div>
                     </div>
@@ -118,6 +126,6 @@
         </main>
     </div>
     <%@ include file="../footer.jsp" %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+ 
 </body>
 </html>

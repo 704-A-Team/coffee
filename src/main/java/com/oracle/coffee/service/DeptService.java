@@ -9,6 +9,7 @@ public interface DeptService {
 	Long 			totalDept();
 	List<DeptDto> 	deptList(DeptDto deptDto);
 	List<DeptDto>   deptAllList();
+	
 	int 			deptSave(DeptDto deptDto);
 	DeptDto 		getSingleDept(int dept_code);
 	DeptDto 		deptUpdate(DeptDto deptDto);

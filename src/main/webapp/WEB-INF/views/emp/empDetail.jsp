@@ -26,6 +26,8 @@
 
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
+        
+        
 
         <main class="flex-grow-1 p-4">
             <div class="form-container bg-primary bg-opacity-25">
@@ -104,11 +106,19 @@
                         </div>
                     </div>
  --%>
-                    <!-- 입사일 -->
+                    <!-- 등록일 -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">등록일</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
+                        </div>
+                    </div>
+
+			       <!-- 입사일 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">입사일</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
+                            <input type="text" class="form-control" value="${empDto.emp_ipsa_date}" disabled>
                         </div>
                     </div>
 
@@ -157,6 +167,6 @@
 
     <%@ include file="../footer.jsp" %>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   
 </body>
 </html>

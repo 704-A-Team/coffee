@@ -44,7 +44,7 @@ public class EmpServiceImpl implements EmpService {
 	@Override
 	public int empSave(EmpDto empDto) {
 		Emp emp = modelMapper.map(empDto, Emp.class);
-		if(emp.getEmp_isdel()==null)emp.changeEmp_isdel(false);
+		if(emp.getEmp_isdel()==1)emp.changeEmp_isdel(0);
 		Emp saveEmp = empRepository.empSave(emp);
 		
 		return saveEmp.getEmp_code();	

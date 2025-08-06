@@ -101,7 +101,7 @@
 				  <c:forEach var="img" items="${wanModifyDTO.wanImgList}" varStatus="status">
 				    <div class="d-flex flex-column align-items-center existing-file" data-filename="${img.file_name}">
 				      <img src="/upload/${img.file_name}" alt="img${status.index}" class="image-thumb mb-1">
-				      <input type="hidden" name="existingFileNames" value="${img.file_name}" />
+				      <input type="hidden" name="existingUploadFileNames" value="${img.file_name}" />
 				      <button type="button" class="btn btn-sm btn-outline-danger remove-existing">삭제</button>
 				    </div>
 				  </c:forEach>

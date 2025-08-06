@@ -21,7 +21,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	@Override
 	public Long empTotalcount() {
 		TypedQuery<Long> query = 	
-				em.createQuery("select count(e) from Emp e where e.emp_isdel = false", Long.class); 
+				em.createQuery("select count(e) from Emp e where e.emp_isdel = 0", Long.class); 
 		Long totalCountLong = query.getSingleResult();
 
 		return totalCountLong;
@@ -33,7 +33,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 			    "SELECT * FROM ( " +
 			    "    SELECT ROWNUM rn, e.* FROM ( " +
 			    "        SELECT emp.emp_code, emp.emp_name, emp.emp_tel, emp.emp_dept_code, emp.emp_grade, " +
-			    "               emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, " +
+			    "               emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, " +
 			    "               d.dept_name, b.cd_contents" +
 			    "        FROM emp " +
 			    "        JOIN dept d ON emp.emp_dept_code = d.dept_code " +
@@ -45,7 +45,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 			    "WHERE rn BETWEEN :start AND :end";
 
 
-		Query query = em.createNativeQuery(nativeSql); // ← 여기만 바꿈
+		Query query = em.createNativeQuery(nativeSql);
 		query.setParameter("start", empDto.getStart());
 		query.setParameter("end", empDto.getEnd());
 
@@ -60,11 +60,13 @@ public class EmpRepositoryImpl implements EmpRepository {
 		    dto.setEmp_grade(((Number) row[5]).intValue());
 		    dto.setEmp_sal(((Number) row[6]).intValue());
 		    dto.setEmp_email((String) row[7]);
-		    dto.setEmp_isDel(((Number) row[8]).intValue() == 1);
+		    dto.setEmp_isDel(((Number) row[8]).intValue());
 		    dto.setEmp_register(((Number) row[9]).intValue());
 		    dto.setEmp_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
-		    dto.setDept_code((String) row[11]); // join된 부서명
-		    dto.setEmp_grade_detail((String) row[12]); //join된 직급
+		    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[11]).getTime()));
+		    dto.setDept_code((String) row[12]); // join된 부서명
+		    dto.setEmp_grade_detail((String) row[13]); //join된 직급
+		    
 		    return dto;
 		}).collect(Collectors.toList());
 
@@ -95,7 +97,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	public EmpDto findByEmp_code(int emp_code) {
 	    String sql =
 	        "SELECT emp.emp_code, emp.emp_name, emp.emp_tel, emp.emp_dept_code, emp.emp_grade, " +
-	        "       emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, " +
+	        "       emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, " +
 	        "       d.dept_name, b.cd_contents " +
 	        "FROM emp " +
 	        "JOIN dept d ON emp.emp_dept_code = d.dept_code " +
@@ -114,11 +116,12 @@ public class EmpRepositoryImpl implements EmpRepository {
 	    dto.setEmp_grade(((Number) row[4]).intValue());
 	    dto.setEmp_sal(((Number) row[5]).intValue());
 	    dto.setEmp_email((String) row[6]);
-	    dto.setEmp_isDel(((Number) row[7]).intValue() == 1);
+	    dto.setEmp_isDel(((Number) row[7]).intValue());
 	    dto.setEmp_register(((Number) row[8]).intValue());
 	    dto.setEmp_reg_date(((java.sql.Timestamp) row[9]).toLocalDateTime());
-	    dto.setDept_code((String) row[10]); // 부서명
-	    dto.setEmp_grade_detail((String) row[11]); // 직급명
+	    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[10]).getTime()));
+	    dto.setDept_code((String) row[11]); // 부서명
+	    dto.setEmp_grade_detail((String) row[12]); // 직급명
 
 	    return dto;
 	}
@@ -126,7 +129,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	@Override
 	public void empDelete(int emp_code) {
 		Emp emp = em.find(Emp.class, emp_code);
-		emp.changeEmp_isdel(true);
+		emp.changeEmp_isdel(1);
 	}
 
 	@Override
@@ -139,7 +142,8 @@ public class EmpRepositoryImpl implements EmpRepository {
 	        "  emp_grade = :grade, " +
 	        "  emp_sal = :sal, " +
 	        "  emp_email = :email, " +
-	        "  emp_isdel = :del " +
+	        "  emp_isdel = :del, " +
+	        "  emp_ipsa_date = :ipsa_date " +
 	        "WHERE emp_code = :code";
 
 	    em.createNativeQuery(updateSql)
@@ -149,8 +153,9 @@ public class EmpRepositoryImpl implements EmpRepository {
 	      .setParameter("grade", empDto.getEmp_grade())
 	      .setParameter("sal", empDto.getEmp_sal())
 	      .setParameter("email", empDto.getEmp_email())
-	      .setParameter("del", empDto.isEmp_isDel())
+	      .setParameter("del", empDto.getEmp_isDel())
 	      .setParameter("code", empDto.getEmp_code())
+	      .setParameter("ipsa_date", empDto.getEmp_ipsa_date())
 	      .executeUpdate();
 
 	    return findByEmp_code(empDto.getEmp_code());

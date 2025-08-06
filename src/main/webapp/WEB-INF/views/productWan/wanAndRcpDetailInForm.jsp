@@ -87,6 +87,19 @@
                                 <td class="text-black">${wanAndRcpDetailDTO.product_pack} 개</td>
                             </tr>
                             <tr>
+							    <th scope="row" class="text-black">판매 여부</th>
+							    <td class="text-black">
+							        <c:choose>
+							            <c:when test="${!wanAndRcpDetailDTO.product_isdel}">
+							                <span style="color:green;">판매중</span>
+							            </c:when>
+							            <c:otherwise>
+							                <span style="color:red;">판매 중지</span>
+							            </c:otherwise>
+							        </c:choose>
+							    </td>
+							</tr>
+                            <tr>
                                 <th scope="row" class="text-black">등록일</th>
                                 <td class="text-black">${wan_reg_date}</td>
                             </tr>
@@ -145,10 +158,30 @@
 
     <!-- 버튼 영역 -->
     <div class="d-flex gap-3 mt-4 mb-5">
-        <a href="/km/wanList" class="btn btn-outline-primary">목록 보기</a>
-        <a href="/km/wanModifyInForm?product_code=${wanAndRcpDetailDTO.product_code}" class="btn btn-primary">제품 수정</a>
-        <a href="/km/recipeModifyInForm?product_code=${wanAndRcpDetailDTO.product_code}" class="btn btn-warning text-white">레시피 수정</a>
-    </div>
+    <a href="/km/wanList" class="btn btn-outline-primary">목록 보기</a>
+    <a href="/km/wanModifyInForm?product_code=${wanAndRcpDetailDTO.product_code}" class="btn btn-primary bg-opacity-25">제품 수정</a>
+    <a href="/km/recipeModifyInForm?product_code=${wanAndRcpDetailDTO.product_code}" class="btn btn-warning bg-opacity-25 text-white">레시피 수정</a>
+    
+    <c:choose>
+        <c:when test="${!wanAndRcpDetailDTO.product_isdel}">
+            <!-- 현재 판매중이면 → 판매 중지로 전환 버튼 -->
+            <form action="/km/wanProductDel" method="post">
+                <input type="hidden" name="product_code" value="${wanAndRcpDetailDTO.product_code}" />
+                <input type="hidden" name="product_isdel" value="true" />
+                <button type="submit" class="btn btn-outline-danger">판매 중지</button>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <!-- 현재 판매 중지면 → 판매중으로 전환 버튼 -->
+            <form action="/km/wanProductDel" method="post">
+                <input type="hidden" name="product_code" value="${wanAndRcpDetailDTO.product_code}" />
+                <input type="hidden" name="product_isdel" value="false" />
+                <button type="submit" class="btn btn-outline-success">판매 재개</button>
+            </form>
+        </c:otherwise>
+    </c:choose>
+</div>
+
 </div>
 
 

@@ -38,14 +38,15 @@
 
                 <!-- Header -->
                 <div class="row fw-bold py-2 border-bottom bg-primary text-white">
-                    <div class="col-1">사번</div>
+                    <div class="col-1">사원 번호</div>
                     <div class="col-2">이름</div>
                     <div class="col-2">전화번호</div>
                     <div class="col-1">소속 부서</div>
                     <div class="col-1">직급</div>
                     <div class="col-1">급여</div>
                     <div class="col-2">이메일</div>
-                    <div class="col-2">입사일</div>
+                    <div class="col-1">등록일</div>
+                    <div class="col-1">입사일</div>
                 </div>
 
                 <!-- Data List -->
@@ -60,7 +61,8 @@
                                 <div class="col-1">${empDto.emp_grade_detail}</div>
                                 <div class="col-1">${empDto.emp_sal}</div>
                                 <div class="col-2">${empDto.emp_email}</div>
-                                <div class="col-2">${empDto.empRegDateFormatted}</div>
+                                <div class="col-1">${empDto.empRegDateFormatted}</div>
+                                <div class="col-1">${empDto.emp_ipsa_date}</div>
                             </div>
                         </a>
                     </c:forEach>
@@ -98,6 +100,5 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

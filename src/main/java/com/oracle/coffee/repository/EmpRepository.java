@@ -10,6 +10,7 @@ public interface EmpRepository {
 	Long 			empTotalcount();
 	List<EmpDto>	findPageEmp(EmpDto empDto);
 	List<EmpDto> 	findAllEmp();
+	
 	Emp 			empSave(Emp emp);
 	EmpDto 			findByEmp_code(int emp_code);
 	void 			empDelete(int emp_code);
