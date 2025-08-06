@@ -17,7 +17,7 @@ public class DeptDto {
 	private int					 dept_code;				//부서코드
 	private String 				 dept_name;				//부서명
 	private String 				 dept_tel;				//부서대표번호
-	private boolean 			 dept_isdel;			//부서삭제구분
+	private int			 		 dept_isdel;			//부서삭제구분
 	private LocalDateTime		 dept_reg_date;			//등록일
 
 	// 페이징 관련 
