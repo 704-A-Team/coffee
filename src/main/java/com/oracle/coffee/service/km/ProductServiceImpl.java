@@ -162,6 +162,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	@Transactional // Tbl 2개에서 정보 변동되므로 걸어두기
 	public void wanProductDel(ProductWanDTO productWanDTO) {
+		log.info("ProductWanDTO productWanDTO->"+productWanDTO );
 		ProductPriceDTO priceDTO = new ProductPriceDTO();
 		
 		LocalDateTime tdate = LocalDateTime.now();
@@ -184,7 +185,8 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 			productDao.priceBeforeEnd(priceDTO);
 			ProductPriceDTO prePrice = productDao.prePrice(priceDTO);
-			productDao.wanStFalse(priceDTO);
+			priceDTO.setPrice(prePrice.getPrice());
+			productDao.priceAfterStart(priceDTO);
 		}
 		
 	}
