@@ -20,8 +20,17 @@
         }
         
         .action-column {
-      width: 270px;  /* 원하는 너비(px, %, rem 등으로 조정) */
+      		width: 270px;  /* 원하는 너비(px, %, rem 등으로 조정) */
     	}
+    	
+    	 .fixed-btn {
+  			display: inline-flex;            /* flex로 중앙정렬 */
+  			align-items: center;             /* 수직 중앙정렬 */
+  			justify-content: center;         /* 수평 중앙정렬 */
+  			height: 40px;                    /* 원하는 고정 높이 */
+  			padding: 0 .75rem;               /* 좌우 패딩 */
+  			box-sizing: border-box;          /* 패딩/보더 포함해서 높이 계산 */
+		}
     </style>
 
     <script>
@@ -74,10 +83,31 @@
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
     <div class="container mt-4 flex-grow-1 p-4">
-        <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-danger me-2" onclick="toggleClose(true)">마감</button>
-            <button class="btn btn-secondary" onclick="toggleClose(false)">마감해제</button>
-        </div>
+        <!-- 버튼 그룹 통합 -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- 왼쪽 그룹: 수주/발주/생산 -->
+  <div class="d-flex align-items-center">
+    <button type="button"
+            class="btn btn-secondary fixed-btn action-btn ${isClosed ? 'disabled-button' : ''} me-2">
+      수주
+    </button>
+    <button type="button"
+            class="btn btn-secondary fixed-btn action-btn ${isClosed ? 'disabled-button' : ''} me-2">
+      발주
+    </button>
+    <a href="${pageContext.request.contextPath}/jh/mfgRequest"
+       class="btn btn-secondary fixed-btn action-btn ${isClosed ? 'disabled-button' : ''}">
+      생산
+    </a>
+  </div>
+
+  <!-- 오른쪽 그룹: 마감/해제 -->
+  <div class="d-flex align-items-center">
+    <button class="btn btn-danger fixed-btn me-2" onclick="toggleClose(true)">마감</button>
+    <button class="btn btn-secondary fixed-btn"   onclick="toggleClose(false)">마감해제</button>
+  </div>
+</div>
+
         <table class="table table-bordered text-center">
             <thead class="table-primary">
                 <tr>
@@ -86,13 +116,8 @@
                     <th>제품설명</th>
                     <th>단위</th>
                     <th>제품유형</th>
-                    <th>예상 수율</th>
-                    <th>기본 중량</th>
                     <th>납품여부</th>
-                    <th>생산단위</th>
-                    <th>사원코드</th>
-                    <th>등록일</th>
-                    <th class="action-column">작업</th>  <!-- 클래스 추가 -->
+                    <th class="action-column">기초재고량</th>				   <!-- 클래스 추가 -->
                                   </tr>
             </thead>
             <tbody>
@@ -103,19 +128,10 @@
                                 <td>${item.product_code}</td>
                                 <td>${item.product_name}</td>
                                 <td>${item.product_contents}</td>
-                                <td>${item.product_unit}</td>
-                                <td>${item.product_type}</td>
-                                <td>${item.product_yield}</td>
-                                <td>${item.product_weight}</td>
-                                <td>${item.product_isorder}</td>
-                                <td>${item.product_pack}</td>
-                                <td>${item.product_reg_code}</td>
-                                <td>${item.product_reg_date}</td>
-                                <td class="action-column">       <!-- 클래스 추가 -->
-                                    <button class="btn btn-success action-btn ${isClosed ? 'disabled-button' : ''}">수주</button>
-            						<button class="btn btn-warning action-btn ${isClosed ? 'disabled-button' : ''}">발주</button>
-            						<button class="btn btn-info action-btn ${isClosed ? 'disabled-button' : ''}">생산</button>
-                                </td>
+                                <td>${item.unitName}</td>
+                                <td>${item.typeName}</td>
+                                <td>${item.isorderName}</td>		<!-- 클래스 추가 -->
+                                <td class="action-column"></td>       
                             </tr>
                         </c:forEach>
                     </c:when>

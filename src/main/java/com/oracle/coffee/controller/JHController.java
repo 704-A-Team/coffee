@@ -30,7 +30,7 @@ public class JHController {
     		InventoryDto inventoryDto,
     		Model model
     		) {
-    	System.out.println("jh/JHController Start...");
+    	System.out.println("jh/JHController inventoryPage Start...");
     	log.info(">>> isClosed received = {}", isClosed);
     	
     	int totalInventory = jHservice.totalInventory();
@@ -48,8 +48,19 @@ public class JHController {
     	model.addAttribute("inventoryList", inventoryList);
     	model.addAttribute("page", page);
     	model.addAttribute("isClosed", isClosed);
-
     	
         return "jh/inventoryList";
+    }
+    
+    @GetMapping(value = "/mfgRequest")
+    public String mfgRequestpage (InventoryDto inventoryDto, Model model) {
+    	System.out.println("jh/JHController mfgRequestpage start...");
+    	
+    	List<InventoryDto> mfgReqList = jHservice.mfgReqList(inventoryDto);
+    	System.out.println("JHController mfgReqList.size : "+mfgReqList.size());
+    	
+    	model.addAttribute("mfgReqList", mfgReqList);
+    	
+    	return "jh/mfgRequest";
     }
 }

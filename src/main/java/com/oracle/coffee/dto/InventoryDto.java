@@ -24,6 +24,12 @@ public class InventoryDto {
 	// 재고수량 계산용
 	private int InventoryCount;
 	
+	// 분류 테이블 조인용
+	private String unitName;
+	private String typeName;
+	private String isorderName;
+	
+	
 	// 조회용
 	private String 	search;
 	private String 	pageNum;

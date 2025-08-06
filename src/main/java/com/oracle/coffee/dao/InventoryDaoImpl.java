@@ -51,4 +51,27 @@ public class InventoryDaoImpl implements InventoryDao {
 	    return listInventory;
 	}
 
+	@Override
+	public List<InventoryDto> mfgReqList(InventoryDto inventoryDto) {
+		System.out.println("InventoryDaoImpl mfgReqList start...");
+		
+		List<InventoryDto> listMfgReq = new ArrayList<>(); // 초기화
+		
+		try {
+			listMfgReq = sqlSession.selectList("com.oracle.coffee.InventoryMapper.jhMfgReqAll", inventoryDto);
+			
+			if (listMfgReq == null) {
+				listMfgReq = new ArrayList<>();
+	            System.out.println("InventoryDaoImpl returned null from MyBatis, replaced with empty list.");
+	        }
+
+	        System.out.println("InventoryDaoImpl inventoryList listMfgReq.size() : " + listMfgReq.size());
+		} catch (Exception e) {
+			System.out.println("InventoryDaoImpl mfgReqList e.getMessage: " + e.getMessage());
+	        e.printStackTrace();
+		}
+		
+		return listMfgReq;
+	}
+
 }
