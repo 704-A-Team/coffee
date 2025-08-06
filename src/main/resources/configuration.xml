@@ -18,7 +18,6 @@
 	
 		<typeAlias alias="InventoryDto" type="com.oracle.coffee.dto.InventoryDto"/>
 		<typeAlias alias="MagamDto" type="com.oracle.coffee.dto.MagamDto"/>
-
 		<typeAlias alias="ProductDto" type="com.oracle.coffee.dto.ProductDto" />
 		<typeAlias alias="SWClientDto" type="com.oracle.coffee.dto.SWClientDto" />
 		<typeAlias alias="ProvideDto" type="com.oracle.coffee.dto.ProvideDto" />

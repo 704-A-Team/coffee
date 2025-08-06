@@ -72,10 +72,17 @@
 		
 		<!--재고 관리-->
 		<li class="mb-3">
+<<<<<<< HEAD
+			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#재고관리order-collapse" aria-expanded="false">
+				<i class="bi bi-caret-right-fill me-2"></i>재고관리
+			</button>
+			<div class="collapse" id="재고관리order-collapse">
+=======
 			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#prd-collapse" aria-expanded="false">
 				<i class="bi bi-caret-right-fill me-2"></i>재고관리
 			</button>
 			<div class="collapse" id="prd-collapse">
+>>>>>>> ad4b975337f70812ca63ce855eb772f90a168870
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 				    <li class="mt-2">
   						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">재고 관리</a>

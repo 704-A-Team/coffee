@@ -7,4 +7,5 @@ import com.oracle.coffee.dto.InventoryDto;
 public interface JHservice {
 	List<InventoryDto> 	inventoryList(InventoryDto inventoryDto);
 	int 				totalInventory();
+	List<InventoryDto> mfgReqList(InventoryDto inventoryDto);
 }
