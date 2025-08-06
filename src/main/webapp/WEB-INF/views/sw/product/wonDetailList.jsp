@@ -51,14 +51,21 @@
             color: #333;
         }
 
-        .product-img {
-            max-width: 160px;
-            max-height: 160px;
-            object-fit: contain;
-            position: absolute;
-            top: 24px;
-            right: 24px;
-        }
+        .product-img-wrapper {
+		    position: absolute;
+		    top: 24px;
+		    right: 24px;
+		    display: flex;
+		    gap: 16px;
+		}
+		
+		.product-img {
+		    width: 200px;
+		    height: 200px;
+		    object-fit: contain;
+		    border: 1px solid #ccc;
+		    border-radius: 6px;
+		}
 
         .btn-brown-outline {
 		    border: 1px solid var(--main-brown) !important;
@@ -118,19 +125,14 @@
 
                 <!-- 카드 -->
                 <div class="card card-product-info position-relative">
-                    <!-- 이미지 오른쪽 상단 -->
-                    <c:choose>
-                        <c:when test="${not empty wonProductDetail.wonImgList}">
-                            <img src="${pageContext.request.contextPath}/upload/${wonProductDetail.wonImgList[0].file_name}"
-                                 alt="제품 이미지"
-                                 class="product-img" />
-                        </c:when>
-                        <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/upload/default.png"
-                                 alt="기본 이미지"
-                                 class="product-img" />
-                        </c:otherwise>
-                    </c:choose>
+                    <!-- 이미지 출력 -->
+					<div class="product-img-wrapper">
+					  <c:forEach var="img" items="${wonProductDetail.wonImgList}">
+					    <img src="${pageContext.request.contextPath}/upload/${img.file_name}"
+					         alt="제품 이미지"
+					         class="product-img" />
+					  </c:forEach>
+					</div>
 
                     <!-- 제품 정보 테이블 -->
                     <table class="table table-borderless mb-0">
