@@ -9,6 +9,7 @@ public interface EmpService {
 	Long 				totalEmp();
 	List<EmpDto> 		empList(EmpDto empDto);
 	List<EmpDto>   		empAllList();
+	
 	int 				empSave(EmpDto empDto);
 	EmpDto 				getSingleEmp(int emp_code);
 	EmpDto 				empUpdate(EmpDto empDto);

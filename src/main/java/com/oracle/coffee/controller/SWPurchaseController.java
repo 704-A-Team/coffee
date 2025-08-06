@@ -1,5 +1,7 @@
 package com.oracle.coffee.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -72,17 +74,18 @@ public class SWPurchaseController {
 	public String purchaseSave(PurchaseDto purchaseDto) {
 		log.info("SWPurchaseController purchaseSave start...");
 		
-		int purchase_code = swPurchaseService.purchaseSave(purchaseDto);
-		System.out.println("save purchase_code : " + purchase_code);
+		purchaseDto.setPurchase_status(1);
+		int purchase_result = swPurchaseService.purchaseSave(purchaseDto);
+		System.out.println("save purchase_code : " + purchase_result);
 		
-		return "redirect:/sw/purchaseSave";
+		return "redirect:/sw/purchaseList";
 	}
 	
 	@GetMapping("/purchaseList")
 	public String purchaseListPage(PurchaseDto purchaseDto, Model model) {
 		System.out.println("SWPurchaseController purchaseListPage Strart...");
 		
-		int totalPurchaseCnt = swPurchaseService.totalPurchaseCnt();
+		int totalPurchaseCnt = swPurchaseService.totalPurchaseCnt(purchaseDto);
 		System.out.println("SWPurchaseController purchaseListPage totalPurchaseCnt : " + totalPurchaseCnt);
 		
 		Paging page = new Paging(totalPurchaseCnt, purchaseDto.getCurrentPage());
@@ -98,7 +101,45 @@ public class SWPurchaseController {
 		model.addAttribute("purchaseList", purchaseList);
 		model.addAttribute("page", page);
 		
-		return "sw/product/wonList";
+		return "sw/purchase/list";
 	}
+	
+	@GetMapping("/purchaseDetail")
+	public String purchaseDetailPage(@RequestParam("purchase_code") int purchase_code, Model model) {
+		System.out.println("SWPurchaseController purchaseDetailPage Strart...");
+		
+		PurchaseDto purchaseDetail = swPurchaseService.purchaseDetail(purchase_code);
+		
+		model.addAttribute("purchaseDetail", purchaseDetail);
+		
+		return "sw/purchase/detailList";
+	}
+	
+	@PostMapping("/purchaseApprove")
+	public String purchaseApprove(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+		System.out.println("SWPurchaseController purchaseApprove Strart...");
+		
+		PurchaseDto purchaseApprove = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
+		System.out.println("SWPurchaseController purchaseApprove purchaseApprove : " + purchaseApprove);
+		purchaseApprove.setPurchase_status(4);
+		swPurchaseService.purchaseApprove(purchaseApprove);
+		
+		return "redirect:/sw/purchaseList";
+
+	}
+	
+	@PostMapping("/purchaseRefuse")
+	public String purchaseRefuse(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+		System.out.println("SWPurchaseController purchaseRefuse Strart...");
+		
+		PurchaseDto purchaseRefuse = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
+		purchaseRefuse.setPurchase_status(3);
+		purchaseRefuse.setPurchase_refuse(purchaseDto.getPurchase_refuse());
+		swPurchaseService.purchaseRefuse(purchaseRefuse);	
+		
+		return "redirect:/sw/purchaseList";
+	}
+	
+	
 	
 }

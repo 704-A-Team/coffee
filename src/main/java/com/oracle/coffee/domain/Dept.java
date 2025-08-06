@@ -42,7 +42,7 @@ public class Dept {
 	private String 				dept_tel;
 	@ColumnDefault("0")			
 	//default column 구분: 0->부서 존재, 1->부서 사라짐
-	private Boolean 			dept_isdel;
+	private int		 			dept_isdel;
 	@CreatedDate					
 	//실제 시간 대입 
 	private LocalDateTime	 	dept_reg_date;
@@ -54,7 +54,7 @@ public class Dept {
 	public void changeDept_tel(String dept_tel) {
 		this.dept_tel = dept_tel;
 	}
-	public void changeDept_isdel(boolean dept_isdel) {
+	public void changeDept_isdel(int dept_isdel) {
 		this.dept_isdel = dept_isdel;
 	}
 	public void changeDept_reg_date(LocalDateTime dept_reg_date) {

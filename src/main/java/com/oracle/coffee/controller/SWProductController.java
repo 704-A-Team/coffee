@@ -1,5 +1,6 @@
 package com.oracle.coffee.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -8,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.service.Paging;
 import com.oracle.coffee.service.SWProductService;
+import com.oracle.coffee.util.CustomFileUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/sw")
 public class SWProductController {
 	private final SWProductService 	productService;
+	private final CustomFileUtil	fileUtil;
 	
 	@GetMapping("/wonProductInForm")
 	public String wonProductInForm() {
@@ -34,6 +38,10 @@ public class SWProductController {
 	public String wonProductSave(ProductDto productDto) {
 		System.out.println("SWProductController wonProductSave Strart...");
 		
+		List<MultipartFile> file = productDto.getFiles();
+		List<String> uploadFileNames = fileUtil.saveFiles(file);
+		productDto.setUploadFileNames(uploadFileNames);
+		
 		int wonProduct_code = productService.wonProductSave(productDto);
 		log.info("Save wonProduct_code : ", wonProduct_code);
 		
@@ -44,7 +52,7 @@ public class SWProductController {
 	public String wonProductListPage(ProductDto productDto, Model model) {
 		System.out.println("SWProductController wonProductListPage Strart...");
 		
-		int totalWonCount = productService.totalWonProduct();
+		int totalWonCount = productService.totalWonProduct(productDto);
 		System.out.println("SWProductController wonProductListPage totalCount : " + totalWonCount);
 		
 		Paging page = new Paging(totalWonCount, productDto.getCurrentPage());
@@ -87,14 +95,23 @@ public class SWProductController {
 	}
 	
 	@PostMapping("/wonProductModify")
-	public String wonProductModify(ProductDto productDto) {
-		System.out.println("SWProductController wonProductModify Strart...");
-		
-		int wonProduct_code = productService.wonProductModify(productDto);
-		System.out.println("SWProductController wonProductModify wonProduct_code : " + wonProduct_code);
-		
-		return "redirect:/sw/wonProductList";
-	}
+    public String wonProductModify(ProductDto productDto) {
+        List<String> existingFileNames = productDto.getUploadFileNames();
+        if (existingFileNames == null) existingFileNames = List.of();
+
+        List<String> newUploadFileNames = fileUtil.saveFiles(productDto.getFiles());
+
+        // 병합 처리
+        existingFileNames = new ArrayList<>(existingFileNames);
+        existingFileNames.addAll(newUploadFileNames);
+        productDto.setUploadFileNames(existingFileNames);
+
+        int wonProduct_code = productService.wonProductModify(productDto);
+        log.info("Modify wonProduct_code : {}", wonProduct_code);
+
+        return "redirect:/sw/wonProductList";
+    }
+
 	
 	@PostMapping("/wonProductDelete")
 	public String wonProductDelete(@RequestParam("product_code") int product_code) {
@@ -104,9 +121,6 @@ public class SWProductController {
 		
 		return "redirect:/sw/wonProductList";
 	}
-	
-	
-	
 	
 	
 	

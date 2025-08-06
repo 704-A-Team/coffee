@@ -9,7 +9,7 @@ public interface SWProductService {
 	int 				wonProductSave(ProductDto productDto);
 	int 				totalProduct();
 	List<ProductDto> 	productList(ProductDto productDto); //paging
-	int 				totalWonProduct();
+	int 				totalWonProduct(ProductDto productDto);
 	ProductDto 			wonProductDetail(int product_code);
 	int 				wonProductModify(ProductDto productDto);
 	void 				wonProductDelete(int product_code);
