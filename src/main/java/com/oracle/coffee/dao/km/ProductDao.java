@@ -42,5 +42,7 @@ public interface ProductDao {
 
 	ProductPriceDTO 		prePrice(ProductPriceDTO priceDTO);
 
+	void 					priceAfterStart(ProductPriceDTO priceDTO);
+
 
 }

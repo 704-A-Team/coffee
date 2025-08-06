@@ -55,7 +55,7 @@
                         </label>
 
                         <label>소요량:
-                            <input type="number" id="recipe_amount" min="1" class="form-control d-inline w-auto" />
+                            <input type="number" id="recipe_amount" min="1" max="99999" class="form-control d-inline w-auto" />
                         </label>
 
                         <label>단위:
@@ -110,10 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const code = selectedOption.value;
         const name = selectedOption.text.trim();
         const unit = selectedOption.getAttribute("data-unit");
-        const amount = document.getElementById("recipe_amount").value.trim();
+        const amount = Number(document.getElementById("recipe_amount").value.trim());
 
-        if (!amount || isNaN(amount) || amount <= 0) {
-            alert("소요량을 정확히 입력하세요.");
+        if (!amount || isNaN(amount) || amount <= 0 || amount > 99999) {
+            alert("소요량을 1 이상 99999 이하 범위로 입력하세요.");
             return;
         }
 

@@ -128,6 +128,9 @@ public class ProductController {
 			List<RecipeDTO> recipeList = objectMapper.readValue(materialsJson, new TypeReference<List<RecipeDTO>>(){});
 			
 			for(RecipeDTO recipe : recipeList) {
+				if(recipe.getRecipe_amount() > 99999) {
+					throw new IllegalArgumentException("레시피 수량은 99999를 넘을 수 없습니다.");
+				}
 				productService.wanRecipeSave(recipe);
 				log.info("recipeDTO->"+recipe);
 			}
@@ -307,11 +310,15 @@ public class ProductController {
 		 * HttpSession session = request.getSession(); EmpDto loginEmp = (EmpDto)
 		 * session.getAttribute("loginEmp");
 		 */
+		
+		productWanDTO.setProduct_reg_code(2004);
 		productService.wanProductDel(productWanDTO);
 		
 		redirectAttributes.addAttribute("product_code" , productWanDTO.getProduct_code());
 		return "redirect:/km/wanAndRcpDetailInForm";
 	}
+	
+	
 	
 	
 	

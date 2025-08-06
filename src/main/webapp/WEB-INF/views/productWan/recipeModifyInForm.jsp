@@ -51,7 +51,7 @@
                         </select>
 
                         <label for="recipe_amount" class="mb-0">수량:</label>
-                        <input type="number" id="recipe_amount" min="1" class="form-control w-auto" />
+                        <input type="number" id="recipe_amount" min="1" max="99999" class="form-control w-auto" />
 
                         <label class="mb-0">단위: <span id="unitDisplay">g</span></label>
 
@@ -119,9 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const amountInput = document.getElementById("recipe_amount");
         const amount = Number(amountInput.value);
 
-        if (!amount || amount <= 0) {
-            alert("소요량을 정확히 입력하세요.");
-            amountInput.focus();
+        if (!amount || isNaN(amount) || amount <= 0 || amount > 99999) {
+            alert("소요량을 1 이상 99999 이하 범위로 입력하세요.");
             return;
         }
 
