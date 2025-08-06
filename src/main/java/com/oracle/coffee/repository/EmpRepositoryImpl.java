@@ -60,7 +60,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 		    dto.setEmp_grade(((Number) row[5]).intValue());
 		    dto.setEmp_sal(((Number) row[6]).intValue());
 		    dto.setEmp_email((String) row[7]);
-		    dto.setEmp_isDel(((Number) row[8]).intValue());
+		    dto.setEmp_isdel(((Number) row[8]).intValue());
 		    dto.setEmp_register(((Number) row[9]).intValue());
 		    dto.setEmp_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
 		    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[11]).getTime()));
@@ -116,7 +116,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	    dto.setEmp_grade(((Number) row[4]).intValue());
 	    dto.setEmp_sal(((Number) row[5]).intValue());
 	    dto.setEmp_email((String) row[6]);
-	    dto.setEmp_isDel(((Number) row[7]).intValue());
+	    dto.setEmp_isdel(((Number) row[7]).intValue());
 	    dto.setEmp_register(((Number) row[8]).intValue());
 	    dto.setEmp_reg_date(((java.sql.Timestamp) row[9]).toLocalDateTime());
 	    dto.setEmp_ipsa_date(new java.sql.Date(((java.sql.Timestamp) row[10]).getTime()));
@@ -145,7 +145,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	        "  emp_isdel = :del, " +
 	        "  emp_ipsa_date = :ipsa_date " +
 	        "WHERE emp_code = :code";
-
+	    
 	    em.createNativeQuery(updateSql)
 	      .setParameter("name", empDto.getEmp_name())
 	      .setParameter("tel", empDto.getEmp_tel())
@@ -153,7 +153,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	      .setParameter("grade", empDto.getEmp_grade())
 	      .setParameter("sal", empDto.getEmp_sal())
 	      .setParameter("email", empDto.getEmp_email())
-	      .setParameter("del", empDto.getEmp_isDel())
+	      .setParameter("del", empDto.getEmp_isdel())
 	      .setParameter("code", empDto.getEmp_code())
 	      .setParameter("ipsa_date", empDto.getEmp_ipsa_date())
 	      .executeUpdate();
