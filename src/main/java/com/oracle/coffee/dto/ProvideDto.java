@@ -26,4 +26,6 @@ public class ProvideDto {
 	private String 		clientName;
 	private String 		unitName;
 	
+	private String 		searchType;
+	private String 		searchKeyword;
 }
