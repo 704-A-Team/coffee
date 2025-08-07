@@ -45,6 +45,7 @@ public class SWProductPriceController {
 		log.info("SWProductPriceController wonProductPriceSave start...");
 
 		int result = swProductPriceService.wonProductPriceSave(wonProductPriceDto);
+		System.out.println("wonProductPriceSave result : " + result);
 		
 		return "redirect:/sw/wonProductPriceList";
 	}
