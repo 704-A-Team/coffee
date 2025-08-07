@@ -62,20 +62,12 @@
                         <input type="text" class="form-control" value="${clientDto.boss_name}" disabled>
                     </div>
                 </div>
-				
-
-						<div class="row mb-3">
-			    <label class="col-sm-2 col-form-label">거래처 유형</label>
-			    <div class="col-sm-8">
-			        <c:if test="${clientDto.client_type == 1}">
-			            <input type="text" class="form-control text-start" value="공급처" disabled />
-			        </c:if>
-			        <c:if test="${clientDto.client_type == 2}">
-			            <input type="text" class="form-control text-start" value="가맹점" disabled />
-			        </c:if>
-			    </div>
-			</div>
-			
+							<div class="row mb-3">
+				    <label class="col-sm-2 col-form-label">거래처 유형</label>
+				    <div class="col-sm-8">
+				        <input type="text" class="form-control" value="${clientDto.client_type_br}" disabled>
+				    </div>
+				</div>
 											
                 <!-- 주소 -->
                 <div class="row mb-3">
