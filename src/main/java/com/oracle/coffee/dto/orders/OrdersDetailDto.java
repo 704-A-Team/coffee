@@ -19,7 +19,7 @@ public class OrdersDetailDto {
 		
 	// product 테이블
 	private String product_name;	// 제품명
-	private String price;			// 현재 가격 / 수주 승인 가격 
+	private int price;				// 현재 가격
 	
 	private boolean can_order;		// "수주 요청 전" 발주 가능 여부
 	

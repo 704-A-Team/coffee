@@ -83,12 +83,9 @@
 					<li class="mt-2">
   						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 현황</a>
 					</li>
-
-
 				</ul>
 			</div>
 		</li>
-
 
 		
 		<!-- 판매 메뉴 -->
