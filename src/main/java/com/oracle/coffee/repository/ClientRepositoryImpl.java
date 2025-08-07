@@ -33,9 +33,11 @@ public class ClientRepositoryImpl implements ClientRepository {
 				"        SELECT cl.client_code, cl.client_name, cl.saup_num, cl.boss_name, cl.client_type, cl.client_address, " +
 				"               cl.client_tel, cl.client_emp_code, cl.client_status, cl.client_reg_code, cl.client_reg_date, " +
 				"               e.emp_name AS client_emp_name, " +
-				"				e.emp_tel AS client_emp_tel "  + 
+				"				e.emp_tel AS client_emp_tel, "  +
+				"               br.CD_CONTENTS AS client_type_br " +
 				"        FROM client_tb cl " +  
 				"        LEFT JOIN emp e ON cl.client_emp_code = e.emp_code " +
+				"        LEFT JOIN bunryu br ON cl.client_type = br.MCD AND br.BCD = 400 " +
 				"        ORDER BY cl.client_code " +
 				"    ) c " +
 				") " +
@@ -62,6 +64,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 			dto.setClient_reg_date(((java.sql.Timestamp) row[11]).toLocalDateTime());
 			dto.setClient_emp_name((String) row[12]);
 			dto.setClient_emp_tel((String) row[13]);
+			dto.setClient_type_br((String) row[14]);
 			return dto;	
 		}).collect(Collectors.toList());
 	}
@@ -86,9 +89,11 @@ public class ClientRepositoryImpl implements ClientRepository {
 			"SELECT cl.client_code, cl.client_name, cl.saup_num, cl.boss_name, cl.client_type, cl.client_address, " +
 			"       cl.client_tel, cl.client_emp_code, cl.client_status, cl.client_reg_code, cl.client_reg_date, " +
 			"       e.emp_name AS client_emp_name, " +
-			"       e.emp_tel AS client_emp_tel " +
+			"       e.emp_tel AS client_emp_tel, " +
+			"               br.CD_CONTENTS AS client_type_br " +
 			"FROM client_tb cl " +  // 
 			"LEFT JOIN emp e ON cl.client_emp_code = e.emp_code " +
+			"LEFT JOIN bunryu br ON cl.client_type = br.MCD AND br.BCD = 400 " +
 			"WHERE cl.client_code = :client_code";
 
 		Object[] row = (Object[]) em.createNativeQuery(nativeSql)
@@ -109,7 +114,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 		dto.setClient_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
 		dto.setClient_emp_name((String) row[11]);
 		dto.setClient_emp_tel((String) row[12]);
-
+		dto.setClient_type_br((String) row[13]);
 		return dto;
 	}
 
