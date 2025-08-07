@@ -1,7 +1,6 @@
 package com.oracle.coffee.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -42,8 +41,6 @@ public class SWPurchaseController {
 		
 		int product_type = 0;
 		List<ProductDto> productIsList = swProductService.productIsList(product_type);
-		
-		
 		
 		model.addAttribute("productIsList", productIsList);
 		

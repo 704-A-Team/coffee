@@ -142,6 +142,7 @@
                             <tr><th>단위</th><td>${wonProductDetail.unitName}</td></tr>
                             <tr><th>제품유형</th><td>${wonProductDetail.typeName}</td></tr>
                             <tr><th>기본 중량 (g)</th><td>${wonProductDetail.product_weight}</td></tr>
+                            <tr><th>판매 단위</th><td>${wonProductDetail.product_order_pack} ${wonProductDetail.unitName}	</td></tr>
                             <tr><th>납품 여부</th><td>${wonProductDetail.isorderName}</td></tr>
                             <tr><th>삭제 구분</th>
                                 <td>

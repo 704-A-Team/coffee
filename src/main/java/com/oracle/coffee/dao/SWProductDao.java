@@ -19,5 +19,6 @@ public interface SWProductDao {
 	void 				wonProductImgSave(List<ProductImgDTO> productImgList);
 	void 				deleteProductImgs(int product_code);
 	void 				insertProductImgs(List<ProductImgDTO> list);
+	List<ProductDto> 	wonProductAllList();
 	
 }
