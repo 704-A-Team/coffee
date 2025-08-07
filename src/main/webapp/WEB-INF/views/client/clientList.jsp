@@ -39,13 +39,14 @@
 
                 <!-- Header -->
                 <div class="row fw-bold py-2 border-bottom bg-primary text-white text-center">
-                    <div class="col-1">코드</div>
+                    <!-- <div class="col-1">코드</div> -->
                     <div class="col-1">유형</div>
                     <div class="col-3">거래처명</div>
                     <div class="col-1">상태</div>
                     <div class="col-2">대표자명</div>
-                    <div class="col-2">담당 사원</div>
+                    <!-- <div class="col-2">담당 사원</div> -->
                     <div class="col-2">전화번호</div>
+					<div class="col-2">등록일</div>
                 </div>
 
                 <!-- Data List -->
@@ -53,26 +54,22 @@
                     <c:forEach var="clientDto" items="${clientDtoList}">
                         <a href="${pageContext.request.contextPath}/client/clientDetail?client_code=${clientDto.client_code}" class="text-decoration-none text-reset">
                             <div class="row py-2 border-bottom list-item-row text-center">
-                                <div class="col-1">${clientDto.client_code}</div>
-                                <div class="col-1">
-                                    <c:choose>
-                                        <c:when test="${clientDto.client_type == 1}">공급처</c:when>
-                                        <c:when test="${clientDto.client_type == 2}">가맹점</c:when>
-                                        <c:otherwise>기타</c:otherwise>
-                                    </c:choose>
-                                </div>
+                                <%-- <div class="col-1">${clientDto.client_code}</div> --%>
+                               <div class="col-1">
+								    ${clientDto.client_type_br}
+								</div>
                                 <div class="col-3">${clientDto.client_name}</div>
                                 <div class="col-1">
                                     <c:choose>
                                         <c:when test="${clientDto.client_status == 0}">영업중</c:when>
-                                        <c:when test="${clientDto.client_status == 1}">휴업</c:when>
+                                        <c:when test="${clientDto.client_status == 1}">휴업중</c:when>
                                         <c:when test="${clientDto.client_status == 2}">폐업</c:when>
                                         <c:otherwise>기타</c:otherwise>
                                     </c:choose>
                                 </div>
                                 <div class="col-2">${clientDto.boss_name}</div>
-                                <div class="col-2">${clientDto.client_emp_name}</div>
                                 <div class="col-2">${clientDto.client_tel}</div>
+                                <div class="col-2">${clientDto.clientRegDateFormatted}</div> 
                             </div>
                         </a>
                     </c:forEach>

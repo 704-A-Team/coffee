@@ -41,8 +41,11 @@
 		<result property="order_refuse" column="order_refuse"/>
 		<result property="order_status" column="order_status"/>
 		<result property="order_reg_date" column="order_reg_date"/>
-		<result property="cd_contents" column="cd_contents"/>
+		<result property="order_final_price" column="order_final_price"/>
+		<result property="order_req_date" column="order_req_date"/>
+		<result property="order_perm_date" column="order_perm_date"/>
 		
+		<result property="cd_contents" column="cd_contents"/>
 		<collection property="orders_details" ofType="OrdersDetailDto" notNullColumn="product_code">
 			<result property="order_code" column="order_code"/>
 			<result property="product_code" column="product_code"/>
@@ -73,7 +76,7 @@
 		    	  and od.product_code = pp.product_code(+)
 		    	  and o.order_code = #{code}
 		    	  and sysdate between to_date(pp.start_date(+), 'yyyy-mm-dd') and to_date(pp.end_date(+), 'yyyy-mm-dd')
-		    	  and b.bcd = 200 and b.mcd = od.order_detail_status
+		    	  and b.bcd = 250 and b.mcd = od.order_detail_status
 		) a, bunryu
 		where bunryu.bcd = 200 and bunryu.mcd = a.order_status
 	</select>
@@ -93,9 +96,12 @@
 		update orders set order_note = #{order_note} where order_code = #{order_code}
 	</update>
 	
-	<!-- orders 테이블 update order_status -->
-	<update id="updateOrdersStatus" parameterType="OrdersDto">
-		update orders set order_status = #{order_status} where order_code = #{order_code}
+	<!-- orders 테이블 request update -->
+	<update id="requestOrders" parameterType="OrdersDto">
+		update orders
+		set order_status = #{order_status},
+			order_req_date = sysdate
+		where order_code = #{order_code}
 	</update>
 	
 	<!-- orders 테이블 count -->
@@ -135,5 +141,17 @@
 			) a 
 		) where rn between #{start} and #{end}
 	</select>
-
+	
+	<!-- orders 테이블 refuse 업데이트 -->
+	<update id="refuseOrders" parameterType="OrdersDto">
+		update orders
+		set order_status = #{order_status},
+		order_refuse = #{order_refuse, jdbcType=VARCHAR},
+		<if test="orders_perm_code != 0">
+			orders_perm_code = #{orders_perm_code},
+		</if>
+		order_final_price = #{order_final_price},
+		order_confirmed_date = sysdate
+		where order_code = #{order_code}
+	</update>
 </mapper>
