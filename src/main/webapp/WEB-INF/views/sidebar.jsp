@@ -47,7 +47,7 @@
 			<div class="collapse" id="pch-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideList" class="link-light rounded menu-small">원재료 조회</a></li>
-				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 공급 등록</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseInForm" class="link-light rounded menu-small">발주 등록</a></li>
 					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseList" class="link-light rounded menu-small">입고 현황</a></li>
 				</ul>
@@ -87,7 +87,7 @@
 			</div>
 		</li>
 
-		
+
 		<!-- 판매 메뉴 -->
 		<li class="mb-3">
 			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#order-collapse" aria-expanded="false">

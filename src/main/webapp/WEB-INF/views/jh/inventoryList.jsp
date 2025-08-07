@@ -83,6 +83,7 @@
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
     <div class="container mt-4 flex-grow-1 p-4">
+    
         <!-- 버튼 그룹 통합 -->
 <div class="d-flex justify-content-between align-items-center mb-3">
   <!-- 왼쪽 그룹: 수주/발주/생산 -->
@@ -182,6 +183,7 @@
             </nav>
         </c:if>
         <%@ include file="../footer.jsp" %>
+    </div>
     </div>
 </body>
 </html>
