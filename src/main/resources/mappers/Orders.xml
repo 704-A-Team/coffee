@@ -74,7 +74,7 @@
 		    	  and od.product_code = pp.product_code(+)
 		    	  and o.order_code = #{code}
 		    	  and sysdate between to_date(pp.start_date(+), 'yyyy-mm-dd') and to_date(pp.end_date(+), 'yyyy-mm-dd')
-		    	  and b.bcd = 200 and b.mcd = od.order_detail_status
+		    	  and b.bcd = 250 and b.mcd = od.order_detail_status
 		) a, bunryu
 		where bunryu.bcd = 200 and bunryu.mcd = a.order_status
 	</select>
@@ -144,11 +144,12 @@
 	<update id="refuseOrders" parameterType="OrdersDto">
 		update orders
 		set order_status = #{order_status},
-		order_refuse = #{order_refuse},
-		orders_perm_code = #{orders_perm_code},
+		order_refuse = #{order_refuse, jdbcType=VARCHAR},
+		<if test="orders_perm_code != 0">
+			orders_perm_code = #{orders_perm_code},
+		</if>
 		order_final_price = #{order_final_price},
 		order_confirmed_date = sysdate
 		where order_code = #{order_code}
 	</update>
-
 </mapper>

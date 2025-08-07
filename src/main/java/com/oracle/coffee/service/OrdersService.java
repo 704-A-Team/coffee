@@ -14,8 +14,7 @@ public interface OrdersService {
 	public List<OrdersProductDto> getProducts();
 	public int upsertInformation(OrdersDto order);
 	public OrdersDto get(int orderCode);
-	// public int autoApprove(int orderCode);
-	public int approve(int orderCode);
+	public void approve(int orderCode);
 	public void refuseOrCancel(OrdersRefuseDto refuse);
 	public void request(int orderCode);
 	public void delete(int orderCode);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.oracle.coffee.dao.InventoryDao;
 import com.oracle.coffee.dto.InventoryDto;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class JHserviceImpl implements JHservice {
 	
 	private final InventoryDao inventoryDao;
+	private final EntityManager em;
 
 	@Override
 	public int totalInventory() {
@@ -39,7 +41,7 @@ public class JHserviceImpl implements JHservice {
 	    System.out.println("JHserviceImpl inventoryList listInventory.size : " + listInventory.size());
 	    return listInventory;
 	}
-
+	
 	@Override
 	public List<InventoryDto> mfgReqList(InventoryDto inventoryDto) {
 		System.out.println("JHserviceImpl mfgReqList start...");
@@ -53,6 +55,5 @@ public class JHserviceImpl implements JHservice {
 		System.out.println("JHserviceImpl mfgReqList listmfgReq.size : " + listMfgReq.size());
 		return listMfgReq;
 	}
-
 
 }

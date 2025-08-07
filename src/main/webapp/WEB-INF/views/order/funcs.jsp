@@ -213,18 +213,19 @@
 	}
 
 	function cancelOrder(orderCode, isRefused) {
-		// 반려인경우 모달창
+		// 반려인경우 모달창의 반려사유 확인
 		let reason = null;
 		
 		if (isRefused) {
 			reason = $('#orderRefuseReason').val();
 			console.log(reason)
-			
 			if (!reason?.trim()) {
 				alert("반려사유를 작성해주세요");
 				return false;
 			}
 			
+		} else {
+			if(!confirm("발주 요청을 취소하시겠습니까?")) return false;
 		}
 		
 		// post 요청
@@ -245,6 +246,13 @@
 			}
 			location.href = "/order/" + orderCode;
 		})
+	}
+	
+	function approveOrder(orderCode) {
+		if(confirm("발주를 승인하시겠습니까?")) {
+			location.href = "/order/approve/" +orderCode;
+		
+		} else return false;
 	}
   
 </script>
