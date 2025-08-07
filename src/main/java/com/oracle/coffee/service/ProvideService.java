@@ -17,5 +17,6 @@ public interface ProvideService {
 	int						provideModify(ProvideDto provideDto);
 	void 					provideDelete(int provide_code);
 	ProvideDto 				getProvideInfo(ProvideDto provideDto);
+	List<ProvideDto> 		getProvideByProduct(int product_code);
 
 }

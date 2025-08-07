@@ -23,6 +23,7 @@ public class ProductDto {
 	private int				product_weight;
 	private int				product_isorder;
 	private int				product_pack;
+	private int 			product_order_pack;
 	private int 			product_isdel;
 	private int				product_reg_code;
 	private Date			product_reg_date;
