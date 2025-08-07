@@ -13,5 +13,6 @@ public interface ProvideDao {
 	int					provideModify(ProvideDto provideDto);
 	void 				provideDelete(ProvideDto provideDetail);
 	ProvideDto 			getProvideInfo(ProvideDto provideDto);
+	List<ProvideDto> 	getProvideByProduct(int product_code);
 
 }

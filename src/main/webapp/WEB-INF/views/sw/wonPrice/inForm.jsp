@@ -104,12 +104,10 @@
                     </div>
 
                     <!-- 가격 입력 -->
-                    <div class="mb-3">
-                        <label for="price" class="form-label">가격(ea, g, ml 기준)</label>
-                        <select id="price" name="price" class="form-select" required>
-                            <option value="">-- 선택 --</option>
-                        </select>
-                    </div>
+					<div class="mb-3">
+					    <label for="price" class="form-label">가격(1ea, 1g, 1ml 기준)</label>
+					    <input type="number" id="price" name="price" class="form-control" required step="0.001" min="0">
+					</div>
 
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
@@ -131,8 +129,6 @@
     }
 
     $(document).ready(function () {
-        console.log("product_won_code 존재 여부:", $('#product_won_code').length);
-
         $('#product_won_code').select2({
             placeholder: '제품명을 선택하거나 검색하세요',
             minimumInputLength: 0,
@@ -144,74 +140,61 @@
             }
         });
 
-        $('#product_won_code').on('select2:select', function () {
-            var ajax_product_code = $(this).val();
-            var $ajax_clientSelect = $('#purchase_client_code');
+        $('#product_won_code').on('change', function () {
+            const ajax_product_code = $(this).val();
 
             if (!ajax_product_code) {
-                $ajax_clientSelect.html('<option value="">-- 거래처를 선택하세요 --</option>');
+                $('#price').val('');
                 return;
             }
 
             $.ajax({
-                url: '${pageContext.request.contextPath}/sw/getClientsByProduct',
+                url: '${pageContext.request.contextPath}/sw/getProvideByProduct',
                 type: 'GET',
-                data: { product_code: ajax_product_code },
-                success: function (clients) {
-                    $ajax_clientSelect.empty().append('<option value="">-- 거래처를 선택하세요 --</option>');
-                    if (!clients || clients.length === 0) {
-                        alert('해당 제품의 원재료를 공급하는 거래처가 없습니다. 원재료 공급 등록부터 해주세요');
+                data: { product_won_code: ajax_product_code },
+                cache: false,
+                success: function (ajax_provideList) {
+                    if (!Array.isArray(ajax_provideList) || ajax_provideList.length === 0) {
+                        $('#price').val('');
                         return;
                     }
-                    $.each(clients, function (i, client) {
-                        $ajax_clientSelect.append('<option value="' + client.client_code + '">' + client.client_name + '</option>');
+
+                    // 단가 / 공급단위 계산
+                    const ajax_unitPrices = ajax_provideList.map(ajax_p => {
+                        const ajax_danga = parseFloat(ajax_p.current_danga);
+                        const ajax_amount = parseFloat(ajax_p.provide_amount);
+
+                        if (isNaN(ajax_danga) || isNaN(ajax_amount) || ajax_amount <= 0) {
+                            return 0;
+                        }
+
+                        return ajax_danga / ajax_amount;
                     });
-                }
-            });
-        });
 
-        $('#purchase_client_code').change(function () {
-            const ajax_client_code = $(this).val();
-            const ajax_product_code = $('#product_won_code').val();
+                    const ajax_maxUnitPrice = Math.max(...ajax_unitPrices);
 
-            if (!ajax_client_code || !ajax_product_code) return;
-
-            $.ajax({
-                url: '${pageContext.request.contextPath}/sw/getProvideInfo',
-                type: 'GET',
-                data: {
-                    product_won_code: ajax_product_code,
-                    provide_client_code: ajax_client_code
-                },
-                success: function (data) {
-                    const ajax_purchase_amount = data.provide_amount;
-                    const ajax_purchase_danga = data.current_danga;
-
-                    $('#purchase_danga').val(ajax_purchase_danga);
-
-                    const $select = $('#purchase_amount');
-                    $select.empty().append('<option value="">-- 선택 --</option>');
-                    for (let i = 1; i <= 50; i++) {
-                        const value = ajax_purchase_amount * i * 10;
-                        $select.append('<option value="' + value + '">' + numberWithCommas(value) + '</option>');
+                    if (isNaN(ajax_maxUnitPrice) || ajax_maxUnitPrice <= 0) {
+                        $('#price').val('');
+                        return;
                     }
+
+                    const ajax_increased = ajax_maxUnitPrice * 1.1;
+                    const ajax_rounded = Math.round(ajax_increased * 1000) / 1000;
+                    const ajax_displayValue = ajax_rounded.toFixed(2);
+
+                    $('#price').val(ajax_displayValue);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX 실패:", status, error);
+                    alert("공급 단가 조회 실패");
                 }
             });
         });
 
-        $('#purchase_amount').change(function () {
-            const ajax_amount = Number($('#purchase_amount option:eq(1)').val());
-            const ajax_i = 10 * Number($(this).val());
-            const ajax_danga = Number($('#purchase_danga').val());
-            if (!ajax_i || !ajax_danga) {
-                $('#total_price').val('');
-                return;
-            }
-            const total = ajax_i * ajax_danga / ajax_amount;
-            $('#total_price').val(numberWithCommas(total));
-        });
+
     });
 </script>
+
 
 </body>
 </html>

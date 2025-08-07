@@ -4,5 +4,8 @@
 
 <mapper namespace="com.oracle.coffee.WonProductPriceMapper">
 
+	<insert id="wonProductPriceSave" parameterType="WonProductPriceDto">
+		
+	</insert>
 
 </mapper>
