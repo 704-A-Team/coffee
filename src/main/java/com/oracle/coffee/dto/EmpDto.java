@@ -26,7 +26,7 @@ public class EmpDto {
 	private int 				emp_grade;					//직급
 	private int 				emp_sal; 					//급여
 	private String 				emp_email; 					//이메일
-	private int			 		emp_isDel; 					//퇴직여부
+	private int			 		emp_isdel; 					//퇴직여부
 	private int 				emp_register; 				//등록자(사원코드)
 	private LocalDateTime 		emp_reg_date; 				//등록일		
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -55,7 +55,7 @@ public class EmpDto {
 		this.emp_grade = emp.getEmp_grade();
 		this.emp_sal = emp.getEmp_sal();
 		this.emp_email = emp.getEmp_email();
-		this.emp_isDel = emp.getEmp_isdel();
+		this.emp_isdel = emp.getEmp_isdel();
 		this.emp_register = emp.getEmp_register();
 		this.emp_reg_date = emp.getEmp_reg_date();
 		this.emp_ipsa_date = emp.getEmp_ipsa_date();
