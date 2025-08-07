@@ -1,7 +1,7 @@
 package com.oracle.coffee.dto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +25,7 @@ public class ProductDto {
 	private int				product_pack;
 	private int 			product_isdel;
 	private int				product_reg_code;
-	private LocalDateTime	product_reg_date;
+	private Date			product_reg_date;
 	
 	// 조회용
 	private String      pageNum;  
