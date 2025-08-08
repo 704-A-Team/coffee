@@ -34,7 +34,7 @@
 
                 <div>
                     <p>제품명 : <strong>${wanAndRcpDetail.product_name}</strong></p>
-                    <p>중량 : <strong>${wanAndRcpDetail.product_pack}</strong></p>
+                    <p>생산 단위 : <strong>${wanAndRcpDetail.product_pack}</strong> 개 </p>
                 </div>
 
                 <form id="recipeForm" action="${pageContext.request.contextPath}/km/recipeModify" method="post">

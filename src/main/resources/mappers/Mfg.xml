@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.coffee.MfgMapper">
+
+	<select id="magamNext" resultType="String">
+		SELECT TO_CHAR(TO_DATE(Max(yrmo),'YYMMDD')+3 , 'YYYY-MM-DD') as magam FROM MAGAM WHERE magam_status = 1
+	</select>
+
+	<insert id="mfgSeqRegister" parameterType="MfgDTO" useGeneratedKeys="true" keyProperty="mfg_code">
+		INSERT INTO MFG(mfg_code , mfg_reg_code , mfg_reg_date)
+		VALUES (MFG_SEQ.nextval , #{mfg_reg_code} , #{mfg_reg_date})
+		
+		<selectKey keyProperty="mfg_code" resultType="Int" order="AFTER">
+			select MFG_SEQ.CURRVAL From dual
+		</selectKey>
+		
+	</insert>
+
+	<insert id="mfgRegister" parameterType="MfgDetailDTO">
+		INSERT INTO MFG_DETAIL(mfg_code , product_code , mfg_amount , mfg_request_date , mfg_due_date , mfg_status , mfg_contents)
+		VALUES (#{mfg_code} , #{product_code} , #{mfg_amount} , #{mfg_request_date, jdbcType=TIMESTAMP},
+		#{mfg_due_date, jdbcType=VARCHAR},
+		#{mfg_status},
+		#{mfg_contents, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="mfgTotal" resultType="Int">
+		SELECT COUNT(*) FROM MFG
+	</select>
+	
+	<select id="mfgList" parameterType="MfgDTO" resultType="MfgDTO">
+		SELECT * FROM (
+            SELECT rownum rw , mfgAll.* FROM (
+                SELECT mfg.* , emp.emp_name , dept.dept_name FROM MFG 
+                         LEFT OUTER JOIN EMP 
+                            ON mfg.mfg_reg_code = emp.emp_code
+                         LEFT OUTER JOIN DEPT
+                            ON emp.emp_dept_code = dept.dept_code
+                            ) mfgAll
+            ) WHERE rw BETWEEN #{start} and #{end}
+	</select>
+	
+	
+</mapper>
