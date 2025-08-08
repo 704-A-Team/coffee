@@ -41,13 +41,27 @@ public class SWProductPriceController {
 	}
 	
 	@PostMapping("/wonProductPriceSave")
-	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto) {
-		log.info("SWProductPriceController wonProductPriceSave start...");
+	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto, Model model) {
+		log.info("SWProductPr	iceController wonProductPriceSave start...");
 
-		int result = swProductPriceService.wonProductPriceSave(wonProductPriceDto);
-		System.out.println("wonProductPriceSave result : " + result);
+		System.out.println("SWProductPriceController wonProductPriceSave wonProductPriceDto : " + wonProductPriceDto);
 		
-		return "redirect:/sw/wonProductPriceList";
+		try {
+			swProductPriceService.wonProductPriceSave(wonProductPriceDto);
+			return "redirect:/sw/wonProductList";
+		} catch (Exception e) {
+			String errorMsg;
+	        if (e.getMessage().contains("ORA-00001")) {
+	            errorMsg = "제품 가격은 하루에 한번만 변경가능합니다.";
+	        } else {
+	            errorMsg = "가격 등록 중 오류 발생: " + e.getMessage();
+	        }
+	        List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
+	        model.addAttribute("wonProductAllList", wonProductAllList);
+		    model.addAttribute("errorMsg", errorMsg);
+		    
+		    return "sw/wonPrice/inForm";
+		}
 	}
 	
 	//조회용

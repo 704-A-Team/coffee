@@ -1,5 +1,6 @@
 package com.oracle.coffee.dto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class ProductDto {
 	private String 		typeName;      // 제품 유형명
 	private String 		isorderName;   // 납품 여부명
 	private String		regName;	   // 등록자명
+	private BigDecimal	price;		
 	
 	private String 		searchType;
 	private String 		searchKeyword;
