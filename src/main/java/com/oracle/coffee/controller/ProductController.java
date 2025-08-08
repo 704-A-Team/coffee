@@ -315,7 +315,17 @@ public class ProductController {
 		return "redirect:/km/wanAndRcpDetailInForm";
 	}
 	
-	
+	// 가격 조정 폼
+	@GetMapping("/wanPriceModifyInForm")
+	public String wanPriceModifyInForm(ProductWanDTO productWanDTO , Model model) {
+		log.info("productWanDTO->"+productWanDTO);
+		
+		List<ProductPriceDTO> priceHistory = productService.priceHistory(productWanDTO);
+		log.info("priceHistory->"+priceHistory);
+		
+		model.addAttribute("priceHistory" , priceHistory);
+		return "productWan/wanPriceModifyInForm";
+	}
 	
 	
 	

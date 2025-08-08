@@ -15,6 +15,10 @@
 		<typeAlias alias="RecipeDTO" type="com.oracle.coffee.dto.km.RecipeDTO"/>
 		<typeAlias alias="ProductImgDTO" type="com.oracle.coffee.dto.km.ProductImgDTO"/>
 		<typeAlias alias="WanAndRecipeDTO" type="com.oracle.coffee.dto.km.WanAndRecipeDTO"/>
+		<typeAlias alias="MfgDTO" type="com.oracle.coffee.dto.km.MfgDTO"/>
+		<typeAlias alias="MfgDetailDTO" type="com.oracle.coffee.dto.km.MfgDetailDTO"/>
+		<typeAlias alias="MfgRpDTO" type="com.oracle.coffee.dto.km.MfgRpDTO"/>
+		<typeAlias alias="RpDetailDTO" type="com.oracle.coffee.dto.km.RpDetailDTO"/>
 	
 		<typeAlias alias="InventoryDto" type="com.oracle.coffee.dto.InventoryDto"/>
 		<typeAlias alias="MagamDto" type="com.oracle.coffee.dto.MagamDto"/>

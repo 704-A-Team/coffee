@@ -44,5 +44,9 @@ public interface ProductDao {
 
 	void 					priceAfterStart(ProductPriceDTO priceDTO);
 
+	List<ProductWanDTO> 	mfgWanList();
+
+	List<ProductPriceDTO> 	priceHistory(ProductWanDTO productWanDTO);
+
 
 }

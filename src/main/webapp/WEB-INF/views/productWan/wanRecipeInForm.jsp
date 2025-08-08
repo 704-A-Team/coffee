@@ -216,8 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         form.appendChild(hiddenInput);									  // 폼에 숨은 input 추가
         form.submit();
-    }; 
-
+    };
+    
     updateUnit(); // 최초 실행
 });
 </script>
