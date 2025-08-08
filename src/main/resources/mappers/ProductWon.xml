@@ -108,12 +108,13 @@
 	
 	<update id="wonProductModify" parameterType="ProductDto">
 	    update product
-	    set product_name     = #{product_name},
-	        product_unit     = #{product_unit},
-	        product_type     = #{product_type},
-	        product_weight   = #{product_weight},
-	        product_isorder  = #{product_isorder},
-	        product_isdel    = #{product_isdel}
+	    set product_name     	= #{product_name},
+	        product_unit     	= #{product_unit},
+	        product_type     	= #{product_type},
+	        product_weight   	= #{product_weight},
+	        product_isorder  	= #{product_isorder},
+	        product_isdel    	= #{product_isdel},
+	        product_order_pack 	= #{product_order_pack}
 	    where product_code   = #{product_code}
 	</update>
 	
@@ -165,5 +166,11 @@
         DELETE FROM product_img
         WHERE product_code = #{product_code}
     </delete>
+	
+	<select id="wonProductAllList" resultType="ProductDto">
+		select *
+		from product
+		where product_type = 0
+	</select>
 	
 </mapper>

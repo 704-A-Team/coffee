@@ -63,8 +63,8 @@
                         <label class="col-sm-2 col-form-label">거래처 유형</label>
                         <div class="col-sm-8">
                             <select class="form-select" name="client_type" required>
-                                <option value="1" ${clientDto.client_type == 1 ? 'selected' : ''}>공급처</option>
-                                <option value="2" ${clientDto.client_type == 2 ? 'selected' : ''}>가맹점</option>
+                                <option value="2" ${clientDto.client_type == 2 ? 'selected' : ''}>공급처</option>
+                                <option value="3" ${clientDto.client_type == 3 ? 'selected' : ''}>가맹점</option>
                             </select>
                         </div>
                     </div>
@@ -103,18 +103,29 @@
                         </div>
                     </div>
 
-                    <!-- 상태 -->
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">상태</label>
-                        <div class="col-sm-8">
-                            <select class="form-select" name="client_status">
-                                <option value="0" ${clientDto.client_status == 0 ? 'selected' : ''}>영업중</option>
-                                <option value="1" ${clientDto.client_status == 1 ? 'selected' : ''}>휴업중</option>
-                                <option value="2" ${clientDto.client_status == 2 ? 'selected' : ''}>폐점</option>
-                            </select>
-                        </div>
-                    </div>
-
+          <!-- 상태 -->
+					<div class="row mb-3">
+					    <label class="col-sm-2 col-form-label">상태</label>
+					    <div class="col-sm-8 pt-2">
+					        <div class="form-check form-check-inline">
+					            <input class="form-check-input" type="radio" name="client_status" id="status0" value="0"
+					                   ${clientDto.client_status == 0 ? 'checked' : ''}>
+					            <label class="form-check-label" for="status0">영업중</label>
+					        </div>
+					        <div class="form-check form-check-inline">
+					            <input class="form-check-input" type="radio" name="client_status" id="status1" value="1"
+					                   ${clientDto.client_status == 1 ? 'checked' : ''}>
+					            <label class="form-check-label" for="status1">휴업중</label>
+					        </div>
+					        <div class="form-check form-check-inline">
+					            <input class="form-check-input" type="radio" name="client_status" id="status2" value="2"
+					                   ${clientDto.client_status == 2 ? 'checked' : ''}>
+					            <label class="form-check-label" for="status2">폐점</label>
+					        </div>
+					    </div>
+					</div>
+					
+					
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
                         <button type="submit" class="btn btn-success btn-custom">수정 완료</button>

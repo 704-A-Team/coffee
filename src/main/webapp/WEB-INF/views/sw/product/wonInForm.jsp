@@ -75,7 +75,7 @@
                         <input type="text" class="form-control" id="product_name" name="product_name" placeholder="제품명을 입력해주세요" required>
                     </div>
 
-                    <!-- 단위 / 유형 / 납품 여부 -->
+                    <!-- 단위 / 납품 여부 -->
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="product_unit" class="form-label">단위</label>
@@ -86,14 +86,7 @@
                                 <option value="2">ml</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="product_type" class="form-label">제품유형</label>
-                            <select id="product_type" name="product_type" class="form-select" required>
-                                <option value="">-- 선택 --</option>
-                                <option value="0">원재료</option>
-                                <option value="1">완제품</option>
-                            </select>
-                        </div>
+                        
                         <div class="col-md-4">
                             <label for="product_isorder" class="form-label">납품 여부</label>
                             <select id="product_isorder" name="product_isorder" class="form-select" required>
@@ -110,6 +103,14 @@
                         <input type="number" class="form-control" id="product_weight" name="product_weight" placeholder="숫자만 입력해주세요" required>
                     </div>
 
+					<!-- 판매단위(콤보박스) -->
+                    <div class="mb-3">
+                        <label for="product_order_pack" class="form-label">판매단위</label>
+                        <select class="form-select" id="product_order_pack" name="product_order_pack" required>
+                            <option value="">-- 단위를 먼저 선택하세요 --</option>
+                        </select>
+                    </div>
+
                     <!-- 이미지 -->
                     <div class="mb-3">
                         <label for="files" class="form-label">제품(원재료) 이미지 (최대 3개)</label>
@@ -117,11 +118,11 @@
                         <div class="form-text text-danger mt-1">※ 최대 3개의 이미지만 업로드할 수 있습니다.</div>
                     </div>
 
-                    <!-- 버튼 영역: 오른쪽 하단 정렬 + 텍스트 변경 없이 유지 -->
+                    <!-- 버튼 영역: 오른쪽 하단 정렬 -->
                     <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
-					    <button type="submit" class="btn btn-brown">등록</button>
-					    <button type="reset" class="btn btn-brown-outline">초기화</button>
-					</div>
+                        <button type="submit" class="btn btn-brown">등록</button>
+                        <button type="reset" class="btn btn-brown-outline">초기화</button>
+                    </div>
                 </form>
             </div>
         </main>
@@ -129,5 +130,40 @@
         <%@ include file="../../footer.jsp" %>
     </div>
 </div>
+
+<!-- 단위 선택 시 판매단위 옵션 변경 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const unitSelect = document.getElementById("product_unit");
+        const orderPackSelect = document.getElementById("product_order_pack");
+
+        unitSelect.addEventListener("change", function () {
+            const selected = this.value;
+            orderPackSelect.innerHTML = ''; // 기존 옵션 제거
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = '';
+            defaultOption.textContent = '-- 선택 --';
+            orderPackSelect.appendChild(defaultOption);
+
+            if (selected === "0") { // ea
+                for (let i = 10; i <= 100; i += 10) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.textContent = i + ' ea';
+                    orderPackSelect.appendChild(opt);
+                }
+            } else if (selected === "1" || selected === "2") { // g or ml
+                for (let i = 100; i <= 1000; i += 100) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.textContent = i + (selected === "1" ? ' g' : ' ml');
+                    orderPackSelect.appendChild(opt);
+                }
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

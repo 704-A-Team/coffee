@@ -60,6 +60,8 @@
 			<result property="product_cd_contents" column="product_cd_contents"/>
 			<result property="price" column="price"/>
 			<result property="can_order" column="can_order"/>
+			<result property="product_name" column="product_name"/>
+			<result property="price" column="price"/>
 		</collection>
 	</resultMap>
 	

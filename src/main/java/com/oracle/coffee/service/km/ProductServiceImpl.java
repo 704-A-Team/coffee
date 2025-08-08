@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-//@Transactionals
+@Transactional
 public class ProductServiceImpl implements ProductService {
 	
 	private final ProductDao productDao;
@@ -132,7 +132,14 @@ public class ProductServiceImpl implements ProductService {
 			addImgList.add(pImgDTO);
 		}
 		System.out.println("ProductServiceImpl wanModify addImgList->"+addImgList);
-		productDao.wanImgRegister(addImgList);
+		
+		   // ✅ 여기에 조건 추가
+	    if (addImgList != null && !addImgList.isEmpty()) {
+	    	productDao.wanImgRegister(addImgList);
+	    } else {
+	        log.info("이미지 등록 생략");
+	    }
+		
 		
 		return productDTO;
 	}
@@ -189,6 +196,25 @@ public class ProductServiceImpl implements ProductService {
 			productDao.priceAfterStart(priceDTO);
 		}
 		
+	}
+
+	@Override
+	public List<ProductWanDTO> mfgWanList() {
+		List<ProductWanDTO> mfgWanList = productDao.mfgWanList();
+		log.info("mfgWanList->"+mfgWanList);
+		return mfgWanList;
+	}
+
+	@Override
+	public List<ProductPriceDTO> priceHistory(ProductWanDTO productWanDTO) {
+		List<ProductPriceDTO> priceHistory = null;
+		try {
+			priceHistory = productDao.priceHistory(productWanDTO);
+			log.info("priceHistory->"+priceHistory);
+		} catch (Exception e) {
+			System.out.println("priceHistory Exception->"+e.getMessage());
+		}
+		return priceHistory;
 	}
 
 }

@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     
-                    <!-- 재직 여부 -->
+       <%--              <!-- 재직 여부 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">재직 여부</label>
                         <div class="col-sm-8">
@@ -115,7 +115,7 @@
                             </select>
                         </div>
                     </div>
-
+ --%>
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
                         <button type="submit" class="btn btn-success btn-custom">수정 완료</button>

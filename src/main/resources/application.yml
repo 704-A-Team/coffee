@@ -1,4 +1,4 @@
-server:
+server:  
   port: 8383
   tomcat:
     max-part-count: 20
@@ -28,6 +28,7 @@ spring:
       max-file-size: 50MB
       max-request-size: 200MB
       file-size-threshold: 2KB # 파일 크기 임계값 설정 (이 크기를 초과하면 디스크에 저장)
+    #  max-file-count: 10 # 최대 10개까지 허용 FileCountLimitExceededException
  
   # View Resolver
   mvc:
