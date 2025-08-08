@@ -29,19 +29,6 @@ public class OrdersDto {
 	// bunryu 테이블
 	private String cd_contents;		// 상태 내용
 	
-	/*
-	// client_tb 
-	private String client_name;		// 상호명
-	private String client_address;	// 가맹점 주소
-	private String client_tel;		// 가맹점 번호
-	private String saup_num;		// 사업자등록번호
-	private String boss_name;		// 가맹점 대표자명
-	private int client_emp_code;	// 담당직원 코드
-	
-	// emp 테이블
-	private String emp_name;		// 승인자 이름
-	*/
-	
 	public int calculateTotalPrice() {
 		int total = 0;
 		for(OrdersDetailDto detail : orders_details) {

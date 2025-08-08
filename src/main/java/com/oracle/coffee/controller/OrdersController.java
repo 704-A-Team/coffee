@@ -73,7 +73,7 @@ public class OrdersController {
 			int clientCode = 3001;
 			respData = ordersService.list(page, clientCode);
 		}
-		
+
 		model.addAttribute("orders", respData.getList());
 		model.addAttribute("page", respData.getPage());
 		return "order/list";

@@ -85,9 +85,10 @@
 		<div class="col-12 border p-3 ">
 	  	<div id="item-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
-			    <div class="col-3">품목명</div>
+			    <div class="col-2">품목명</div>
 			    <div class="col-2">단가</div>
 			    <div class="col-2">수량</div>
+			    <div class="col-1">단위</div>
 			    <div class="col-2">공급가액</div>
 			    <div class="col-2">납기일</div>
 			    <div class="col-1">상태</div>
@@ -98,18 +99,19 @@
 		<c:forEach items="${order.orders_details }" var="detail">
 			<c:set var="rowTotalPrice" value="${detail.price * detail.order_amount}" />
 			<div class="row g-2 mb-2 item-list-item">
-				<div class="col-3">
+				<div class="col-2">
 					<div class="form-control form-control-sm bg-light">
 						<c:if test="${order.order_status <= 1 and not detail.can_order }">[❌불가] </c:if>${detail.product_name} (${detail.product_code})
 					</div>
 				</div>
 				<div class="col-2">
-			    	<div class="form-control form-control-sm bg-light prd-price">
-			    		${detail.price }
-			    	</div>
+			    	<div class="form-control form-control-sm bg-light prd-price">${detail.price }</div>
 				</div>
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light prd-count">${detail.order_amount }</div>
+				</div>
+				<div class="col-1">
+					<div class="form-control form-control-sm bg-light prd-count">${detail.product_order_pack } ${detail.product_cd_contents }</div>
 				</div>
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light prd-total-price">${rowTotalPrice}</div>
@@ -128,7 +130,10 @@
 				</c:choose>
 				</div>
 			</div>
-			<c:set var="totalPrice" value="${totalPrice + rowTotalPrice}" />
+			<c:if test="${detail.can_order }">
+				<c:set var="totalPrice" value="${totalPrice + rowTotalPrice}" />
+			</c:if>
+			
 		</c:forEach>
 		<div class="col text-end">
 		<c:choose>
@@ -156,7 +161,7 @@
   	<c:if test="${order.order_status == 0 }">
   		<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
 		<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/del/${order.order_code }'">임시저장 삭제</button>
-		<button type="button" class="btn btn-md btn-primary fw-bold" onclick="reqOrder(${order.order_code })">발주요청</button>
+		<button type="button" class="btn btn-md btn-primary fw-bold" onclick="return reqOrder(${order.order_code })">발주요청</button>
   	</c:if>
   	
   	<c:if test="${order.order_status == 1 }">
@@ -171,8 +176,9 @@
 				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">발주변경</button>
 				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, false)">요청취소</button>
 				
-				<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려 테스트</button>
-				<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인 테스트</button>
+				<div class="vr mx-2"></div>
+				<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
+				<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
 
 			</div>
 		</div>

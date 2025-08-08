@@ -50,7 +50,7 @@ public class OrdersServiceImpl implements OrdersService {
 		// update
 		} else {
 			// orders 비고 변경
-			ordersDao.updateOrdersNote(order);
+			ordersDao.updateOrders(order);
 			orderCode = order.getOrder_code();
 			// ordersDetail (전체 엎어치기)
 			ordersDao.deleteOrdersDetails(orderCode);
@@ -58,7 +58,9 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		// ordersDetail 추가
 		ordersDao.createOrdersDetails(details);		
-		
+		// 예상 총액 저장
+		order.setOrder_final_price(order.calculateTotalPrice());
+		ordersDao.updateOrdersFinalPrice(order);
 		return orderCode;
 	}
 
@@ -71,36 +73,62 @@ public class OrdersServiceImpl implements OrdersService {
 	@Override
 	public void request(int orderCode) {
 		// 수주 요청 (가맹점 -> 본사)
-		// 요청상태(1)로 변경 (orders, orders_detail)
+		// 요청상태(1)로 변경 (orders)
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		
 		int targetStatus = 1;
 		order.setOrder_status(targetStatus);
+		ordersDao.requestOrders(order);
+	}
+
+	private boolean checkToApprove(OrdersDto order, boolean isAuto) {
+		boolean result = true;
+		// 1. 총 금액 확인
+		
+		// 2. 재고 모자라면 승인 불가
 		List<OrdersDetailDto> details = order.getOrders_details();
 		for (OrdersDetailDto detail : details) {
-			detail.setOrder_datail_status(targetStatus);
+			if (detail.getOrder_amount() < 0) continue;
+			else {
+				if (isAuto) {
+					// 원재료 발주 신청 OR 완재품 생산 신청
+				}
+				result = false;
+			}
 		}
 		
-		ordersDao.requestOrders(order);
+		return result;
 	}
 	
 	private boolean autoApprove(int orderCode) {
 		boolean result = false;
 		
+		OrdersDto order = ordersDao.findByCode(orderCode);
+		
+		// 재고 없으면 자동 승인 불가
+		// => 자동 원재료 신청
+		// => 자동 생산 신청
 		return result;
 	}
 
 	@Override
 	public void approve(int orderCode) {
-		// 수주 승인 상태로 변경 (요청 상태에서 가능)
-		// 수주 상세 출고예정 상태로 변경
+		// 수주 승인 상태(4)로 변경 (요청 상태에서 가능)
+		// 수주 상세 출고예정(1) 상태로 변경
+		OrdersDto order = ordersDao.findByCode(orderCode);
+		
+		boolean isConfirm = checkToApprove(order, false);
+		if (isConfirm) {
+			int targetStatus = 4;
+			// 
+		}
 	}
 
 	@Override
 	public void refuseOrCancel(OrdersRefuseDto refuse) {
 		// 수주 취소(5)/반려(3) 상태로 변경 (요청 상태에서 가능)
-		// 취소(가맹점): 취소상태(4) + 승인자 null + order_refuse null
-		// 반려(본사): 반려상태(3) + 승인자 코드 존재 + 거부사유 존재
+		// 취소(가맹점): 취소상태(4) + order_perm_code/order_refuse NULL
+		// 반려(본사): 반려상태(3) + 승인자코드/거부사유 NOT NULL
 		
 		OrdersDto order = ordersDao.findByCode(refuse.getOrder_code());
 		
@@ -127,6 +155,13 @@ public class OrdersServiceImpl implements OrdersService {
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd());
 		List<OrdersListDto> list = ordersDao.list(ordersPage);
+		
+		// 확정전 예상 금액
+		for (OrdersListDto order : list) {
+			if (order.getOrder_status() > 1) continue;
+			OrdersDto detail_order = ordersDao.findByCode(order.getOrder_code());
+			order.setOrder_final_price(detail_order.calculateTotalPrice());
+		}
 		return new PageRespDto<OrdersListDto, Paging>(list, paging);
 	}
 
@@ -136,6 +171,13 @@ public class OrdersServiceImpl implements OrdersService {
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd(), clientCode);
 		List<OrdersListDto> list = ordersDao.list(ordersPage);
+		
+		// 확정전 예상 금액
+		for (OrdersListDto order : list) {
+			if (order.getOrder_status() > 1) continue;
+			OrdersDto detail_order = ordersDao.findByCode(order.getOrder_code());
+			order.setOrder_final_price(detail_order.calculateTotalPrice());
+		}
 		return new PageRespDto<OrdersListDto, Paging>(list, paging);
 	}
 

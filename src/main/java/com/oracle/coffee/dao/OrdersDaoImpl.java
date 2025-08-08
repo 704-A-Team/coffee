@@ -63,9 +63,18 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	@Override
-	public void updateOrdersNote(OrdersDto order) {
+	public void updateOrders(OrdersDto order) {
 		try {
-			session.update("updateOrdersNote", order);
+			session.update("updateOrders", order);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void updateOrdersFinalPrice(OrdersDto order) {
+		try {
+			session.update("updateOrdersFinalPrice", order);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
