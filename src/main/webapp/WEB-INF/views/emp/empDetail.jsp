@@ -90,14 +90,7 @@
                         </div>
                     </div>
                     
-  <%--                  <!-- 재직 여부 -->
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">재직 여부</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" value="${empDto.emp_isDel}" disabled>
-                        </div>
-                    </div>
-                     --%>
+
 <%--                    <!-- 등록자 -->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">등록자</label>

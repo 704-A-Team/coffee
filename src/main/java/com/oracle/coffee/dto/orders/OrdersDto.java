@@ -20,7 +20,7 @@ public class OrdersDto {
 	private LocalDateTime order_reg_date;
 	private int order_final_price;
 	private LocalDateTime order_req_date;	// 수주 요청 시간
-	private LocalDateTime order_perm_date;	// 수주 승인/반려 시간
+	private LocalDateTime order_confirmed_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
 	
 	
@@ -41,4 +41,12 @@ public class OrdersDto {
 	// emp 테이블
 	private String emp_name;		// 승인자 이름
 	*/
+	
+	public int calculateTotalPrice() {
+		int total = 0;
+		for(OrdersDetailDto detail : orders_details) {
+			total += detail.getPrice() * detail.getOrder_amount();
+		}
+		return total;
+	}
 }

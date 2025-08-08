@@ -53,8 +53,8 @@
                             <div class="mb-3">
                                 <label class="form-label">거래처 유형</label>
                                 <select name="client_type" class="form-select" required>
-                                    <option value="1">공급처</option>
-                                    <option value="2">가맹점</option>
+                                    <option value="2">공급처</option>
+                                    <option value="3">가맹점</option>
                                 </select>
                             </div>
 

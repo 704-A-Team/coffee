@@ -19,7 +19,7 @@
             <th>총액</th>
             <th>상태</th>
             <th>요청일</th>
-            <th>승인/반려일</th>
+            <th>확정일</th>
             <th>등록일</th>
         </tr>
     </thead>
@@ -30,7 +30,7 @@
                 <td>${order.client_name}</td>
                 <td>${order.emp_name}</td>
                 <td>
-                    <fmt:formatNumber value="${order.order_final_price}"pattern="#,###" />
+                    <fmt:formatNumber value="${order.order_final_price}" pattern="#,###" />
                 </td>
                 <td><c:choose>
                 	<c:when test="${order.order_status == 0}">
@@ -48,6 +48,9 @@
                 	<c:when test="${order.order_status == 4}">
                 		<span class="badge bg-success fs-6">${order.cd_contents}</span>
                 	</c:when>
+                	<c:when test="${order.order_status == 5}">
+                		<span class="badge bg-danger-subtle text-dark fs-6">${order.cd_contents}</span>
+                	</c:when>
                 	<c:otherwise>
                 		<span class="badge bg-success fs-6">${order.cd_contents}</span>
                 	</c:otherwise>
@@ -61,7 +64,7 @@
                     </c:choose> --%>
                     ${order.order_req_date }
                 </td>
-                <td>${order.order_perm_date }</td>
+                <td>${order.order_confirmed_date }</td>
                 <td>${order.order_reg_date }</td>
             </tr>
         </c:forEach>

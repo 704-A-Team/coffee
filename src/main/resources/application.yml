@@ -1,4 +1,4 @@
-server:
+server:  
   port: 8383
   tomcat:
     max-part-count: 20
@@ -48,6 +48,7 @@ logging.level:
 mybatis:
   config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/*.xml
+  
 
   
 #upload Folder

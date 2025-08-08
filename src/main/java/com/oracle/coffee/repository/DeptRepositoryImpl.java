@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.oracle.coffee.dto.ClientDto;
 import com.oracle.coffee.dto.DeptDto;
 import com.oracle.coffee.domain.Dept;
 
@@ -44,30 +45,36 @@ public class DeptRepositoryImpl implements DeptRepository {
 	
 	@Override
 	public List<DeptDto> findPageDept(DeptDto deptDto) {
-		  String nativeSql = "SELECT dept_code, dept_name, dept_tel,dept_isdel, dept_reg_date " 
-                  + "FROM ( "
-                  + "    SELECT ROWNUM rn, a.* "
-                  + "    FROM ( "
-                  + "        SELECT dept_code, dept_name, dept_tel,dept_isdel, dept_reg_date " 
-                  + "        FROM   DEPT " 
-                  + "        WHERE  dept_isdel = 0"
-                  + "        ORDER BY dept_code "
-                  + "    ) a "
-                  + ") "
-                  + "WHERE rn BETWEEN :start AND :end";
+		String nativeSql = 
+			    "SELECT dept_code, dept_name, dept_tel, dept_isdel, dept_reg_date, dept_emp_name " +
+			    "FROM ( " +
+			    "    SELECT ROWNUM rn, a.* " +
+			    "    FROM ( " +
+			    "        SELECT d.dept_code, d.dept_name, d.dept_tel, d.dept_isdel, d.dept_reg_date, e.emp_name AS dept_emp_name " +
+			    "        FROM dept d " +
+			    "        LEFT JOIN emp e ON d.dept_code = e.emp_dept_code AND e.emp_grade = 2 " +
+			    "        WHERE d.dept_isdel = 0 " +
+			    "        ORDER BY d.dept_code " +
+			    "    ) a " +
+			    ") " +
+			    "WHERE rn BETWEEN :start AND :end";
+			 Query query = em.createNativeQuery(nativeSql); 
+			 query.setParameter("start", deptDto.getStart());
+			 query.setParameter("end", deptDto.getEnd());
+			 
+			 List<Object[]> resultList = query.getResultList();
 
- Query query = em.createNativeQuery(nativeSql, Dept.class); 
- query.setParameter("start", deptDto.getStart());
- query.setParameter("end", deptDto.getEnd());
- 
- List<Dept> deptEntityList = query.getResultList();
- System.out.println("DeptRepositoryImplfindPageDept deptEntityList->"+deptEntityList);
-
- List<DeptDto> deptDtoList = deptEntityList.stream()
-							                .map(dept->new DeptDto(dept))
- 		                               .collect(Collectors.toList());
- System.out.println("DeptRepositoryImplfindPageDept deptDtoList->"+deptDtoList);
- return deptDtoList;	
+			 return resultList.stream().map(row -> {
+			     DeptDto dto = new DeptDto();
+			     dto.setDept_code(((Number) row[0]).intValue()); // dept_code
+			     dto.setDept_name((String) row[1]);              // dept_name
+			     dto.setDept_tel((String) row[2]);               // dept_tel
+			     dto.setDept_isdel(((Number) row[3]).intValue()); // dept_isdel
+			     dto.setDept_reg_date(((java.sql.Timestamp) row[4]).toLocalDateTime());
+			     dto.setDept_emp_name((String) row[5]);
+			     
+			     return dto;
+			 }).collect(Collectors.toList());
 	}
 
 	@Override

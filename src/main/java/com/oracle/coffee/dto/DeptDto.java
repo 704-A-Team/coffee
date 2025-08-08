@@ -27,6 +27,9 @@ public class DeptDto {
 	
 	//페이지
 	private String      currentPage;
+	
+	//join
+	private String 		dept_emp_name;
 
 	public DeptDto(Dept dept) {
 		this.dept_code = dept.getDept_code();
