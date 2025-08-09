@@ -14,7 +14,7 @@ public interface ClientService {
 	ClientDto 				getSingleClient(int client_code);
 	ClientDto 				getSingleEmp(int client_code);
 	ClientDto				clientUpdate(ClientDto clientDto);
-
+	
 	
 
 }
