@@ -137,6 +137,23 @@ public class ProvideDaoImpl implements ProvideDao {
 		return getProvideInfo;
 	}
 
+	@Override
+	public List<ProvideDto> getProvideByProduct(int product_code) {
+		System.out.println("ProvideDaoImpl getProvideByProduct start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		List<ProvideDto> getProvideByProduct = null;
+		try {
+			getProvideByProduct = session.selectList("getProvideByProduct", product_code);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("ProvideDaoImpl getProvideByProduct Exception : " + e.getMessage());
+		}
+		return getProvideByProduct;
+	}
+
 	
 	
 }

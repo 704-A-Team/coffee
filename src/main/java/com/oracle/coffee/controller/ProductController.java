@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coffee.dto.km.ProductWanDTO;
-import com.oracle.coffee.dto.EmpDto;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
 import com.oracle.coffee.dto.km.WanAndRecipeDTO;
@@ -28,9 +27,7 @@ import com.oracle.coffee.service.km.Paging;
 import com.oracle.coffee.service.km.ProductService;
 import com.oracle.coffee.util.CustomFileUtil;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -318,7 +315,17 @@ public class ProductController {
 		return "redirect:/km/wanAndRcpDetailInForm";
 	}
 	
-	
+	// 가격 조정 폼
+	@GetMapping("/wanPriceModifyInForm")
+	public String wanPriceModifyInForm(ProductWanDTO productWanDTO , Model model) {
+		log.info("productWanDTO->"+productWanDTO);
+		
+		List<ProductPriceDTO> priceHistory = productService.priceHistory(productWanDTO);
+		log.info("priceHistory->"+priceHistory);
+		
+		model.addAttribute("priceHistory" , priceHistory);
+		return "productWan/wanPriceModifyInForm";
+	}
 	
 	
 	

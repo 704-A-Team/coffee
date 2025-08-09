@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.service.Paging;
@@ -35,15 +36,19 @@ public class SWProductController {
 	}
 	
 	@PostMapping("/wonProductSave")
-	public String wonProductSave(ProductDto productDto) {
+	public String wonProductSave(ProductDto productDto, RedirectAttributes redirectAttrs) {
 		System.out.println("SWProductController wonProductSave Strart...");
 		
 		List<MultipartFile> file = productDto.getFiles();
 		List<String> uploadFileNames = fileUtil.saveFiles(file);
 		productDto.setUploadFileNames(uploadFileNames);
+		productDto.setProduct_type(0);
 		
 		int wonProduct_code = productService.wonProductSave(productDto);
 		log.info("Save wonProduct_code : ", wonProduct_code);
+		
+		redirectAttrs.addAttribute("currentPage", productDto.getCurrentPage());
+	    redirectAttrs.addAttribute("searchKeyword", productDto.getSearchKeyword());
 		
 		return "redirect:/sw/wonProductList";
 	}
@@ -77,6 +82,7 @@ public class SWProductController {
 		System.out.println("SWProductController wonProductDetailPage Strart...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
+		System.out.println("SWProductController wonProductDetailPage wonProductDetail : " + wonProductDetail);
 		
 		model.addAttribute("wonProductDetail", wonProductDetail);
 		
@@ -88,6 +94,7 @@ public class SWProductController {
 		System.out.println("SWProductController wonProductModifyForm Strart...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
+		System.out.println("SWProductController wonProductModifyForm wonProductDetail : " + wonProductDetail);
 		
 		model.addAttribute("wonProductDetail", wonProductDetail);
 		

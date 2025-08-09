@@ -107,8 +107,8 @@
 		                                        ${product.product_contents}
 		                                    </p>
 		                                    <ul class="product-info-list">
-		                                        <li><strong>예상 수율</strong> <span>${product.product_yield}%</span></li>
-		                                        <li><strong>생산 단위</strong> <span>${product.product_pack}</span></li>
+		                                        <li><strong>예상 수율</strong> <span>${product.product_yield} %</span></li>
+		                                        <li><strong>생산 단위</strong> <span>${product.product_pack} 개</span></li>
 		                                        <li>
 													<strong>가격</strong>
 													<span>
@@ -117,7 +117,7 @@
 												            <span style="color: red; font-weight: bold;">가격 조정 필요</span>
 												        </c:when>
 												        <c:otherwise>
-												            ${product.price}원
+												            ${product.price} 원
 												        </c:otherwise>
 												    </c:choose>
 												    </span>
@@ -132,25 +132,34 @@
 													    </c:otherwise>
 													  </c:choose>
 												</li>
-		                                        <li><strong>최근 등록일</strong> <span>${product.start_date != null ? product.start_date : '정보 없음'}</span></li>
+		                                        <li><strong>등록일</strong> <span>${product.start_date != null ? product.start_date : '정보 없음'}</span></li>
 		                                    </ul>
 		
-		       								<div class="d-flex gap-2 mt-auto">
-												  <form action="/km/wanAndRcpDetailInForm" method="get" style="flex-grow:1;">
-												    <input type="hidden" name="product_code" value="${product.product_code}" />
-												    <button type="submit" class="btn btn-light-primary btn-sm w-100">상세 보기</button>
-												  </form>
-												
-												  <form action="/km/wanPriceModifyInForm" method="get" style="flex-grow:1;">
-												    <input type="hidden" name="product_code" value="${product.product_code}" />
-												    <button type="submit" class="btn btn-light-warning btn-sm w-100">가격 조정</button>
-												  </form>
-												
-												  <form action="/km/wanProductdelete" method="post" style="flex-grow:1;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-												    <input type="hidden" name="product_code" value="${product.product_code}" />
-												    <button type="submit" class="btn btn-light-danger btn-sm w-100">삭제</button>
-												  </form>
+			       							<div class="d-flex gap-2 mt-auto">
+											  <!-- 상세 보기 버튼은 그대로 유지 -->
+											  <form action="/km/wanAndRcpDetailInForm" method="get" style="flex-grow:1;">
+											    <input type="hidden" name="product_code" value="${product.product_code}" />
+											    <button type="submit" class="btn btn-light-primary btn-sm w-100">상세 보기</button>
+											  </form>
+											
+											  <!-- 가격 조정 버튼 조건부 처리 -->
+											  <c:choose>
+											    <c:when test="${product.product_isdel == true}">
+											      <!-- 판매 중지일 경우 모달 버튼 -->
+											      <div style="flex-grow:1;">
+												  	<button type="button" class="btn btn-light-warning btn-sm w-100" onclick="showStoppedModal()">가격 조정</button>
+												  </div>
+											    </c:when>
+											    <c:otherwise>
+											      <!-- 판매 중이면 정상 폼 전송 -->
+											      <form action="/km/wanPriceModifyInForm" method="get" style="flex-grow:1;">
+											        <input type="hidden" name="product_code" value="${product.product_code}" />
+											        <button type="submit" class="btn btn-light-warning btn-sm w-100">가격 조정</button>
+											      </form>
+											    </c:otherwise>
+											  </c:choose>
 											</div>
+
 
 		                                </div>
 		                            </div>
@@ -189,12 +198,37 @@
 		     </div>
 		   </div>
 		</main>
-
-			
+		<!-- 판매중지 알림 모달 -->
+		<div class="modal fade" id="stoppedModal" tabindex="-1" aria-labelledby="stoppedModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header bg-warning">
+		        <h5 class="modal-title" id="stoppedModalLabel">알림</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+		      </div>
+		      <div class="modal-body">
+		        해당 제품은 현재 <strong>판매 중지</strong> 상태입니다.<br>가격 조정이 불가능합니다.
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>			
 			<!-- FOOTER -->
 			<%@ include file="../footer.jsp" %>
 		</div>
-	</div>
-	
+	</div>	
 </body>
+<!-- Bootstrap JS (Modal 작동에 필수) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function showStoppedModal() {
+    var modal = new bootstrap.Modal(document.getElementById('stoppedModal'));
+    modal.show();
+  }
+</script>
+
 </html>

@@ -110,6 +110,7 @@
 	        p.purchase_client_code,
 	        p.purchase_status,
 	        p.purchase_perm_code,
+	        p.purchase_ipgo_date,
 	        p.purchase_refuse,
 	        p.purchase_reg_code,
 	        p.purchase_reg_date,

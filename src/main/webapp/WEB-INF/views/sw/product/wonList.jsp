@@ -32,11 +32,6 @@
             transition: all 0.3s ease-in-out;
         }
 
-        .card:hover {
-            transform: scale(1.01);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.1);
-        }
-
         .card-title {
             font-weight: 700;
             color: var(--main-brown);
@@ -147,7 +142,6 @@
                                             <ul class="product-info-list">
                                                 <li><strong>유형</strong> <span>${product.typeName}</span></li>
                                                 <li><strong>납품 여부</strong> <span>${product.isorderName}</span></li>
-                                                <li><strong>등록일</strong> <span>${product.product_reg_date}</span></li>
                                                 <li><strong>삭제 구분</strong>
                                                     <span>
                                                         <c:choose>
@@ -156,7 +150,12 @@
                                                         </c:choose>
                                                     </span>
                                                 </li>
-                                            </ul>
+                                                <li><strong>등록일</strong> 
+												    <span>
+												        <fmt:formatDate value="${product.product_reg_date}" pattern="yyyy-MM-dd" />
+												    </span>
+												</li>
+	                                            </ul>
                                             <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="mt-auto">
                                                 <input type="hidden" name="product_code" value="${product.product_code}" />
                                                 <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>

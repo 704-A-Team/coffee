@@ -11,7 +11,7 @@
 	</select>
 	
 	<select id="getClientsByProduct" parameterType="int" resultType="SWClientDto">
-		select client_code, client_name
+		select *
 		from provide p
 		join client_tb c 
 			ON p.provide_client_code = c.client_code

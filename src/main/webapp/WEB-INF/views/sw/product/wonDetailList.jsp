@@ -51,49 +51,56 @@
             color: #333;
         }
 
-        .product-img {
-            max-width: 160px;
-            max-height: 160px;
-            object-fit: contain;
+        .product-img-wrapper {
             position: absolute;
             top: 24px;
             right: 24px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .product-img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 6px;
         }
 
         .btn-brown-outline {
-		    border: 1px solid var(--main-brown) !important;
-		    color: var(--main-brown) !important;
-		    background-color: #fff !important;
-		}
-		
-		.btn-brown-outline:hover {
-		    background-color: var(--main-brown) !important;
-		    color: white !important;
-		    border-color: var(--main-brown) !important;
-		}
-		
-		.btn-brown {
-		    background-color: var(--soft-brown) !important;
-		    color: white !important;
-		    border: 1px solid var(--soft-brown) !important;
-		}
-		
-		.btn-brown:hover {
-		    background-color: var(--main-brown) !important;
-		    border-color: var(--main-brown) !important;
-		    color: white !important;
-		}
-		
-		.btn-soft-danger {
-		    background-color: var(--danger-red) !important;
-		    color: white !important;
-		    border: 1px solid var(--danger-red) !important;
-		}
-		
-		.btn-soft-danger:hover {
-		    background-color: #922d2b !important;
-		    border-color: #922d2b !important;
-		}
+            border: 1px solid var(--main-brown) !important;
+            color: var(--main-brown) !important;
+            background-color: #fff !important;
+        }
+
+        .btn-brown-outline:hover {
+            background-color: var(--main-brown) !important;
+            color: white !important;
+            border-color: var(--main-brown) !important;
+        }
+
+        .btn-brown {
+            background-color: var(--soft-brown) !important;
+            color: white !important;
+            border: 1px solid var(--soft-brown) !important;
+        }
+
+        .btn-brown:hover {
+            background-color: var(--main-brown) !important;
+            border-color: var(--main-brown) !important;
+            color: white !important;
+        }
+
+        .btn-soft-danger {
+            background-color: var(--danger-red) !important;
+            color: white !important;
+            border: 1px solid var(--danger-red) !important;
+        }
+
+        .btn-soft-danger:hover {
+            background-color: #922d2b !important;
+            border-color: #922d2b !important;
+        }
 
         @media (max-width: 768px) {
             .product-img {
@@ -118,19 +125,14 @@
 
                 <!-- 카드 -->
                 <div class="card card-product-info position-relative">
-                    <!-- 이미지 오른쪽 상단 -->
-                    <c:choose>
-                        <c:when test="${not empty wonProductDetail.wonImgList}">
-                            <img src="${pageContext.request.contextPath}/upload/${wonProductDetail.wonImgList[0].file_name}"
+                    <!-- 이미지 출력 -->
+                    <div class="product-img-wrapper">
+                        <c:forEach var="img" items="${wonProductDetail.wonImgList}">
+                            <img src="${pageContext.request.contextPath}/upload/${img.file_name}"
                                  alt="제품 이미지"
                                  class="product-img" />
-                        </c:when>
-                        <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/upload/default.png"
-                                 alt="기본 이미지"
-                                 class="product-img" />
-                        </c:otherwise>
-                    </c:choose>
+                        </c:forEach>
+                    </div>
 
                     <!-- 제품 정보 테이블 -->
                     <table class="table table-borderless mb-0">
@@ -140,23 +142,36 @@
                             <tr><th>단위</th><td>${wonProductDetail.unitName}</td></tr>
                             <tr><th>제품유형</th><td>${wonProductDetail.typeName}</td></tr>
                             <tr><th>기본 중량 (g)</th><td>${wonProductDetail.product_weight}</td></tr>
+                            <tr><th>판매 단위</th><td>${wonProductDetail.product_order_pack} ${wonProductDetail.unitName}	</td></tr>
                             <tr><th>납품 여부</th><td>${wonProductDetail.isorderName}</td></tr>
-                            <tr><th>삭제 구분</th><td>${wonProductDetail.product_isdel}</td></tr>
+                            <tr><th>삭제 구분</th>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${wonProductDetail.product_isdel == 0}">사용중</c:when>
+                                        <c:otherwise>삭제됨</c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
                             <tr><th>등록자</th><td>${wonProductDetail.regName}</td></tr>
-                            <tr><th>등록일</th><td>${wonProductDetail.product_reg_date}</td></tr>
+                            <tr><th>등록일</th>
+                                <td>
+                                    <fmt:formatDate value="${wonProductDetail.product_reg_date}" pattern="yyyy-MM-dd" />
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- 버튼들: 카드 밖, 오른쪽 정렬 -->
-                <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                    <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
-                    <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" class="btn btn-brown">수정</a>
-                    <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                        <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
-                        <button type="submit" class="btn btn-soft-danger">삭제</button>
-                    </form>
-                </div>
+			<div class="d-flex justify-content-end gap-3 mt-4 mb-5">
+			    <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" class="btn btn-brown">수정</a>
+			    <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+			        <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
+			        <button type="submit" class="btn btn-soft-danger">삭제</button>
+			    </form>
+			
+			    <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
+			</div>
             </div>
         </main>
 

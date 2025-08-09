@@ -175,9 +175,16 @@ public class SWProductServiceImpl implements SWProductService {
 
 	@Override
 	public List<ProductDto> productIsList(int product_type) {
-		log.info("ProductServiceImpl productAllList start...");
+		log.info("ProductServiceImpl productIsList start...");
 		
 		return productDao.productIsList(product_type);
+	}
+
+	@Override
+	public List<ProductDto> wonProductAllList() {
+		log.info("ProductServiceImpl wonProductAllList start...");
+		
+		return productDao.wonProductAllList();
 	}
 
 }

@@ -47,7 +47,7 @@
 			<div class="collapse" id="pch-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideList" class="link-light rounded menu-small">원재료 조회</a></li>
-				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/provide/provideInForm" class="link-light rounded menu-small">원재료 공급 등록</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseInForm" class="link-light rounded menu-small">발주 등록</a></li>
 					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/purchaseList" class="link-light rounded menu-small">입고 현황</a></li>
 				</ul>
@@ -61,11 +61,14 @@
 			</button>
 			<div class="collapse" id="mf-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductList" class="link-light rounded menu-small">제품 조회</a></li>
-				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">제품 등록</a></li>
+					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductList" class="link-light rounded menu-small">원재료 조회</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">원재료 등록</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductPriceInForm" class="link-light rounded menu-small">가격 등록</a></li>
+            <li class="mt-2"><a href="${pageContext.request.contextPath}/km/productInForm" class="link-light rounded menu-small">완제품 등록</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/km/wanList" class="link-light rounded menu-small">완제품 리스트</a></li>
-					<li class="mt-2"><a href="${pageContext.request.contextPath}/km/productInForm" class="link-light rounded menu-small">완제품 등록</a></li>
-					<li class="mt-2"><a href="${pageContext.request.contextPath}" class="link-light rounded menu-small">가격 등록</a></li>
+            <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgInForm" class="link-light rounded menu-small">생산 신청</a></li>
+					  <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgList" class="link-light rounded menu-small">생산 신청 목록</a></li>
+					
 				</ul>
 			</div>
 		</li>
@@ -83,14 +86,11 @@
 					<li class="mt-2">
   						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 현황</a>
 					</li>
-
-
 				</ul>
 			</div>
 		</li>
 
 
-		
 		<!-- 판매 메뉴 -->
 		<li class="mb-3">
 			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#order-collapse" aria-expanded="false">

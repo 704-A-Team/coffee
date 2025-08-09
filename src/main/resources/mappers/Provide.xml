@@ -134,4 +134,10 @@
 		and 	provide_client_code = #{provide_client_code}	  	
 	</select>
 	
+	<select id="getProvideByProduct" parameterType="int" resultType="ProvideDto">
+		select 	*
+		from 	provide
+		where 	product_won_code = #{product_code}
+	</select>
+	
 </mapper>

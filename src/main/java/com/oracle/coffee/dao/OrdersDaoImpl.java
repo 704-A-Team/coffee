@@ -10,6 +10,7 @@ import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
+import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -80,9 +81,9 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	@Override
-	public void updateOrdersStatus(OrdersDto order) {
+	public void requestOrders(OrdersDto order) {
 		try {
-			session.update("updateOrdersStatus", order);
+			session.update("requestOrders", order);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -134,6 +135,15 @@ public class OrdersDaoImpl implements OrdersDao {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public void refuseOrders(OrdersDto order) {
+		try {
+			session.update("refuseOrders", order);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
