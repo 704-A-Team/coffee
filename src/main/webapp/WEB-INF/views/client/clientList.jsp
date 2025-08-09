@@ -46,7 +46,7 @@
                     <div class="col-2">대표자명</div>
                     <!-- <div class="col-2">담당 사원</div> -->
                     <div class="col-2">전화번호</div>
-					<div class="col-2">등록일</div>
+               <div class="col-2">등록일</div>
                 </div>
 
                 <!-- Data List -->
@@ -56,8 +56,8 @@
                             <div class="row py-2 border-bottom list-item-row text-center">
                                 <%-- <div class="col-1">${clientDto.client_code}</div> --%>
                                <div class="col-1">
-								    ${clientDto.client_type_br}
-								</div>
+                            ${clientDto.client_type_br}
+                        </div>
                                 <div class="col-3">${clientDto.client_name}</div>
                                 <div class="col-1">
                                     <c:choose>
