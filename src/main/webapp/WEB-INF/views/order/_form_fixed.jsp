@@ -18,7 +18,24 @@
     	<div class="flex-fill pe-3">
     		<div class="mb-2 d-flex">
 				<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">상태</label>
-   				<div class="form-control form-control-sm bg-light">${order.cd_contents }</div>
+				<c:if test="${order.order_status == 0}">
+					<div class="form-control form-control-sm bg-secondary-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 1}">
+					<div class="form-control form-control-sm bg-primary-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 2}">
+					<div class="form-control form-control-sm bg-danger">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 3}">
+					<div class="form-control form-control-sm bg-warning">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 4}">
+					<div class="form-control form-control-sm bg-success-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 5}">
+					<div class="form-control form-control-sm bg-danger-subtle">${order.cd_contents }</div>
+				</c:if>
 		    </div>
     		<div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">등록 코드</label>
@@ -86,10 +103,10 @@
 	  	<div id="item-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
 			    <div class="col-2">품목명</div>
-			    <div class="col-2">단가</div>
+			    <div class="col-2">단가(원)</div>
 			    <div class="col-2">수량</div>
 			    <div class="col-1">단위</div>
-			    <div class="col-2">공급가액</div>
+			    <div class="col-2">공급가액(원)</div>
 			    <div class="col-2">납기일</div>
 			    <div class="col-1">상태</div>
 			</div>
@@ -117,7 +134,8 @@
 					<div class="form-control form-control-sm bg-light prd-total-price">${rowTotalPrice}</div>
 				</div>
 				<div class="col-2">
-					<div class="form-control form-control-sm bg-light">${detail.order_ddate }</div>
+					<fmt:parseDate var="parsedDate" value="${detail.order_ddate }" pattern="yyyyMMdd" />
+					<div class="form-control form-control-sm bg-light"><fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd" /></div>
 				</div>
 				<div class="col-1">
 				<c:choose>

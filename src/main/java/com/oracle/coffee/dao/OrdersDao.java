@@ -22,5 +22,5 @@ public interface OrdersDao {
 	int totalCount(int clientCode);
 	List<OrdersListDto> list(OrdersPageDto page);
 	void refuseOrders(OrdersDto order);
-	void updateOrdersFinalPrice(OrdersDto order);
+	void approveOrders(OrdersDto order);
 }

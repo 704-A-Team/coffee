@@ -70,15 +70,6 @@ public class OrdersDaoImpl implements OrdersDao {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public void updateOrdersFinalPrice(OrdersDto order) {
-		try {
-			session.update("updateOrdersFinalPrice", order);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void deleteOrdersDetails(int orderCode) {
@@ -150,6 +141,15 @@ public class OrdersDaoImpl implements OrdersDao {
 	public void refuseOrders(OrdersDto order) {
 		try {
 			session.update("refuseOrders", order);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void approveOrders(OrdersDto order) {
+		try {
+			session.update("approveOrders", order);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

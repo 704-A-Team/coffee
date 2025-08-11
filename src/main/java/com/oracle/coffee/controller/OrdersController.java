@@ -168,7 +168,8 @@ public class OrdersController {
 	public String approve(@PathVariable("order_code") int orderCode) {
 		// 로그인한 본사직원 정보 조회
 		// 권한 확인
-		ordersService.approve(orderCode);
+		int loginEmpCode = 2003;
+		ordersService.approve(loginEmpCode, orderCode);
 		return "redirect:/order/" + orderCode;
 	}
 }

@@ -1,5 +1,11 @@
 package com.oracle.coffee.dto.orders;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +30,21 @@ public class OrdersDetailDto {
 	private int product_unit;		// 단위 (ea, g, ml)
 	
 	// product_price 테이블
-	private int price;				// 현재 가격
+	private BigDecimal price;				// 현재 가격
 	
 	private boolean can_order;		// "수주 요청 전" 발주 가능 여부
+	
+	public void setOrder_ddate(String order_ddate) {
+		
+		if (order_ddate != null && !order_ddate.isEmpty()) {
+			if (order_ddate.matches("\\d{8}")) {
+				this.order_ddate = order_ddate;
+			} else {
+				LocalDate date = LocalDate.parse(order_ddate);
+		        this.order_ddate = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			}
+		} else {
+	        this.order_ddate = null;
+	    }
+	}
 }

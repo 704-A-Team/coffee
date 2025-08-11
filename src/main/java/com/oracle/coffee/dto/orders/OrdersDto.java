@@ -1,6 +1,7 @@
 
 package com.oracle.coffee.dto.orders;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public class OrdersDto {
 	private String order_refuse;
 	private int order_status;
 	private LocalDateTime order_reg_date;
-	private int order_final_price;
+	private BigDecimal order_final_price;
 	private LocalDateTime order_req_date;	// 수주 요청 시간
 	private LocalDateTime order_confirmed_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
@@ -29,10 +30,12 @@ public class OrdersDto {
 	// bunryu 테이블
 	private String cd_contents;		// 상태 내용
 	
-	public int calculateTotalPrice() {
-		int total = 0;
+	public BigDecimal calculateTotalPrice() {
+		BigDecimal total = BigDecimal.ZERO;
 		for(OrdersDetailDto detail : orders_details) {
-			total += detail.getPrice() * detail.getOrder_amount();
+			total = total.add(
+						detail.getPrice().multiply(new BigDecimal(detail.getOrder_amount()))
+					);
 		}
 		return total;
 	}

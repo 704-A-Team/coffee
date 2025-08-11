@@ -12,6 +12,15 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+
+	function toDateString(date_str)
+	{
+	    var yyyyMMdd = String(date_str);
+	    var sYear = yyyyMMdd.substring(0,4);
+	    var sMonth = yyyyMMdd.substring(4,6);
+	    var sDate = yyyyMMdd.substring(6,8);
+	    return sYear + "-" + sMonth + "-" + sDate;
+	}
 	
 	function getDetails() {
 		return [
@@ -19,7 +28,8 @@
 				{
 					product_code: "${detail.product_code}",
 					order_amount: "${detail.order_amount}",
-					order_ddate: "${detail.order_ddate}", // yyyy-MM-dd
+					
+					order_ddate: toDateString("${detail.order_ddate}"), // yyyy-MM-dd
 					
 					product_name: "${detail.product_name} (${detail.product_code})",
 					product_order_pack: "${detail.product_order_pack}",
@@ -44,8 +54,18 @@
     		}
     		
     		// 선택한 제품에 따라 unit, price 자동 추가
-    		$('#item-list').on("change", '.prd-code', function () {
+    		$('#item-list').on("change", '.prd-code', function (e) {
     			const $row = $(this).closest('.row');
+    			// prd 중복 선택 방지
+    			var existedCodes = $('#item-list .prd-code').map(function() {
+    									return $(this).val();
+								   }).get();
+    			const currentCode = $(this).val();
+    			if(currentCode && existedCodes.filter(v => v === currentCode).length > 1) {
+    				alert("중복된 제품이 선택되었습니다");
+    				return;
+    			}
+    			
     		    // 가격 조정
     			const price = $(this).find("option:selected").attr("price");
     		    $row.find(".prd-price").text(price);
@@ -102,11 +122,11 @@
     	    	
     	    	// 오늘 기준 3일 뒤
     	    	const minDate = new Date();
-    	    	minDate.setDate((new Date()).getDate() + 3);
+    	    	minDate.setDate((new Date()).getDate() + 2);
     	    	minDate.setHours(0,0,0,0);
     	    	
     	    	if (ddate < minDate) {
-    	            alert("오늘로부터 3일 이후 날짜만 선택할 수 있습니다.");
+    	            alert("오늘로부터 2일 이후 날짜만 선택할 수 있습니다.");
     	            $(this).val("");  // 날짜 초기화
     	        }
     	    });
@@ -128,20 +148,20 @@
 			</c:forEach>
 		    </select>
 	      </div>
-	      <div class="col-1">
-	        <div class="form-control form-control-sm bg-light prd-unit" placeholder="단위"></div>
+	      <div class="col-2">
+	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단위"></div>
 	      </div>
 	      <div class="col-2">
 	        <input type="number" min="1" step="1" class="form-control form-control-sm prd-count" required placeholder="수량">
 	      </div>
-	      <div class="col-2">
-	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단가">0</div>
+	      <div class="col-1">
+	        <div class="form-control form-control-sm bg-light prd-unit" placeholder="단가">0</div>
 	      </div>
 	      <div class="col-2">
 	        <div class="form-control form-control-sm bg-light prd-total-price" placeholder="총액">0</div>
 	      </div>
 	      <div class="col-2">
-	        <input type="date" class="form-control form-control-sm prd-ddate" required placeholder="납기일">
+	        <input type="date" class="form-control form-control-sm prd-ddate" pattern="YYYYMMDD" required placeholder="납기일">
 	      </div>
 	      
 	      <div class="col-1 text-end pe-0">
@@ -167,7 +187,8 @@
 	  				nameInput.append(deletedOption)
 				} else $(nameInput).val(detail.product_code);
 	        }
-	        if (unitInput) $(unitInput).val(detail.product_order_pack + " " + detail.product_unit);
+ 	       	const prdOrderUnit = detail.product_order_pack + " " + detail.product_unit;
+	        if (unitInput) $(unitInput).text(prdOrderUnit);
 	        if (countInput) {
 	        	$(countInput).val(detail.order_amount ?? 0);
 	        	$(countInput).attr('min', detail.product_order_pack);
@@ -189,7 +210,7 @@
 	    });
 	}
 	
-	// form submit전 제품 목록 리스트 생성 (payload)
+	// form submit (/save)전 제품 목록 리스트 생성 (payload)
 	function setOrderDetails(orderCode) {
 		const rows = document.querySelectorAll('#item-list .item-list-item');
 		const detailsContainer = document.getElementById('ordersDetails');

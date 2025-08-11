@@ -36,7 +36,6 @@ public class OrdersServiceImpl implements OrdersService {
 		// 수주 정보 저장
 		int orderCode = 0;
 		List<OrdersDetailDto> details = order.getOrders_details();
-		
 		// create
 		if (order.getOrder_code() == 0) {	
 			// orders 생성
@@ -58,9 +57,6 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		// ordersDetail 추가
 		ordersDao.createOrdersDetails(details);		
-		// 예상 총액 저장
-		order.setOrder_final_price(order.calculateTotalPrice());
-		ordersDao.updateOrdersFinalPrice(order);
 		return orderCode;
 	}
 
@@ -79,48 +75,71 @@ public class OrdersServiceImpl implements OrdersService {
 		int targetStatus = 1;
 		order.setOrder_status(targetStatus);
 		ordersDao.requestOrders(order);
+		
+		// 자동 승인 (background)
+		// autoApprove(orderCode);
 	}
 
-	private boolean checkToApprove(OrdersDto order, boolean isAuto) {
+	private boolean approveOrdersDetails(OrdersDto order, boolean isAuto) {
 		boolean result = true;
 		// 1. 총 금액 확인
+		if (isAuto) {}
 		
 		// 2. 재고 모자라면 승인 불가
-		List<OrdersDetailDto> details = order.getOrders_details();
-		for (OrdersDetailDto detail : details) {
-			if (detail.getOrder_amount() < 0) continue;
-			else {
-				if (isAuto) {
-					// 원재료 발주 신청 OR 완재품 생산 신청
-				}
-				result = false;
-			}
-		}
+		List<Integer> orderedPrdCodes = order.getOrders_details().stream()
+															  .map(detail -> detail.getProduct_code())
+															  .toList();
+//		List<Integer> approvedPrdCodes = ordersDao.approveOrdersDetails(order.getOrder_code());
+//		
+//		// 프로시저에서 return된 approvedPrdCodes가 details와 다른 경우: 수주 승인 안됨
+		// 모든 제품이 재고가 있으면 프로시저에서 이미 "출고예정"으로 변경됨
+//		for (int ordered: orderedPrdCodes) {
+//			if (approvedPrdCodes.contains(ordered)) continue;
+//			else {
+//				if (isAuto) {
+//					// 원재료 발주 신청 OR 완재품 생산 신청 (background)
+//				}
+//				result = false;
+//			}
+//		}
 		
 		return result;
 	}
 	
-	private boolean autoApprove(int orderCode) {
-		boolean result = false;
-		
+	private void autoApprove(int orderCode) {
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		
 		// 재고 없으면 자동 승인 불가
 		// => 자동 원재료 신청
 		// => 자동 생산 신청
-		return result;
+		boolean isConfirm = approveOrdersDetails(order, true);
+		if (isConfirm) {
+			int targetStatus = 4;
+			order.setOrder_status(targetStatus);
+			int systemUserCode = 2999;
+			order.setOrders_perm_code(systemUserCode);	// system
+
+			// 승인 당시 총액
+			order.setOrder_final_price(order.calculateTotalPrice());
+			ordersDao.approveOrders(order);
+		}
 	}
 
 	@Override
-	public void approve(int orderCode) {
+	public void approve(int approverCode, int orderCode) {
 		// 수주 승인 상태(4)로 변경 (요청 상태에서 가능)
 		// 수주 상세 출고예정(1) 상태로 변경
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		
-		boolean isConfirm = checkToApprove(order, false);
+		boolean isConfirm = approveOrdersDetails(order, false);
 		if (isConfirm) {
 			int targetStatus = 4;
-			// 
+			order.setOrder_status(targetStatus);
+			order.setOrders_perm_code(approverCode);
+
+			// 승인 당시 총액
+			order.setOrder_final_price(order.calculateTotalPrice());
+			ordersDao.approveOrders(order);
 		}
 	}
 
