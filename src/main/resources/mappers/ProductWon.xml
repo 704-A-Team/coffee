@@ -191,4 +191,5 @@
 		where product_type = 0
 	</select>
 	
+	
 </mapper>

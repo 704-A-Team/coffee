@@ -78,7 +78,7 @@
                 <form action="${pageContext.request.contextPath}/sw/purchaseList" method="get" class="row g-2 mb-4">
                     <input type="hidden" name="searchType" value="productName" />
                     <div class="col-md-9">
-                        <input type="text" name="searchKeyword" value="${param.searchKeyword}" class="form-control" placeholder="제품명을 입력하세요" />
+                        <input type="text" name="searchKeyword" value="${param.searchKeyword}" class="form-control" placeholder="거래처명을 입력하세요" />
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-brown w-100">검색</button>
@@ -96,9 +96,11 @@
                 <table class="table table-bordered align-middle text-center bg-white shadow-sm">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 30%;">제품명</th>
-                            <th style="width: 20%;">거래처</th>
-                            <th style="width: 20%;">상태</th>
+                            <th style="width: 10%;">등록코드</th>
+                            <th style="width: 20%;">거래처명</th>
+                            <th style="width: 10%;">총액</th>
+                            <th style="width: 10%;">상태</th>
+                            <th style="width: 10%;">요청자</th>
                             <th style="width: 20%;">등록일</th>
                             <th style="width: 10%;">상세</th>
                         </tr>
@@ -106,9 +108,13 @@
                     <tbody>
                         <c:forEach var="purchase" items="${purchaseList}">
                             <tr>
-                                <td>${purchase.productName}</td>
-                                <td>${purchase.clientName}</td>
+                            	<td>${purchase.purchase_code}</td>
+                            	<td>${purchase.clientName}</td>
+                                <td>
+                                	<fmt:formatNumber value="${purchase.totalPrice}" pattern="#,###"/>
+                                </td>
                                 <td>${purchase.statusName}</td>
+                                <td>${purchase.empRegName}</td>
                                 <td>
                                     <fmt:formatDate value="${purchase.purchase_reg_date}" pattern="yyyy-MM-dd HH:mm" />
                                 </td>

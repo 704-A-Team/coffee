@@ -17,13 +17,14 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 	private final SWPurchaseDao		swPurchaseDao;
 
 	@Override
-	public int purchaseSave(PurchaseDto purchaseDto) {
+	public int purchaseSave(List<PurchaseDto> purchaseDtoList) {
 		System.out.println("SWPurchaseServiceImpl purchaseSave start...");
 		
-		int purchase_result = swPurchaseDao.purchaseSave(purchaseDto);
+		int purchase_result = swPurchaseDao.purchaseSave(purchaseDtoList);
 		
 		return purchase_result;
 	}
+	
 	@Override
 	public int totalPurchaseCnt(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl totalPurchaseCnt start...");

@@ -38,7 +38,7 @@ public class PurchaseDto {
 	private int 		provideAmount;
 	private String		empPermName;
 	private String		empRegName;
-	//private int			totalPrice = purchase_danga*provideAmount/purchase_amount;
+	private int			totalPrice;
 	
 	private String 		searchType;
 	private String 		searchKeyword;

@@ -20,19 +20,20 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	private final SqlSession 	session;
 
 	@Override
-	public int purchaseSave(PurchaseDto purchaseDto) {
+	public int purchaseSave(List<PurchaseDto> purchaseDtoList) {
 		System.out.println("SWPurchaseDaoImpl purchaseSave start...");
 		
-		System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto : " + purchaseDto);
+		System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDtoList : " + purchaseDtoList);
 		int purchase_result = 0;
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
-			purchase_result = session.insert("purchaseSave", purchaseDto);
-			System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto->"+purchaseDto);
-				
-			session.insert("purchaseDetailSave", purchaseDto);
-				
+			for(PurchaseDto dto : purchaseDtoList) {
+				purchase_result = session.insert("purchaseSave", dto);
+				System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto-> " + dto);
+					
+				session.insert("purchaseDetailSave", dto);
+			}
 			transactionManager.commit(txStatus);
 			purchase_result = 1;
 		} catch (Exception e) {
