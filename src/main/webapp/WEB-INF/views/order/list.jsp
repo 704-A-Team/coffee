@@ -16,7 +16,6 @@
 		<%@ include file="../sidebar.jsp" %>
 		
 		<div class="d-flex flex-column flex-grow-1">
-			
 			<!-- 본문 -->
 			<main>
     			<%@ include file="_list.jsp" %>
