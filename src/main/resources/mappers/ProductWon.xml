@@ -59,18 +59,27 @@
 	                bu.cd_contents as unitName,
 	                bt.cd_contents as typeName,
 	                bi.cd_contents as isorderName,
-	                img.file_name  as simage
+	                img.file_name  as simage,
+	                pp.price	   as price
 	            from product p
 	            left join bunryu bu 
-	                ON p.product_unit = bu.mcd and bu.bcd = 750
+	                ON p.product_unit 		= bu.mcd and bu.bcd = 750
 	            left join bunryu bt 
-	                ON p.product_type = bt.mcd and bt.bcd = 700
+	                ON p.product_type 		= bt.mcd and bt.bcd = 700
 	            left join bunryu bi 
-	                ON p.product_isorder = bi.mcd and bi.bcd = 800
+	                ON p.product_isorder 	= bi.mcd and bi.bcd = 800
 	            left join (select * 
 	            		   from product_img 
 	            		   where ord = 0) img
-	            	ON p.product_code = img.product_code
+	            	ON p.product_code 		= img.product_code
+	            left join (
+			        		select 	product_code, MAX(start_date) as max_start_date
+			        		from 	product_price
+					        group 	by product_code
+					      ) pm
+			        ON pm.product_code 		= p.product_code
+			    left join product_price pp
+			        ON pp.product_code 		= p.product_code and pp.start_date = pm.max_start_date
 	            where p.product_type = 0
 	            <if test="searchKeyword != null and searchKeyword != ''">
 	                and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
@@ -86,17 +95,26 @@
 	            bu.cd_contents as unitName,
 	            bt.cd_contents as typeName,
 	            bi.cd_contents as isorderName,
-	            e.emp_name	   as regName
+	            e.emp_name	   as regName,
+	            pp.price	   as price
 	   	from 	product p
 	    left join bunryu bu 
-	    	ON p.product_unit = bu.mcd 		and bu.bcd = 750
+	    	ON p.product_unit 		= bu.mcd 		and bu.bcd = 750
 	    left join bunryu bt 
-	    	ON p.product_type = bt.mcd 		and bt.bcd = 700
+	    	ON p.product_type 		= bt.mcd 		and bt.bcd = 700
 	    left join bunryu bi 
-	    	ON p.product_isorder = bi.mcd 	and bi.bcd = 800
+	    	ON p.product_isorder 	= bi.mcd 	and bi.bcd = 800
     	left join emp e
-    		ON p.product_reg_code = e.emp_code
-	    where product_code = #{product_code}
+    		ON p.product_reg_code 	= e.emp_code
+    	left join (
+	        		select 	product_code, MAX(start_date) as max_start_date
+	        		from 	product_price
+			        group 	by product_code
+			      ) pm
+	        ON pm.product_code 		= p.product_code
+		left join product_price pp
+	        ON pp.product_code 		= p.product_code and pp.start_date = pm.max_start_date
+	    where p.product_code = #{product_code}
 	</select>
 	
 	<select id="wonProductImgList" parameterType="int" resultType="ProductImgDTO">
@@ -172,5 +190,6 @@
 		from product
 		where product_type = 0
 	</select>
+	
 	
 </mapper>

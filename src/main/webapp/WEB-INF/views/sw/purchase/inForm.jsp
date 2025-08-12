@@ -1,233 +1,491 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>발주 등록</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>발주 등록</title>
 
-    <!-- jQuery 먼저 로드 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 
-    <!-- Select2 CSS/JS (jQuery 다음에 위치해야 함) -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <style>
-        :root {
-            --main-brown: #6f4e37;
-            --light-brown: #e6d3c1;
-            --dark-brown: #4e342e;
-            --soft-brown: #bfa08e;
-        }
+<!-- Select2 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
+<script
+	src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-        body {
-            background-color: #f9f5f1;
-        }
+<style>
+:root {
+	--main-brown: #6f4e37;
+	--light-brown: #e6d3c1;
+	--dark-brown: #4e342e;
+	--soft-brown: #bfa08e;
+}
 
-        .form-section-title {
-            border-left: 5px solid var(--main-brown);
-            padding-left: 12px;
-            margin-bottom: 24px;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: var(--dark-brown);
-        }
+body {
+	background-color: #f9f5f1;
+}
 
-        .btn-brown {
-            background-color: white !important;
-            color: var(--main-brown) !important;
-            border: 1px solid var(--main-brown) !important;
-            transition: 0.2s;
-        }
+.form-section-title {
+	border-left: 5px solid var(--main-brown);
+	padding-left: 12px;
+	margin-bottom: 16px;
+	font-weight: 700;
+	font-size: 1.6rem;
+	color: var(--dark-brown);
+}
 
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+.card-form {
+	background: #fff;
+	padding: 16px;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, .05);
+	height: 100%;
+}
 
-        .btn-brown-outline {
-            background-color: transparent !important;
-            color: var(--main-brown) !important;
-            border: 1px solid var(--main-brown) !important;
-            transition: 0.2s;
-        }
+.btn-brown {
+	background-color: #fff !important;
+	color: var(--main-brown) !important;
+	border: 1px solid var(--main-brown) !important;
+	transition: .2s;
+}
 
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+.btn-brown:hover {
+	background-color: var(--main-brown) !important;
+	color: #fff !important;
+}
 
-        .btn-secondary-custom {
-            background-color: #eee !important;
-            color: #333 !important;
-            border: 1px solid #ccc !important;
-        }
+.btn-brown-outline {
+	background-color: transparent !important;
+	color: var(--main-brown) !important;
+	border: 1px solid var(--main-brown) !important;
+	transition: .2s;
+}
 
-        .btn-secondary-custom:hover {
-            background-color: #ccc !important;
-        }
-        
-        /* Select2 드롭다운 높이 & hover 색상 커스터마이징 */
-        .select2-results__options {
-            max-height: 400px !important;
-        }
+.btn-brown-outline:hover {
+	background-color: var(--main-brown) !important;
+	color: #fff !important;
+}
 
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-        }
-    </style>
+.btn-secondary-custom {
+	background-color: #eee !important;
+	color: #333 !important;
+	border: 1px solid #ccc !important;
+}
+
+.btn-secondary-custom:hover {
+	background-color: #ccc !important;
+}
+
+/* Select2 드롭다운 */
+.select2-results__options {
+	max-height: 400px !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected]
+	{
+	background-color: var(--soft-brown) !important;
+	color: #fff !important;
+}
+
+/* 상단 35% / 하단 65% */
+.pane-top {
+	height: 35vh;
+	overflow: auto;
+}
+
+.pane-bottom {
+	height: 65vh;
+	overflow: auto;
+}
+
+#provider-list {
+	max-height: 170px; /* 원하는 높이로 조절 */
+	overflow-y: auto;
+}
+
+.pane-bottom {
+	height: auto;
+	overflow: visible;
+}
+</style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<%@ include file="../../header.jsp" %>
+	<%@ include file="../../header.jsp"%>
 
-<div class="d-flex flex-grow-1">
-    <%@ include file="../../sidebar.jsp" %>
+	<div class="d-flex flex-grow-1">
+		<%@ include file="../../sidebar.jsp"%>
 
-    <div class="d-flex flex-column flex-grow-1">
-        <main class="flex-grow-1 p-4">
-            <div class="container mt-3">
-                <div class="form-section-title">발주 등록</div>
+		<div class="d-flex flex-column flex-grow-1">
+			<main class="flex-grow-1 p-3">
+				<div class="container-fluid">
+					<form action="${pageContext.request.contextPath}/sw/purchaseSave"
+						method="post" id="purchaseForm">
 
-                <form action="${pageContext.request.contextPath}/sw/purchaseSave" method="post">
-                    <!-- 제품 선택 -->
-                    <div class="mb-3">
-                        <label for="product_won_code" class="form-label">제품</label>
-                        <select id="product_won_code" name="product_won_code" class="form-select" required>
-                            <option value="">-- 제품을 선택하세요 --</option>
-                            <c:forEach var="product" items="${productIsList}">
-                                <option value="${product.product_code}">${product.product_name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
+						<!-- 상단: 35% -->
+						<div class="pane-top mb-2">
+							<div class="card-form">
+								<div class="form-section-title">제품 검색</div>
 
-                    <!-- 거래처 선택 -->
-                    <div class="mb-3">
-                        <label for="purchase_client_code" class="form-label">거래처명</label>
-                        <select id="purchase_client_code" name="purchase_client_code" class="form-select" required>
-                            <option value="">-- 거래처를 선택하세요 --</option>
-                        </select>
-                    </div>
+								<select id="product_code" name="product_code"
+									class="form-select">
+									<option value="">-- 제품을 선택하세요 --</option>
+									<c:forEach var="product" items="${productIsList}">
+										<option value="${product.product_code}">${product.product_name}</option>
+									</c:forEach>
+								</select>
 
-                    <!-- 수량 입력 -->
-                    <div class="mb-3">
-                        <label for="purchase_amount" class="form-label">발주 수량 (ea, g, ml)</label>
-                        <select id="purchase_amount" name="purchase_amount" class="form-select" required>
-                            <option value="">-- 선택 --</option>
-                        </select>
-                    </div>
+								<div class="mt-2">
+									<div class="small text-muted">이 제품을 공급하는 거래처</div>
+									<ul id="provider-list" class="list-group mt-1"
+										style="max-height: 170px; overflow-y: auto;"></ul>
+								</div>
+							</div>
+						</div>
 
-                    <input type="hidden" id="purchase_danga" name="purchase_danga" />
+						<!-- 하단: 65% -->
+						<div class="pane-bottom">
+							<!-- 발주 등록 카드폼 -->
+							<div class="card-form d-flex flex-column">
+								<div class="form-section-title">발주 등록</div>
 
-                    <!-- 총 금액 -->
-                    <div class="mb-4">
-                        <label for="total_price" class="form-label">총 금액 (₩)</label>
-                        <input type="text" class="form-control" id="total_price" readonly>
-                    </div>
+								<!-- 발주 행들이 들어갈 영역 -->
+								<div id="purchase-rows">
+									<div class="row g-3 align-items-end mb-2 purchase-row">
+										<!-- 거래처 선택 -->
+										<div class="col-md-2">
+											<label class="form-label">거래처</label> <select
+												name="purchase_client_code[]" class="form-select js-client"
+												required>
+												<option value="">-- 선택 --</option>
+												<c:forEach var="client" items="${clientIsList}">
+													<option value="${client.client_code}">${client.client_name}</option>
+												</c:forEach>
+											</select>
+										</div>
 
-                    <!-- 버튼 -->
-                    <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">등록</button>
-                        <button type="reset" class="btn btn-secondary-custom">초기화</button>
-                        <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
-                    </div>
-                </form>
-            </div>
-        </main>
+										<!-- 제품 선택(해당 거래처가 공급하는 제품) -->
+										<div class="col-md-2">
+											<label class="form-label">제품</label> <select
+												name="product_won_code[]" class="form-select js-product"
+												required>
+												<option value="">-- 선택 --</option>
+											</select>
+										</div>
 
-        <%@ include file="../../footer.jsp" %>
-    </div>
-</div>
+										<!-- 공급 단위(표시만) -->
+										<div class="col-md-1">
+											<label class="form-label">공급 단위</label> <input type="text"
+												class="form-control js-provide-amount-view"
+												placeholder="자동 입력" readonly>
+										</div>
 
-<script>
-    function numberWithCommas(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+										<!-- 단가(표시 + hidden 전송) -->
+										<div class="col-md-1">
+											<label class="form-label">단가</label> <input type="text"
+												class="form-control js-current-danga-view"
+												placeholder="자동 입력" readonly> <input type="hidden"
+												name="purchase_danga[]" class="js-purchase-danga">
+										</div>
 
-    $(document).ready(function () {
-        console.log("product_won_code 존재 여부:", $('#product_won_code').length);
+										<!-- 수량(배수) -->
+										<div class="col-md-2">
+											<label class="form-label">수량</label> <select
+												name="purchase_amount[]" class="form-select js-qty" required>
+												<option value="">-- 선택 --</option>
+											</select>
+										</div>
 
-        $('#product_won_code').select2({
-            placeholder: '제품명을 선택하거나 검색하세요',
-            minimumInputLength: 0,
-            width: '100%',
-            language: {
-                noResults: function () {
-                    return "일치하는 제품이 없습니다";
-                }
+										<!-- 총 금액 -->
+										<div class="col-md-2">
+											<label class="form-label">총 금액 (₩)</label> <input type="text"
+												class="form-control js-total" name="total_price[]" readonly>
+										</div>
+
+										<!-- 행 삭제 -->
+										<div class="col-md-2 d-grid">
+											<button type="button"
+												class="btn btn-outline-danger btn-remove">삭제</button>
+										</div>
+									</div>
+								</div>
+
+								<!-- 카드폼 안 왼쪽 하단 +추가 버튼 -->
+								<div class="mt-2">
+									<button type="button" id="btn-add-row" class="btn btn-success">+
+										추가</button>
+								</div>
+							</div>
+
+							<!-- 카드폼 밖 버튼 -->
+							<div class="d-flex justify-content-end gap-2 mt-3">
+								<button type="submit" class="btn btn-brown">등록</button>
+								<button type="reset" class="btn btn-secondary-custom">초기화</button>
+								<a href="${pageContext.request.contextPath}/sw/purchaseList"
+									class="btn btn-brown-outline">목록</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</main>
+
+			<%@ include file="../../footer.jsp"%>
+		</div>
+	</div>
+
+	<script>
+    $(function () {
+      /* ====== 상단 제품 → 공급 거래처 목록 ====== */
+      $('#product_code').select2({
+        placeholder: '제품명을 선택하거나 검색하세요',
+        minimumInputLength: 0,
+        width: '100%',
+        language: { noResults: () => "일치하는 제품이 없습니다" }
+      });
+
+      $('#product_code').on('change', function () {
+        const ajax_product_code = $(this).val();
+        const $list = $('#provider-list').empty();
+        if (!ajax_product_code) return;
+
+        $.getJSON('${pageContext.request.contextPath}/sw/getClientsByProduct', { product_code: ajax_product_code })
+          .done(list => {
+            if (!list || list.length === 0) {
+              $list.append('<li class="list-group-item text-muted">거래처가 없습니다</li>');
+              return;
             }
-        });
+            list.forEach(c => $list.append('<li class="list-group-item">' + c.client_name + '</li>'));
+          })
+          .fail(xhr => {
+            console.error(xhr.responseText);
+            $list.append('<li class="list-group-item text-danger">조회 실패</li>');
+          });
+      });
 
-        $('#product_won_code').on('select2:select', function () {
-            var ajax_product_code = $(this).val();
-            var $ajax_clientSelect = $('#purchase_client_code');
+      /* ====== 유틸 ====== */
+      const fmt = n => n.toLocaleString();
 
-            if (!ajax_product_code) {
-                $ajax_clientSelect.html('<option value="">-- 거래처를 선택하세요 --</option>');
-                return;
+      function resetRow($row) {
+        $row.find('.js-product').empty().append('<option value="">-- 선택 --</option>');
+        $row.find('.js-provide-amount-view').val('');
+        $row.find('.js-current-danga-view').val('');
+        $row.find('.js-purchase-danga').val('');
+        $row.find('.js-qty').empty().append('<option value="">-- 선택 --</option>');
+        $row.find('.js-total').val('');
+      }
+
+      function fillQty($row, provideAmount, max = 50) {
+        const $qty = $row.find('.js-qty').empty().append('<option value="">-- 선택 --</option>');
+        for (let i = 1; i <= max; i++) {
+          const totalAmount = provideAmount * i * 10;
+          $qty.append('<option value="' + totalAmount + '">' + totalAmount + '</option>');
+        }
+      }
+
+      function recalcTotal($row) {
+        const qty = Number($row.find('.js-qty').val() || 0);                    // 선택한 수량(총 수량)
+        const danga = Number($row.find('.js-purchase-danga').val() || 0);        // 공급단위 1묶음 가격
+        const provideAmount = Number($row.find('.js-provide-amount-view').data('amount') || 0); // 공급단위 수량
+
+        if (!qty || !danga || !provideAmount) {
+          $row.find('.js-total').val('');
+          return;
+        }
+
+        const total = (danga / provideAmount) * qty;
+        $row.find('.js-total').val(fmt(total));
+      }
+
+      function loadProductsForClient($row, clientCode, onDone) {
+    	  resetRow($row);
+    	  if (!clientCode) { if (onDone) onDone(); updateProductOptions(); return; }
+
+    	  $.getJSON(
+    	    '${pageContext.request.contextPath}/sw/getProductsByClient',
+    	    { provide_client_code: clientCode }
+    	  )
+    	    .done(list => {
+    	      const $prod = $row.find('.js-product').empty().append('<option value="">-- 선택 --</option>');
+    	      if (!list || list.length === 0) {
+    	        $prod.append('<option value="">-- 공급 제품 없음 --</option>');
+    	      } else {
+    	        list.forEach(item => {
+    	          $prod.append($('<option>').val(item.product_won_code).text(item.productName));
+    	        });
+    	      }
+    	      if (onDone) onDone();
+    	      updateProductOptions();
+    	    })
+    	    .fail(xhr => {
+    	      console.error('getProductsByClient:', xhr.responseText);
+    	      $row.find('.js-product').append('<option value="">-- 조회 실패 --</option>');
+    	      if (onDone) onDone();
+    	      updateProductOptions();
+    	    });
+    	}
+
+      
+      /* ====== 중복 방지: 이미 선택된 제품은 다른 행에서 비활성화 ====== */
+      function updateProductOptions() {
+        const selected = $('.js-product').map(function () {
+          return $(this).val() || '';
+        }).get().filter(v => v !== '');
+
+        $('.js-product').each(function () {
+          const currentVal = $(this).val();
+          $(this).find('option').each(function () {
+            const val = $(this).val();
+            if (val !== '' && val !== currentVal && selected.includes(val)) {
+              $(this).prop('disabled', true);
+            } else {
+              $(this).prop('disabled', false);
             }
-
-            $.ajax({
-                url: '${pageContext.request.contextPath}/sw/getClientsByProduct',
-                type: 'GET',
-                data: { product_code: ajax_product_code },
-                success: function (clients) {
-                    $ajax_clientSelect.empty().append('<option value="">-- 거래처를 선택하세요 --</option>');
-                    if (!clients || clients.length === 0) {
-                        alert('해당 제품의 원재료를 공급하는 거래처가 없습니다. 원재료 공급 등록부터 해주세요');
-                        return;
-                    }
-                    $.each(clients, function (i, client) {
-                        $ajax_clientSelect.append('<option value="' + client.client_code + '">' + client.client_name + '</option>');
-                    });
-                }
-            });
+          });
         });
+      }
 
-        $('#purchase_client_code').change(function () {
-            const ajax_client_code = $(this).val();
-            const ajax_product_code = $('#product_won_code').val();
+      /* ====== 거래처 선택 → 해당 거래처가 공급하는 제품 목록 채우기 ====== */
+      $(document).on('change', '.js-client', function () {
+        const $row = $(this).closest('.purchase-row');
+        const clientCode = $(this).val();
 
-            if (!ajax_client_code || !ajax_product_code) return;
+        loadProductsForClient($row, clientCode);
 
-            $.ajax({
-                url: '${pageContext.request.contextPath}/sw/getProvideInfo',
-                type: 'GET',
-                data: {
-                    product_won_code: ajax_product_code,
-                    provide_client_code: ajax_client_code
-                },
-                success: function (data) {
-                    const ajax_purchase_amount = data.provide_amount;
-                    const ajax_purchase_danga = data.current_danga;
+        // 첫 번째 행의 거래처가 바뀌면 → 이후 행 모두 동일하게 고정 & 제품목록 갱신
+        if ($row.is('.purchase-row:first')) {
+          $('.purchase-row').not(':first').each(function () {
+            const $r = $(this);
+            $r.find('.js-client').val(clientCode); // hidden 상태지만 값은 유지됨(서브밋 됨)
+            loadProductsForClient($r, clientCode);
+          });
+        }
+      });
 
-                    $('#purchase_danga').val(ajax_purchase_danga);
+      /* ====== 제품 선택 → 공급정보(공급단위/단가) + 수량옵션 + 총액 초기화 ====== */
+      // 제품 선택 시마다 갱신
+		$(document).on('change', '.js-product', function () {
+		  const $row = $(this).closest('.purchase-row');
+		  const ajax_product_code = $(this).val();
+		  const ajax_client_code = $row.find('.js-client').val();
+		
+		  $row.find('.js-provide-amount-view').val('');
+		  $row.find('.js-current-danga-view').val('');
+		  $row.find('.js-purchase-danga').val('');
+		  $row.find('.js-qty').empty().append('<option value="">-- 선택 --</option>');
+		  $row.find('.js-total').val('');
+		
+		  updateProductOptions(); 
+		
+		  if (!ajax_product_code || !ajax_client_code) return;
+		
+		  $.getJSON(
+		    '${pageContext.request.contextPath}/sw/getProvideInfo',
+		    { product_won_code: ajax_product_code, provide_client_code: ajax_client_code }
+		  )
+		    .done(data => {
+		      const provide_amount = Number(data.provide_amount);
+		      const current_danga = Number(data.current_danga);
+		      const unitName = data.unitName || '';
+		
+		      $row.find('.js-provide-amount-view')
+		        .val(unitName ? `${provide_amount} ${unitName}` : provide_amount)
+		        .data('amount', provide_amount);
+		
+		      $row.find('.js-current-danga-view').val(current_danga.toLocaleString());
+		      $row.find('.js-purchase-danga').val(current_danga);
+		
+		      fillQty($row, provide_amount, 50);
+		      recalcTotal($row);
+		
+		      updateProductOptions(); //
+		    })
+		    .fail(xhr => console.error('getProvideInfo:', xhr.responseText));
+		});
 
-                    const $select = $('#purchase_amount');
-                    $select.empty().append('<option value="">-- 선택 --</option>');
-                    for (let i = 1; i <= 50; i++) {
-                        const value = ajax_purchase_amount * i * 10;
-                        $select.append('<option value="' + value + '">' + numberWithCommas(value) + '</option>');
-                    }
-                }
-            });
-        });
+      /* ====== 중복 방지: 이미 선택된 제품은 다른 행에서 비활성화 ====== */
+      function updateProductOptions() {
+        // 현재 선택된 모든 제품 코드 수집
+        const selectedProducts = $('.js-product').map(function () {
+          return $(this).val() || '';
+        }).get().filter(v => v !== '');
 
-        $('#purchase_amount').change(function () {
-            const ajax_amount = Number($('#purchase_amount option:eq(1)').val());
-            const ajax_i = 10 * Number($(this).val());
-            const ajax_danga = Number($('#purchase_danga').val());
-            if (!ajax_i || !ajax_danga) {
-                $('#total_price').val('');
-                return;
+        // 각 제품 select에서 해당 옵션 비활성화
+        $('.js-product').each(function () {
+          const currentVal = $(this).val();
+          $(this).find('option').each(function () {
+            const val = $(this).val();
+            if (val !== '' && val !== currentVal && selectedProducts.includes(val)) {
+              $(this).prop('disabled', true);
+            } else {
+              $(this).prop('disabled', false);
             }
-            const total = ajax_i * ajax_danga / ajax_amount;
-            $('#total_price').val(numberWithCommas(total));
+          });
         });
+      }
+	
+      /* ====== 수량 변경 → 총액 재계산 ====== */
+      $(document).on('change', '.js-qty', function () {
+        recalcTotal($(this).closest('.purchase-row'));
+      });
+
+      $('#btn-add-row').on('click', function () {
+    	  const $first = $('.purchase-row:first');
+    	  const clientCode = $first.find('.js-client').val();
+
+    	  if (!clientCode) {
+    	    alert('먼저 첫 번째 행에서 거래처를 선택하세요.');
+    	    return;
+    	  }
+
+    	  const $new = $first.clone(true, true);
+
+    	  // 새 행 초기화
+    	  $new.find('label').remove();
+    	  $new.find('.js-product').empty().append('<option value="">-- 선택 --</option>');
+    	  $new.find('.js-provide-amount-view').val('').removeData('amount');
+    	  $new.find('.js-current-danga-view').val('');
+    	  $new.find('.js-purchase-danga').val('');
+    	  $new.find('.js-qty').empty().append('<option value="">-- 선택 --</option>');
+    	  $new.find('.js-total').val('');
+
+    	  // 거래처 고정 + 숨김
+    	  $new.find('.js-client')
+    	    .val(clientCode)
+    	    .addClass('invisible')
+    	    .attr({ 'tabindex': '-1', 'aria-hidden': 'true' });
+
+    	  $('#purchase-rows').append($new);
+
+    	  updateProductOptions();
+
+    	  loadProductsForClient($new, clientCode, function () {
+    	    updateProductOptions();
+    	  });
+    	});
+
+
+   	// 행 삭제 후 갱신
+      $(document).on('click', '.btn-remove', function () {
+        if ($('.purchase-row').length > 1) {
+          $(this).closest('.purchase-row').remove();
+          updateProductOptions(); //
+        } else {
+          alert('최소 1개 행은 있어야 합니다.');
+        }
+      });
+
+      // 초기 로드 때 한 번 정리
+      updateProductOptions();
     });
-</script>
-
+  </script>
 </body>
 </html>

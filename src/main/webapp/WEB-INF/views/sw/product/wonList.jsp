@@ -140,7 +140,6 @@
                                         <div class="card-body d-flex flex-column h-100">
                                             <h5 class="card-title">${product.product_name}</h5>
                                             <ul class="product-info-list">
-                                                <li><strong>유형</strong> <span>${product.typeName}</span></li>
                                                 <li><strong>납품 여부</strong> <span>${product.isorderName}</span></li>
                                                 <li><strong>삭제 구분</strong>
                                                     <span>
@@ -150,11 +149,18 @@
                                                         </c:choose>
                                                     </span>
                                                 </li>
-                                                <li><strong>등록일</strong> 
-												    <span>
-												        <fmt:formatDate value="${product.product_reg_date}" pattern="yyyy-MM-dd" />
+                                                <li><strong>단가(1 ea/g/ml)</strong> 
+	                                                <span>
+												        <c:choose>
+												            <c:when test="${product.price == null || product.price == 0}">
+												                가격조정필요
+												            </c:when>
+												            <c:otherwise>
+												                ${product.price}
+												            </c:otherwise>
+												        </c:choose>
 												    </span>
-												</li>
+											    </li>
 	                                            </ul>
                                             <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="mt-auto">
                                                 <input type="hidden" name="product_code" value="${product.product_code}" />

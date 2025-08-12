@@ -139,9 +139,10 @@
                         <tbody>
                             <tr><th>제품 코드</th><td>${wonProductDetail.product_code}</td></tr>
                             <tr><th>제품명</th><td class="product-name">${wonProductDetail.product_name}</td></tr>
-                            <tr><th>단위</th><td>${wonProductDetail.unitName}</td></tr>
                             <tr><th>제품유형</th><td>${wonProductDetail.typeName}</td></tr>
                             <tr><th>기본 중량 (g)</th><td>${wonProductDetail.product_weight}</td></tr>
+                            <tr><th>단위</th><td>${wonProductDetail.unitName}</td></tr>
+                            <tr><th>단가(1 ea/g/ml)</th><td>${wonProductDetail.price}</td></tr>
                             <tr><th>판매 단위</th><td>${wonProductDetail.product_order_pack} ${wonProductDetail.unitName}	</td></tr>
                             <tr><th>납품 여부</th><td>${wonProductDetail.isorderName}</td></tr>
                             <tr><th>삭제 구분</th>
