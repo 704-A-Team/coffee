@@ -2,11 +2,17 @@ package com.oracle.coffee.dto;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
+import java.util.Map;
+
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class InventoryDto {
 	private int 			product_code;
 	private String 			product_name;
@@ -39,4 +45,6 @@ public class InventoryDto {
 	
 	// Page 정보 
 	private String 	currentPage;
+	
+	
 }

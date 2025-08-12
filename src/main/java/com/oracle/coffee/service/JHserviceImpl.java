@@ -16,6 +16,8 @@ public class JHserviceImpl implements JHservice {
 	
 	private final InventoryDao inventoryDao;
 
+	
+	
 	@Override
 	public int totalInventory() {
 		System.out.println("JHserviceImpl totalInventoryDto start...");
@@ -25,6 +27,8 @@ public class JHserviceImpl implements JHservice {
 		return totInvCnt;
 	}
 
+	
+	
 	@Override
 	public List<InventoryDto> inventoryList(InventoryDto inventoryDto) {
 	    System.out.println("JHserviceImpl inventoryList start...");
@@ -40,6 +44,8 @@ public class JHserviceImpl implements JHservice {
 	    return listInventory;
 	}
 
+	
+	
 	@Override
 	public List<InventoryDto> mfgReqList(InventoryDto inventoryDto) {
 		System.out.println("JHserviceImpl mfgReqList start...");
@@ -53,6 +59,20 @@ public class JHserviceImpl implements JHservice {
 		System.out.println("JHserviceImpl mfgReqList listmfgReq.size : " + listMfgReq.size());
 		return listMfgReq;
 	}
+
+	
+	
+	
+/////////////////////////////////////////////////////////////////////////////////////
+// 민영님이 부탁하신 것: 현재 마감상태(마감/비마감)인지 상태구분
+//	@Override
+//	public boolean MagamGap() {
+//		System.out.println("JHserviceImpl MagamGap start...");
+//		boolean MagamGapSev = inventoryDao.MagamGapDao();
+//		System.out.println("JHserviceImpl MagamGap MagamGapSev : "+MagamGapSev);
+//		return MagamGapSev;
+//	}
+/////////////////////////////////////////////////////////////////////////////////////
 
 
 }

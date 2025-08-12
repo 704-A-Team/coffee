@@ -19,14 +19,14 @@
     FROM
     (
     	
-    			SELECT
-    			ROW_NUMBER() OVER (ORDER BY mm.month_yrmo) AS rn, 	
-    				mm.month_yrmo,
-       				b.cd_contents AS mlcontents,
-       				mm.month_magam_reg_date
-				FROM month_magam mm
-				LEFT JOIN bunryu b ON mm.month_magam_status = b.mcd and b.bcd = 600
-    			order by mm.month_yrmo
+    	SELECT
+    	ROW_NUMBER() OVER (ORDER BY mm.month_yrmo) AS rn, 	
+    		mm.month_yrmo,
+       		b.cd_contents AS mlcontents,
+       		mm.month_magam_reg_date
+		FROM month_magam mm
+		LEFT JOIN bunryu b ON mm.month_magam_status = b.mcd and b.bcd = 600
+    	order by mm.month_yrmo
     			
     )
     WHERE rn BETWEEN #{start} AND #{end}

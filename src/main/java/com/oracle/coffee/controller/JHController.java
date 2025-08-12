@@ -1,19 +1,26 @@
 package com.oracle.coffee.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.coffee.dto.InventoryDto;
 import com.oracle.coffee.service.JHservice;
 import com.oracle.coffee.service.Paging;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+
 
 @Controller
 @RequiredArgsConstructor
@@ -33,24 +40,43 @@ public class JHController {
     	System.out.println("jh/JHController inventoryPage Start...");
     	log.info(">>> isClosed received = {}", isClosed);
     	
+    	/////////////////////////////////////////////////////////////////////////////////////
+    	//	민영님이 부탁하신 것: 현재 마감상태(마감/비마감)인지 상태구분 
+    	//	boolean MagamSangTae = jHservice.MagamGap(isMagam);
+    	//	System.out.println("JHController inventoryPage MagamSangTae : "+MagamSangTae);
+    	/////////////////////////////////////////////////////////////////////////////////////
+    	
+    	
+    	// 페이징 카운팅용
     	int totalInventory = jHservice.totalInventory();
     	//String currentPage = "1";
-    	
     	Paging page = new Paging(totalInventory, String.valueOf(currentPage));
 		// Parameter emp --> Page만 추가 Setting
 		inventoryDto.setStart(page.getStart());   // 시작시 1
-		inventoryDto.setEnd(page.getEnd());       // 시작시 10 
+		inventoryDto.setEnd(page.getEnd());       // 시작시 10
     	
+		
+		// 재고관리 리스트 조회
     	List<InventoryDto> inventoryList = jHservice.inventoryList(inventoryDto);
     	System.out.println("JHController InventoryList.size : "+inventoryList.size());
     	
     	model.addAttribute("totalInventory", totalInventory);
     	model.addAttribute("inventoryList", inventoryList);
+    	
+    	
     	model.addAttribute("page", page);
     	model.addAttribute("isClosed", isClosed);
     	
+    	/////////////////////////////////////////////////////////////////////////////////////
+    	//	민영님이 부탁하신 것: 현재 마감상태(마감/비마감)인지 상태구분
+    	//	model.addAttribute("isMagam", isMagam);
+    	/////////////////////////////////////////////////////////////////////////////////////
+    	
         return "jh/inventoryList";
     }
+    
+    
+    
     
     @GetMapping(value = "/mfgRequest")
     public String mfgRequestpage (InventoryDto inventoryDto, Model model) {
@@ -64,3 +90,5 @@ public class JHController {
     	return "jh/mfgRequest";
     }
 }
+
+
