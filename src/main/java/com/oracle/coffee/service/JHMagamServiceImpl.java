@@ -25,6 +25,9 @@ public class JHMagamServiceImpl implements JHMagamService {
 		return totMagCnt;
 	}
 
+	
+	
+	
 	@Override
 	public List<MagamDto> magamList(MagamDto magamDto) {
 		System.out.println("JHMagamServiceImpl magamList start...");
@@ -40,5 +43,38 @@ public class JHMagamServiceImpl implements JHMagamService {
 		System.out.println("JHMagamServiceImpl magamList ListMagam.size : "+ListMagam.size());
 		return ListMagam;
 	}
+
+	
+	
+	
+	@Override
+	public List<MagamDto> monthMagamList(MagamDto magamDto) {
+		System.out.println("JHMagamServiceImpl monthMagamList start...");
+		
+		List<MagamDto> ListMonthMagam = jhMagamDao.monthMagamList(magamDto);
+		
+		// 방어 코드 추가
+	    if (ListMonthMagam == null) {
+	    	ListMonthMagam = new ArrayList<>();
+	        System.out.println("JHMagamServiceImpl magamList returned null, replaced with empty list.");
+	    }
+	    
+		System.out.println("JHMagamServiceImpl magamList ListMonthMagam.size : "+ListMonthMagam.size());
+		return ListMonthMagam;
+	}
+
+	
+	
+	
+	@Override
+	public int countMonMagAll(MagamDto magamDto) {
+		System.out.println("JHMagamServiceImpl countMonMagAll start...");
+		
+		int countMonMagAll = jhMagamDao.countMonMagAll(magamDto);
+		System.out.println("JHMagamServiceImpl totalMagamDto countMonMagAll : "+countMonMagAll);
+		return countMonMagAll;
+	}
+	
+	
 
 }

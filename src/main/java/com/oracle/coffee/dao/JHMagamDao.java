@@ -11,4 +11,8 @@ public interface JHMagamDao {
 
 	List<MagamDto> magamList(MagamDto magamDto);
 
+	List<MagamDto> monthMagamList(MagamDto magamDto);
+
+	int countMonMagAll(MagamDto magamDto);
+
 }

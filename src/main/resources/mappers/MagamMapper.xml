@@ -8,22 +8,79 @@
   <!-- 전체 개수 조회 -->
   <select id="totMagCnt" resultType="int">
     SELECT COUNT(*) 
-      FROM month_magam 
+      FROM month_magam mm
   </select>
   
-  <!-- 전체 리스트 조회 (페이징 제거) -->
+  
+  <!--모든 마감 목록조회 -->
   <select id="jhMagAll" resultType="com.oracle.coffee.dto.MagamDto">
     <![CDATA[
     SELECT *
     FROM
     (
-    	SELECT rownum rn , a.*
-    	FROM
-    			(select * from month_magam order by product_code)a
+    	
+    			SELECT
+    			ROW_NUMBER() OVER (ORDER BY mm.month_yrmo) AS rn, 	
+    				mm.month_yrmo,
+       				b.cd_contents AS mlcontents,
+       				mm.month_magam_reg_date
+				FROM month_magam mm
+				LEFT JOIN bunryu b ON mm.month_magam_status = b.mcd and b.bcd = 600
+    			order by mm.month_yrmo
+    			
     )
-    WHERE rn >= #{start}
-    and   rn <= #{end}
+    WHERE rn BETWEEN #{start} AND #{end}
     ]]> 
   </select>
+  
+  
+  
+  
+  
+  <!-- 전체 개수 조회(마감상세) -->
+  <select id="countMonMagAll" resultType="int">
+  <![CDATA[
+    SELECT COUNT(*)
+    FROM month_magam m
+    WHERE m.month_yrmo = #{month_yrmo}
+      AND m.month_magam_reg_date >= TO_DATE(#{month_yrmo} || '01', 'YYYYMMDD')
+      AND m.month_magam_reg_date <  ADD_MONTHS(TO_DATE(#{month_yrmo} || '01', 'YYYYMMDD'), 1)
+  ]]>
+  </select>
+  
+  
+  <!--마감 상세 조회 -->
+  <select id="jhMonMagAll" resultType="com.oracle.coffee.dto.MagamDto">
+  <![CDATA[
+  SELECT *
+  FROM 
+  (
+    
+      SELECT
+      ROW_NUMBER() OVER (ORDER BY m.month_magam_reg_date, m.product_code) AS rn,
+        m.month_yrmo,
+        bu.cd_contents AS mdcontents,
+        m.product_code,
+        m.month_magam_amount,
+        m.month_magam_reg_date,
+        p.product_name AS unitName
+        
+      FROM month_magam m
+      
+      JOIN product p ON p.product_code = m.product_code
+      LEFT JOIN bunryu bu ON m.month_magam_status = bu.mcd AND bu.bcd = 600
+      
+      WHERE m.month_yrmo = #{month_yrmo}
+      	
+        AND m.month_magam_reg_date >= TO_DATE(#{month_yrmo} || '01', 'YYYYMMDD')
+        AND m.month_magam_reg_date <  ADD_MONTHS(TO_DATE(#{month_yrmo} || '01', 'YYYYMMDD'), 1)
+  )
+  WHERE rn BETWEEN #{start} AND #{end}
+  ]]>
+  </select>
+
+
+
+
 
 </mapper>

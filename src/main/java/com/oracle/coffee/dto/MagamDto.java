@@ -4,10 +4,14 @@ package com.oracle.coffee.dto;
 import java.time.LocalDateTime;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class MagamDto {
 	
 	private String 			month_yrmo;
@@ -25,4 +29,15 @@ public class MagamDto {
 	
 	// Page 정보 
 	private String 	currentPage;
+	
+	// 마감목록 분류 조인용
+	private String 	mlcontents;
+	
+	// 마감상세 분류 조인용
+	private String 	mdcontents;
+	
+	// 월 마감 수량체크용
+	private String 			product_name;
+	private String 			unitName;
+	private String 			monthYrmo; // setMonthYrmo()
 }

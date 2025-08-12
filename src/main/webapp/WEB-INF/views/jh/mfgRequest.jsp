@@ -55,9 +55,40 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            `</form>
         </div>
         <%@ include file="../footer.jsp" %>
     </div>
 </body>
+<script>
+        let isClosed = ${isClosed};
+
+        function toggleClose(state) {
+            isClosed = state;
+            document.querySelectorAll(".action-btn").forEach(btn => {
+                if (state) btn.classList.add("disabled-button");
+                else       btn.classList.remove("disabled-button");
+            });
+            const url = new URL(window.location.href);
+            url.searchParams.set('isClosed', isClosed);
+            window.history.replaceState({}, '', url);
+            document.querySelectorAll('.pagination a').forEach(link => {
+                const linkUrl = new URL(link.href, window.location.origin);
+                linkUrl.searchParams.set('isClosed', isClosed);
+                link.href = linkUrl.toString();
+            });
+        }
+
+        function checkTimeAndClose() {
+            const now = new Date();
+            if (now.getHours() === 23 && now.getMinutes() >= 59) {
+                toggleClose(true);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            toggleClose(isClosed);
+            checkTimeAndClose();
+        });
+    </script>
 </html>
