@@ -17,11 +17,11 @@
 		values
 		(
 			#{product_code},
-			TO_CHAR(SYSDATE, 'YYYY-MM-DD'),
+			SYSDATE,
 			#{end_date},
 			#{price},
 			#{price_reg_code},
-			TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			SYSDATE
 		)
 	</insert>
 	

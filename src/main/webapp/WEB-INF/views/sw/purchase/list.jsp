@@ -32,9 +32,10 @@
         }
 
         .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    background: #ccc !important;   /* 회색 배경 */
+		    color: #333 !important;         /* 진회색 글자 */
+		    border-color: #ccc !important;  /* 회색 테두리 */
+		}
 
         .btn-brown-outline {
             background-color: transparent !important;
@@ -43,9 +44,10 @@
         }
 
         .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    background: #ccc !important;   /* 회색 배경 */
+		    color: #333 !important;         /* 글자색 진회색 */
+		    border-color: #ccc !important;  /* 테두리 회색 */
+		}
 
         .table th, .table td {
             vertical-align: middle !important;

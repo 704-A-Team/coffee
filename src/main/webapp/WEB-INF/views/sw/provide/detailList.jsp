@@ -44,38 +44,52 @@
         }
 
         .btn-brown-outline {
-            border: 1.5px solid var(--main-brown) !important;
-            color: var(--main-brown) !important;
-            background-color: #fff !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		
+		.btn-brown-outline:hover {
+		    background-color: #ccc !important; /* 회색 배경 */
+		    color: #333 !important;            /* 진회색 글자 */
+		    border-color: #ccc !important;     /* 회색 테두리 */
+		}
 
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+        /* 수정 버튼 (파란색) */
+		.btn-brown {
+		    background-color: #0d6efd !important; /* 부트스트랩 기본 파랑 */
+		    color: white !important;
+		    border: 1.5px solid #0d6efd !important;
+		}
+		
+		.btn-brown:hover {
+		    background-color: #0b5ed7 !important; /* hover 시 더 진한 파랑 */
+		    border-color: #0b5ed7 !important;
+		    color: white !important;
+		}
+		
+		/* 삭제 버튼 (빨간색) */
+		.btn-soft-danger {
+		    background-color: #dc3545 !important; /* 부트스트랩 기본 빨강 */
+		    color: white !important;
+		    border: 1.5px solid #dc3545 !important;
+		}
+		
+		.btn-soft-danger:hover {
+		    background-color: #bb2d3b !important; /* hover 시 더 진한 빨강 */
+		    border-color: #bb2d3b !important;
+		}
+		
+		.btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 더 진한 회색 */
+		}
+		
 
-        .btn-brown {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-            border: 1.5px solid var(--soft-brown) !important;
-        }
-
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-            border-color: var(--main-brown) !important;
-            color: white !important;
-        }
-
-        .btn-soft-danger {
-            background-color: var(--danger-red) !important;
-            color: white !important;
-            border: 1.5px solid var(--danger-red) !important;
-        }
-
-        .btn-soft-danger:hover {
-            background-color: #922d2b !important;
-            border-color: #922d2b !important;
-        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -126,12 +140,12 @@
 
                 <!-- 버튼들: 카드 밖, 우측 하단 정렬 -->
                 <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
                     <a href="${pageContext.request.contextPath}/provide/provideModifyForm?provide_code=${provideDetail.provide_code}" class="btn btn-brown">수정</a>
                     <form action="${pageContext.request.contextPath}/provide/provideDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
                         <input type="hidden" name="provide_code" value="${provideDetail.provide_code}">
                         <button type="submit" class="btn btn-soft-danger">삭제</button>
                     </form>
+                    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
                 </div>
             </div>
         </main>

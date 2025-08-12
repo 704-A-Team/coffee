@@ -30,6 +30,7 @@ public class SWProductDaoImpl implements SWProductDao {
 		
 		try {
 			wonProduct_code = session.insert("wonProductSave", productDto);
+			session.insert("monthMagamSave", productDto);
 			transactionManager.commit(txStatus);
 
 		} catch (Exception e) {

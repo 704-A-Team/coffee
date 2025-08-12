@@ -191,5 +191,24 @@
 		where product_type = 0
 	</select>
 	
+	<insert id="monthMagamSave" parameterType="ProductDto">
+		insert into month_magam (
+			month_yrmo,
+			month_magam_status,
+			product_code,
+			month_magam_amount,
+			month_magam_reg_code,
+			month_magam_reg_date
+		) values (
+			TO_CHAR(sysdate, 'yyyyMM'),
+			0,
+			#{product_code},
+			0,
+			#{product_reg_code},
+			sysdate
+		)
+		
+	</insert>
+	
 	
 </mapper>
