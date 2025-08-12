@@ -1,10 +1,12 @@
 package com.oracle.coffee.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.oracle.coffee.dto.orders.OrdersDetailApprovedDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
@@ -153,6 +155,22 @@ public class OrdersDaoImpl implements OrdersDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<Integer> approveOrdersDetails(int order_code) {
+		// 한 수주의 모든 orders_detail 재고 확인하는 프로시저 동작
+		
+		/*
+		 * OrdersDetailApprovedDto dto = new OrdersDetailApprovedDto();
+		 * dto.setOrder_code(order_code);
+		 * 
+		 * try { session.selectOne("approveOrdersDetail", dto); } catch (Exception e) {
+		 * e.printStackTrace(); }
+		 * 
+		 * return dto.getEnabled_products();
+		 */
+		return null;
 	}
 
 }

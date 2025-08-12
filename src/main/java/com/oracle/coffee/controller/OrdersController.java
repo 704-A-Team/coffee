@@ -23,6 +23,7 @@ import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 import com.oracle.coffee.service.ClientService;
 import com.oracle.coffee.service.OrdersService;
 import com.oracle.coffee.service.Paging;
+import com.oracle.coffee.service.StockService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class OrdersController {
 	
 	private final OrdersService ordersService;
 	private final ClientService clientService;
+	private final StockService stockService;
 	
 	// 새로운 수주서 페이지
 	@GetMapping("/new")
@@ -92,10 +94,15 @@ public class OrdersController {
 		int clientCode = order.getOrders_client_code();
 		ClientDto client = clientService.getSingleClient(clientCode);
 		
+		// 마감 상태 조회
+		boolean isClosedMagam = stockService.isClosedMagam();
+		
 		// model.addAttrubyte("loginUser", loginUser);
 		model.addAttribute("client", client);
 		model.addAttribute("order", order);
 		model.addAttribute("isFixedPage", true);
+		model.addAttribute("isClosedMagam", isClosedMagam);
+		
 		return "order/form";
 	}
 	

@@ -23,4 +23,5 @@ public interface OrdersDao {
 	List<OrdersListDto> list(OrdersPageDto page);
 	void refuseOrders(OrdersDto order);
 	void approveOrders(OrdersDto order);
+	List<Integer> approveOrdersDetails(int order_code);
 }

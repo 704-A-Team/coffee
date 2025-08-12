@@ -1,5 +1,7 @@
 package com.oracle.coffee.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -80,67 +82,79 @@ public class OrdersServiceImpl implements OrdersService {
 		// autoApprove(orderCode);
 	}
 
-	private boolean approveOrdersDetails(OrdersDto order, boolean isAuto) {
-		boolean result = true;
-		// 1. 총 금액 확인
-		if (isAuto) {}
+	private List<OrdersDetailDto> notApprovedDetails(OrdersDto order) {
+		// orders_detail 수량 확인 후 "불가능"한 모든 orders_detail 리턴
+		// detail 모두 가능한 경우: 수주 승인 상태(4)로 변경 
+		// 						수주 상세 출고예정(1) 상태로 변경
 		
-		// 2. 재고 모자라면 승인 불가
-		List<Integer> orderedPrdCodes = order.getOrders_details().stream()
-															  .map(detail -> detail.getProduct_code())
-															  .toList();
+		List<OrdersDetailDto> disabled = new ArrayList<>();
+
+		
+		// details 중 재고 모자라면 승인 불가
+//		List<OrdersDetailDto> details = order.getOrders_details();
 //		List<Integer> approvedPrdCodes = ordersDao.approveOrdersDetails(order.getOrder_code());
 //		
 //		// 프로시저에서 return된 approvedPrdCodes가 details와 다른 경우: 수주 승인 안됨
-		// 모든 제품이 재고가 있으면 프로시저에서 이미 "출고예정"으로 변경됨
-//		for (int ordered: orderedPrdCodes) {
-//			if (approvedPrdCodes.contains(ordered)) continue;
-//			else {
-//				if (isAuto) {
-//					// 원재료 발주 신청 OR 완재품 생산 신청 (background)
-//				}
-//				result = false;
-//			}
+//		// 모든 제품이 재고가 있으면 프로시저에서 이미 "출고예정"으로 변경됨
+//		for (OrdersDetailDto detail : details) {
+//			int orderedPrdCode = detail.getProduct_code();
+//			if (!approvedPrdCodes.contains(orderedPrdCode)) disabled.add(detail);
 //		}
 		
-		return result;
+		return disabled;
 	}
 	
 	private void autoApprove(int orderCode) {
+		// 자동 승인
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		
-		// 재고 없으면 자동 승인 불가
-		// => 자동 원재료 신청
-		// => 자동 생산 신청
-		boolean isConfirm = approveOrdersDetails(order, true);
-		if (isConfirm) {
+		// 금액 제한 확인
+		BigDecimal finalPrice = order.calculateTotalPrice();
+		BigDecimal upperLimit = new BigDecimal(1000000);
+		if (finalPrice.compareTo(upperLimit) == 1) {
+			// 자동 승인 불가 이메일
+			return;
+		}
+		
+		// 재고 확인
+		// => 원재료 발주/생산 자동신청
+		List<OrdersDetailDto> disabled = notApprovedDetails(order);
+		if (disabled.size() == 0) {
+			// 수주 승인 상태(4)로 변경 
 			int targetStatus = 4;
 			order.setOrder_status(targetStatus);
 			int systemUserCode = 2999;
 			order.setOrders_perm_code(systemUserCode);	// system
-
 			// 승인 당시 총액
-			order.setOrder_final_price(order.calculateTotalPrice());
+			order.setOrder_final_price(finalPrice);
+			
 			ordersDao.approveOrders(order);
 		}
+		else {
+			// 자동 승인 불가 이메일
+		}
+		
 	}
 
 	@Override
 	public void approve(int approverCode, int orderCode) {
-		// 수주 승인 상태(4)로 변경 (요청 상태에서 가능)
-		// 수주 상세 출고예정(1) 상태로 변경
+		// 수동 승인
 		OrdersDto order = ordersDao.findByCode(orderCode);
-		
-		boolean isConfirm = approveOrdersDetails(order, false);
-		if (isConfirm) {
+		order.setOrders_perm_code(approverCode);
+
+		List<OrdersDetailDto> disabled = notApprovedDetails(order);
+		if (disabled.size() == 0) {
+			// 수주 승인 상태(4)로 변경 
 			int targetStatus = 4;
 			order.setOrder_status(targetStatus);
 			order.setOrders_perm_code(approverCode);
-
 			// 승인 당시 총액
 			order.setOrder_final_price(order.calculateTotalPrice());
+			
 			ordersDao.approveOrders(order);
 		}
+		
+		// 승인 불가 재고 return
 	}
 
 	@Override

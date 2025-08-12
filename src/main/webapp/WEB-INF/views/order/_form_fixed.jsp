@@ -176,10 +176,24 @@
   	-->
   	<!-- "loginUser가 가맹점이면": <c:if test="${loginUser.login_type == 0 }"></c:if> -->
   	
-  	<c:if test="${order.order_status == 0 }">
-  		<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
-		<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/del/${order.order_code }'">임시저장 삭제</button>
-		<button type="button" class="btn btn-md btn-primary fw-bold" onclick="return reqOrder(${order.order_code })">발주요청</button>
+  	<c:if test="${order.order_status == 0 }">	<!-- and 가맹점만 -->
+  		<div class="card border-0 pe-0">
+	  		<c:if test="${isClosedMagam }">
+				<div class="alert alert-info d-flex align-items-center" role="alert">
+			  		<i class="bi bi-info-circle-fill me-2"></i>
+			  		<div>
+			    		발주가 <strong>마감</strong>되어 현재 <u>발주 요청이 불가능</u>합니다.
+			  		</div>
+				</div>
+			</c:if>
+			<div class="d-flex justify-content-end gap-2 pe-0">
+				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
+				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/del/${order.order_code }'">임시저장 삭제</button>
+				<c:if test="${not isClosedMagam }">
+					<button type="button" class="btn btn-md btn-primary fw-bold" onclick="return reqOrder(${order.order_code })">발주요청</button>
+				</c:if>
+			</div>
+		</div>
   	</c:if>
   	
   	<c:if test="${order.order_status == 1 }">
@@ -187,17 +201,28 @@
 			<div class="alert alert-info d-flex align-items-center" role="alert">
 		  		<i class="bi bi-info-circle-fill me-2"></i>
 		  		<div>
-		    		발주가 <strong>승인</strong> 또는 <strong>반려</strong>되기 전까지 <u>내용을 변경하거나 요청을 취소</u>할 수 있습니다.
+		    		<strong>승인</strong> 또는 <strong>반려</strong>전까지 <u>내용을 변경하거나 요청을 취소</u>할 수 있습니다.
 		  		</div>
 			</div>
+			
+			<c:if test="${isClosedMagam }">	<!-- and 본사만 -->
+				<div class="alert alert-info d-flex align-items-center" role="alert">
+			  		<i class="bi bi-info-circle-fill me-2"></i>
+			  		<div>
+			    		수주가 <strong>마감</strong>되어 현재 <u>수주의 승인 및 반려가 불가능</u>합니다.
+			  		</div>
+				</div>
+			</c:if>
+			
 			<div class="d-flex justify-content-end gap-2 pe-0">
-				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">발주변경</button>
+				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
+				<!-- 가맹점만 -->
 				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, false)">요청취소</button>
 				
-				<div class="vr mx-2"></div>
-				<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
-				<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
-
+				<c:if test="${not isClosedMagam }"> <!-- and 본사만 -->
+					<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
+					<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
+				</c:if>
 			</div>
 		</div>
   	</c:if>
