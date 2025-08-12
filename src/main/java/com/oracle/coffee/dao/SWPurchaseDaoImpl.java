@@ -27,11 +27,13 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		int purchase_result = 0;
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		boolean first = true;
 		try {
 			for(PurchaseDto dto : purchaseDtoList) {
-				purchase_result = session.insert("purchaseSave", dto);
-				System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto-> " + dto);
-					
+				if(first) {
+					purchase_result = session.insert("purchaseSave", dto);
+					first = false;
+				}
 				session.insert("purchaseDetailSave", dto);
 			}
 			transactionManager.commit(txStatus);
@@ -84,6 +86,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	@Override
 	public PurchaseDto purchaseDetail(int purchase_code) {
 		System.out.println("SWPurchaseDaoImpl purchaseDetail start...");
+		System.out.println(purchase_code);
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -99,14 +102,14 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	}
 
 	@Override
-	public void purchaseApprove(PurchaseDto purchaseApprove) {
+	public void purchaseApprove(int purchase_code) {
 		System.out.println("SWPurchaseDaoImpl purchaseApprove start...");
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
 		try {
-			session.update("purchaseApprove", purchaseApprove);
+			session.update("purchaseApprove", purchase_code);
 			transactionManager.commit(txStatus);
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
@@ -130,6 +133,23 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 			e.printStackTrace();
 			System.out.println("SWPurchaseDaoImpl purchaseRefuse Exception : " + e.getMessage());
 		}
+	}
+
+	@Override
+	public List<PurchaseDto> purchaseDetailList(int purchase_code) {
+		System.out.println("SWPurchaseDaoImpl purchaseDetailList start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		List<PurchaseDto> purchaseDetailList = null;
+		try {
+			purchaseDetailList = session.selectList("purchaseDetailList", purchase_code);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseDetailList Exception : " + e.getMessage());
+		}
+		return purchaseDetailList;
 	}
 
 }

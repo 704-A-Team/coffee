@@ -134,34 +134,33 @@ public class SWPurchaseController {
 	public String purchaseDetailPage(@RequestParam("purchase_code") int purchase_code, Model model) {
 		System.out.println("SWPurchaseController purchaseDetailPage Strart...");
 
-		PurchaseDto purchaseDetail = swPurchaseService.purchaseDetail(purchase_code);
+		List<PurchaseDto> purchaseDetailList = swPurchaseService.purchaseDetailList(purchase_code);
 
-		model.addAttribute("purchaseDetail", purchaseDetail);
+		model.addAttribute("purchaseDetailList", purchaseDetailList);
+		
+		boolean isApprovable = (purchaseDetailList != null && !purchaseDetailList.isEmpty())
+                && "1".equals(String.valueOf(purchaseDetailList.get(0).getPurchase_status()));
+		model.addAttribute("isApprovable", isApprovable);
 
 		return "sw/purchase/detailList";
 	}
 
 	@PostMapping("/purchaseApprove")
-	public String purchaseApprove(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+	public String purchaseApprove(@RequestParam("purchase_code") int purchase_code) {
 		System.out.println("SWPurchaseController purchaseApprove Strart...");
 
-		PurchaseDto purchaseApprove = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
-		System.out.println("SWPurchaseController purchaseApprove purchaseApprove : " + purchaseApprove);
-		purchaseApprove.setPurchase_status(4);
-		swPurchaseService.purchaseApprove(purchaseApprove);
+		swPurchaseService.purchaseApprove(purchase_code);
 
 		return "redirect:/sw/purchaseList";
 
 	}
 
 	@PostMapping("/purchaseRefuse")
-	public String purchaseRefuse(PurchaseDto purchaseDto) throws UnsupportedEncodingException {
+	public String purchaseRefuse(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseController purchaseRefuse Strart...");
 
-		PurchaseDto purchaseRefuse = swPurchaseService.purchaseDetail(purchaseDto.getPurchase_code());
-		purchaseRefuse.setPurchase_status(3);
-		purchaseRefuse.setPurchase_refuse(purchaseDto.getPurchase_refuse());
-		swPurchaseService.purchaseRefuse(purchaseRefuse);
+		purchaseDto.setPurchase_status(3);
+		swPurchaseService.purchaseRefuse(purchaseDto);
 
 		return "redirect:/sw/purchaseList";
 	}

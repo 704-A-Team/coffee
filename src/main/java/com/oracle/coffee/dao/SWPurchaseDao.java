@@ -9,7 +9,8 @@ public interface SWPurchaseDao {
 	int 				totalPurchaseCnt(PurchaseDto purchaseDto);
 	List<PurchaseDto> 	purchaseList(PurchaseDto purchaseDto);
 	PurchaseDto 		purchaseDetail(int purchase_code);
-	void 				purchaseApprove(PurchaseDto purchaseApprove);
+	void 				purchaseApprove(int purchase_code);
 	void 				purchaseRefuse(PurchaseDto purchaseRefuse);
+	List<PurchaseDto> 	purchaseDetailList(int purchase_code);
 
 }

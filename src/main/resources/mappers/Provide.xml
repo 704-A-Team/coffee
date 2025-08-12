@@ -138,6 +138,7 @@
 		select 	*
 		from 	provide
 		where 	product_won_code = #{product_code}
+		and		provide_isdel = 0
 	</select>
 	
 	<select id="getProductsByClient" parameterType="int" resultType="ProvideDto">

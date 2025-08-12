@@ -39,6 +39,10 @@ public class PurchaseDto {
 	private String		empPermName;
 	private String		empRegName;
 	private int			totalPrice;
+	private String 		saupNum;
+    private String 		bossName;
+    private String 		clientTel;
+    private String 		clientAddress;
 	
 	private String 		searchType;
 	private String 		searchKeyword;
