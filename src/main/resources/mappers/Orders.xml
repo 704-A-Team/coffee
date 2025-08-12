@@ -2,14 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.oracle.coffee.dto.order.ordersMapper">
+<mapper namespace="com.oracle.coffee.ordersMapper">
 
 	<!-- product 테이블 select (join product_price) -->
 	<select id="selectOrdersProducts" resultType="OrdersProductDto">
-		select p.product_code, p.product_name, pp.price
-		from product p, product_price pp
+		select p.product_code, p.product_name, p.product_order_pack, p.product_unit, pp.price, b.cd_contents
+		from product p, product_price pp, bunryu b
 		where p.product_code = pp.product_code
 		and p.product_isdel = 0 and p.product_isorder = 1
+		and b.bcd = 750 and b.mcd = p.product_unit
 		and sysdate between to_date(pp.start_date, 'yyyy-mm-dd') and to_date(pp.end_date, 'yyyy-mm-dd')
 	</select>
 	
@@ -27,7 +28,8 @@
 	<insert id="insertAllOrdersDetails" parameterType="java.util.List">
 		insert all
 		<foreach collection="list" item="item" separator=" ">
-			into orders_detail values (#{item.order_code}, #{item.product_code}, #{item.order_amount}, #{item.order_ddate}, #{item.order_datail_status})
+			into orders_detail values (#{item.order_code}, #{item.product_code}, #{item.order_amount},
+				#{item.order_ddate}, #{item.order_datail_status})
 		</foreach>
 		select * from dual
 	</insert>
@@ -43,7 +45,7 @@
 		<result property="order_reg_date" column="order_reg_date"/>
 		<result property="order_final_price" column="order_final_price"/>
 		<result property="order_req_date" column="order_req_date"/>
-		<result property="order_perm_date" column="order_perm_date"/>
+		<result property="order_confirmed_date" column="order_confirmed_date"/>
 		
 		<result property="cd_contents" column="cd_contents"/>
 		<collection property="orders_details" ofType="OrdersDetailDto" notNullColumn="product_code">
@@ -54,6 +56,9 @@
 			<result property="order_datail_status" column="order_datail_status"/>
 			<result property="detail_cd_contents" column="detail_cd_contents"/>
 			<result property="product_name" column="product_name"/>
+			<result property="product_order_pack" column="product_order_pack"/>
+			<result property="product_unit" column="product_unit"/>
+			<result property="product_cd_contents" column="product_cd_contents"/>
 			<result property="price" column="price"/>
 			<result property="can_order" column="can_order"/>
 			<result property="product_name" column="product_name"/>
@@ -65,18 +70,19 @@
 		select a.*, bunryu.cd_contents
 		from (
 		    select o.*, od.product_code, od.order_amount, od.order_ddate, od.order_detail_status,
-		    	   p.product_name, pp.price, b.cd_contents as detail_cd_contents,
+		    	   p.product_name, p.product_order_pack, p.product_unit, pp.price, b.cd_contents as detail_cd_contents, pb.cd_contents as product_cd_contents,
 		    	   CASE 
         		   	 WHEN p.product_isorder = 1 AND p.product_isdel = 0 AND pp.price IS NOT NULL THEN 1
         			 ELSE 0
     			   END AS can_order
-		    from orders o, orders_detail od, product p, product_price pp, bunryu b
+		    from orders o, orders_detail od, product p, product_price pp, bunryu b, bunryu pb
 		    where o.order_code = od.order_code(+)
 		    	  and od.product_code = p.product_code
 		    	  and od.product_code = pp.product_code(+)
 		    	  and o.order_code = #{code}
 		    	  and sysdate between to_date(pp.start_date(+), 'yyyy-mm-dd') and to_date(pp.end_date(+), 'yyyy-mm-dd')
 		    	  and b.bcd = 250 and b.mcd = od.order_detail_status
+		    	  and pb.bcd = 750 and pb.mcd = p.product_unit
 		) a, bunryu
 		where bunryu.bcd = 200 and bunryu.mcd = a.order_status
 	</select>
@@ -92,7 +98,7 @@
 	</delete>
 	
 	<!-- orders 테이블 update order_note -->
-	<update id="updateOrdersNote" parameterType="OrdersDto">
+	<update id="updateOrders" parameterType="OrdersDto">
 		update orders set order_note = #{order_note} where order_code = #{order_code}
 	</update>
 	
@@ -119,7 +125,8 @@
 	<select id="listOrders" parameterType="OrdersPageDto" resultType="OrdersListDto">
 		select * from (
 			select rownum rn, a.* from (
-				select o.*, b.cd_contents, c.client_name, e.emp_name from orders o, bunryu b, client_tb c, emp e 
+				select o.*, b.cd_contents, c.client_name, e.emp_name
+				from orders o, bunryu b, client_tb c, emp e 
 				where o.order_status != 0
 				and o.orders_client_code = c.client_code
 				and c.client_emp_code = e.emp_code
@@ -132,7 +139,8 @@
 	<select id="listOrdersByClient" parameterType="OrdersPageDto" resultType="OrdersListDto">
 		select * from (
 			select rownum rn, a.* from (
-				select o.*, b.cd_contents, c.client_name, e.emp_name from orders o, bunryu b, client_tb c, emp e 
+				select o.*, b.cd_contents, c.client_name, e.emp_name
+				from orders o, bunryu b, client_tb c, emp e 
 				where o.orders_client_code = #{client_code}
 				and o.orders_client_code = c.client_code
 				and c.client_emp_code = e.emp_code
@@ -142,16 +150,33 @@
 		) where rn between #{start} and #{end}
 	</select>
 	
-	<!-- orders 테이블 refuse 업데이트 -->
+	<!-- orders 테이블 refuse update -->
 	<update id="refuseOrders" parameterType="OrdersDto">
 		update orders
 		set order_status = #{order_status},
-		order_refuse = #{order_refuse, jdbcType=VARCHAR},
-		<if test="orders_perm_code != 0">
-			orders_perm_code = #{orders_perm_code},
-		</if>
-		order_final_price = #{order_final_price},
-		order_confirmed_date = sysdate
+			order_refuse = #{order_refuse, jdbcType=VARCHAR},
+			<if test="orders_perm_code != 0">
+				orders_perm_code = #{orders_perm_code},
+			</if>
+			order_final_price = #{order_final_price},
+			order_confirmed_date = sysdate
 		where order_code = #{order_code}
 	</update>
+	
+	<!-- orders 테이블 approve update -->
+	<update id="approveOrders" parameterType="OrdersDto">
+		update orders
+		set order_status = #{order_status},
+			orders_perm_code = #{orders_perm_code},
+			order_final_price = #{order_final_price},
+			order_confirmed_date = sysdate
+		where order_code = #{order_code}
+	</update>
+	
+	<!-- <select id="approveOrdersDetail" statementType="CALLABLE" parameterType="OrdersDetailApprovedDto">
+		call approve_orders_detail(
+			#{order_code, mode=IN},
+			#{enabled_products, mode=OUT, jdbcType=java.sql.Array, jdbcTypeName="NUMBER_TABLE"}
+		)
+	</select> -->
 </mapper>

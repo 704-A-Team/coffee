@@ -32,6 +32,7 @@ spring:
       max-file-size: 50MB
       max-request-size: 200MB
       file-size-threshold: 2KB # 파일 크기 임계값 설정 (이 크기를 초과하면 디스크에 저장)
+    #  max-file-count: 10 # 최대 10개까지 허용 FileCountLimitExceededException
  
   # View Resolver
   mvc:
@@ -43,6 +44,18 @@ spring:
     user:
       name: test
       password: test
+  
+  # gmail SMPT
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: team704gpt
+    password:  # 앱 비밀번호
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
       
 logging.level:
   org.hibernate.SQL: debug   # logger를 통해 하이버네이트 실행 SQL 

@@ -23,6 +23,7 @@ import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 import com.oracle.coffee.service.ClientService;
 import com.oracle.coffee.service.OrdersService;
 import com.oracle.coffee.service.Paging;
+import com.oracle.coffee.service.StockService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class OrdersController {
 	
 	private final OrdersService ordersService;
 	private final ClientService clientService;
+	private final StockService stockService;
 	
 	// 새로운 수주서 페이지
 	@GetMapping("/new")
@@ -73,7 +75,7 @@ public class OrdersController {
 			int clientCode = 3001;
 			respData = ordersService.list(page, clientCode);
 		}
-		
+
 		model.addAttribute("orders", respData.getList());
 		model.addAttribute("page", respData.getPage());
 		return "order/list";
@@ -92,10 +94,15 @@ public class OrdersController {
 		int clientCode = order.getOrders_client_code();
 		ClientDto client = clientService.getSingleClient(clientCode);
 		
+		// 마감 상태 조회
+		boolean isClosedMagam = stockService.isClosedMagam();
+		
 		// model.addAttrubyte("loginUser", loginUser);
 		model.addAttribute("client", client);
 		model.addAttribute("order", order);
 		model.addAttribute("isFixedPage", true);
+		model.addAttribute("isClosedMagam", isClosedMagam);
+		
 		return "order/form";
 	}
 	
@@ -168,7 +175,8 @@ public class OrdersController {
 	public String approve(@PathVariable("order_code") int orderCode) {
 		// 로그인한 본사직원 정보 조회
 		// 권한 확인
-		ordersService.approve(orderCode);
+		int loginEmpCode = 2003;
+		ordersService.approve(loginEmpCode, orderCode);
 		return "redirect:/order/" + orderCode;
 	}
 }

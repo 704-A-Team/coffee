@@ -4,11 +4,11 @@
 <mapper namespace="com.oracle.coffee.ProductWanMapper">
 	<insert id="wanRegister" parameterType="ProductWanDTO" useGeneratedKeys="true" keyProperty="product_code">
 		insert into product(PRODUCT_CODE , PRODUCT_NAME , PRODUCT_CONTENTS , PRODUCT_UNIT ,
-							PRODUCT_TYPE , PRODUCT_YIELD , PRODUCT_WEIGHT , PRODUCT_ISORDER , PRODUCT_PACK ,
+							PRODUCT_TYPE , PRODUCT_YIELD , PRODUCT_WEIGHT , PRODUCT_ISORDER , PRODUCT_PACK , PRODUCT_ORDER_PACK ,
 							PRODUCT_ISDEL , PRODUCT_REG_CODE , PRODUCT_REG_DATE)
 							values (
 								PRODUCT_SEQ.nextval, #{product_name}, #{product_contents}, #{product_unit},
-								#{product_type}, #{product_yield}, #{product_weight}, #{product_isorder}, #{product_pack},
+								#{product_type}, #{product_yield}, #{product_weight}, #{product_isorder}, #{product_pack}, #{product_pack},
 								#{product_isdel}, #{product_reg_code}, #{product_reg_date}	)
 		<selectKey keyProperty="product_code" resultType="Int" order="AFTER">
 			select PRODUCT_SEQ.CURRVAL From dual
@@ -23,6 +23,7 @@
 	<!-- 예시 DTO: ProductDto (id, name, price) -->
     <!-- List<ProductDto>를 한 번에 저장 -->
     <insert id="wanImgRegister" parameterType="java.util.List">
+     		<if test="list != null and list.size() > 0">
 		    INSERT ALL 
 		    <foreach collection="list" item="imgDto" separator=" "> <!-- item 이름을 imgDto 등으로 변경 -->
 		    INTO  PRODUCT_IMG (product_code, ord, file_name) VALUES
@@ -33,6 +34,7 @@
 		        )
 		    </foreach>
 		    SELECT 1 FROM DUAL
+		    </if>
 	</insert>
 	
 	
@@ -76,7 +78,7 @@
 		                                 AND   pp.start_date   = p_max_date.max_start_date
 		                                 ) pp_latest     
 		              ON pd.product_code = pp_latest.product_code
-		              ORDER BY pd.product_code
+		              ORDER BY pd.product_code DESC
 		    ) wanAll
 		)
 		WHERE rw BETWEEN #{start} AND #{end}
@@ -205,5 +207,13 @@
 		INSERT INTO PRODUCT_PRICE (PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
 			values (#{product_code} ,  #{start_date} , #{price_reg_code}, '9999-12-31' , #{price}, #{price_reg_date} )
 	</insert>
+	
+	<select id="mfgWanList" resultType="ProductWanDTO">
+		SELECT * FROM PRODUCT WHERE product_type = 1 AND product_isdel = 0
+	</select>
+	
+	<select id="priceHistory" parameterType="ProductWanDTO" resultType="ProductPriceDTO">
+		SELECT * FROM PRODUCT_PRICE WHERE product_code = #{product_code}
+	</select>
 	
 </mapper>

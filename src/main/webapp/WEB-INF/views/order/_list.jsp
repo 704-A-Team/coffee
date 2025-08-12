@@ -5,10 +5,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+	:root {
+	    --main-brown: #6f4e37;
+	    --light-brown: #e6d3c1;
+	    --dark-brown: #4e342e;
+    }
+    
+	.pagination .page-link {
+    	color: var(--main-brown);
+	}
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--main-brown);
+        border-color: var(--main-brown);
+        color: white;
+    }
+    
+    .form-section-title {
+        border-left: 5px solid var(--main-brown);
+        padding-left: 12px;
+        margin-bottom: 24px;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--dark-brown);
+    }
+</style>
 </head>
 <body>
 <div class="container p-4">
-<h2 class="mb-4 text-center fw-bold">수주 목록</h2>
+<div class="form-section-title">수주 목록</div>
 
 <table class="table table-bordered table-hover text-center">
     <thead class="table-secondary">
@@ -30,7 +56,7 @@
                 <td>${order.client_name}</td>
                 <td>${order.emp_name}</td>
                 <td>
-                    <fmt:formatNumber value="${order.order_final_price}" pattern="#,###" />
+                    <fmt:formatNumber value="${order.order_final_price}" pattern="#,###" /><c:if test="${order.order_status <= 1}"> (예상)</c:if>
                 </td>
                 <td><c:choose>
                 	<c:when test="${order.order_status == 0}">
@@ -56,12 +82,6 @@
                 	</c:otherwise>
                 </c:choose></td>
                 <td>
-                    <%-- <c:choose>
-                        <c:when test="${not empty order.approvedOrRejectedDate}">
-                            <fmt:formatDate value="${order.approvedOrRejectedDate}" pattern="yyyy-MM-dd" />
-                        </c:when>
-                        <c:otherwise>-</c:otherwise>
-                    </c:choose> --%>
                     ${order.order_req_date }
                 </td>
                 <td>${order.order_confirmed_date }</td>
@@ -82,7 +102,7 @@
 
 		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
 			<li class="page-item ${i == page.currentPage ? 'active' : ''}">
-				<a class="page-link bg-secondary border-secondary" href="/order/list?page=${i}&size=${page.rowPage}">${i}</a>
+				<a class="page-link" href="/order/list?page=${i}&size=${page.rowPage}">${i}</a>
 			</li>
 		</c:forEach>
 

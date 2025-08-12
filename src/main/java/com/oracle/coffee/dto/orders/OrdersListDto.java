@@ -1,6 +1,7 @@
 
 package com.oracle.coffee.dto.orders;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ public class OrdersListDto {
 	private int orders_client_code;
 	private int order_status;
 	private LocalDateTime order_reg_date;
-	private int order_final_price;			// 수주 확정 금액
+	private BigDecimal order_final_price;			// 수주 확정 금액
 	private LocalDateTime order_req_date;	// 수주 요청 시간
 	private LocalDateTime order_confirmed_date;	// 수주 승인/반려 시간
 	

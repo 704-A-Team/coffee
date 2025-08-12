@@ -18,7 +18,24 @@
     	<div class="flex-fill pe-3">
     		<div class="mb-2 d-flex">
 				<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">상태</label>
-   				<div class="form-control form-control-sm bg-light">${order.cd_contents }</div>
+				<c:if test="${order.order_status == 0}">
+					<div class="form-control form-control-sm bg-secondary-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 1}">
+					<div class="form-control form-control-sm bg-primary-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 2}">
+					<div class="form-control form-control-sm bg-danger">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 3}">
+					<div class="form-control form-control-sm bg-warning">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 4}">
+					<div class="form-control form-control-sm bg-success-subtle">${order.cd_contents }</div>
+				</c:if>
+				<c:if test="${order.order_status == 5}">
+					<div class="form-control form-control-sm bg-danger-subtle">${order.cd_contents }</div>
+				</c:if>
 		    </div>
     		<div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">등록 코드</label>
@@ -85,10 +102,11 @@
 		<div class="col-12 border p-3 ">
 	  	<div id="item-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
-			    <div class="col-3">품목명</div>
-			    <div class="col-2">단가</div>
+			    <div class="col-2">품목명</div>
+			    <div class="col-2">단가(원)</div>
 			    <div class="col-2">수량</div>
-			    <div class="col-2">공급가액</div>
+			    <div class="col-1">단위</div>
+			    <div class="col-2">공급가액(원)</div>
 			    <div class="col-2">납기일</div>
 			    <div class="col-1">상태</div>
 			</div>
@@ -98,24 +116,26 @@
 		<c:forEach items="${order.orders_details }" var="detail">
 			<c:set var="rowTotalPrice" value="${detail.price * detail.order_amount}" />
 			<div class="row g-2 mb-2 item-list-item">
-				<div class="col-3">
+				<div class="col-2">
 					<div class="form-control form-control-sm bg-light">
 						<c:if test="${order.order_status <= 1 and not detail.can_order }">[❌불가] </c:if>${detail.product_name} (${detail.product_code})
 					</div>
 				</div>
 				<div class="col-2">
-			    	<div class="form-control form-control-sm bg-light prd-price">
-			    		${detail.price }
-			    	</div>
+			    	<div class="form-control form-control-sm bg-light prd-price">${detail.price }</div>
 				</div>
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light prd-count">${detail.order_amount }</div>
+				</div>
+				<div class="col-1">
+					<div class="form-control form-control-sm bg-light prd-count">${detail.product_order_pack } ${detail.product_cd_contents }</div>
 				</div>
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light prd-total-price">${rowTotalPrice}</div>
 				</div>
 				<div class="col-2">
-					<div class="form-control form-control-sm bg-light">${detail.order_ddate }</div>
+					<fmt:parseDate var="parsedDate" value="${detail.order_ddate }" pattern="yyyyMMdd" />
+					<div class="form-control form-control-sm bg-light"><fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd" /></div>
 				</div>
 				<div class="col-1">
 				<c:choose>
@@ -128,7 +148,10 @@
 				</c:choose>
 				</div>
 			</div>
-			<c:set var="totalPrice" value="${totalPrice + rowTotalPrice}" />
+			<c:if test="${detail.can_order }">
+				<c:set var="totalPrice" value="${totalPrice + rowTotalPrice}" />
+			</c:if>
+			
 		</c:forEach>
 		<div class="col text-end">
 		<c:choose>
@@ -153,10 +176,24 @@
   	-->
   	<!-- "loginUser가 가맹점이면": <c:if test="${loginUser.login_type == 0 }"></c:if> -->
   	
-  	<c:if test="${order.order_status == 0 }">
-  		<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
-		<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/del/${order.order_code }'">임시저장 삭제</button>
-		<button type="button" class="btn btn-md btn-primary fw-bold" onclick="reqOrder(${order.order_code })">발주요청</button>
+  	<c:if test="${order.order_status == 0 }">	<!-- and 가맹점만 -->
+  		<div class="card border-0 pe-0">
+	  		<c:if test="${isClosedMagam }">
+				<div class="alert alert-info d-flex align-items-center" role="alert">
+			  		<i class="bi bi-info-circle-fill me-2"></i>
+			  		<div>
+			    		발주가 <strong>마감</strong>되어 현재 <u>발주 요청이 불가능</u>합니다.
+			  		</div>
+				</div>
+			</c:if>
+			<div class="d-flex justify-content-end gap-2 pe-0">
+				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
+				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/order/del/${order.order_code }'">임시저장 삭제</button>
+				<c:if test="${not isClosedMagam }">
+					<button type="button" class="btn btn-md btn-primary fw-bold" onclick="return reqOrder(${order.order_code })">발주요청</button>
+				</c:if>
+			</div>
+		</div>
   	</c:if>
   	
   	<c:if test="${order.order_status == 1 }">
@@ -164,16 +201,28 @@
 			<div class="alert alert-info d-flex align-items-center" role="alert">
 		  		<i class="bi bi-info-circle-fill me-2"></i>
 		  		<div>
-		    		발주가 <strong>승인</strong> 또는 <strong>반려</strong>되기 전까지 <u>내용을 변경하거나 요청을 취소</u>할 수 있습니다.
+		    		<strong>승인</strong> 또는 <strong>반려</strong>전까지 <u>내용을 변경하거나 요청을 취소</u>할 수 있습니다.
 		  		</div>
 			</div>
+			
+			<c:if test="${isClosedMagam }">	<!-- and 본사만 -->
+				<div class="alert alert-info d-flex align-items-center" role="alert">
+			  		<i class="bi bi-info-circle-fill me-2"></i>
+			  		<div>
+			    		수주가 <strong>마감</strong>되어 현재 <u>수주의 승인 및 반려가 불가능</u>합니다.
+			  		</div>
+				</div>
+			</c:if>
+			
 			<div class="d-flex justify-content-end gap-2 pe-0">
-				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">발주변경</button>
+				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
+				<!-- 가맹점만 -->
 				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, false)">요청취소</button>
 				
-				<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려 테스트</button>
-				<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인 테스트</button>
-
+				<c:if test="${not isClosedMagam }"> <!-- and 본사만 -->
+					<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
+					<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
+				</c:if>
 			</div>
 		</div>
   	</c:if>

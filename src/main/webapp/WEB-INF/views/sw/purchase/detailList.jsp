@@ -282,7 +282,6 @@ body { background-color: #f9f5f1; }
 			<%@ include file="../../footer.jsp"%>
 		</div>
 	</div>
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	
 </body>
 </html>

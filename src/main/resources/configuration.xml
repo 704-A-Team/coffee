@@ -9,12 +9,19 @@
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersProductDto" alias="OrdersProductDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersListDto" alias="OrdersListDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersPageDto" alias="OrdersPageDto"/>
+		<typeAlias type="com.oracle.coffee.dto.orders.OrdersDetailApprovedDto" alias="OrdersDetailApprovedDto"/>
+		
+		<typeAlias type="com.oracle.coffee.dto.MagamStatusDto" alias="MagamStatusDto"/>
 
 		<typeAlias alias="ProductWanDTO" type="com.oracle.coffee.dto.km.ProductWanDTO"/>
 		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>
 		<typeAlias alias="RecipeDTO" type="com.oracle.coffee.dto.km.RecipeDTO"/>
 		<typeAlias alias="ProductImgDTO" type="com.oracle.coffee.dto.km.ProductImgDTO"/>
 		<typeAlias alias="WanAndRecipeDTO" type="com.oracle.coffee.dto.km.WanAndRecipeDTO"/>
+		<typeAlias alias="MfgDTO" type="com.oracle.coffee.dto.km.MfgDTO"/>
+		<typeAlias alias="MfgDetailDTO" type="com.oracle.coffee.dto.km.MfgDetailDTO"/>
+		<typeAlias alias="MfgRpDTO" type="com.oracle.coffee.dto.km.MfgRpDTO"/>
+		<typeAlias alias="RpDetailDTO" type="com.oracle.coffee.dto.km.RpDetailDTO"/>
 	
 		<typeAlias alias="InventoryDto" type="com.oracle.coffee.dto.InventoryDto"/>
 		<typeAlias alias="MagamDto" type="com.oracle.coffee.dto.MagamDto"/>

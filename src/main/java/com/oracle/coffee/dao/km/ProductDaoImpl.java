@@ -216,6 +216,29 @@ public class ProductDaoImpl implements ProductDao {
 		
 	}
 
+	@Override
+	public List<ProductWanDTO> mfgWanList() {
+		List<ProductWanDTO> mfgWanList = null;
+		try {
+			mfgWanList = session.selectList("mfgWanList");
+		} catch (Exception e) {
+			System.out.println("mfgWanList Exception->" + e.getMessage());
+			throw e;  // 예외를 다시 던져줘야 트랜잭션이 감지함
+		}
+		return mfgWanList;
+	}
+
+	@Override
+	public List<ProductPriceDTO> priceHistory(ProductWanDTO productWanDTO) {
+		List<ProductPriceDTO> priceHistory = null;
+		try {
+			priceHistory = session.selectList("priceHistory" , productWanDTO);
+		} catch (Exception e) {
+			System.out.println("priceHistory Exception->" + e.getMessage());
+		}
+		return priceHistory;
+	}
+
 
 
 

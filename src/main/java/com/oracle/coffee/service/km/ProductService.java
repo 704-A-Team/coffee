@@ -30,6 +30,10 @@ public interface ProductService {
 	void 					recipeModify(List<RecipeDTO> recipeList);
 
 	void 					wanProductDel(ProductWanDTO productWanDTO);
+
+	List<ProductWanDTO> 	mfgWanList();
+
+	List<ProductPriceDTO> 	priceHistory(ProductWanDTO productWanDTO);
 	
 
 
