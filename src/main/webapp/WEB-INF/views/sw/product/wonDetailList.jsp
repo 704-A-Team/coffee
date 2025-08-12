@@ -68,16 +68,16 @@
         }
 
         .btn-brown-outline {
-            border: 1px solid var(--main-brown) !important;
-            color: var(--main-brown) !important;
-            background-color: #fff !important;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-            border-color: var(--main-brown) !important;
-        }
+	        border: 1px solid var(--main-brown) !important;
+	        color: var(--main-brown) !important;
+	        background-color: white !important;
+	    }
+	    
+	    .btn-brown-outline:hover {
+	        background-color: #ccc !important; /* 회색 배경 */
+	        color: #333 !important;            /* 진회색 글자 */
+	        border-color: #ccc !important;     /* 회색 테두리 */
+	    }
 
         .btn-brown {
             background-color: var(--soft-brown) !important;
@@ -109,6 +109,16 @@
                 margin: 0 auto 16px;
             }
         }
+        
+        .btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 진한 회색 */
+		}
+		
     </style>
 </head>
 
@@ -164,15 +174,19 @@
                 </div>
 
                 <!-- 버튼들: 카드 밖, 오른쪽 정렬 -->
-			<div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-			    <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" class="btn btn-brown">수정</a>
-			    <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-			        <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
-			        <button type="submit" class="btn btn-soft-danger">삭제</button>
-			    </form>
-			
-			    <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
-			</div>
+				<div class="d-flex justify-content-end gap-3 mt-4 mb-5">
+				    <!-- 수정: 파란색 -->
+				    <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" 
+				       class="btn btn-primary">수정</a>
+				
+				    <!-- 삭제: 빨간색 -->
+				    <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" 
+				          onsubmit="return confirm('정말 삭제하시겠습니까?');">
+				        <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
+				        <button type="submit" class="btn btn-danger">삭제</button>
+				    </form>
+				    <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
+				</div>
             </div>
         </main>
 

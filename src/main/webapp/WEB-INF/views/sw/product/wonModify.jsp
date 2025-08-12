@@ -61,6 +61,15 @@
                 justify-content: center !important;
             }
         }
+        .btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 진한 회색 */
+		}
+		
     </style>
 </head>
 
@@ -154,8 +163,9 @@
 
                     <!-- 버튼 영역: 오른쪽 하단 정렬 -->
                     <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">수정 완료</button>
-                        <a href="${pageContext.request.contextPath}/sw/wonProductDetail?product_code=${wonProductDetail.product_code}" class="btn btn-brown-outline">취소</a>
+                        <button type="submit" class="btn btn-primary">수정 완료</button>
+                        <a href="${pageContext.request.contextPath}/sw/wonProductDetail?product_code=${wonProductDetail.product_code}" class="btn btn-secondary-custom">취소</a>
+
                     </div>
                 </form>
             </div>

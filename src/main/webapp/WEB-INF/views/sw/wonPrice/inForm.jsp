@@ -47,16 +47,16 @@
         }
 
         .btn-brown-outline {
-            background-color: transparent !important;
-            color: var(--main-brown) !important;
-            border: 1px solid var(--main-brown) !important;
-            transition: 0.2s;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		
+		.btn-brown-outline:hover {
+		    background-color: #ccc !important; /* 회색 배경 */
+		    color: #333 !important;            /* 진회색 글자 */
+		    border-color: #ccc !important;     /* 회색 테두리 */
+		}
 
         .btn-secondary-custom {
             background-color: #eee !important;
@@ -115,7 +115,7 @@
 
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">등록</button>
+                        <button type="submit" class="btn btn-primary">등록</button>
                         <button type="reset" class="btn btn-secondary-custom">초기화</button>
                         <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
                     </div>

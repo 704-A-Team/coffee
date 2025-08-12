@@ -34,15 +34,18 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        .btn-brown {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-        }
+        /* 수정 완료 버튼 (파란색) */
+		.btn-brown {
+		    background-color: #0d6efd !important; /* 부트스트랩 기본 파랑 */
+		    color: white !important;
+		    border: 1.5px solid #0d6efd !important;
+		}
+		
+		.btn-brown:hover {
+		    background-color: #0b5ed7 !important; /* hover 시 더 진한 파랑 */
+		    border-color: #0b5ed7 !important;
+		    color: white !important;
+		}
 
         .btn-brown-outline {
             border: 1px solid var(--main-brown) !important;
@@ -54,6 +57,17 @@
             background-color: var(--main-brown) !important;
             color: white !important;
         }
+        
+        .btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 더 진한 회색 */
+		}
+
+
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -125,7 +139,7 @@
                 <!-- 버튼: 카드 밖, 오른쪽 정렬 -->
                 <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
                     <button type="submit" form="provideModifyForm" class="btn btn-brown">수정 완료</button>
-                    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">취소</a>
+                    <a href="${pageContext.request.contextPath}/provide/provideDetail?provide_code=${provideDetail.provide_code}" class="btn btn-secondary-custom">취소</a>
                 </div>
             </div>
         </main>

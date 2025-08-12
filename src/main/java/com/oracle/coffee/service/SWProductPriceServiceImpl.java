@@ -33,7 +33,7 @@ public class SWProductPriceServiceImpl implements SWProductPriceService {
 			if(isPriceCheck > 0) {
 				swProductPriceDao.updateEndDate(wonProductPriceDto);
 			}
-			wonProductPriceDto.setEnd_date("9999-12-31");
+			wonProductPriceDto.setEnd_date("99/12/31");
 			result = swProductPriceDao.wonProductPriceSave(wonProductPriceDto);
 			
 			transactionManager.commit(txStatus);

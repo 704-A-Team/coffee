@@ -14,27 +14,40 @@
 	rel="stylesheet" />
 
 <style>
-:root {
-	--main-brown: #6f4e37;
-	--soft-brown: #bfa08e;
-	--dark-brown: #4e342e;
-}
-body { background-color: #f9f5f1; }
-.doc-wrapper { background:#fff; border:1px solid #eee; border-radius:10px; padding:24px; }
-.form-label { font-weight:600; }
-.form-control[readonly], .bg-light { background:#f7f7f7 !important; }
-.form-section-title {
-	border-left: 5px solid var(--main-brown);
-	padding-left: 12px;
-	margin-bottom: 24px;
-	font-weight: 700;
-	font-size: 1.8rem;
-	color: var(--dark-brown);
-}
-.doc-title { background:#fff; border:1px solid #eee; border-radius:10px; padding:16px 20px; }
-.doc-title h4 { margin:0; font-weight:700; }
-.doc-sub { font-size:.95rem; }
-.doc-chip { display:inline-block; padding:2px 10px; border-radius:999px; background:#f1f1f1; margin-left:6px; }
+	:root {
+		--main-brown: #6f4e37;
+		--soft-brown: #bfa08e;
+		--dark-brown: #4e342e;
+	}
+	body { background-color: #f9f5f1; }
+	.doc-wrapper { background:#fff; border:1px solid #eee; border-radius:10px; padding:24px; }
+	.form-label { font-weight:600; }
+	.form-control[readonly], .bg-light { background:#f7f7f7 !important; }
+	.form-section-title {
+		border-left: 5px solid var(--main-brown);
+		padding-left: 12px;
+		margin-bottom: 24px;
+		font-weight: 700;
+		font-size: 1.8rem;
+		color: var(--dark-brown);
+	}
+	.doc-title { background:#fff; border:1px solid #eee; border-radius:10px; padding:16px 20px; }
+	.doc-title h4 { margin:0; font-weight:700; }
+	.doc-sub { font-size:.95rem; }
+	.doc-chip { display:inline-block; padding:2px 10px; border-radius:999px; background:#f1f1f1; margin-left:6px; }
+	
+	.btn-brown-outline {
+	    border: 1px solid var(--main-brown) !important;
+	    color: var(--main-brown) !important;
+	    background-color: white !important;
+	}
+	
+	.btn-brown-outline:hover {
+	    background-color: #ccc !important; /* 회색 배경 */
+	    color: #333 !important;            /* 진회색 글자 */
+	    border-color: #ccc !important;     /* 회색 테두리 */
+	}
+	
 </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -246,7 +259,7 @@ body { background-color: #f9f5f1; }
 							</form>
 							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">거부</button>
 						</c:if>
-						<a href="javascript:history.back()" class="btn btn-outline-secondary">목록</a>
+						<a href="javascript:history.back()" class="btn btn-brown-outline">목록</a>
 					</div>
 
 					<!-- 거부 사유 모달 -->
