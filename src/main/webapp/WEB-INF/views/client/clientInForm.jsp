@@ -66,9 +66,32 @@
 
                             <!-- 전화번호 -->
                             <div class="mb-3">
-                                <label class="form-label">전화번호</label>
-                                <input type="text" name="client_tel" class="form-control" required>
-                            </div>
+                          		<label for="client_tel" class="form-label">전화번호</label>
+								<input type="text" class="form-control" id="client_tel" name="client_tel" maxlength="13" required>
+					  </div>
+                <script>
+				document.addEventListener("DOMContentLoaded", function () {
+				    const telInput = document.getElementById("client_tel");
+				
+				    telInput.addEventListener("input", function () {
+				        let value = telInput.value.replace(/[^0-9]/g, ""); // 숫자만
+				
+				        if (value.length === 9) {
+				            value = value.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3");
+				        } else if (value.length === 11) {
+				            value = value.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+				        } else if (value.length === 10) {
+				            if (value.startsWith("02")) {
+				                value = value.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
+				            } else {
+				                value = value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+				            }
+				        }
+				        telInput.value = value;
+				    });
+				});
+				</script>
+
 
                             <!-- 담당 사원 -->
                             <div class="mb-3">

@@ -13,6 +13,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="sec"    uri="http://www.springframework.org/security/tags" %>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -58,21 +59,46 @@
 		<!-- Sidebar Toggle-->
 		<button class="btn btn-sm text-white border-0 bg-transparent" id="sidebarToggle"><i class="bi bi-list"></i></button>
 
-	    <!-- My Page-->
-	    <ul class="navbar-nav ms-auto me-3 me-lg-4">
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-				   data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="bi bi-person-fill"></i>
-				</a>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-					<li><a class="dropdown-item" href="#!">My Profile</a></li>
-					<li><a class="dropdown-item" href="#!">Activity Log</a></li>
-					<li><hr class="dropdown-divider" /></li>
-					<li><a class="dropdown-item" href="#!">Logout</a></li>
-				</ul>
-			</li>
-		</ul>
+	   <!-- 우측 메뉴 -->
+		<ul class="navbar-nav ms-auto me-3 me-lg-4">
+		  <li class="nav-item dropdown">
+		    <a class="nav-link dropdown-toggle" href="#" id="userMenu"
+		       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+		      <i class="bi bi-person-fill"></i>
+		    </a>
+		
+		    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+		      <sec:authorize access="isAnonymous()">
+		        <li><a class="dropdown-item" href="/login">Login</a></li>
+		      </sec:authorize>
+		
+		      <sec:authorize access="isAuthenticated()">
+		       <sec:authorize access="isAuthenticated()">
+						    <li class="dropdown-item-text p-2" style="line-height: 1.6;">
+						        <div>
+						            <strong>로그인:</strong>
+						            <span><sec:authentication property="principal.username"/></span>
+						        </div>
+						        <div>
+						            <strong>권한:</strong>
+						            <span><sec:authentication property="principal.roles"/></span>
+						        </div>
+						    </li>
+						</sec:authorize>
+				<li class="px-3">
+						  <a href="${pageContext.request.contextPath}/MyPage/MyPage"
+						     class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						</li>
+		        <li>
+		          <form action="/logout" method="post" class="px-3">
+		            <sec:csrfInput/>
+		            <button type="submit" class="btn btn-sm btn-outline-danger w-100">Log out</button>
+		          </form>
+		        </li>
+		      </sec:authorize>
+		    </ul>
+		  </li>
+</ul>
 	</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
