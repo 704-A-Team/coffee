@@ -20,7 +20,7 @@ import lombok.Data;
 @SequenceGenerator(
 		name = "ACCOUNT_SEQ",  // Seq 객체
 		sequenceName = "ACCOUNT_SEQ", // Seq DB 
-		initialValue = 4010,
+		initialValue = 4001,
 		allocationSize = 1
   )
 public class Account implements Serializable {
@@ -38,3 +38,4 @@ public class Account implements Serializable {
     private String roles;
 
 }
+
