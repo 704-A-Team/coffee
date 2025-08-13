@@ -67,30 +67,36 @@
                 <div class="container mt-4 p-4">
 
                     <!-- 버튼 그룹 -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <!-- 왼쪽: 수주/발주/생산 -->
-                      <div class="d-flex align-items-center">
-                        <button type="button"
-                                class="btn btn-secondary fixed-btn action-btn me-2">
-                          수주
-                        </button>
-                        <button type="button"
-                                class="btn btn-secondary fixed-btn action-btn me-2">
-                          발주
-                        </button>
-                        <a href="${pageContext.request.contextPath}/jh/mfgRequest"
-                           class="btn btn-secondary fixed-btn action-btn">
-                          생산
-                        </a>
-                      </div>
-
-                      <!-- 오른쪽: 마감/해제 -->
-                      <div class="d-flex align-items-center">
-                        <button class="btn btn-danger fixed-btn me-2" onclick="toggleClose(true)">마감</button>
-                        <button class="btn btn-secondary fixed-btn"   onclick="toggleClose(false)">마감해제</button>
-                      </div>
-                    </div>
-
+			<div class="d-flex justify-content-between align-items-center mb-3">
+			  <!-- 왼쪽: 수주/발주/생산 -->
+			  <div class="d-flex align-items-center">
+			    <!-- 수주 버튼 -->
+			    <button type="button"
+			            class="btn btn-secondary fixed-btn action-btn me-2"
+			            onclick="location.href='${pageContext.request.contextPath}/order/new'">
+			      수주
+			    </button>
+			
+			    <!-- 발주 버튼 -->
+			    <button type="button"
+			            class="btn btn-secondary fixed-btn action-btn me-2"
+			            onclick="location.href='${pageContext.request.contextPath}/sw/purchaseInForm'">
+			      발주
+			    </button>
+			
+			    <!-- 생산 버튼 -->
+			    <a href="${pageContext.request.contextPath}/jh/mfgRequest"
+			       class="btn btn-secondary fixed-btn action-btn">
+			      생산
+			    </a>
+			  </div>
+			
+			  <!-- 오른쪽: 마감/해제 -->
+			  <div class="d-flex align-items-center">
+			    <button class="btn btn-danger fixed-btn me-2" onclick="toggleClose(true)">마감</button>
+			    <button class="btn btn-secondary fixed-btn"   onclick="toggleClose(false)">마감해제</button>
+			  </div>
+			</div>
                     <!-- 테이블 -->
                     <table class="table table-bordered text-center">
                         <thead class="table-primary">
