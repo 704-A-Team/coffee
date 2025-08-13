@@ -3,8 +3,10 @@ package com.oracle.coffee.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.oracle.coffee.domain.Account;
 import com.oracle.coffee.domain.Client;
 import com.oracle.coffee.dto.ClientDto;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ClientRepositoryImpl implements ClientRepository {
 
 	private final EntityManager em;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public Long clientTotalcount() {
@@ -79,9 +82,46 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 	@Override
 	public Client clientSave(Client client) {
+		// 1. 거래처 등록
 		em.persist(client);
+		em.flush();
+		
+		// 2.거래처 
+		  String tel = client.getClient_tel();
+	        if (tel == null || tel.isBlank()) {
+	            throw new IllegalArgumentException("전화번호가 없습니다.");
+	        }	
+	        String last4 = extractLast4Digits(tel);
+	        if (last4.isEmpty()) {
+	            throw new IllegalArgumentException("전화번호에서 숫자 4자리를 추출할 수 없습니다.");
+	        }
+	        String encoded = passwordEncoder.encode(last4);
+
+	        // 3) Account 생성 (id는 시퀀스로 자동)
+	        Account account = new Account();
+	        account.setClient_code(client.getClient_code());              // EMP_CODE 저장
+	        account.setUsername(String.valueOf(client.getClient_code())); // USERNAME = emp_code
+	        account.setPassword(encoded);                       // PASSWORD = hash(last4)
+	        if (client.getClient_type() == 2) 
+	        { 
+	            account.setRoles("ROLE_CLIENT");
+	        } 
+	        else if (client.getClient_type() == 3) 
+	        {
+	            account.setRoles("ROLE_CLIENT2");
+	        }
+	        em.persist(account); 
+
 		return client;
 	}
+	
+	  private String extractLast4Digits(String tel) {
+	        String digits = tel.replaceAll("\\D", "");
+	        int len = digits.length();
+	        if (len < 4) return "";
+	        return digits.substring(len - 4);
+	    }
+	    
 
 	@Override
 	public ClientDto findByClient_code(int client_code) {
@@ -146,4 +186,5 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 		return findByClient_code(clientDto.getClient_code());
 	}
+
 }

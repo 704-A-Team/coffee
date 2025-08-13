@@ -36,11 +36,26 @@
                                     <input type="text" class="form-control" id="emp_name" name="emp_name" required>
                                 </div>
 
-                                <!-- 전화번호 -->
-                                <div class="mb-3">
-                                    <label for="emp_tel" class="form-label">전화번호</label>
-                                    <input type="text" class="form-control" id="emp_tel" name="emp_tel" required>
-                                </div>
+                               <!-- 전화번호 -->
+								<div class="mb-3">
+								    <label for="emp_tel" class="form-label">전화번호</label>
+								    <input type="text" class="form-control" id="emp_tel" name="emp_tel" maxlength="13" required>
+								</div>
+								<script>
+								document.addEventListener("DOMContentLoaded", function () {
+								    const telInput = document.getElementById("emp_tel");
+								
+								    telInput.addEventListener("input", function () {
+								        let value = telInput.value.replace(/[^0-9]/g, ""); // 숫자만
+								        if (value.length > 3 && value.length <= 7) {
+								            value = value.replace(/(\d{3})(\d+)/, "$1-$2");
+								        } else if (value.length > 7) {
+								            value = value.replace(/(\d{3})(\d{4})(\d+)/, "$1-$2-$3");
+								        }
+								        telInput.value = value;
+								    });
+								});
+								</script>
 
                                 <!-- 부서코드 -->
                                 <div class="mb-3">
