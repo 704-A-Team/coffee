@@ -316,7 +316,27 @@
 		}
 
 		if(confirm("발주를 승인하시겠습니까?")) {
-			location.href = "/order/approve/" +orderCode;
+			fetch('/order/approve/' + orderCode, {
+				method: 'GET',
+				credentials: 'include', // 쿠키(세션ID) 포함
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('요청 실패');
+				}
+				return response.json();
+			})
+			.then(data => {
+				const disabledPrds = data;
+				if (disabledPrds.length === 0) {
+					alert("승인되었습니다");
+					location.href = "/order/" + orderCode;
+				
+				} else {
+					const prdNames = disabledPrds.map(prd => prd.product_name + "(" + prd.product_code + ")").join('\n');
+			        alert('재고 부족으로 승인할 수 없습니다\n[재고 부족 제품]\n' + prdNames);
+				}
+			})
 		
 		} else return false;
 	}

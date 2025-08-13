@@ -1,12 +1,13 @@
 package com.oracle.coffee.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.oracle.coffee.dto.orders.OrdersDetailApprovedDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
@@ -21,6 +22,15 @@ import lombok.RequiredArgsConstructor;
 public class OrdersDaoImpl implements OrdersDao {
 	
 	private final SqlSession session;
+	
+	@Override
+	public void updateOrdersDetailsDelivery() {
+		try {
+			session.update("deliveryOrdersDetail");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public List<OrdersProductDto> getProducts() {
@@ -158,19 +168,21 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	@Override
-	public List<Integer> approveOrdersDetails(int order_code) {
+	public List<Integer> approveOrdersDetails(int orderCode) {
 		// 한 수주의 모든 orders_detail 재고 확인하는 프로시저 동작
+		Map<String, Object> map = new HashMap<>();
+		map.put("order_code", orderCode);
 		
-		/*
-		 * OrdersDetailApprovedDto dto = new OrdersDetailApprovedDto();
-		 * dto.setOrder_code(order_code);
-		 * 
-		 * try { session.selectOne("approveOrdersDetail", dto); } catch (Exception e) {
-		 * e.printStackTrace(); }
-		 * 
-		 * return dto.getEnabled_products();
-		 */
-		return null;
+		try {
+			session.selectOne("approveOrdersDetail", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		List<OrdersDetailDto> details = (List<OrdersDetailDto>) map.get("enabled_products") ;
+		List<Integer> enabledPrdCodes = details.stream().map(detail -> detail.getProduct_code()).toList();
+		return enabledPrdCodes;
+		
 	}
 
 }

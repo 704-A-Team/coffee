@@ -11,8 +11,15 @@
 		where p.product_code = pp.product_code
 		and p.product_isdel = 0 and p.product_isorder = 1
 		and b.bcd = 750 and b.mcd = p.product_unit
-		and sysdate between to_date(pp.start_date, 'yyyy-mm-dd') and to_date(pp.end_date, 'yyyy-mm-dd')
+		and sysdate between pp.start_date and pp.end_date
 	</select>
+	
+	<update id="deliveryOrdersDetail">
+		update orders_detail
+		set order_detail_status = 2
+		where order_detail_status = 1
+		and	order_ddate = to_char(sysdate, 'YYYYMMDD')
+	</update>
 	
 	<!-- orders 테이블 insert -->
 	<insert id="insertOrders" statementType="CALLABLE" parameterType="OrdersDto">
@@ -80,7 +87,7 @@
 		    	  and od.product_code = p.product_code
 		    	  and od.product_code = pp.product_code(+)
 		    	  and o.order_code = #{code}
-		    	  and sysdate between to_date(pp.start_date(+), 'yyyy-mm-dd') and to_date(pp.end_date(+), 'yyyy-mm-dd')
+		    	  and sysdate between pp.start_date(+) and pp.end_date(+)
 		    	  and b.bcd = 250 and b.mcd = od.order_detail_status
 		    	  and pb.bcd = 750 and pb.mcd = p.product_unit
 		) a, bunryu
@@ -173,10 +180,15 @@
 		where order_code = #{order_code}
 	</update>
 	
-	<!-- <select id="approveOrdersDetail" statementType="CALLABLE" parameterType="OrdersDetailApprovedDto">
+	<!-- orders_detail 테이블 모든 재고 가능한 경우 approve update -->	
+	<resultMap id="approvedPrds" type="OrdersDetailDto">
+    	<result property="product_code" column="product_code"/>
+	</resultMap>
+	
+	<select id="approveOrdersDetail" statementType="CALLABLE" parameterType="map">
 		call approve_orders_detail(
 			#{order_code, mode=IN},
-			#{enabled_products, mode=OUT, jdbcType=java.sql.Array, jdbcTypeName="NUMBER_TABLE"}
+			#{enabled_products, mode=OUT, jdbcType=CURSOR, resultMap=approvedPrds}
 		)
-	</select> -->
+	</select>
 </mapper>
