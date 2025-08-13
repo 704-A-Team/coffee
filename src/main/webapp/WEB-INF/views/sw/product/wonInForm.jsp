@@ -38,21 +38,31 @@
         }
 
         .btn-brown-outline {
-            border: 1px solid var(--main-brown) !important;
-            color: var(--main-brown) !important;
-            background-color: white !important;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		.btn-brown-outline:hover {
+		    background-color: var(--main-brown) !important;
+		    color: white !important;
+		    border-color: var(--main-brown) !important;
+		}
 
         @media (max-width: 768px) {
             .d-flex.justify-content-end {
                 justify-content: center !important;
             }
         }
+        
+        .btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 진한 회색 */
+		}
+		
     </style>
 </head>
 
@@ -106,7 +116,7 @@
 					<!-- 판매단위(콤보박스) -->
                     <div class="mb-3">
                         <label for="product_order_pack" class="form-label">판매단위</label>
-                        <select class="form-select" id="product_order_pack" name="product_order_pack" required>
+                        <select class="form-select" id="product_order_pack" name="product_order_pack">
                             <option value="">-- 단위를 먼저 선택하세요 --</option>
                         </select>
                     </div>
@@ -119,10 +129,10 @@
                     </div>
 
                     <!-- 버튼 영역: 오른쪽 하단 정렬 -->
-                    <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">등록</button>
-                        <button type="reset" class="btn btn-brown-outline">초기화</button>
-                    </div>
+					<div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+					    <button type="submit" class="btn btn-primary">등록</button>
+					    <button type="reset" class="btn btn-secondary-custom">초기화</button>
+					</div>
                 </form>
             </div>
         </main>

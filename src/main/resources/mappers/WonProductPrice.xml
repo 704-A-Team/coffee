@@ -5,7 +5,41 @@
 <mapper namespace="com.oracle.coffee.WonProductPriceMapper">
 
 	<insert id="wonProductPriceSave" parameterType="WonProductPriceDto">
-		
+		insert into product_price
+		(	
+			product_code,
+			start_date,
+			end_date,
+			price,
+			price_reg_code,
+			price_reg_date
+		)
+		values
+		(
+			#{product_code},
+			SYSDATE,
+			#{end_date},
+			#{price},
+			#{price_reg_code},
+			SYSDATE
+		)
 	</insert>
+	
+	<select id="isPriceCheck" parameterType="WonProductPriceDto" resultType="int">
+		select 	count(*)
+		from 	product_price
+		where	product_code = #{product_code}
+	</select>
 
+	<update id="updateEndDate">
+		update 	product_price
+		set		end_date = TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD')
+		where 	product_code = #{product_code}
+		and		end_date = (select 	Max(end_date)
+							from 	product_price
+							where	product_code = #{product_code}
+							)
+	</update>
+	
+	
 </mapper>

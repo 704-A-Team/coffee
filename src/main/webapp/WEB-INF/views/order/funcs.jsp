@@ -12,6 +12,15 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+
+	function toDateString(date_str)
+	{
+	    var yyyyMMdd = String(date_str);
+	    var sYear = yyyyMMdd.substring(0,4);
+	    var sMonth = yyyyMMdd.substring(4,6);
+	    var sDate = yyyyMMdd.substring(6,8);
+	    return sYear + "-" + sMonth + "-" + sDate;
+	}
 	
 	function getDetails() {
 		return [
@@ -19,9 +28,12 @@
 				{
 					product_code: "${detail.product_code}",
 					order_amount: "${detail.order_amount}",
-					order_ddate: "${detail.order_ddate}", // yyyy-MM-dd
+					
+					order_ddate: toDateString("${detail.order_ddate}"), // yyyy-MM-dd
 					
 					product_name: "${detail.product_name} (${detail.product_code})",
+					product_order_pack: "${detail.product_order_pack}",
+					product_unit: "${detail.product_cd_contents}",
 					product_price: "${detail.price}",
 					
 					can_order: ${detail.can_order},
@@ -41,14 +53,32 @@
     			details.forEach(detail => addItem(detail));
     		}
     		
-    		// 선택한 제품에 따라 price 자동 추가
-    		$('#item-list').on("change", '.prd-code', function () {
+    		// 선택한 제품에 따라 unit, price 자동 추가
+    		$('#item-list').on("change", '.prd-code', function (e) {
     			const $row = $(this).closest('.row');
-    		    const price = $(this).find("option:selected").attr("price");
+    			// prd 중복 선택 방지
+    			var existedCodes = $('#item-list .prd-code').map(function() {
+    									return $(this).val();
+								   }).get();
+    			const currentCode = $(this).val();
+    			if(currentCode && existedCodes.filter(v => v === currentCode).length > 1) {
+    				alert("중복된 제품이 선택되었습니다");
+    				return;
+    			}
+    			
+    		    // 가격 조정
+    			const price = $(this).find("option:selected").attr("price");
     		    $row.find(".prd-price").text(price);
+    		    // 단위 조정
+    		    const pack = parseInt($(this).find("option:selected").attr("pack"));
+    		    const unit = $(this).find("option:selected").attr("unit");
+    		    $row.find(".prd-unit").text(pack + " " + unit);
+    		    // 수량 범위 조정
+    		    $row.find(".prd-count").attr('min', pack === 0 ? 1 : pack);
+    		    $row.find(".prd-count").attr('step', pack);
     	    });
     		
-    		// row 별 총액 계산
+    		// 수량 변경에 따라 row 별 총액 계산
     	    $('#item-list').on("change", '.prd-count', function () {
     	    	const $row = $(this).closest('.row');
     	    	const count = $(this).val();
@@ -56,6 +86,7 @@
     	    	$row.find(".prd-total-price").text(count * price);
     	    });
     		
+    	 	// 선택한 제품에 따라 row 별 총액 계산
     	    $('#item-list').on("change", '.prd-code', function () {
     	    	const $row = $(this).closest('.row');
     	    	const price = $(this).find("option:selected").attr("price");
@@ -82,6 +113,23 @@
     	    	});
     	    	$('.total-price').text(total);
     	    });
+    	    
+    	    // 선택한 날짜 제한 확인
+    	    $('#item-list').on("change", '.prd-ddate', function () {
+    	    	const $row = $(this).closest('.row');
+    	    	const ddate = new Date($(this).val());
+    	    	ddate.setHours(0,0,0,0);
+    	    	
+    	    	// 오늘 기준 3일 뒤
+    	    	const minDate = new Date();
+    	    	minDate.setDate((new Date()).getDate() + 2);
+    	    	minDate.setHours(0,0,0,0);
+    	    	
+    	    	if (ddate < minDate) {
+    	            alert("오늘로부터 2일 이후 날짜만 선택할 수 있습니다.");
+    	            $(this).val("");  // 날짜 초기화
+    	        }
+    	    });
     	});	
     }
 
@@ -92,25 +140,28 @@
 	    row.className = "row g-2 mb-2 item-list-item";
 	    
 	    row.innerHTML = `
-	      <div class="col-3">
+	      <div class="col-2">
 	    	<select class="form-select prd-code" required>
 	    		<option value=""></option>
 	    			<c:forEach items="${products }" var="prd">
-    			<option value="${prd.product_code}" price="${prd.price}">${prd.product_name} (${prd.product_code})</option>
+    			<option value="${prd.product_code}" price="${prd.price}" pack="${prd.product_order_pack}" unit="${prd.cd_contents}">${prd.product_name} (${prd.product_code})</option>
 			</c:forEach>
 		    </select>
 	      </div>
 	      <div class="col-2">
-	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단가">0</div>
+	        <div class="form-control form-control-sm bg-light prd-price" placeholder="단위"></div>
 	      </div>
 	      <div class="col-2">
-	        <input type="number" min="1" class="form-control form-control-sm prd-count" required placeholder="수량">
+	        <input type="number" min="1" step="1" class="form-control form-control-sm prd-count" required placeholder="수량">
+	      </div>
+	      <div class="col-1">
+	        <div class="form-control form-control-sm bg-light prd-unit" placeholder="단가">0</div>
 	      </div>
 	      <div class="col-2">
 	        <div class="form-control form-control-sm bg-light prd-total-price" placeholder="총액">0</div>
 	      </div>
 	      <div class="col-2">
-	        <input type="date" class="form-control form-control-sm prd-ddate" required placeholder="납기일">
+	        <input type="date" class="form-control form-control-sm prd-ddate" pattern="YYYYMMDD" required placeholder="납기일">
 	      </div>
 	      
 	      <div class="col-1 text-end pe-0">
@@ -120,6 +171,7 @@
 	    container.appendChild(row);
 	 	
 		const nameInput = row.querySelector('.prd-code');
+        const unitInput = row.querySelector('.prd-unit');
         const countInput = row.querySelector('.prd-count');
         const priceInput = row.querySelector('.prd-price');
         const rowPriceInput = row.querySelector('.prd-total-price');
@@ -130,13 +182,18 @@
  	        if (nameInput) {
  	        	// 현재 가능한 products 목록(select태그의 value들)에 없으면
  	        	if (!detail.can_order) {
-				// if (!$(nameInput).find('option[value="' + detail.product_code + '"]').length) {
 	 	        	const deletedOption = new Option('[❌불가] ' + detail.product_name, 0, true, true);
 	  				$(deletedOption).prop("disabled", true);
 	  				nameInput.append(deletedOption)
 				} else $(nameInput).val(detail.product_code);
 	        }
-	        if (countInput) $(countInput).val(detail.order_amount ?? 0);
+ 	       	const prdOrderUnit = detail.product_order_pack + " " + detail.product_unit;
+	        if (unitInput) $(unitInput).text(prdOrderUnit);
+	        if (countInput) {
+	        	$(countInput).val(detail.order_amount ?? 0);
+	        	$(countInput).attr('min', detail.product_order_pack);
+	        	$(countInput).attr('step', detail.product_order_pack);
+	        }
 	        if (priceInput) $(priceInput).text(detail.product_price ?? 0);
 	        const rowPrice = detail.order_amount * detail.product_price;
 	        if (rowPriceInput) $(rowPriceInput).text(rowPrice);
@@ -153,9 +210,8 @@
 	    });
 	}
 	
-	// form submit전 제품 목록 리스트 생성 (payload)
+	// form submit (/save)전 제품 목록 리스트 생성 (payload)
 	function setOrderDetails(orderCode) {
-		console.log(orderCode)
 		const rows = document.querySelectorAll('#item-list .item-list-item');
 		const detailsContainer = document.getElementById('ordersDetails');
 		detailsContainer.innerHTML = '';
@@ -209,7 +265,9 @@
 				return false;
 			}
 		}
-		location.href = "/order/request/" + orderCode;
+		if (confirm("발주를 요청하시겠습니까?")) {
+			location.href = "/order/request/" + orderCode;
+		} else return false;
 	}
 
 	function cancelOrder(orderCode, isRefused) {
@@ -249,8 +307,36 @@
 	}
 	
 	function approveOrder(orderCode) {
+		const details = getDetails();
+		for(detail of details) {
+			if (!detail.can_order) {
+				alert("발주 불가 품목이 존재합니다\n내용을 수정해주세요");
+				return false;
+			}
+		}
+
 		if(confirm("발주를 승인하시겠습니까?")) {
-			location.href = "/order/approve/" +orderCode;
+			fetch('/order/approve/' + orderCode, {
+				method: 'GET',
+				credentials: 'include', // 쿠키(세션ID) 포함
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('요청 실패');
+				}
+				return response.json();
+			})
+			.then(data => {
+				const disabledPrds = data;
+				if (disabledPrds.length === 0) {
+					alert("승인되었습니다");
+					location.href = "/order/" + orderCode;
+				
+				} else {
+					const prdNames = disabledPrds.map(prd => prd.product_name + "(" + prd.product_code + ")").join('\n');
+			        alert('재고 부족으로 승인할 수 없습니다\n[재고 부족 제품]\n' + prdNames);
+				}
+			})
 		
 		} else return false;
 	}

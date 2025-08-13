@@ -47,16 +47,16 @@
         }
 
         .btn-brown-outline {
-            background-color: transparent !important;
-            color: var(--main-brown) !important;
-            border: 1px solid var(--main-brown) !important;
-            transition: 0.2s;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		
+		.btn-brown-outline:hover {
+		    background-color: #ccc !important; /* 회색 배경 */
+		    color: #333 !important;            /* 진회색 글자 */
+		    border-color: #ccc !important;     /* 회색 테두리 */
+		}
 
         .btn-secondary-custom {
             background-color: #eee !important;
@@ -67,8 +67,7 @@
         .btn-secondary-custom:hover {
             background-color: #ccc !important;
         }
-        
-        /* Select2 드롭다운 높이 & hover 색상 커스터마이징 */
+
         .select2-results__options {
             max-height: 400px !important;
         }
@@ -76,6 +75,11 @@
         .select2-container--default .select2-results__option--highlighted[aria-selected] {
             background-color: var(--soft-brown) !important;
             color: white !important;
+        }
+
+        .input-price-warning {
+            border: 2px solid red !important;
+            background-color: #ffe5e5 !important;
         }
     </style>
 </head>
@@ -94,8 +98,8 @@
                 <form action="${pageContext.request.contextPath}/sw/wonProductPriceSave" method="post">
                     <!-- 제품 선택 -->
                     <div class="mb-3">
-                        <label for="product_won_code" class="form-label">제품</label>
-                        <select id="product_won_code" name="product_won_code" class="form-select" required>
+                        <label for="product_code" class="form-label">제품</label>
+                        <select id="product_code" name="product_code" class="form-select" required>
                             <option value="">-- 제품을 선택하세요 --</option>
                             <c:forEach var="product" items="${wonProductAllList}">
                                 <option value="${product.product_code}">${product.product_name}</option>
@@ -104,14 +108,14 @@
                     </div>
 
                     <!-- 가격 입력 -->
-					<div class="mb-3">
-					    <label for="price" class="form-label">가격(1ea, 1g, 1ml 기준)</label>
-					    <input type="number" id="price" name="price" class="form-control" required step="0.001" min="0">
-					</div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">가격(1ea, 1g, 1ml 기준)</label>
+                        <input type="number" id="price" name="price" class="form-control" required step="0.001" min="0">
+                    </div>
 
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">등록</button>
+                        <button type="submit" class="btn btn-primary">등록</button>
                         <button type="reset" class="btn btn-secondary-custom">초기화</button>
                         <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
                     </div>
@@ -129,7 +133,7 @@
     }
 
     $(document).ready(function () {
-        $('#product_won_code').select2({
+        $('#product_code').select2({
             placeholder: '제품명을 선택하거나 검색하세요',
             minimumInputLength: 0,
             width: '100%',
@@ -140,7 +144,7 @@
             }
         });
 
-        $('#product_won_code').on('change', function () {
+        $('#product_code').on('change', function () {
             const ajax_product_code = $(this).val();
 
             if (!ajax_product_code) {
@@ -159,7 +163,6 @@
                         return;
                     }
 
-                    // 단가 / 공급단위 계산
                     const ajax_unitPrices = ajax_provideList.map(ajax_p => {
                         const ajax_danga = parseFloat(ajax_p.current_danga);
                         const ajax_amount = parseFloat(ajax_p.provide_amount);
@@ -182,19 +185,32 @@
                     const ajax_rounded = Math.round(ajax_increased * 1000) / 1000;
                     const ajax_displayValue = ajax_rounded.toFixed(2);
 
-                    $('#price').val(ajax_displayValue);
+                    $('#price').val(ajax_displayValue).data('original-price', ajax_rounded);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX 실패:", status, error);
                     alert("공급 단가 조회 실패");
                 }
             });
+
+            $('#price').on('input', function () {
+                const currentVal = parseFloat($(this).val());
+                const originalVal = parseFloat($(this).data('original-price'));
+
+                if (!isNaN(originalVal) && currentVal < originalVal) {
+                    $(this).addClass('input-price-warning');
+                } else {
+                    $(this).removeClass('input-price-warning');
+                }
+            });
         });
 
-
+        const errorMsg = '${errorMsg}';
+        if (errorMsg && errorMsg !== 'null' && errorMsg.trim() !== '') {
+            alert(errorMsg);
+        }
     });
 </script>
-
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.oracle.coffee.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.Data;
@@ -12,7 +13,7 @@ public class WonProductPriceDto {
 	private String		start_date;
 	private int 		price_reg_code;
 	private String		end_date;
-	private int 		price;
+	private BigDecimal 	price;
 	private Date		price_reg_date;
 	
 	// 조회용
@@ -26,4 +27,5 @@ public class WonProductPriceDto {
 	private String		regName;	   // 등록자명
 	
 	private String 		searchKeyword;
+	private String 		errorMsg;
 }
