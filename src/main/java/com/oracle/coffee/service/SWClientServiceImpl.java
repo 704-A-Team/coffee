@@ -26,4 +26,11 @@ public class SWClientServiceImpl implements SWClientService {
 		return clientDao.getClientsByProduct(product_code);
 	}
 
+	@Override
+	public List<SWClientDto> clientIsList(SWClientDto swclientDto) {
+		System.out.println("SWClientServiceImpl clientIsList start...");
+		
+		return clientDao.clientIsList(swclientDto);
+	}
+
 }

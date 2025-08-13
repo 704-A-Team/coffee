@@ -138,6 +138,18 @@
 		select 	*
 		from 	provide
 		where 	product_won_code = #{product_code}
+		and		provide_isdel = 0
+	</select>
+	
+	<select id="getProductsByClient" parameterType="int" resultType="ProvideDto">
+		select 	p.*,
+				pt.product_name as productName
+		from 	provide p
+		left join product pt
+			ON p.product_won_code = pt.product_code
+		where 	provide_client_code = #{client_code}
+		and 	provide_isdel = 0
+		
 	</select>
 	
 </mapper>

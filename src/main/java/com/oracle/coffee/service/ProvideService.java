@@ -18,5 +18,6 @@ public interface ProvideService {
 	void 					provideDelete(int provide_code);
 	ProvideDto 				getProvideInfo(ProvideDto provideDto);
 	List<ProvideDto> 		getProvideByProduct(int product_code);
+	List<ProvideDto> 		getProductsByClient(int client_code);
 
 }

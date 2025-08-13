@@ -7,5 +7,6 @@ import com.oracle.coffee.dto.SWClientDto;
 public interface ClientDao {
 	List<SWClientDto> 		getClientInfo(int client_type);
 	List<SWClientDto> 		getClientsByProduct(int product_code);
+	List<SWClientDto> 		clientIsList(SWClientDto swclientDto);
 
 }

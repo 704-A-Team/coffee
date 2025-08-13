@@ -53,4 +53,11 @@ public class ClientDaoImpl implements ClientDao {
 		return getClientsByProduct;
 	}
 
+	@Override
+	public List<SWClientDto> clientIsList(SWClientDto swclientDto) {
+		System.out.println("ClientDaoImpl getClientsByProduct start...");
+		
+		return session.selectList("clientIsList", swclientDto);
+	}
+
 }

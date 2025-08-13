@@ -24,6 +24,32 @@
 		});
 	});
 </script>
+<style type="text/css">
+	:root {
+	    --main-brown: #6f4e37;
+	    --light-brown: #e6d3c1;
+	    --dark-brown: #4e342e;
+    }
+    
+	.form-section-title {
+            border-left: 5px solid var(--main-brown);
+            padding-left: 12px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--dark-brown);
+	}
+    .pagination .page-link {
+            color: var(--main-brown);
+	}
+
+	.pagination .page-item.active .page-link {
+            background-color: var(--main-brown);
+            border-color: var(--main-brown);
+            color: white;
+	}
+
+</style>
 </head>
 <body class="sb-nav-fixed">
 	<nav class="navbar navbar-expand navbar-dark bg-dark">

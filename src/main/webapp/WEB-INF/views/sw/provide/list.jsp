@@ -61,9 +61,9 @@
         }
 
         .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    background: #ccc !important;   /* 발주 등록 초기화 버튼과 동일 */
+		    color: #333 !important;        /* 글자색 유지 */
+		}
 
         .search-form input.form-control {
             border: 1px solid #ced4da !important;

@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="doc-wrapper">
-	<h4 class="text-center mb-4 fw-bold">발주서</h4>
+	<h4 class="text-center mb-4 fw-bold" style="color: var(--dark-brown);">발주서</h4>
 	
 	<!-- 상단 박스 (정보) -->
 	<div class="row mb-4">
