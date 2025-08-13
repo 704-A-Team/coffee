@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.dto.WonProductPriceDto;
+import com.oracle.coffee.service.Paging;
 import com.oracle.coffee.service.ProvideService;
 import com.oracle.coffee.service.SWProductPriceService;
 import com.oracle.coffee.service.SWProductService;
@@ -30,38 +31,28 @@ public class SWProductPriceController {
 	private final ProvideService		provideService;
 	
 	@GetMapping("/wonProductPriceInForm")
-	public String wonProductPriceInForm(WonProductPriceDto wonProductPriceDto, Model model) {
+	public String wonProductPriceInForm(@RequestParam("product_code") int product_code, Model model) {
 		log.info("SWProductPriceController wonProductPriceInForm start...");
 		
-		List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
+		ProductDto wonProductDetail = swProductService.wonProductDetail(product_code);
 		
-		model.addAttribute("wonProductAllList", wonProductAllList);
+		model.addAttribute("wonProductDetail", wonProductDetail);
 		
 		return "sw/wonPrice/inForm";
 	}
 	
 	@PostMapping("/wonProductPriceSave")
 	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto, Model model) {
-		log.info("SWProductPr	iceController wonProductPriceSave start...");
+		log.info("SWProductPriceController wonProductPriceSave start...");
 
 		System.out.println("SWProductPriceController wonProductPriceSave wonProductPriceDto : " + wonProductPriceDto);
 		
-		try {
-			swProductPriceService.wonProductPriceSave(wonProductPriceDto);
-			return "redirect:/sw/wonProductList";
-		} catch (Exception e) {
-			String errorMsg;
-	        if (e.getMessage().contains("ORA-00001")) {
-	            errorMsg = "제품 가격은 하루에 한번만 변경가능합니다.";
-	        } else {
-	            errorMsg = "가격 등록 중 오류 발생: " + e.getMessage();
-	        }
-	        List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
-	        model.addAttribute("wonProductAllList", wonProductAllList);
-		    model.addAttribute("errorMsg", errorMsg);
-		    
-		    return "sw/wonPrice/inForm";
-		}
+		swProductPriceService.wonProductPriceSave(wonProductPriceDto);
+		
+        List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
+        model.addAttribute("wonProductAllList", wonProductAllList);
+        
+        return "redirect:/sw/wonProductList";
 	}
 	
 	//조회용
@@ -74,5 +65,28 @@ public class SWProductPriceController {
 		System.out.println("getProvideByProduct : " + getProvideByProduct);
 		
 		return getProvideByProduct;
+	}
+	
+	@GetMapping("/wonProductPriceList")
+	public String wonProductPriceList(WonProductPriceDto wonProductPriceDto, Model model) {
+		log.info("SWProductPriceController wonProductPriceList start...");
+		
+		int totalWonProductPriceCnt = swProductPriceService.isPriceCheck(wonProductPriceDto.getProduct_code());
+		System.out.println("SWProductPriceController wonProductPriceList totalWonProductPriceCnt : " + totalWonProductPriceCnt);
+		
+		Paging page = new Paging(totalWonProductPriceCnt, wonProductPriceDto.getCurrentPage());
+		
+		wonProductPriceDto.setStart(page.getStart());
+		wonProductPriceDto.setEnd(page.getEnd());
+		System.out.println("SWProductPriceController wonProductPriceList wonProductPriceDto : "+ wonProductPriceDto);
+		
+		List<WonProductPriceDto> wonProductPriceList = swProductPriceService.wonProductPriceList(wonProductPriceDto);
+		System.out.println("SWProductPriceController wonProductPriceList : " + wonProductPriceList);
+		
+		model.addAttribute("totalWonProductPriceCnt", totalWonProductPriceCnt);
+		model.addAttribute("wonProductPriceList", wonProductPriceList);
+		model.addAttribute("page", page);
+		
+		return "sw/wonPrice/list";
 	}
 }

@@ -63,7 +63,6 @@
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 					<li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductList" class="link-light rounded menu-small">원재료 조회</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">원재료 등록</a></li>
-				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductPriceInForm" class="link-light rounded menu-small">가격 등록</a></li>
             <li class="mt-2"><a href="${pageContext.request.contextPath}/km/productInForm" class="link-light rounded menu-small">완제품 등록</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/km/wanList" class="link-light rounded menu-small">완제품 리스트</a></li>
             <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgInForm" class="link-light rounded menu-small">생산 신청</a></li>

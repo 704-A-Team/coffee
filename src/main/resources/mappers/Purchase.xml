@@ -14,6 +14,7 @@
         	 purchase_code
         	,purchase_client_code
         	,purchase_status
+        	,purchase_type
         	,purchase_reg_code
         	,purchase_reg_date 
         )
@@ -22,6 +23,7 @@
         	 #{purchase_code}
         	,#{purchase_client_code}
         	,#{purchase_status}
+        	,0
         	,#{purchase_reg_code}
         	,sysdate
         )
@@ -65,6 +67,7 @@
 	              from (
 	                    select p.purchase_code
 	                         , p.purchase_client_code
+	                         , p.purchase_type
 	                         , p.purchase_status
 	                         , p.purchase_perm_code
 	                         , p.purchase_refuse
@@ -118,6 +121,7 @@
 	        pd.purchase_danga,
 	
 	        p.purchase_client_code,
+	        p.purchase_type,
 	        p.purchase_status,
 	        p.purchase_perm_code,
 	        p.purchase_ipgo_date,
@@ -181,6 +185,7 @@
 	        pd.purchase_danga,
 	
 	        p.purchase_client_code,
+	        p.	purchase_type,
 	        p.purchase_status,
 	        p.purchase_perm_code,
 	        p.purchase_ipgo_date,

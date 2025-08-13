@@ -1,5 +1,7 @@
 package com.oracle.coffee.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -23,7 +25,7 @@ public class SWProductPriceServiceImpl implements SWProductPriceService {
 	public int wonProductPriceSave(WonProductPriceDto wonProductPriceDto) {
 		System.out.println("SWProductPriceServiceImpl wonProductPriceSave start...");
 		
-		int isPriceCheck = swProductPriceDao.isPriceCheck(wonProductPriceDto);
+		int isPriceCheck = swProductPriceDao.isPriceCheck(wonProductPriceDto.getProduct_code());
 		System.out.println("SWProductPriceServiceImpl wonProductPriceSave isPriceCheck : " + isPriceCheck);
 		
 		TransactionStatus txStatus = 
@@ -33,7 +35,7 @@ public class SWProductPriceServiceImpl implements SWProductPriceService {
 			if(isPriceCheck > 0) {
 				swProductPriceDao.updateEndDate(wonProductPriceDto);
 			}
-			wonProductPriceDto.setEnd_date("99/12/31");
+			wonProductPriceDto.setEnd_date("9999/12/31");
 			result = swProductPriceDao.wonProductPriceSave(wonProductPriceDto);
 			
 			transactionManager.commit(txStatus);
@@ -43,6 +45,20 @@ public class SWProductPriceServiceImpl implements SWProductPriceService {
 			throw new RuntimeException("가격 등록 중 오류 발생: " + e.getMessage());
 		}
 		return result;
+	}
+
+	@Override
+	public List<WonProductPriceDto> wonProductPriceList(WonProductPriceDto wonProductPriceDto) {
+		System.out.println("SWProductPriceServiceImpl wonProductPriceList start...");
+		
+		return swProductPriceDao.wonProductPriceList(wonProductPriceDto);
+	}
+
+	@Override
+	public int isPriceCheck(int product_code) {
+		System.out.println("SWProductPriceServiceImpl wonProductPriceList start...");
+		
+		return swProductPriceDao.isPriceCheck(product_code);
 	}
 	
 }

@@ -25,7 +25,7 @@
 		)
 	</insert>
 	
-	<select id="isPriceCheck" parameterType="WonProductPriceDto" resultType="int">
+	<select id="isPriceCheck" parameterType="int" resultType="int">
 		select 	count(*)
 		from 	product_price
 		where	product_code = #{product_code}
@@ -33,13 +33,33 @@
 
 	<update id="updateEndDate">
 		update 	product_price
-		set		end_date = TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD')
+		SET 	end_date = SYSDATE - NUMTODSINTERVAL(1, 'MINUTE')
 		where 	product_code = #{product_code}
-		and		end_date = (select 	Max(end_date)
-							from 	product_price
-							where	product_code = #{product_code}
-							)
+		and		start_date = (select max(pp.start_date)
+				              from 	product_price pp
+				              where  pp.product_code = #{product_code}
+				             )
 	</update>
+	
+	<select id="wonProductPriceList" parameterType="WonProductPriceDto" resultType="WonProductPriceDto">
+		select 	*
+		from 	(
+				 select rownum rn, a.*
+				 from (
+				 	   select
+				 	   		  	pp.*
+				 	   		   ,p.product_name as productName
+				 	   		   ,c.client_name  as regName
+				 	   from 	product_price pp
+				 	   left join product p
+				 	   	   ON p.product_code = pp.product_code
+				 	   left join client_tb c
+				 	   	   ON pp.price_reg_code = c.client_code
+				 	   where 	pp.product_code = #{product_code}
+				 	  ) a
+		)
+		where rn between #{start} and #{end}
+	</select>
 	
 	
 </mapper>

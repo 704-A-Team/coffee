@@ -74,7 +74,7 @@
               <div class="card-form">
                 <div class="form-section-title">제품 검색</div>
 
-                <select id="product_code" name="product_code" class="form-select" required>
+                <select id="product_code" name="product_code" class="form-select">
                   <option value="">-- 제품을 선택하세요 --</option>
                   <c:forEach var="product" items="${productIsList}">
                     <option value="${product.product_code}">${product.product_name}</option>

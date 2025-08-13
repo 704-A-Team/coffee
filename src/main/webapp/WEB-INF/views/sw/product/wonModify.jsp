@@ -110,13 +110,15 @@
                                 <option value="1" ${wonProductDetail.product_type == 1 ? 'selected' : ''}>완제품</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">납품 유무</label>
-                            <select name="product_isorder" class="form-select" required>
-                                <option value="0" ${wonProductDetail.product_isorder == 0 ? 'selected' : ''}>납품</option>
-                                <option value="1" ${wonProductDetail.product_isorder == 1 ? 'selected' : ''}>비납품</option>
-                            </select>
-                        </div>
+                        
+                        <!-- 납품 유무 -->
+						<div class="col-md-4">
+						    <label class="form-label">납품 유무</label>
+						    <select name="product_isorder" id="product_isorder" class="form-select" required>
+						        <option value="0" ${wonProductDetail.product_isorder == 0 ? 'selected' : ''}>납품</option>
+						        <option value="1" ${wonProductDetail.product_isorder == 1 ? 'selected' : ''}>비납품</option>
+						    </select>
+						</div>
                     </div>
 
                     <!-- 중량 -->
@@ -131,6 +133,12 @@
                         <select class="form-select" id="product_order_pack" name="product_order_pack" required>
                             <!-- JS에서 옵션 생성 -->
                         </select>
+                    </div>
+
+					<!-- 적정수량 -->
+                    <div class="mb-3">
+                        <label class="form-label">적정수량</label>
+                        <input type="number" class="form-select" id="product_min_amount" name="product_min_amount" value="${wonProductDetail.product_min_amount}" required>
                     </div>
 
                     <!-- 삭제 구분 -->
@@ -176,84 +184,111 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const unitSelect = document.getElementById("product_unit");
-        const orderPackSelect = document.getElementById("product_order_pack");
+document.addEventListener("DOMContentLoaded", function () {
+    const unitSelect = document.getElementById("product_unit");
+    const orderPackSelect = document.getElementById("product_order_pack");
+    const isOrderSelect = document.getElementById("product_isorder");
 
-        // ⭐ 백엔드에서 넘긴 기존 값
-        const selectedPack = "${wonProductDetail.product_order_pack}";
+    // ⭐ 백엔드에서 넘긴 기존 값
+    const selectedPack = "${wonProductDetail.product_order_pack}";
 
-        function populateOrderPack(unitValue) {
-            orderPackSelect.innerHTML = ''; // 기존 옵션 제거
+    // 판매단위 옵션 구성
+    function populateOrderPack(unitValue) {
+        orderPackSelect.innerHTML = '';
 
-            const defaultOption = document.createElement("option");
-            defaultOption.value = '';
-            defaultOption.textContent = '-- 선택 --';
-            orderPackSelect.appendChild(defaultOption);
+        const defaultOption = document.createElement("option");
+        defaultOption.value = '';
+        defaultOption.textContent = '-- 선택 --';
+        orderPackSelect.appendChild(defaultOption);
 
-            if (unitValue === "0") { // ea
-                for (let i = 10; i <= 100; i += 10) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = i + ' ea';
-                    if (String(i) === selectedPack) opt.selected = true;
-                    orderPackSelect.appendChild(opt);
-                }
-            } else if (unitValue === "1" || unitValue === "2") { // g or ml
-                for (let i = 100; i <= 1000; i += 100) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = i + (unitValue === "1" ? ' g' : ' ml');
-                    if (String(i) === selectedPack) opt.selected = true;
-                    orderPackSelect.appendChild(opt);
-                }
+        if (unitValue === "0") { // ea
+            for (let i = 10; i <= 100; i += 10) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = i + ' ea';
+                if (String(i) === selectedPack) opt.selected = true;
+                orderPackSelect.appendChild(opt);
+            }
+        } else if (unitValue === "1" || unitValue === "2") { // g or ml
+            for (let i = 100; i <= 1000; i += 100) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = i + (unitValue === "1" ? ' g' : ' ml');
+                if (String(i) === selectedPack) opt.selected = true;
+                orderPackSelect.appendChild(opt);
             }
         }
+    }
 
-        // 최초 로딩 시 기존 값 기준으로 옵션 구성
-        populateOrderPack(unitSelect.value);
+    // 납품 여부에 따라 판매단위 사용 가능/불가 전환
+    function toggleOrderPackAvailability() {
+        const isOrder = isOrderSelect.value; // "0": 납품, "1": 비납품
+        if (isOrder === "0") {
+            // 납품: 활성화 + required + 옵션 구성
+            orderPackSelect.disabled = false;
+            orderPackSelect.required = true;
+            populateOrderPack(unitSelect.value);
+        } else {
+            // 비납품: 비활성화 + required 제거 + 안내 옵션만
+            orderPackSelect.required = false;
+            orderPackSelect.disabled = true;
+            orderPackSelect.innerHTML = "";
+            const opt = document.createElement("option");
+            opt.value = "";
+            opt.textContent = "-- 납품일 때만 선택 가능합니다 --";
+            orderPackSelect.appendChild(opt);
+        }
+    }
 
-        // 단위 변경 시 다시 구성
-        unitSelect.addEventListener("change", function () {
-            populateOrderPack(this.value);
-        });
-        
-        // 이미지 삭제 동적처리
-        const fileInput = document.querySelector("#newFiles");
-        const existingFilesContainer = document.querySelector("#existingFiles");
-        const form = document.querySelector("form");
+    // 최초 로딩 시 상태 반영
+    toggleOrderPackAvailability();
 
-        existingFilesContainer.addEventListener("click", function (e) {
-            if (e.target.classList.contains("remove-existing")) {
-                const fileDiv = e.target.closest(".existing-file");
-                fileDiv.remove();
-            }
-        });
+    // 단위 변경 시 (활성 상태일 때만) 옵션 갱신
+    unitSelect.addEventListener("change", function () {
+        if (!orderPackSelect.disabled) populateOrderPack(this.value);
+    });
 
-        fileInput.addEventListener("change", function () {
-            const existingCount = document.querySelectorAll("#existingFiles .existing-file").length;
-            const newCount = this.files.length;
-            if (existingCount + newCount > 3) {
-                alert("기존 이미지와 새 이미지 합산 최대 3개까지만 가능합니다.");
-                this.value = "";
-            }
-        });
+    // 납품 여부 변경 시 활성/비활성 전환
+    isOrderSelect.addEventListener("change", toggleOrderPackAvailability);
 
-        form.addEventListener("submit", function () {
-            document.querySelectorAll("input[name='uploadFileNames']").forEach(e => e.remove());
+    // =======================
+    // 이미지 삭제/업로드 3개 제한 (기존 로직 유지)
+    // =======================
+    const fileInput = document.querySelector("#newFiles");
+    const existingFilesContainer = document.querySelector("#existingFiles");
+    const form = document.querySelector("form");
 
-            document.querySelectorAll(".existing-file").forEach(fileDiv => {
-                const filename = fileDiv.getAttribute("data-filename");
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "uploadFileNames";
-                input.value = filename;
-                form.appendChild(input);
-                console.log(" 유지 이미지 추가됨:", filename);
-            });
+    existingFilesContainer.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-existing")) {
+            const fileDiv = e.target.closest(".existing-file");
+            fileDiv.remove();
+        }
+    });
+
+    fileInput.addEventListener("change", function () {
+        const existingCount = document.querySelectorAll("#existingFiles .existing-file").length;
+        const newCount = this.files.length;
+        if (existingCount + newCount > 3) {
+            alert("기존 이미지와 새 이미지 합산 최대 3개까지만 가능합니다.");
+            this.value = "";
+        }
+    });
+
+    form.addEventListener("submit", function () {
+        // 삭제되지 않고 남아있는 기존 파일명을 hidden으로 재생성해서 전송
+        document.querySelectorAll("input[name='uploadFileNames']").forEach(e => e.remove());
+        document.querySelectorAll(".existing-file").forEach(fileDiv => {
+            const filename = fileDiv.getAttribute("data-filename");
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "uploadFileNames";
+            input.value = filename;
+            form.appendChild(input);
         });
     });
+});
 </script>
+
 
 
 </body>
