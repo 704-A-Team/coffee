@@ -4,13 +4,17 @@
 
 <configuration>
 	<typeAliases>
+		<typeAlias type="com.oracle.coffee.dto.PageRequestDto" alias="PageRequestDto"/>
+	
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersDto" alias="OrdersDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersDetailDto" alias="OrdersDetailDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersProductDto" alias="OrdersProductDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersListDto" alias="OrdersListDto"/>
 		<typeAlias type="com.oracle.coffee.dto.orders.OrdersPageDto" alias="OrdersPageDto"/>
 		
+		
 		<typeAlias type="com.oracle.coffee.dto.MagamStatusDto" alias="MagamStatusDto"/>
+		<typeAlias type="com.oracle.coffee.dto.StockDto" alias="StockDto"/>
 
 		<typeAlias alias="ProductWanDTO" type="com.oracle.coffee.dto.km.ProductWanDTO"/>
 		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>

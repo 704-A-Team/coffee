@@ -179,8 +179,8 @@
   	<c:if test="${order.order_status == 0 }">	<!-- and 가맹점만 -->
   		<div class="card border-0 pe-0">
 	  		<c:if test="${isClosedMagam }">
-				<div class="alert alert-info d-flex align-items-center" role="alert">
-			  		<i class="bi bi-info-circle-fill me-2"></i>
+				<div class="alert alert-danger d-flex align-items-center" role="alert">
+			  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
 			  		<div>
 			    		발주가 <strong>마감</strong>되어 현재 <u>발주 요청이 불가능</u>합니다.
 			  		</div>
@@ -206,8 +206,8 @@
 			</div>
 			
 			<c:if test="${isClosedMagam }">	<!-- and 본사만 -->
-				<div class="alert alert-info d-flex align-items-center" role="alert">
-			  		<i class="bi bi-info-circle-fill me-2"></i>
+				<div class="alert alert-danger d-flex align-items-center" role="alert">
+			  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
 			  		<div>
 			    		수주가 <strong>마감</strong>되어 현재 <u>수주의 승인 및 반려가 불가능</u>합니다.
 			  		</div>
