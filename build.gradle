@@ -43,6 +43,8 @@ dependencies {
 	// Thumbnail
 	implementation 'net.coobird:thumbnailator:0.4.19'
 	
+	//security
+	implementation 'org.springframework.security:spring-security-taglibs:6.5.2'
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
