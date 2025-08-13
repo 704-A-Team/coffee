@@ -9,7 +9,6 @@ spring:
   # Oracle DB
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@localhost:1521/xe
     url: jdbc:oracle:thin:@172.30.1.27:1521/xe
 #    username: team1
 #    password: tiger
@@ -50,7 +49,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: team704gpt
-    password:  # 앱 비밀번호
+    password: aqsk zgyp mpuq dsee  # 앱 비밀번호
     properties:
       mail:
         smtp:

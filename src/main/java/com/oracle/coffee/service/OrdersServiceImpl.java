@@ -1,13 +1,18 @@
 package com.oracle.coffee.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.oracle.coffee.dao.OrdersDao;
+import com.oracle.coffee.dto.ClientDto;
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
@@ -17,6 +22,7 @@ import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,6 +31,20 @@ import lombok.RequiredArgsConstructor;
 public class OrdersServiceImpl implements OrdersService {
 
 	private final OrdersDao ordersDao;
+	
+	private final ClientService clientService;
+	private final EmpService empService;
+	private final EmailService emailService;
+	
+	@Scheduled(cron = "0 0 11 * * *")
+	public void autoChangeOrdersDetailStatus() {
+		// 납기일이 오늘인 ordersDetail status 출고완료(2)로 변경
+		ordersDao.updateOrdersDetailsDelivery();
+
+		System.out.println("==================================================");
+		System.out.println("================ 오늘자 납품 출고 완료 ================");
+		System.out.println("==================================================");
+	}
 	
 	@Override
 	public List<OrdersProductDto> getProducts() {
@@ -78,34 +98,47 @@ public class OrdersServiceImpl implements OrdersService {
 		order.setOrder_status(targetStatus);
 		ordersDao.requestOrders(order);
 		
-		// 자동 승인 (background)
-		// autoApprove(orderCode);
+		// 담당자에게 요청 알림 이메일 전송
+		try {
+			ClientDto client = clientService.getSingleClient(order.getOrders_client_code());
+			String targetMail = "min__37@naver.com";
+			String title = "[수주 요청] " + client.getClient_name();
+			String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")); 
+			String contents = now + "에 수주 요청이 등록되었습니다.\n\n"
+					+ "상호명: " + client.getClient_name() + "\n"
+					+ "총액: " + order.calculateTotalPrice() + "원";
+			
+			emailService.sendEmail(targetMail, title, contents);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private List<OrdersDetailDto> notApprovedDetails(OrdersDto order) {
-		// orders_detail 수량 확인 후 "불가능"한 모든 orders_detail 리턴
+		// orders_detail 수량 확인 후 "불가능"한 모든 orders_detail 리턴하는 메서드
 		// detail 모두 가능한 경우: 수주 승인 상태(4)로 변경 
 		// 						수주 상세 출고예정(1) 상태로 변경
 		
-		List<OrdersDetailDto> disabled = new ArrayList<>();
+		List<OrdersDetailDto> details = order.getOrders_details();
+		List<Integer> approvedPrdCodes = ordersDao.approveOrdersDetails(order.getOrder_code());
 
-		
-		// details 중 재고 모자라면 승인 불가
-//		List<OrdersDetailDto> details = order.getOrders_details();
-//		List<Integer> approvedPrdCodes = ordersDao.approveOrdersDetails(order.getOrder_code());
-//		
-//		// 프로시저에서 return된 approvedPrdCodes가 details와 다른 경우: 수주 승인 안됨
-//		// 모든 제품이 재고가 있으면 프로시저에서 이미 "출고예정"으로 변경됨
-//		for (OrdersDetailDto detail : details) {
-//			int orderedPrdCode = detail.getProduct_code();
-//			if (!approvedPrdCodes.contains(orderedPrdCode)) disabled.add(detail);
-//		}
+		// 요청한 details 중 한 제품이라도 재고 모자라면 승인 불가
+		// 프로시저에서 return된 approvedPrdCodes가 details와 다른 경우: 수주 승인 안됨
+		// 모든 제품이 재고가 있으면 프로시저에서 이미 "출고예정"으로 변경됨 => 빈 리스트 return
+		List<OrdersDetailDto> disabled = new ArrayList<>();
+		for (OrdersDetailDto detail : details) {
+			int orderedPrdCode = detail.getProduct_code();
+			if (!approvedPrdCodes.contains(orderedPrdCode)) disabled.add(detail);
+		}
 		
 		return disabled;
 	}
 	
-	private void autoApprove(int orderCode) {
-		// 자동 승인
+	@Async
+	public void autoApprove(int orderCode) {
+		System.out.println("====> Auto approve task start");
+		// 자동 승인 로직
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		
 		// 금액 제한 확인
@@ -113,9 +146,10 @@ public class OrdersServiceImpl implements OrdersService {
 		BigDecimal upperLimit = new BigDecimal(1000000);
 		if (finalPrice.compareTo(upperLimit) == 1) {
 			// 자동 승인 불가 이메일
+			System.out.println("====> Auto approve FAIL : Price is too big");
 			return;
 		}
-		
+
 		// 재고 확인
 		// => 원재료 발주/생산 자동신청
 		List<OrdersDetailDto> disabled = notApprovedDetails(order);
@@ -129,15 +163,32 @@ public class OrdersServiceImpl implements OrdersService {
 			order.setOrder_final_price(finalPrice);
 			
 			ordersDao.approveOrders(order);
+			
+			System.out.println("====> Auto approve SUCCESS");
+			// 자동 승인 완료 이메일
+			try {
+				ClientDto client = clientService.getSingleClient(order.getOrders_client_code());
+				String targetMail = "min__37@naver.com";
+				String title = "[수주 자동승인] " + client.getClient_name();
+				String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")); 
+				String contents = now + "에 수주가 자동 승인되었습니다.\n\n"
+						+ "상호명: " + client.getClient_name() + "\n"
+						+ "총액: " + order.calculateTotalPrice() + "원";
+				
+				emailService.sendEmail(targetMail, title, contents);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
 			// 자동 승인 불가 이메일
+			System.out.println("====> Auto approve FAIL : Stock is less than request");
 		}
-		
 	}
 
 	@Override
-	public void approve(int approverCode, int orderCode) {
+	public List<OrdersDetailDto> approve(int approverCode, int orderCode) {
 		// 수동 승인
 		OrdersDto order = ordersDao.findByCode(orderCode);
 		order.setOrders_perm_code(approverCode);
@@ -155,6 +206,7 @@ public class OrdersServiceImpl implements OrdersService {
 		}
 		
 		// 승인 불가 재고 return
+		return disabled;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
+import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersPageDto;
@@ -14,7 +15,8 @@ public interface OrdersService {
 	public List<OrdersProductDto> getProducts();
 	public int upsertInformation(OrdersDto order);
 	public OrdersDto get(int orderCode);
-	public void approve(int approverCode, int orderCode);
+	public void autoApprove(int orderCode);
+	public List<OrdersDetailDto> approve(int approverCode, int orderCode);
 	public void refuseOrCancel(OrdersRefuseDto refuse);
 	public void request(int orderCode);
 	public void delete(int orderCode);

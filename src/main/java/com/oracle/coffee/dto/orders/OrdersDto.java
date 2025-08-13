@@ -33,6 +33,7 @@ public class OrdersDto {
 	public BigDecimal calculateTotalPrice() {
 		BigDecimal total = BigDecimal.ZERO;
 		for(OrdersDetailDto detail : orders_details) {
+			if (detail.getPrice() == null) continue;
 			total = total.add(
 						detail.getPrice().multiply(new BigDecimal(detail.getOrder_amount()))
 					);

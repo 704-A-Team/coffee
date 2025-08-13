@@ -25,6 +25,12 @@
 	});
 </script>
 <style type="text/css">
+	:root {
+	    --main-brown: #6f4e37;
+	    --light-brown: #e6d3c1;
+	    --dark-brown: #4e342e;
+    }
+    
 	.form-section-title {
             border-left: 5px solid var(--main-brown);
             padding-left: 12px;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.oracle.coffee.dto.ClientDto;
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
+import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
@@ -147,6 +148,8 @@ public class OrdersController {
 	public String register(@PathVariable("order_code") int orderCode) {
 		// 수주 요청 상태로 변경
 		ordersService.request(orderCode);
+		// 자동 승인 진행
+		ordersService.autoApprove(orderCode);
 		return "redirect:/order/" + orderCode;
 	}
 	
@@ -169,14 +172,16 @@ public class OrdersController {
 		
 		return ResponseEntity.ok().build();
 	}
-	
+
 	// 수주 승인: 요청 상태인 경우만 가능
 	@GetMapping("/approve/{order_code}")
-	public String approve(@PathVariable("order_code") int orderCode) {
+	@ResponseBody
+	public List<OrdersDetailDto> approve(@PathVariable("order_code") int orderCode) {
 		// 로그인한 본사직원 정보 조회
 		// 권한 확인
 		int loginEmpCode = 2003;
-		ordersService.approve(loginEmpCode, orderCode);
-		return "redirect:/order/" + orderCode;
+		List<OrdersDetailDto> disableds = ordersService.approve(loginEmpCode, orderCode);
+		
+		return disableds;
 	}
 }
