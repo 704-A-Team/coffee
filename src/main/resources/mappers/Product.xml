@@ -43,13 +43,26 @@
 			values (#{product_code} , #{start_date}, #{price_reg_code}, #{end_date}, #{price}, #{price_reg_date} )
 	</insert>
 	
+	<insert id="jaegoStatus" parameterType="Map">
+		INSERT INTO MONTH_MAGAM (MONTH_YRMO , MONTH_MAGAM_STATUS , PRODUCT_CODE , MONTH_MAGAM_AMOUNT , MONTH_MAGAM_REG_CODE , MONTH_MAGAM_REG_DATE) 
+		VALUES (#{MONTH_YRMO} , 0 , #{product_code} , 0 , #{MONTH_MAGAM_REG_CODE} , sysdate)
+	</insert>
+	
 	<select id="countTotal" resultType="Int">
-		select count(*) from product where product_isdel = 0 and product_type = 1
+		select count(*) from product where product_type = 1
 	</select>
 	
 	<select id="wonList" resultType="ProductWanDTO">
 		select * from product where product_type = 0 AND product_isdel = 0
 	</select>
+	
+	<select id="findPack" parameterType="Int" resultType="Int">
+		SELECT product_pack FROM product WHERE product_code = #{product_code}
+	</select>
+	
+	<update id="saveWeight" parameterType="Map">
+		UPDATE PRODUCT SET PRODUCT_WEIGHT = #{product_weight} WHERE product_code = #{product_code}
+	</update>
 	
 	<insert id="wanRecipeSave" parameterType="RecipeDTO">
 		insert into recipe (product_wan_code, product_won_code, recipe_amount) values
@@ -195,12 +208,12 @@
 	<select id="prePrice" parameterType="ProductPriceDTO" resultType="ProductPriceDTO">
 		SELECT * 
 		FROM PRODUCT_PRICE 
-		WHERE product_code = #{product_code} 
-		    AND end_date = (
-		    SELECT MAX(end_date)
+		WHERE product_code = #{product_code}
+		    AND (start_date,end_date) = (
+		    SELECT MAX(start_date), MAX(end_date)
 		    FROM PRODUCT_PRICE
 		    WHERE product_code = #{product_code}
-		    )
+		)
 	</select>
 	
 	<insert id="priceAfterStart" parameterType="ProductPriceDTO">
@@ -212,8 +225,38 @@
 		SELECT * FROM PRODUCT WHERE product_type = 1 AND product_isdel = 0
 	</select>
 	
-	<select id="priceHistory" parameterType="ProductWanDTO" resultType="ProductPriceDTO">
-		SELECT * FROM PRODUCT_PRICE WHERE product_code = #{product_code}
+	<select id="priceHistory" parameterType="Int" resultType="ProductPriceDTO">
+		SELECT * FROM PRODUCT_PRICE WHERE product_code = #{product_code} ORDER BY START_DATE DESC
 	</select>
+
+	<select id="launchPrice" parameterType="int" resultType="double">
+		SELECT wan_launch_price(#{product_code})  FROM dual
+	</select>	
+	
+	<select id="launchPrice3" parameterType="Map" statementType="CALLABLE">
+		{
+			#{tot_wan_price , mode=OUT , jdbcType=INTEGER} 
+			     = call wan_launch_price (
+									#{product_code , mode=IN , jdbcType=INTEGER}
+									      )
+		}
+	</select>
+	
+	<update id="wanPriceBeforeModify" parameterType="ProductPriceDTO">
+		UPDATE PRODUCT_PRICE 
+		SET END_DATE = #{end_date} 
+		WHERE PRODUCT_CODE = #{product_code} 
+		AND END_DATE = (
+							SELECT MAX(end_date)
+							FROM PRODUCT_PRICE
+							WHERE PRODUCT_CODE = #{product_code}
+						)
+	</update>
+	
+	<insert id="wanPriceModify" parameterType="ProductPriceDTO">
+		INSERT INTO PRODUCT_PRICE(PRODUCT_CODE , START_DATE , PRICE_REG_CODE , END_DATE , PRICE , PRICE_REG_DATE)
+			VALUES (#{product_code} , #{start_date}, #{price_reg_code}, TO_DATE('9999-12-30','YYYY-MM-DD'), #{price}, sysdate )
+	</insert>
+	
 	
 </mapper>

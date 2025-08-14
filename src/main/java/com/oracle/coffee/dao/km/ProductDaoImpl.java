@@ -1,6 +1,10 @@
 package com.oracle.coffee.dao.km;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -57,6 +61,15 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
+	public void jaegoStatus(ProductWanDTO productWanDTO) {
+		LocalDateTime date = productWanDTO.getProduct_reg_date();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+		String month_yrmo = date.format(formatter);
+		session.insert("jaegoStatus" , Map.of("MONTH_YRMO" , month_yrmo , "product_code" , productWanDTO.getProduct_code() , "MONTH_MAGAM_REG_CODE" , productWanDTO.getProduct_reg_code()));
+		
+	}
+	
+	@Override
 	public int countTotal() {
 		int countTotal = 0;
 		try {
@@ -80,6 +93,18 @@ public class ProductDaoImpl implements ProductDao {
 		return wonList;
 	}
 
+	@Override
+	public int findPack(int product_code) {
+		int findPack = session.selectOne("findPack" , product_code);
+		return findPack;
+	}
+	
+	@Override
+	public void saveWeight(int product_wan_code, double weight) {
+		session.update("saveWeight" , Map.of("product_code" , product_wan_code , "product_weight" , weight));
+		
+	}
+	
 	@Override
 	public void wanRecipeSave(RecipeDTO recipe) {
 		try {
@@ -184,6 +209,7 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public void priceBeforeEnd(ProductPriceDTO productPriceDTO) {
 		try {
+			System.out.println("dao priceBeforeEnd productPriceDTO->" + productPriceDTO);
 			session.update("priceBeforeEnd" , productPriceDTO);
 		} catch (Exception e) {
 			System.out.println("priceBeforeEnd Exception->" + e.getMessage());
@@ -195,6 +221,7 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public ProductPriceDTO prePrice(ProductPriceDTO priceDTO) {
 		ProductPriceDTO prePrice = null;
+		System.out.println("dao prePrice->" + priceDTO);
 		try {
 			prePrice = session.selectOne("prePrice" , priceDTO);
 		} catch (Exception e) {
@@ -229,15 +256,51 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<ProductPriceDTO> priceHistory(ProductWanDTO productWanDTO) {
+	public List<ProductPriceDTO> priceHistory(int product_code) {
 		List<ProductPriceDTO> priceHistory = null;
 		try {
-			priceHistory = session.selectList("priceHistory" , productWanDTO);
+			priceHistory = session.selectList("priceHistory" , product_code);
 		} catch (Exception e) {
 			System.out.println("priceHistory Exception->" + e.getMessage());
 		}
 		return priceHistory;
 	}
+
+	@Override
+	public double launchPrice(int product_code) {
+		// Map<String, Object> param = new HashMap<>();
+		// param.put("product_code" , product_code);
+		double tot_wan_price =  session.selectOne("launchPrice" , product_code);
+		System.out.println("ProductDao launchPrice product_code->"+product_code);
+		return tot_wan_price;
+	}
+
+	
+	public int launchPrice3(int product_code) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("product_code" , product_code);
+		session.selectOne("launchPrice" , param);
+		System.out.println("ProductDao launchPrice param->"+param);
+		return (int) param.get("tot_wan_price");
+	}
+	
+	@Override
+	public void wanPriceBeforeModify(ProductPriceDTO priceDTO) {
+		LocalDateTime end_date = priceDTO.getStart_date().minusSeconds(1);
+		priceDTO.setEnd_date(end_date);
+		session.update("wanPriceBeforeModify" , priceDTO);
+		
+	}
+	
+	@Override
+	public void wanPriceModify(ProductPriceDTO priceDTO) {
+		session.insert("wanPriceModify" , priceDTO);
+		
+	}
+
+
+
+
 
 
 

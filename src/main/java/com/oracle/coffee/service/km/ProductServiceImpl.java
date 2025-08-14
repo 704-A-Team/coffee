@@ -1,7 +1,6 @@
 package com.oracle.coffee.service.km;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +53,8 @@ public class ProductServiceImpl implements ProductService {
 		priceDTO.setProduct_code(productDTO.getProduct_code());
 		System.out.println("ProductServiceImpl wanRegister priceDTO->"+priceDTO);
 		result = productDao.priceRegister(priceDTO);
+		// 4. 완제품 재고Tbl(month_magam)에 상태 0 으로 등록
+		productDao.jaegoStatus(productDTO);
 		} catch (Exception e) {
 			  throw new RuntimeException("완제품 등록 실패", e);
 		}
@@ -72,6 +73,19 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductWanDTO> wonList() {
 		List<ProductWanDTO> wonList = productDao.wonList();
 		return wonList;
+	}
+	
+	@Override
+	public int findPack(int product_code) {
+		int findPack = productDao.findPack(product_code);
+		return findPack;
+	}
+	
+	@Override
+	public void saveWeight(int product_wan_code, double weight) {
+		log.info("product_wan_code , weight->" + product_wan_code + " , " + weight);
+		productDao.saveWeight(product_wan_code , weight);
+		
 	}
 	
 	// 레시피 등록
@@ -173,16 +187,16 @@ public class ProductServiceImpl implements ProductService {
 		ProductPriceDTO priceDTO = new ProductPriceDTO();
 		
 		LocalDateTime tdate = LocalDateTime.now();
-		LocalDateTime ydate = LocalDateTime.now().minusDays(1);
-		String start_date = tdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String end_date = ydate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		LocalDateTime ydate = LocalDateTime.now().minusSeconds(10);
+	//	String start_date = tdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	//	String end_date = ydate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		priceDTO.setProduct_code(productWanDTO.getProduct_code());
-		priceDTO.setStart_date(start_date);
-		priceDTO.setEnd_date(end_date);
+		priceDTO.setStart_date(tdate); 
+		priceDTO.setEnd_date(ydate); 
 		priceDTO.setPrice_reg_date(tdate);
 		// 변경할것
 		priceDTO.setPrice_reg_code(productWanDTO.getProduct_reg_code());
-		
+		System.out.println("sERVICE wanProductDel ProductWanDTO priceDTO->"+priceDTO);
 		// 1. 제품Tbl -- 판매 여부 수정
 		productDao.productDelUpdate(productWanDTO);
 		// 2. 판매 여부 판별
@@ -206,15 +220,31 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductPriceDTO> priceHistory(ProductWanDTO productWanDTO) {
+	public List<ProductPriceDTO> priceHistory(int product_code) {
 		List<ProductPriceDTO> priceHistory = null;
 		try {
-			priceHistory = productDao.priceHistory(productWanDTO);
+			priceHistory = productDao.priceHistory(product_code);
 			log.info("priceHistory->"+priceHistory);
 		} catch (Exception e) {
 			System.out.println("priceHistory Exception->"+e.getMessage());
 		}
 		return priceHistory;
 	}
+
+	@Override
+	public double launchPrice(int product_code) {
+		double launchPrice = productDao.launchPrice(product_code);
+		return launchPrice;
+	}
+
+	@Override
+	public void wanPriceModify(ProductPriceDTO priceDTO) {
+		// 새로운 가격 수정 메소드
+		productDao.wanPriceBeforeModify(priceDTO);   // 이전 가격의 종료 일자를 수정
+		productDao.wanPriceModify(priceDTO);		 // 새로 추가된 가격 저장
+		
+	}
+
+	
 
 }

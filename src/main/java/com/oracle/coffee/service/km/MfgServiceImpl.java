@@ -70,4 +70,79 @@ public class MfgServiceImpl implements MfgService {
 		}
 		return mfgList;
 	}
+
+	@Override
+	public List<MfgDetailDTO> mfgDetail(MfgDetailDTO mfgDetailDTO) {
+		List<MfgDetailDTO> mfgDetail = null;
+		try {
+			mfgDetail = mfgDao.mfgDetail(mfgDetailDTO);
+		} catch (Exception e) {
+			log.error("mfgList() 조회 중 오류 발생" , e);
+		}
+		return mfgDetail;
+	}
+
+	@Override
+	public List<MfgDetailDTO> mfgStatus(MfgDetailDTO mfgDetailDTO) {
+		List<MfgDetailDTO> mfgStatus = null;
+		try {
+			mfgStatus = mfgDao.mfgStatus(mfgDetailDTO);
+		} catch (Exception e) {
+			log.error("mfgList() 조회 중 오류 발생" , e);
+		}
+		return mfgStatus;
+	}
+
+	@Override
+	public List<MfgDetailDTO> mfgUpdateForm(MfgDetailDTO mfgDetailDTO) {
+		List<MfgDetailDTO> mfgUpdateForm = null;
+		try {
+			mfgUpdateForm = mfgDao.mfgUpdateForm(mfgDetailDTO);
+		} catch (Exception e) {
+			log.error("mfgUpdateForm() 조회 중 오류 발생" , e);
+		}
+		return mfgUpdateForm;
+	}
+	
+	@Override
+	public List<MfgDetailDTO> existingList(int mfg_code) {
+		List<MfgDetailDTO> existingList = mfgDao.existingList(mfg_code);
+		log.info("existingList->"+existingList);
+		return existingList;
+	}
+
+	@Override
+	public void mfgDelete(MfgDetailDTO existingDTO) {
+		log.info("mfgDelete->"+existingDTO);
+		mfgDao.mfgDelete(existingDTO);
+	}
+
+	@Override
+	public void mfgInsert(MfgDetailDTO updateMfg) {
+		log.info("mfgInsert->"+updateMfg);
+		mfgDao.mfgInsert(updateMfg);
+		log.info("mfgInsert Service updateMfg->"+updateMfg);
+	}
+
+	@Override
+	public void mfgUpdate(MfgDetailDTO updateMfg) {
+		log.info("updateMfg->"+updateMfg);
+		mfgDao.mfgUpdate(updateMfg);
+		log.info("mfgUpdate Service updateMfg->"+updateMfg);
+		
+	}
+
+	@Override
+	public List<MfgDetailDTO> mfgApproveForm(MfgDetailDTO mfgDetailDTO) {
+		List<MfgDetailDTO> mfgApproveForm = mfgDao.mfgApproveForm(mfgDetailDTO);
+		log.info("mfgApproveForm List->"+mfgApproveForm);
+		return mfgApproveForm;
+	}
+
+	@Override
+	public void mfgApproveUpdate(MfgDetailDTO mfgDetailDTO) {
+		mfgDao.mfgApproveUpdate(mfgDetailDTO);
+		
+	}
+
 }

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -52,48 +52,48 @@
                 </c:if>
 
                 <!-- 📋 목록 테이블 -->
-<table class="table table-bordered table-hover mt-4">
-    <thead class="table-light">
-        <tr class="text-center align-middle">
-            <th>신청코드</th>
-            <th>신청자</th>
-            <th>신청부서</th>
-            <th>신청일</th>
-            <th>상세보기</th>
-            <th>승인</th>
-        </tr>
-    </thead>
-    <tbody class="text-center align-middle">
-        <c:forEach var="mfg" items="${mfgList}">
-            <tr>
-                <td>${mfg.mfg_code}</td>
-                <td>${mfg.emp_name}</td>
-                <td>${mfg.dept_name}</td>
-                <!-- mfg_reg_date가 LocalDateTime이라면 그냥 출력(서버에서 문자열로 변환하면 더 예쁨) -->
-                <td>${mfg.mfg_reg_date}</td>
-
-                <td>
-                    <form action="${pageContext.request.contextPath}/km/mfgDetail" method="get" class="m-0">
-                        <input type="hidden" name="mfg_code" value="${mfg.mfg_code}">
-                        <button type="submit" class="btn btn-sm btn-outline-primary">보기</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="${pageContext.request.contextPath}/km/mfgApproveForm" method="get" class="m-0">
-                        <input type="hidden" name="mfg_code" value="${mfg.mfg_code}">
-                        <button type="submit" class="btn btn-sm btn-success">승인</button>
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-
-        <c:if test="${empty mfgList}">
-            <tr>
-                <td colspan="6" class="text-center text-muted">생산 신청이 없습니다.</td>
-            </tr>
-        </c:if>
-    </tbody>
-</table>
+				<table class="table table-bordered table-hover mt-4">
+				    <thead class="table-light">
+				        <tr class="text-center align-middle">
+				            <th>신청코드</th>
+				            <th>신청자</th>
+				            <th>신청부서</th>
+				            <th>신청일</th>
+				            <th>상세보기</th>
+				            <th>승인</th>
+				        </tr>
+				    </thead>
+				    <tbody class="text-center align-middle">
+				        <c:forEach var="mfg" items="${mfgList}">
+				            <tr>
+				                <td>${mfg.mfg_code}</td>
+				                <td>${mfg.emp_name}</td>
+				                <td>${mfg.dept_name}</td>
+				                <!-- mfg_reg_date가 LocalDateTime이라면 그냥 출력(서버에서 문자열로 변환하면 더 예쁨) -->
+				                <td>${mfg.mfg_reg_date}</td>
+				
+				                <td>
+				                    <form action="${pageContext.request.contextPath}/km/mfgDetail" method="get" class="m-0">
+				                        <input type="hidden" name="mfg_code" value="${mfg.mfg_code}">
+				                        <button type="submit" class="btn btn-sm btn-outline-primary">보기</button>
+				                    </form>
+				                </td>
+				                <td>
+				                    <form action="${pageContext.request.contextPath}/km/mfgApproveDetail" method="get" class="m-0">
+				                        <input type="hidden" name="mfg_code" value="${mfg.mfg_code}">
+				                        <button type="submit" class="btn btn-sm btn-success">승인</button>
+				                    </form>
+				                </td>
+				            </tr>
+				        </c:forEach>
+				
+				        <c:if test="${empty mfgList}">
+				            <tr>
+				                <td colspan="6" class="text-center text-muted">생산 신청이 없습니다.</td>
+				            </tr>
+				        </c:if>
+				    </tbody>
+				</table>
 
                 <!-- 페이징 -->
                 <nav aria-label="Page navigation">
