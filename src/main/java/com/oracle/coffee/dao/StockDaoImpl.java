@@ -1,5 +1,6 @@
 package com.oracle.coffee.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.oracle.coffee.dto.MagamStatusDto;
 import com.oracle.coffee.dto.PageRequestDto;
+import com.oracle.coffee.dto.SilsaDto;
 import com.oracle.coffee.dto.StockDto;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public int totalCount() {
+	public int totalStockCount() {
 		int total = 0;
 		try {
 			total = session.selectOne("InvTotal");
@@ -41,7 +43,7 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public List<StockDto> list(PageRequestDto page) {
+	public List<StockDto> getStockList(PageRequestDto page) {
 		List<StockDto> stocks = null;
 		try {
 			stocks = session.selectList("InvList", page);
@@ -69,4 +71,24 @@ public class StockDaoImpl implements StockDao {
 		}
 	}
 
+	@Override
+	public List<StockDto> getAllStock() {
+		List<StockDto> stocks = new ArrayList<>();
+		
+		try {
+			stocks = session.selectList("InvAll");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return stocks;
+	}
+
+	@Override
+	public void saveSilsa(List<SilsaDto> silsaList) {
+		try {
+			session.update("insertSilsa", silsaList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

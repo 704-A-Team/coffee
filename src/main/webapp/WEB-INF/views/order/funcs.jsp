@@ -6,11 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<!-- jQuery & Select2 CDN -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <script>
 
 	function toDateString(date_str)
@@ -83,7 +78,7 @@
     	    	const $row = $(this).closest('.row');
     	    	const count = $(this).val();
     	    	const price = $row.find(".prd-price").text() ?? 0;
-    	    	$row.find(".prd-total-price").text(count * price);
+    	    	$row.find(".prd-total-price").text(parseInt(count * price));
     	    });
     		
     	 	// 선택한 제품에 따라 row 별 총액 계산

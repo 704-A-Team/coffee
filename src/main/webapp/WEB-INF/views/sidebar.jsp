@@ -85,10 +85,12 @@
 					<li class="mt-2">
   						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 내역</a>
 					</li>
+					<li class="mt-2">
+  						<a href="${pageContext.request.contextPath}/inventory/silsa" class="link-light rounded menu-small">재고 조정</a>
+					</li>
 				</ul>
 			</div>
 		</li>
-
 
 		<!-- 판매 메뉴 -->
 		<li class="mb-3">

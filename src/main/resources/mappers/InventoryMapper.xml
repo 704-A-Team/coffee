@@ -4,25 +4,47 @@
 
 <mapper namespace="com.oracle.coffee.InventoryMapper">
 
-  <!-- 전체 개수 조회 -->
-  <select id="InvTotal" resultType="int">
-  	SELECT COUNT(*) 
-    FROM product 
-  	WHERE product_isdel = 0
-  </select>
+	<!-- 전체 재고 개수 조회 -->
+	<select id="InvTotal" resultType="int">
+		select COUNT(*) 
+	  from product
+	  where product_isdel = 0
+	</select>
   
-  <!-- 페이징 리스트 조회 -->
-  <select id="InvList" parameterType="PageRequestDto" resultType="StockDto">
-	  select * from (
-	    select rownum rn, a.* from (
-	        select p.*, ub.cd_contents as unit_contents, tb.cd_contents as type_contents,
-	        	REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
-	        from product p, bunryu ub, bunryu tb
-	        where ub.bcd = 750 and p.product_unit = ub.mcd
-	        	and tb.bcd = 700 and p.product_type = tb.mcd
-	    ) a
-	) where rn between #{start} and #{end}
-  </select>
+	<!-- 페이징 재고 리스트 조회 -->
+	<select id="InvList" parameterType="PageRequestDto" resultType="StockDto">
+		select * from (
+		    select rownum rn, a.* from (
+		        select p.*, ub.cd_contents as unit_contents, tb.cd_contents as type_contents,
+		        	REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
+		        from product p, bunryu ub, bunryu tb
+		        where ub.bcd = 750 and p.product_unit = ub.mcd
+		        	and tb.bcd = 700 and p.product_type = tb.mcd
+		        	and p.product_isdel = 0
+		    ) a
+		) where rn between #{start} and #{end}
+	</select>
+  
+	<!-- 전체 재고 리스트 조회 -->
+	<select id="InvAll" resultType="StockDto">
+		select p.*, REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
+		from product p
+		where p.product_isdel = 0
+	</select>
+  
+  <!-- 재고 실사 저장 -->
+	<insert id="insertSilsa" parameterType="java.util.List">
+		insert all
+		<foreach collection="list" item="item" separator=" ">
+			into silsa values (to_char(sysdate, 'YYYYMMDD'), #{item.silsa_product_code}, #{item.silsa_amount},
+				#{item.silsa_status}, #{item.silsa_reason}, #{item.silsa_reg_code}, sysdate)
+		</foreach>
+		select * from dual
+	</insert>
+  
+  
+  
+
   
   <select id="jhMfgReqAll" resultType="com.oracle.coffee.dto.InventoryDto">
   SELECT *
