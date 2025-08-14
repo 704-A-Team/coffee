@@ -33,14 +33,17 @@ public class StockController {
 		return "jh/inventoryList";
 	}
 	
-	// 마감 내역 페이지
-	
 	// 수동 마감
 	@GetMapping("/close")
 	public String closeMagam() {
-		stockService.closeTodayMagam();
+		try {
+			stockService.closeTodayMagam();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "redirect:/inventory/close";
 	}
-	// 마감 취소
 	
+	// 마감 취소
+	// 마감 내역 페이지
 }
