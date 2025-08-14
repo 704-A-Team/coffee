@@ -1,6 +1,5 @@
 package com.oracle.coffee.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.Data;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class PurchaseDto {
 	private int 			purchase_code;
 	private int 			purchase_client_code;
+	private int 			purchase_type;
 	private int 			purchase_status;
 	private Date			purchase_ipgo_date;
 	private int 			purchase_perm_code;

@@ -95,6 +95,12 @@
                                     <input type="email" class="form-control" id="emp_email" name="emp_email" required>
                                 </div>
 
+								<!-- 생일일 -->
+                                <div class="mb-3">
+                                    <label for="emp_birth" class="form-label">생일</label>
+                                    <input type="date" class="form-control" id="emp_birth" name="emp_birth" required>
+                                </div>                               
+                                
                                 <!-- 입사일 -->
                                 <div class="mb-3">
                                     <label for="emp_ipsa_date" class="form-label">입사일</label>

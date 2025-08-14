@@ -26,33 +26,6 @@
             color: var(--dark-brown);
         }
 
-        .card-title {
-            font-weight: bold;
-            color: var(--main-brown);
-        }
-
-        .supply-info-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .supply-info-list li {
-            display: flex;
-            margin-bottom: 6px;
-        }
-
-        .supply-info-list li strong {
-            width: 40%;
-            color: #555;
-        }
-
-        .supply-info-list li span {
-            width: 60%;
-            color: #333;
-        }
-
         .btn-brown {
             background-color: white !important;
             color: var(--main-brown) !important;
@@ -61,9 +34,9 @@
         }
 
         .btn-brown:hover {
-		    background: #ccc !important;   /* 발주 등록 초기화 버튼과 동일 */
-		    color: #333 !important;        /* 글자색 유지 */
-		}
+            background: #ccc !important;
+            color: #333 !important;
+        }
 
         .search-form input.form-control {
             border: 1px solid #ced4da !important;
@@ -79,6 +52,23 @@
             border-color: var(--main-brown);
             color: white;
         }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+        
+        .btn-brown-outline {
+		    background-color: transparent !important;
+		    color: var(--main-brown) !important;
+		    border: 1px solid var(--main-brown) !important; /* ← !important 추가 */
+		}
+		
+		.btn-brown-outline:hover {
+		    background: #ccc !important;
+		    color: #333 !important;
+		    border: 1px solid #ccc !important; /* ← !important 추가 */
+		}
+		        
     </style>
 </head>
 
@@ -92,10 +82,11 @@
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
                 <!-- 리스트 제목 + 등록 버튼 -->
-			    <div class="d-flex justify-content-between align-items-center mb-3">
-			        <div class="form-section-title mb-0">원재료 공급 리스트</div>
-			        <a href="${pageContext.request.contextPath}/provide/provideInForm" class="btn btn-brown">+ 등록</a>
-			    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-section-title mb-0">원재료 공급 리스트</div>
+                    <a href="${pageContext.request.contextPath}/provide/provideInForm" class="btn btn-brown">+ 등록</a>
+                </div>
+
                 <!-- 검색 -->
                 <form action="${pageContext.request.contextPath}/provide/provideList" method="get" class="row g-2 mb-4 search-form">
                     <div class="col-md-3">
@@ -123,46 +114,46 @@
                     </div>
                 </c:if>
 
-                <!-- 리스트 카드 -->
-                <div class="row">
-                    <c:forEach var="provide" items="${provideList}">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">${provide.productName}</h5>
-                                    <ul class="supply-info-list">
-                                        <li><strong>거래처</strong> <span>${provide.clientName}</span></li>
-                                        <li><strong>공급 단위</strong>
-                                            <span>
-                                                <fmt:formatNumber value="${provide.provide_amount}" type="number" groupingUsed="true" />
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <strong>삭제 여부</strong>
-                                            <span>
-                                                <c:choose>
-                                                    <c:when test="${provide.provide_isdel == 0}">발주 가능</c:when>
-                                                    <c:otherwise>발주 불가</c:otherwise>
-                                                </c:choose>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <strong>등록일</strong>
-                                            <span>
-                                                <fmt:formatDate value="${provide.provide_reg_date}" pattern="yyyy-MM-dd"/>
-                                            </span>
-                                        </li>
-                                    </ul>
-
-                                    <form action="${pageContext.request.contextPath}/provide/provideDetail" method="get" class="mt-auto">
+                <!-- 리스트 테이블 -->
+                <table class="table table-bordered align-middle text-center bg-white shadow-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>제품명</th>
+                            <th>거래처</th>
+                            <th>공급 단위</th>
+                            <th>상태</th>
+                            <th>등록일</th>
+                            <th>상세</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="provide" items="${provideList}">
+                            <tr>
+                                <td>${provide.productName}</td>
+                                <td>${provide.clientName}</td>
+                                <td>
+                                    <fmt:formatNumber value="${provide.provide_amount}" type="number" groupingUsed="true" />
+                                    ${provide.unitName}
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${provide.provide_isdel == 0}">발주 가능</c:when>
+                                        <c:otherwise>발주 불가</c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <fmt:formatDate value="${provide.provide_reg_date}" pattern="yyyy-MM-dd"/>
+                                </td>
+                                <td>
+                                    <form action="${pageContext.request.contextPath}/provide/provideDetail" method="get" class="m-0">
                                         <input type="hidden" name="provide_code" value="${provide.provide_code}" />
-                                        <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>
+                                        <button type="submit" class="btn btn-sm btn-brown-outline">보기</button>
                                     </form>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
 
                 <!-- 페이징 -->
                 <nav aria-label="Page navigation">
@@ -170,25 +161,25 @@
                         <c:if test="${page.startPage > page.pageBlock}">
                             <li class="page-item">
                                 <a class="page-link"
-								   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage - page.pageBlock}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
-								   &laquo; 이전
-								</a>
+                                   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage - page.pageBlock}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
+                                   &laquo; 이전
+                                </a>
                             </li>
                         </c:if>
                         <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
                             <li class="page-item ${i == page.currentPage ? 'active' : ''}">
                                 <a class="page-link"
-								   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${i}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
-								   ${i}
-								</a>
-                            </li>	
+                                   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${i}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
+                                   ${i}
+                                </a>
+                            </li>
                         </c:forEach>
                         <c:if test="${page.endPage < page.totalPage}">
                             <li class="page-item">
                                 <a class="page-link"
-								   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage + page.pageBlock}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
-								   다음 &raquo;
-								</a>
+                                   href="${pageContext.request.contextPath}/provide/provideList?currentPage=${page.startPage + page.pageBlock}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}">
+                                   다음 &raquo;
+                                </a>
                             </li>
                         </c:if>
                     </ul>

@@ -22,13 +22,13 @@ public class StockServiceImpl implements StockService{
 	private final StockDao stockDao;
 	
 	@Override
-	public PageRespDto<StockDto, Paging> list(PageRequestDto page) {
-		int totalCount = stockDao.totalCount();
+	public PageRespDto<StockDto, Paging> getStockList(PageRequestDto page) {
+		int totalCount = stockDao.totalStockCount();
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		page.setStart(paging.getStart());
 		page.setEnd(paging.getEnd());
 		
-		List<StockDto> list = stockDao.list(page);
+		List<StockDto> list = stockDao.getStockList(page);
 		return new PageRespDto<StockDto, Paging>(list, paging);
 	}
 
@@ -63,8 +63,8 @@ public class StockServiceImpl implements StockService{
 	}
 
 	@Override
-	public List<StockDto> getAll() {
-		List<StockDto> stocks = stockDao.getAll();
+	public List<StockDto> getAllStock() {
+		List<StockDto> stocks = stockDao.getAllStock();
 		return stocks;
 	}
 

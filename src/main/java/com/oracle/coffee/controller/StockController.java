@@ -28,7 +28,7 @@ public class StockController {
 	// 재고 현황 페이지
 	@GetMapping("/list")
 	public String listPage(PageRequestDto page, Model model) {
-		PageRespDto<StockDto, Paging> listData = stockService.list(page);
+		PageRespDto<StockDto, Paging> listData = stockService.getStockList(page);
 		boolean isClosedMagam = stockService.isClosedMagam();
 		
 		model.addAttribute("inventoryList", listData.getList());
@@ -69,7 +69,7 @@ public class StockController {
 	// 재고 조정(실사)페이지
 	@GetMapping("/silsa")
 	public String silsaPage(Model model) {
-		List<StockDto> products = stockService.getAll();
+		List<StockDto> products = stockService.getAllStock();
 		model.addAttribute("products", products);
 		
 		return "jh/silsa";

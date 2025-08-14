@@ -9,10 +9,10 @@ import com.oracle.coffee.dto.StockDto;
 
 public interface StockDao {
 	public MagamStatusDto getTodayMagam();
-	public int totalCount();
-	public List<StockDto> list(PageRequestDto page);
+	public int totalStockCount();
+	public List<StockDto> getStockList(PageRequestDto page);
 	public void closeTodayMagam();
 	public void cancelTodayMagam();
-	public List<StockDto> getAll();
+	public List<StockDto> getAllStock();
 	public void saveSilsa(List<SilsaDto> silsaList);
 }

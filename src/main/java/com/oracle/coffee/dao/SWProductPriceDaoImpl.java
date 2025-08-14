@@ -1,5 +1,7 @@
 package com.oracle.coffee.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -23,10 +25,10 @@ public class SWProductPriceDaoImpl implements SWProductPriceDao {
 	}
 
 	@Override
-	public int isPriceCheck(WonProductPriceDto wonProductPriceDto) {
+	public int isPriceCheck(int product_code) {
 		System.out.println("SWProductPriceDaoImpl isPriceCheck start...");
 		
-		return session.selectOne("isPriceCheck", wonProductPriceDto);
+		return session.selectOne("isPriceCheck", product_code);
 	}
 
 	@Override
@@ -35,6 +37,13 @@ public class SWProductPriceDaoImpl implements SWProductPriceDao {
 		System.out.println("SWProductPriceDaoImpl updateEndDate wonProductPriceDto-->"+wonProductPriceDto);
 		
 		session.update("updateEndDate", wonProductPriceDto);
+	}
+
+	@Override
+	public List<WonProductPriceDto> wonProductPriceList(WonProductPriceDto wonProductPriceDto) {
+		System.out.println("SWProductPriceDaoImpl wonProductPriceList start...");
+		
+		return session.selectList("wonProductPriceList", wonProductPriceDto);
 	}
 	
 	

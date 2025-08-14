@@ -32,7 +32,7 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public int totalCount() {
+	public int totalStockCount() {
 		int total = 0;
 		try {
 			total = session.selectOne("InvTotal");
@@ -43,7 +43,7 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public List<StockDto> list(PageRequestDto page) {
+	public List<StockDto> getStockList(PageRequestDto page) {
 		List<StockDto> stocks = null;
 		try {
 			stocks = session.selectList("InvList", page);
@@ -72,7 +72,7 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public List<StockDto> getAll() {
+	public List<StockDto> getAllStock() {
 		List<StockDto> stocks = new ArrayList<>();
 		
 		try {

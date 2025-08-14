@@ -13,10 +13,7 @@
             --danger-red: #a94442;
         }
 
-        body {
-            background-color: #f9f5f1;
-            font-family: 'Segoe UI', sans-serif;
-        }
+        body { background-color: #f9f5f1; font-family: 'Segoe UI', sans-serif; }
 
         .form-section-title {
             border-left: 5px solid var(--main-brown);
@@ -27,42 +24,28 @@
             color: var(--main-brown);
         }
 
-        .btn-brown {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-        }
+        .btn-brown { background-color: var(--soft-brown) !important; color: white !important; border: none !important; }
+        .btn-brown:hover { background-color: var(--main-brown) !important; }
 
         .btn-brown-outline {
-		    border: 1px solid var(--main-brown) !important;
-		    color: var(--main-brown) !important;
-		    background-color: white !important;
-		}
-		.btn-brown-outline:hover {
-		    background-color: var(--main-brown) !important;
-		    color: white !important;
-		    border-color: var(--main-brown) !important;
-		}
+            border: 1px solid var(--main-brown) !important;
+            color: var(--main-brown) !important;
+            background-color: white !important;
+        }
+        .btn-brown-outline:hover {
+            background-color: var(--main-brown) !important;
+            color: white !important;
+            border-color: var(--main-brown) !important;
+        }
 
         @media (max-width: 768px) {
-            .d-flex.justify-content-end {
-                justify-content: center !important;
-            }
+            .d-flex.justify-content-end { justify-content: center !important; }
         }
         
         .btn-secondary-custom {
-		    background:#eee!important;      /* 밝은 회색 배경 */
-		    color:#333!important;            /* 진회색 글자 */
-		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
-		}
-		.btn-secondary-custom:hover {
-		    background:#ccc!important;       /* hover 시 진한 회색 */
-		}
-		
+            background:#eee!important; color:#333!important; border:1px solid #ccc!important;
+        }
+        .btn-secondary-custom:hover { background:#ccc!important; }
     </style>
 </head>
 
@@ -84,6 +67,13 @@
                         <label for="product_name" class="form-label">제품명</label>
                         <input type="text" class="form-control" id="product_name" name="product_name" placeholder="제품명을 입력해주세요" required>
                     </div>
+                    
+                    <!-- 제품명 중복체크 리스트 -->
+                    <div id="existingNames" style="display:none;">
+					  <c:forEach var="p" items="${wonProductAllList}">
+					    <div class="name">${p.product_name}</div>
+					  </c:forEach>
+					</div>
 
                     <!-- 단위 / 납품 여부 -->
                     <div class="row mb-3">
@@ -113,26 +103,32 @@
                         <input type="number" class="form-control" id="product_weight" name="product_weight" placeholder="숫자만 입력해주세요" required>
                     </div>
 
-					<!-- 판매단위(콤보박스) -->
+                    <!-- 적정수량 -->
+                    <div class="mb-3">
+                        <label for="product_min_amount" class="form-label">적정수량</label>
+                        <input type="number" class="form-control" id="product_min_amount" name="product_min_amount" placeholder="적정 재고 수량을 입력해주세요" min="0" required>
+                    </div>
+
+                    <!-- 판매단위(콤보박스) -->
                     <div class="mb-3">
                         <label for="product_order_pack" class="form-label">판매단위</label>
-                        <select class="form-select" id="product_order_pack" name="product_order_pack">
+                        <select class="form-select" id="product_order_pack" name="product_order_pack" disabled>
                             <option value="">-- 단위를 먼저 선택하세요 --</option>
                         </select>
                     </div>
 
                     <!-- 이미지 -->
                     <div class="mb-3">
-                        <label for="files" class="form-label">제품(원재료) 이미지 (최대 3개)</label>
-                        <input type="file" class="form-control" id="files" name="files" multiple accept=".jpg,.jpeg,.png">
-                        <div class="form-text text-danger mt-1">※ 최대 3개의 이미지만 업로드할 수 있습니다.</div>
+                        <label for="files" class="form-label">제품(원재료) 이미지</label>
+                        <input type="file" class="form-control" id="files" name="files" multiple accept=".jpg,.jpeg,.png" required="required">
+                        <div class="form-text text-danger mt-1">※ 최소 1개의 이미지를 등록해야 하고 최대 3개의 이미지를 업로드할 수 있습니다.</div>
                     </div>
 
                     <!-- 버튼 영역: 오른쪽 하단 정렬 -->
-					<div class="d-flex justify-content-end gap-2 mt-4 mb-5">
-					    <button type="submit" class="btn btn-primary">등록</button>
-					    <button type="reset" class="btn btn-secondary-custom">초기화</button>
-					</div>
+                    <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+                        <button type="submit" class="btn btn-primary">등록</button>
+                        <button type="reset" class="btn btn-secondary-custom">초기화</button>
+                    </div>
                 </form>
             </div>
         </main>
@@ -141,39 +137,111 @@
     </div>
 </div>
 
-<!-- 단위 선택 시 판매단위 옵션 변경 -->
+<!-- 단위/납품여부에 따라 판매단위 사용 가능 제어 -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const unitSelect = document.getElementById("product_unit");
-        const orderPackSelect = document.getElementById("product_order_pack");
+document.addEventListener("DOMContentLoaded", function () {
+    const unitSelect = document.getElementById("product_unit");
+    const isOrderSelect = document.getElementById("product_isorder");
+    const orderPackSelect = document.getElementById("product_order_pack");
+    
+    const ajax_existingNameSet = new Set(
+       	    Array.from(document.querySelectorAll('#existingNames .name'))
+       	      .map(n => n.textContent.trim().toLowerCase())
+       	      .filter(Boolean)
+       	  );
 
-        unitSelect.addEventListener("change", function () {
-            const selected = this.value;
-            orderPackSelect.innerHTML = ''; // 기존 옵션 제거
+    const input = document.getElementById('product_name');
+    const form  = document.querySelector('form[action$="/sw/wonProductSave"]');
 
-            const defaultOption = document.createElement("option");
-            defaultOption.value = '';
-            defaultOption.textContent = '-- 선택 --';
-            orderPackSelect.appendChild(defaultOption);
-
-            if (selected === "0") { // ea
-                for (let i = 10; i <= 100; i += 10) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = i + ' ea';
-                    orderPackSelect.appendChild(opt);
-                }
-            } else if (selected === "1" || selected === "2") { // g or ml
-                for (let i = 100; i <= 1000; i += 100) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.textContent = i + (selected === "1" ? ' g' : ' ml');
-                    orderPackSelect.appendChild(opt);
-                }
-            }
-        });
+    // blur 시 간단 체크
+    input.addEventListener('blur', function(){
+      const key = input.value.trim().toLowerCase();
+      if (key && ajax_existingNameSet.has(key)) {
+        input.setCustomValidity('이미 등록된 제품명입니다.');
+        input.reportValidity();
+      } else {
+        input.setCustomValidity('');
+      }
     });
+
+    // 제출 직전 한 번 더 체크
+    form.addEventListener('submit', function(e){
+      const key = input.value.trim().toLowerCase();
+      if (key && ajax_existingNameSet.has(key)) {
+        e.preventDefault();
+        alert('이미 등록된 제품명입니다. 다른 이름을 입력해 주세요.');
+        input.focus();
+        return false;
+      }
+    });
+
+    // 옵션 채우기 로직
+    function populateOrderPackOptions() {
+        orderPackSelect.innerHTML = "";
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "-- 선택 --";
+        orderPackSelect.appendChild(defaultOption);
+
+        const unit = unitSelect.value;
+        if (unit === "0") { // ea
+            for (let i = 10; i <= 100; i += 10) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = i + " ea";
+                orderPackSelect.appendChild(opt);
+            }
+        } else if (unit === "1" || unit === "2") { // g or ml
+            for (let i = 100; i <= 1000; i += 100) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.textContent = i + (unit === "1" ? " g" : " ml");
+                orderPackSelect.appendChild(opt);
+            }
+        } else {
+            // 단위 미선택 시
+            const opt = document.createElement("option");
+            opt.value = "";
+            opt.textContent = "-- 단위를 먼저 선택하세요 --";
+            orderPackSelect.appendChild(opt);
+        }
+    }
+
+    // 납품여부에 따라 판매단위 활성/비활성
+    function toggleOrderPackAvailability() {
+        const isOrder = isOrderSelect.value; // "0": 납품, "1": 비납품
+        if (isOrder === "0") {
+            // 납품: 활성화 + 옵션 채우기 + required 부여
+            orderPackSelect.disabled = false;
+            populateOrderPackOptions();
+            orderPackSelect.required = true;
+        } else {
+            // 비납품: 비활성화 + 값 초기화 + required 제거
+            orderPackSelect.required = false;
+            orderPackSelect.disabled = true;
+            orderPackSelect.innerHTML = "";
+            const opt = document.createElement("option");
+            opt.value = "";
+            opt.textContent = "-- 납품일 때만 선택 가능합니다 --";
+            orderPackSelect.appendChild(opt);
+        }
+    }
+    
+    // 이벤트 바인딩
+    unitSelect.addEventListener("change", function () {
+        // 납품 상태일 때만 단위 변경에 따라 리스트 갱신
+        if (!orderPackSelect.disabled) populateOrderPackOptions();
+    });
+
+    isOrderSelect.addEventListener("change", function () {
+        toggleOrderPackAvailability();
+    });
+
+    // 초기 상태 설정
+    toggleOrderPackAvailability();
+});
 </script>
 
 </body>
 </html>
+ 

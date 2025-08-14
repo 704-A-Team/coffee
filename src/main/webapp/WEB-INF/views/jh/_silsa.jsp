@@ -86,6 +86,8 @@
 			return false;
 		}
 		
+		if (!confirm("재고를 조정하시겠습니까?")) return false;
+		
 		for (const [index, row] of rows.entries()) {
 			const prdCode = row.querySelector('.prd-code')?.value?.trim();
 			const silsaCount = row.querySelector('.count-gap')?.textContent?.trim();

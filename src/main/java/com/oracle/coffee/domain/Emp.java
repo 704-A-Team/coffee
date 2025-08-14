@@ -51,6 +51,7 @@ public class Emp {
 	@CreatedDate
 	private LocalDateTime emp_reg_date;
 	private Date emp_ipsa_date;
+	private Date emp_birth;
 	
 	public void changeEmp_name(String emp_name) {
 		this.emp_name = emp_name;
@@ -81,6 +82,9 @@ public class Emp {
 	}
 	public void changeEmp_ipsa_date(Date emp_ipsa_date) {
 		this.emp_ipsa_date = emp_ipsa_date;
+	}
+	public void changeEmp_birth(Date emp_birth)	{
+		this.emp_birth = emp_birth;
 	}
 	
 }
