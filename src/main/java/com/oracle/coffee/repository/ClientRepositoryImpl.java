@@ -13,6 +13,7 @@ import com.oracle.coffee.dto.ClientDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -158,6 +159,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 		return dto;
 	}
 
+	@Transactional
 	@Override
 	public ClientDto updateClient(ClientDto clientDto) {
 		String updateSql =
@@ -183,6 +185,30 @@ public class ClientRepositoryImpl implements ClientRepository {
 			.setParameter("status", clientDto.getClient_status())
 			.setParameter("code", clientDto.getClient_code())
 			.executeUpdate();
+		
+		//업뎃 후 필요에 따른  ROLE 변경 
+		 String targetRole = null;
+		    int status = clientDto.getClient_status();
+		    int type   = clientDto.getClient_type();
+		    
+		        if (status == 1) {
+		            targetRole = "ROLE_GUEST";
+		        } else if (status == 0) {
+		            if (type == 2)      targetRole = "ROLE_CLIENT";
+		            else if (type == 3) targetRole = "ROLE_CLIENT2";
+		        }
+		    
+
+		    // 3) roles 업데이트 (client_code 참고)
+		    if (targetRole != null) {
+		        final String ROLE_TABLE = "Account";
+		        em.createNativeQuery(
+		            "UPDATE " + ROLE_TABLE + " SET roles = :roles WHERE client_code = :clientCode"
+		        )
+		        .setParameter("roles", targetRole)
+		        .setParameter("clientCode", clientDto.getClient_code())
+		        .executeUpdate();
+		    }
 
 		return findByClient_code(clientDto.getClient_code());
 	}
