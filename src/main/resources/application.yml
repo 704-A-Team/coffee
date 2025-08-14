@@ -52,4 +52,4 @@ mybatis:
 
   
 #upload Folder
-com.oracle.coffee.upload.path: upload   
+com.oracle.coffee.upload.path: upload

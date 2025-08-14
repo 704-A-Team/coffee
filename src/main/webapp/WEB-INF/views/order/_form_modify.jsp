@@ -100,11 +100,13 @@
 		<div class="col-12 border p-3 ">
 	  	<div id="item-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
-			    <div class="col-3">품목명</div>
-			    <div class="col-2">단가</div>
+			    <div class="col-2">품목명</div>
+			    <div class="col-2">단가(원)</div>
 			    <div class="col-2">수량</div>
-			    <div class="col-2">공급가액</div>
+			    <div class="col-1">단위</div>
+			    <div class="col-2">공급가액(원)</div>
 			    <div class="col-2">납기일</div>
+			    <div class="col-1"></div>
 			</div>
 		</div>
 		<div class="col text-end">

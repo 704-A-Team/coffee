@@ -14,7 +14,7 @@ public interface OrdersDao {
 	void createOrders(OrdersDto order);
 	void createOrdersDetails(List<OrdersDetailDto> ordersdetails);
 	OrdersDto findByCode(int orderCode);
-	void updateOrdersNote(OrdersDto order);
+	void updateOrders(OrdersDto order);
 	void deleteOrdersDetails(int orderCode);
 	void requestOrders(OrdersDto order);
 	void deleteOrders(int orderCode);
@@ -22,4 +22,7 @@ public interface OrdersDao {
 	int totalCount(int clientCode);
 	List<OrdersListDto> list(OrdersPageDto page);
 	void refuseOrders(OrdersDto order);
+	void approveOrders(OrdersDto order);
+	List<Integer> approveOrdersDetails(int orderCode);
+	void updateOrdersDetailsDelivery();
 }

@@ -16,5 +16,6 @@ public interface EmpRepository {
 	void 			empDelete(int emp_code);
 	EmpDto 			updateEmp(EmpDto empDto);
 	
+	
 
 }

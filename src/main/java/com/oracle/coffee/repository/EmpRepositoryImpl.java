@@ -3,7 +3,10 @@ package com.oracle.coffee.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+
+import com.oracle.coffee.domain.Account;
 import com.oracle.coffee.domain.Emp;
 import com.oracle.coffee.dto.EmpDto;
 
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class EmpRepositoryImpl implements EmpRepository {
 	
 	private final EntityManager em;
+    private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public Long empTotalcount() {
@@ -87,12 +91,46 @@ public class EmpRepositoryImpl implements EmpRepository {
 			return empDtoList;
 	}
 
-	@Override
-	public Emp empSave(Emp emp) {
-		em.persist(emp);
-		return emp;
-	}
+    public Emp empSave(Emp emp) {
+        // 1) emp 저장
+        if (emp.getEmp_isdel() == 1) emp.changeEmp_isdel(0);
+        em.persist(emp);
+        em.flush(); 
 
+        // 2) emp_tel 뒤 4자리 → 해시
+        String tel = emp.getEmp_tel();
+        if (tel == null || tel.isBlank()) {
+            throw new IllegalArgumentException("전화번호가 없습니다.");
+        }	
+        String last4 = extractLast4Digits(tel);
+        if (last4.isEmpty()) {
+            throw new IllegalArgumentException("전화번호에서 숫자 4자리를 추출할 수 없습니다.");
+        }
+        String encoded = passwordEncoder.encode(last4);
+
+        // 3) Account 생성 (id는 시퀀스로 자동)
+        Account account = new Account();
+        account.setEmp_code(emp.getEmp_code());              // EMP_CODE 저장
+        account.setUsername(String.valueOf(emp.getEmp_code())); // USERNAME = emp_code
+        account.setPassword(encoded);                       // PASSWORD = hash(last4)
+        if (emp.getEmp_grade() >= 2) { 
+            account.setRoles("ROLE_MANAGER");
+        } else {
+            account.setRoles("ROLE_USER");
+        }                  
+
+        em.persist(account); 
+
+        return emp;
+    }
+
+    private String extractLast4Digits(String tel) {
+        String digits = tel.replaceAll("\\D", "");
+        int len = digits.length();
+        if (len < 4) return "";
+        return digits.substring(len - 4);
+    }
+    
 	@Override
 	public EmpDto findByEmp_code(int emp_code) {
 	    String sql =

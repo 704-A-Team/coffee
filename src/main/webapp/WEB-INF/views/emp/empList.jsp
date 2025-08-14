@@ -12,15 +12,9 @@
         transition: background-color 0.3s ease;
         cursor: pointer;
     }
-    .list-item-row:hover {
-        background-color: #e2f3ff;
-    }
-    .data-list-wrapper a:nth-of-type(odd) .list-item-row {
-        background-color: #f8f9fa;
-    }
-    .data-list-wrapper a:nth-of-type(even) .list-item-row {
-        background-color: #e9ecef;
-    }
+    .list-item-row:hover { background-color: #e2f3ff; }
+    .data-list-wrapper a:nth-of-type(odd) .list-item-row { background-color: #f8f9fa; }
+    .data-list-wrapper a:nth-of-type(even) .list-item-row { background-color: #e9ecef; }
 </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -29,6 +23,7 @@
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
 
+        <!-- 본문과 푸터를 같은 컬럼에 배치 -->
         <div class="d-flex flex-column flex-grow-1">
             <main class="flex-grow-1 p-4">
                 <div class="d-flex justify-content-between mb-4">
@@ -37,7 +32,7 @@
                 </div>
 
                 <!-- Header -->
-                <div class="row fw-bold py-2 border-bottom bg-primary text-white">
+                <div class="row fw-bold py-2 border-bottom bg-primary text-white text-center">
                     <div class="col-1">사원 번호</div>
                     <div class="col-2">이름</div>
                     <div class="col-2">전화번호</div>
@@ -53,7 +48,7 @@
                 <div class="data-list-wrapper">
                     <c:forEach var="empDto" items="${empDtoList}">
                         <a href="${pageContext.request.contextPath}/emp/empDetail?emp_code=${empDto.emp_code}" class="text-decoration-none text-reset">
-                            <div class="row py-2 border-bottom list-item-row">
+                            <div class="row py-2 border-bottom list-item-row text-center">
                                 <div class="col-1">${empDto.emp_code}</div>
                                 <div class="col-2">${empDto.emp_name}</div>
                                 <div class="col-2">${empDto.emp_tel}</div>
@@ -99,6 +94,5 @@
             <%@ include file="../footer.jsp" %>
         </div>
     </div>
-
 </body>
 </html>

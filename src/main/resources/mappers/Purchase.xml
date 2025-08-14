@@ -37,7 +37,7 @@
         )
         values
         (
-        	 #{purchase_code}
+        	 purchase_seq.currval
         	,#{product_won_code}
         	,#{purchase_amount}
         	,#{purchase_danga}
@@ -58,47 +58,57 @@
 	</select>
 	
 	<select id="purchaseList" parameterType="PurchaseDto" resultType="PurchaseDto">
-		select *
-		from (
-		    select rownum rn, a.*
-		    from (
-		        select 
-		            p.purchase_code,
-		            p.purchase_client_code,
-		            p.purchase_status,
-		            p.purchase_perm_code,
-		            p.purchase_refuse,
-		            p.purchase_reg_code,
-		            p.purchase_reg_date,
-	
-		            pd.product_won_code,
-		            pd.purchase_amount,
-		            pd.purchase_danga,
-	
-		            pr.product_name as 	productName,
-		            c.client_name  as 	clientName,
-		            
-		            bs.cd_contents as 	statusName
-		        from purchase p
-		        left join purchase_detail pd 
-		            on p.purchase_code = 		pd.purchase_code
-		        left join product pr 
-		            on pd.product_won_code = 	pr.product_code
-		        left join client_tb c
-		            on p.purchase_client_code = c.client_code
-		        left join bunryu bs
-		        	on p.purchase_status = 		bs.mcd and bs.bcd = 100
-		        left join bunryu bu
-		        	on pr.product_unit = 		bu.mcd and bu.bcd = 750
-		        where 1=1
-		        <if test="searchKeyword != null and searchKeyword != ''">
-		            and lower(pr.product_name) like '%' || lower(#{searchKeyword}) || '%'
-		        </if>
-		        order by p.purchase_code desc
-		    ) a
-		)
-		where rn between #{start} and #{end}
+	    select *
+	      from (
+	            select rownum rn
+	                 , a.*
+	              from (
+	                    select p.purchase_code
+	                         , p.purchase_client_code
+	                         , p.purchase_status
+	                         , p.purchase_perm_code
+	                         , p.purchase_refuse
+	                         , p.purchase_reg_code
+	                         , p.purchase_reg_date
+	                         , c.client_name  as clientName
+	                         , bs.cd_contents as statusName
+	                         , t.total_amount as totalPrice
+	                      from purchase p
+	                 left join client_tb c
+	                        on p.purchase_client_code = c.client_code
+	                 left join bunryu bs
+	                        on p.purchase_status = bs.mcd
+	                       and bs.bcd = 100
+	                 left join (
+	                            select p2.purchase_code
+	                                 , sum(
+	                                        case
+	                                          when nvl(pv.provide_amount, 0) > 0
+	                                          then (pd2.purchase_danga / pv.provide_amount) * pd2.purchase_amount
+	                                          else 0
+	                                        end
+	                                      ) as total_amount
+	                              from purchase p2
+	                         join purchase_detail pd2
+	                               on p2.purchase_code = pd2.purchase_code
+	                         left join provide pv
+	                               on pv.product_won_code    = pd2.product_won_code
+	                              and pv.provide_client_code = p2.purchase_client_code
+	                              and pv.provide_isdel       = 0
+	                          group by p2.purchase_code
+	                            ) t
+	                        on t.purchase_code = p.purchase_code
+	                     	where 1=1
+							<if test="searchKeyword != null and searchKeyword != ''">
+							  and lower(c.client_name) like '%' || lower(#{searchKeyword}) || '%'
+							</if>
+							order by p.purchase_code desc
+	                  ) a
+	           )
+	     where rn between #{start} and #{end}
 	</select>
+
+
 
 	<select id="purchaseDetail" parameterType="int" resultType="PurchaseDto">
 	    select 
@@ -147,11 +157,12 @@
 	    where pd.purchase_code = #{purchase_code}
 	</select>
 	
-	<update id="purchaseApprove" parameterType="PurchaseDto">
+	<update id="purchaseApprove" parameterType="int">
 		update 	purchase
 		set		purchase_ipgo_date 	= sysdate,
-				purchase_status 	= #{purchase_status}
+				purchase_status 	= 4
 		where	purchase_code 		= #{purchase_code}
+		and		purchase_status = 1
 	</update>
 	
 	<update id="purchaseRefuse" parameterType="PurchaseDto">
@@ -159,7 +170,59 @@
 		set		purchase_refuse = #{purchase_refuse},
 				purchase_status = #{purchase_status}
 		where	purchase_code 	= #{purchase_code}
+		and		purchase_status = 1
 	</update>
+	
+	<select id="purchaseDetailList" parameterType="int" resultType="PurchaseDto">
+	    select 
+	        pd.purchase_code,
+	        pd.product_won_code,
+	        pd.purchase_amount,
+	        pd.purchase_danga,
+	
+	        p.purchase_client_code,
+	        p.purchase_status,
+	        p.purchase_perm_code,
+	        p.purchase_ipgo_date,
+	        p.purchase_refuse,
+	        p.purchase_reg_code,
+	        p.purchase_reg_date,
+	
+	        pt.product_name         as productName,
+	        c.client_name           as clientName,
+	        c.saup_num				as saupNum,
+	        c.boss_name				as bossName,
+	        c.client_tel			as clientTel,
+	        c.client_address		as clientAddress,
+	
+	        pv.provide_amount       as provideAmount,
+	        
+	        ep.emp_name				as empPermName,
+	        er.emp_name				as empRegName,
+	
+	        bs.cd_contents          as statusName,
+	        bu.cd_contents			as unitName
+	    from purchase_detail pd
+	    left join purchase p 
+	        on pd.purchase_code = 		p.purchase_code
+	    left join product pt
+	        on pd.product_won_code = 	pt.product_code
+	    left join client_tb c
+	        on p.purchase_client_code = c.client_code
+	    left join provide pv
+	        on pv.product_won_code = 	pt.product_code
+	       and pv.provide_client_code = p.purchase_client_code
+	       and pv.provide_isdel = 0
+	    left join emp ep
+	    	on p.purchase_perm_code = 	ep.emp_code
+	    left join emp er
+	    	on p.purchase_reg_code = 	er.emp_code
+	    left join bunryu bs
+	        on p.purchase_status = 		bs.mcd and bs.bcd = 100
+	    left join bunryu bu
+	    	on pt.product_unit = 		bu.mcd and bu.bcd = 750
+	    where pd.purchase_code = #{purchase_code}
+	</select>
 	
 	
 	

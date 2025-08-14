@@ -33,10 +33,10 @@ public class ClientDto {
 	//join
 	private String client_emp_name;						//join해서 가져올 사원 이름 
 	private String client_emp_tel;						//join해서 가져올 사원 번호 
-	private String client_type_br;					//join해서 가져올 거래처 유형 
+	private String client_type_br;						//join해서 가져올 거래처 유형 
 		
 
-
+	
 	// 페이징 관련 
 	private String      pageNum;  
 	private int 		start; 		 	   
