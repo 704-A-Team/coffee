@@ -16,7 +16,7 @@
 	  select * from (
 	    select rownum rn, a.* from (
 	        select p.*, ub.cd_contents as unit_contents, tb.cd_contents as type_contents,
-	        	REAL_STOCK(p.product_code) as real_stock, USABLE_STOCK(p.product_code) as usable_stock 
+	        	REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
 	        from product p, bunryu ub, bunryu tb
 	        where ub.bcd = 750 and p.product_unit = ub.mcd
 	        	and tb.bcd = 700 and p.product_type = tb.mcd
@@ -31,3 +31,4 @@
   </select>
 
 </mapper>
+
