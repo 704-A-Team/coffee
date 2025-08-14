@@ -1,5 +1,6 @@
 package com.oracle.coffee.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -72,9 +73,9 @@ public class ProductController {
 		
 		// productDTO의 등록일 컬럼("현재시간")을 priceDTO "가격변동시작일, 등록일" 에 저장
 		LocalDateTime date = productDTO.getProduct_reg_date();
-		String reg_date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	//	String reg_date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		priceDTO.setPrice_reg_date(date);	// 등록일(Date)
-		priceDTO.setStart_date(reg_date);	// 가격변동일자(String)
+		priceDTO.setStart_date(date);	// 가격변동일자(String)
 		
 		
 		// File 저장
@@ -124,6 +125,25 @@ public class ProductController {
 		try {
 			List<RecipeDTO> recipeList = objectMapper.readValue(materialsJson, new TypeReference<List<RecipeDTO>>(){});
 			
+			// 1. recipeList 파싱 후 바로 원재료 총합 계산 & 생산단위 추출
+			int totalRecipe = 0;
+			for(RecipeDTO recipeDTO : recipeList) {
+				totalRecipe += recipeDTO.getRecipe_amount(); // 원재료 무게 합산
+			}
+			
+			// 2. 완제품 코드 추출
+			int product_wan_code = recipeList.get(0).getProduct_wan_code();
+			
+			// 3. 제품 테이블에서 생산단위 조회
+			int product_pack = productService.findPack(product_wan_code);
+			
+			// 4. 기본 중량 계산
+			double weight = (double)totalRecipe/product_pack;
+			
+			// 5. 기본 중량 저장
+			productService.saveWeight(product_wan_code , weight);
+			
+			
 			for(RecipeDTO recipe : recipeList) {
 				if(recipe.getRecipe_amount() > 99999) {
 					throw new IllegalArgumentException("레시피 수량은 99999를 넘을 수 없습니다.");
@@ -148,6 +168,7 @@ public class ProductController {
 	public String wanList(ProductWanDTO productDTO, Model model) {
 		
 		int total = productService.countTotal();
+		System.out.println("total->"+total);
 		Paging page = new Paging(total, productDTO.getCurrentPage());
 		productDTO.setStart(page.getStart());
 		productDTO.setEnd(page.getEnd());
@@ -280,8 +301,24 @@ public class ProductController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			List<RecipeDTO> recipeList = mapper.readValue(newRecipe, new TypeReference<List<RecipeDTO>>(){});
+			
 			if( !recipeList.isEmpty() ) {
 				product_code = recipeList.get(0).getProduct_wan_code();
+				
+				// 1. recipeList 파싱 후 바로 원재료 총합 계산 & 생산단위 추출
+				int totalRecipe = 0;
+				for(RecipeDTO recipeDTO : recipeList) {
+					totalRecipe += recipeDTO.getRecipe_amount(); // 원재료 무게 합산
+				}
+				
+				// 3. 제품 테이블에서 생산단위 조회
+				int product_pack = productService.findPack(product_code);
+				
+				// 4. 기본 중량 계산
+				double weight = (double)totalRecipe/product_pack;
+				
+				// 5. 기본 중량 저장
+				productService.saveWeight(product_code , weight);
 			}
 				productService.recipeModify(recipeList);
 			
@@ -320,10 +357,33 @@ public class ProductController {
 	public String wanPriceModifyInForm(ProductWanDTO productWanDTO , Model model) {
 		log.info("productWanDTO->"+productWanDTO);
 		
-		List<ProductPriceDTO> priceHistory = productService.priceHistory(productWanDTO);
+		List<ProductPriceDTO> priceHistory = productService.priceHistory(productWanDTO.getProduct_code());
 		log.info("priceHistory->"+priceHistory);
 		
+		double tot_wan_price = productService.launchPrice(productWanDTO.getProduct_code());
+		log.info("tot_wan_price->" + tot_wan_price);
+		model.addAttribute("tot_wan_price" , tot_wan_price);
 		model.addAttribute("priceHistory" , priceHistory);
+		return "productWan/wanPriceModifyInForm";
+	}
+	
+	// 가격 조정
+	@PostMapping("/wanPriceModify")
+	public String wanPriceModify(ProductPriceDTO priceDTO , RedirectAttributes redirectAttributes , Model model) {
+		System.out.println("priceDTO->"+priceDTO);
+		
+		// 로그인한 사원 정보
+		priceDTO.setPrice_reg_code(2004);
+		productService.wanPriceModify(priceDTO);
+		
+		List<ProductPriceDTO> priceHistory = productService.priceHistory(priceDTO.getProduct_code());
+		double tot_wan_price = productService.launchPrice(priceDTO.getProduct_code());
+		
+		model.addAttribute("tot_wan_price" , tot_wan_price);
+		model.addAttribute("priceHistory" , priceHistory);
+	//  RedirectAttributes는 단순 값(String, int 등)만 전송 가능하고, 컬렉션이나 객체는 안 돼
+	//  redirectAttributes.addAttribute("priceHistory" , priceHistory);
+	//	redirectAttributes.addAttribute("product_code" , priceDTO.getProduct_code());
 		return "productWan/wanPriceModifyInForm";
 	}
 	

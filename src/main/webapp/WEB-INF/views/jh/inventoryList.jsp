@@ -112,7 +112,6 @@
                 </div>
 			</main>
 			<%@ include file="../footer.jsp" %>
-
         </div><!-- /본문 래퍼 -->
     </div><!-- /좌우 영역 -->
 </body>

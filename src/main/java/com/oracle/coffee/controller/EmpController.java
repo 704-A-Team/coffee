@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class EmpController {
 	
 	private final EmpService empService;
+	
 
 	@GetMapping("/empList")
 	public String empList(EmpDto empDto, Model model) {
@@ -86,4 +87,6 @@ public class EmpController {
 		
 		return "redirect:empList";
 	}
+	
+	
 }
