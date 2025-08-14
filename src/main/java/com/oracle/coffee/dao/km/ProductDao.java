@@ -46,7 +46,19 @@ public interface ProductDao {
 
 	List<ProductWanDTO> 	mfgWanList();
 
-	List<ProductPriceDTO> 	priceHistory(ProductWanDTO productWanDTO);
+	List<ProductPriceDTO> 	priceHistory(int product_code);
+
+	int 					findPack(int product_code);
+
+	void 					saveWeight(int product_wan_code, double weight);
+
+	void 					jaegoStatus(ProductWanDTO productWanDTO);
+
+	double 					launchPrice(int product_code);
+
+	void 					wanPriceModify(ProductPriceDTO priceDTO);
+
+	void 					wanPriceBeforeModify(ProductPriceDTO priceDTO);
 
 
 }

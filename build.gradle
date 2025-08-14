@@ -43,6 +43,8 @@ dependencies {
 	// Thumbnail
 	implementation 'net.coobird:thumbnailator:0.4.19'
 	
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
