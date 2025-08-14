@@ -50,11 +50,14 @@
 				 	   		  	pp.*
 				 	   		   ,p.product_name as productName
 				 	   		   ,c.client_name  as regName
+				 	   		   ,b.cd_contents  as unitName
 				 	   from 	product_price pp
 				 	   left join product p
 				 	   	   ON p.product_code = pp.product_code
 				 	   left join client_tb c
 				 	   	   ON pp.price_reg_code = c.client_code
+				 	   left join bunryu b
+				 	   	   ON p.product_unit = b.mcd and b.bcd = 750
 				 	   where 	pp.product_code = #{product_code}
 				 	  ) a
 		)

@@ -65,12 +65,15 @@
 	            select 
 	                p.*, 
 	                pt.product_name as productName,
-	                ct.client_name  as clientName
+	                ct.client_name  as clientName,
+	                b.cd_contents   as unitName
 	            from provide p
 	            left join product pt 
 	                on p.product_won_code = pt.product_code
 	            left join client_tb ct 
 	                on p.provide_client_code = ct.client_code
+	            left join bunryu b
+	            	on pt.product_unit = b.mcd and b.bcd = 750
 	            where 1=1
 	            <if test="searchKeyword != null and searchKeyword != ''">
 	                <choose>

@@ -99,7 +99,7 @@
                     <!-- 제품 -->
                     <div class="mb-3">
 					    <label class="form-label">제품</label>
-					    <div class="form-control-plaintext bg-light">
+					    <div class="form-control-plaintext bg-light ps-3">
 					        ${wonProductDetail.product_name}
 					    </div>
 					    <input type="hidden" id="product_code" name="product_code" value="${wonProductDetail.product_code}">
@@ -145,40 +145,49 @@
                 type: 'GET',
                 data: { product_won_code: ajax_product_code },
                 cache: false,
-                success: function (ajax_provideList) {
-                    if (!Array.isArray(ajax_provideList) || ajax_provideList.length === 0) {
-                        $('#price').val('');
+                dataType: 'json', // ← 응답을 JSON으로 강제 파싱
+                success: function (ajax_provideList, textStatus, xhr) {
+                    // 204 No Content 또는 빈 배열 처리
+                    if (xhr.status === 204 || !Array.isArray(ajax_provideList) || ajax_provideList.length === 0) {
+                        $('#price').val('').removeData('original-price');
+                        alert('공급정보가 없습니다. 원재료 공급을 등록한 뒤 다시 시도해주세요.');
+                        window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
                         return;
                     }
 
                     const ajax_unitPrices = ajax_provideList.map(ajax_p => {
-                        const ajax_danga = parseFloat(ajax_p.current_danga);
+                        const ajax_danga  = parseFloat(ajax_p.current_danga);
                         const ajax_amount = parseFloat(ajax_p.provide_amount);
-
-                        if (isNaN(ajax_danga) || isNaN(ajax_amount) || ajax_amount <= 0) {
-                            return 0;
-                        }
+                        if (isNaN(ajax_danga) || isNaN(ajax_amount) || ajax_amount <= 0) return 0;
                         return ajax_danga / ajax_amount;
                     });
 
                     const ajax_maxUnitPrice = Math.max(...ajax_unitPrices);
 
                     if (isNaN(ajax_maxUnitPrice) || ajax_maxUnitPrice <= 0) {
-                        $('#price').val('');
+                        $('#price').val('').removeData('original-price');
+                        alert('공급 단가/수량이 유효하지 않습니다. 공급정보를 확인해주세요.');
+                        setTimeout(function () {
+                            window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
+                        }, 0);
                         return;
                     }
 
-                    const ajax_increased     = ajax_maxUnitPrice * 1.1;
-                    const ajax_rounded       = Math.round(ajax_increased * 1000) / 1000;
-                    const ajax_displayValue  = ajax_rounded.toFixed(2);
+                    const ajax_increased    = ajax_maxUnitPrice * 1.1;
+                    const ajax_rounded      = Math.round(ajax_increased * 1000) / 1000;
+                    const ajax_displayValue = ajax_rounded.toFixed(2);
 
                     $('#price').val(ajax_displayValue).data('original-price', ajax_rounded);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX 실패:", status, error);
-                    alert("공급 단가 조회 실패");
+                    alert(`공급정보 로딩 실패 (상태코드: ${xhr.status}). 원재료 공급이 등록되어있는지 확인해주세요.`);
+                    setTimeout(function () {
+                        window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
+                    }, 0);
                 }
             });
+
 
             $('#price').on('input', function () {
                 const currentVal  = parseFloat($(this).val());
@@ -197,7 +206,7 @@
             const ajax_originalVal = parseFloat($('#price').data('original-price')); // 제시가격
 
             if (!isNaN(ajax_originalVal) && !isNaN(ajax_currentVal) && ajax_currentVal < ajax_originalVal) {
-                const ajax_confirm = confirm('설정한 금액이 정책 금액	보다 낮습니다. 정말 등록하시겠습니까?');
+                const ajax_confirm = confirm('설정한 금액이 정책 금액보다 낮습니다. 정말 등록하시겠습니까?');
                 if (!ajax_confirm) {
                     e.preventDefault();
                     return false;

@@ -162,7 +162,7 @@
                             </c:forEach>
                         </div>
                         <input type="file" id="newFiles" name="files" multiple class="form-control" accept=".jpg,.jpeg,.png">
-                        <div class="form-text text-danger mt-1">※ 기존 + 새 이미지 포함 최대 3개까지 등록 가능합니다.</div>
+                        <div class="form-text text-danger mt-1">※ 기존 + 새 이미지 포함 최소 1개, 최대 3개 등록 가능합니다.</div>
                     </div>
 
                     <c:forEach var="img" items="${wonProductDetail.wonImgList}">

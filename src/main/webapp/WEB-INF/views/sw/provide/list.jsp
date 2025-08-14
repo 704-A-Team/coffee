@@ -34,8 +34,8 @@
         }
 
         .btn-brown:hover {
-            background: #ccc !important;   /* 발주 등록 초기화 버튼과 동일 */
-            color: #333 !important;        /* 글자색 유지 */
+            background: #ccc !important;
+            color: #333 !important;
         }
 
         .search-form input.form-control {
@@ -52,6 +52,23 @@
             border-color: var(--main-brown);
             color: white;
         }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+        
+        .btn-brown-outline {
+		    background-color: transparent !important;
+		    color: var(--main-brown) !important;
+		    border: 1px solid var(--main-brown) !important; /* ← !important 추가 */
+		}
+		
+		.btn-brown-outline:hover {
+		    background: #ccc !important;
+		    color: #333 !important;
+		    border: 1px solid #ccc !important; /* ← !important 추가 */
+		}
+		        
     </style>
 </head>
 
@@ -98,46 +115,45 @@
                 </c:if>
 
                 <!-- 리스트 테이블 -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-sm align-middle">
-                        <thead class="table-light">
-                            <tr class="text-center">
-                                <th>제품명</th>
-                                <th>거래처</th>
-                                <th>공급 단위</th>
-                                <th>삭제 여부</th>
-                                <th>등록일</th>
-                                <th>상세</th>
+                <table class="table table-bordered align-middle text-center bg-white shadow-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th>제품명</th>
+                            <th>거래처</th>
+                            <th>공급 단위</th>
+                            <th>상태</th>
+                            <th>등록일</th>
+                            <th>상세</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="provide" items="${provideList}">
+                            <tr>
+                                <td>${provide.productName}</td>
+                                <td>${provide.clientName}</td>
+                                <td>
+                                    <fmt:formatNumber value="${provide.provide_amount}" type="number" groupingUsed="true" />
+                                    ${provide.unitName}
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${provide.provide_isdel == 0}">발주 가능</c:when>
+                                        <c:otherwise>발주 불가</c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <fmt:formatDate value="${provide.provide_reg_date}" pattern="yyyy-MM-dd"/>
+                                </td>
+                                <td>
+                                    <form action="${pageContext.request.contextPath}/provide/provideDetail" method="get" class="m-0">
+                                        <input type="hidden" name="provide_code" value="${provide.provide_code}" />
+                                        <button type="submit" class="btn btn-sm btn-brown-outline">보기</button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="provide" items="${provideList}">
-                                <tr>
-                                    <td>${provide.productName}</td>
-                                    <td>${provide.clientName}</td>
-                                    <td class="text-end">
-                                        <fmt:formatNumber value="${provide.provide_amount}" type="number" groupingUsed="true" />
-                                    </td>
-                                    <td class="text-center">
-                                        <c:choose>
-                                            <c:when test="${provide.provide_isdel == 0}">발주 가능</c:when>
-                                            <c:otherwise>발주 불가</c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td class="text-center">
-                                        <fmt:formatDate value="${provide.provide_reg_date}" pattern="yyyy-MM-dd"/>
-                                    </td>
-                                    <td class="text-center">
-                                        <form action="${pageContext.request.contextPath}/provide/provideDetail" method="get" class="m-0">
-                                            <input type="hidden" name="provide_code" value="${provide.provide_code}" />
-                                            <button type="submit" class="btn btn-brown btn-sm">상세 보기</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+                        </c:forEach>
+                    </tbody>
+                </table>
 
                 <!-- 페이징 -->
                 <nav aria-label="Page navigation">
