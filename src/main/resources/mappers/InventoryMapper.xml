@@ -1,39 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.oracle.coffee.InventoryMapper">
 
   <!-- 전체 개수 조회 -->
   <select id="InvTotal" resultType="int">
-    SELECT COUNT(*) 
-      FROM product 
-     WHERE product_isdel = 0
+  	SELECT COUNT(*) 
+    FROM product 
+  	WHERE product_isdel = 0
   </select>
   
-  <!-- 전체 리스트 조회 (페이징 제거) + (select * from product) 절 내 order by product_code 삭제함 -->
-  <select id="jhInvAll" resultType="com.oracle.coffee.dto.InventoryDto">
-    <![CDATA[
-    SELECT *
-    FROM
-    (
-    	SELECT rownum rn , a.*
-    	FROM
-    			(
-    			select p.product_code, p.product_name, p.product_contents,
-    					 bu.cd_contents as unitName,
-    					 bt.cd_contents as typeName,
-    					 bi.cd_contents as isorderName
-    			from product p
-    			left join bunryu bu on p.product_unit = bu.mcd and bu.bcd = 750  
-    			left join bunryu bt on p.product_type = bt.mcd and bt.bcd = 700
-    			left join bunryu bi on p.product_isorder = bi.mcd and bi.bcd = 800
-    			order by p.product_code)a
-    )
-    WHERE rn >= #{start}
-    and   rn <= #{end}
-    ]]> 
+  <!-- 페이징 리스트 조회 -->
+  <select id="InvList" parameterType="PageRequestDto" resultType="StockDto">
+	  select * from (
+	    select rownum rn, a.* from (
+	        select p.*, ub.cd_contents as unit_contents, tb.cd_contents as type_contents,
+	        	REAL_STOCK(p.product_code) as real_stock, USABLE_STOCK(p.product_code) as usable_stock 
+	        from product p, bunryu ub, bunryu tb
+	        where ub.bcd = 750 and p.product_unit = ub.mcd
+	        	and tb.bcd = 700 and p.product_type = tb.mcd
+	    ) a
+	) where rn between #{start} and #{end}
   </select>
   
   <select id="jhMfgReqAll" resultType="com.oracle.coffee.dto.InventoryDto">

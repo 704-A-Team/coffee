@@ -7,7 +7,21 @@
 	<!-- 오늘자 마감 조회 -->
 	<select id="selectTodayMagam" resultType="MagamStatusDto">
 		select * from magam 
-		where to_char(sysdate, 'YYYYMMDD') = yrmo and magam_status = 1
+		where to_char(sysdate, 'YYYYMMDD') = yrmo and magam_status != 2
+	</select>
+	
+	<!-- 오늘자 마감 진행 -->
+	<select id="closeTodayMagam" statementType="CALLABLE">
+		BEGIN
+			MM_COLLECTION_PKG.MM_COLLECTION_MAIN(to_char(sysdate, 'YYYYMMDD'), 1, 0);
+		END;
+	</select>
+	
+	<!-- 오늘자 마감 취소 -->
+	<select id="cancelTodayMagam" statementType="CALLABLE">
+		BEGIN
+			MM_COLLECTION_PKG.MM_COLLECTION_MAIN(to_char(sysdate, 'YYYYMMDD'), 0, 0);
+		END;
 	</select>
 
 </mapper>

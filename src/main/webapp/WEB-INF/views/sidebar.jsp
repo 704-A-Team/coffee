@@ -81,10 +81,10 @@
 			<div class="collapse" id="prd-collapse">
 				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 				    <li class="mt-2">
-  						<a href="${pageContext.request.contextPath}/jh/inventoryList" class="link-light rounded menu-small">재고 관리</a>
+  						<a href="${pageContext.request.contextPath}/inventory/list" class="link-light rounded menu-small">재고 현황</a>
 					</li>
 					<li class="mt-2">
-  						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 현황</a>
+  						<a href="${pageContext.request.contextPath}/jh/magamList" class="link-light rounded menu-small">마감 내역</a>
 					</li>
 				</ul>
 			</div>

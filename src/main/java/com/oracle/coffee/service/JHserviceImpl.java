@@ -21,7 +21,7 @@ public class JHserviceImpl implements JHservice {
 	@Override
 	public int totalInventory() {
 		System.out.println("JHserviceImpl totalInventoryDto start...");
-		
+
 		int totInvCnt = inventoryDao.totalInventoryDao();
 		System.out.println("JHserviceImpl totalInventoryDto totInvCnt"+totInvCnt);
 		return totInvCnt;
