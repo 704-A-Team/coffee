@@ -2,21 +2,24 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>재고관리</title>
+<meta charset="UTF-8">
+<title>재고관리</title>
+<script type="text/javascript">
 
-    <!-- 부트스트랩 및 아이콘 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	function magam() {
+		magamCheck = $('#magamModalCheck').val();
+		console.log(magamCheck)
+		if (magamCheck?.trim() !== "확인했습니다.") {
+			alert("확인 문장을 입력하세요");
+			return false;
+		}
+		
+		if (${isClosed}) location.href = "/inventory/cancel";
+		else location.href = "/inventory/close"
+	}
+	
 
-    <style>
-        .disabled-button { pointer-events: none; opacity: 0.5; }
-        .action-column { width: 270px; }
-        .fixed-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            height: 40px; padding: 0 .75rem; box-sizing: border-box;
-        }
-    </style>
+</script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -29,12 +32,33 @@
         <div class="d-flex flex-column flex-grow-1">
             <main class="flex-grow-1">
             	<div class="container mt-4 p-4">
-                	<div class="form-section-title">수주 목록</div>
+                	<div class="form-section-title">재고 현황</div>
                     <!-- 오른쪽: 마감/취소 -->
                     <div class="d-flex justify-content-end mb-3">
-                    	<button class="btn btn-danger fixed-btn me-2" ${isClosed ? 'disabled' : ''}>마감</button>
-                        <button class="btn btn-secondary fixed-btn"   ${isClosed ? '' : 'disabled'}>마감취소</button>
+                    	<button class="btn btn-danger btn-md fw-bold me-2" ${isClosed ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#magamModal">마감</button>
+                        <button class="btn btn-secondary btn-md fw-bold" ${isClosed ? '' : 'disabled'} data-bs-toggle="modal" data-bs-target="#magamModal">마감취소</button>
                  	</div>
+                 	
+                 	<!-- 마감 모달 -->
+				  	<div class="modal fade" id="magamModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body">
+					      	<div>이 동작은 돌이킬 수 없습니다.</div>
+					      	<div>계속 진행하려면 아래 문장을 입력하세요.</div>
+					      	<div><i>"확인했습니다."</i></div>
+					        <textarea rows="4" class="form-control form-control-sm mt-4" placeholder="확인했습니다." id="magamModalCheck"></textarea>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					        <button type="button" class="btn btn-danger fw-bold" onclick="return magam()">확인</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
 
 	                <!-- 테이블 -->
 	                <table class="table table-bordered text-center">
@@ -77,38 +101,27 @@
 	                </table>
 
 	                <!-- 페이징 -->
-	                <c:if test="${not empty page}">
-	                    <nav aria-label="Page navigation" class="mt-4">
-	                        <ul class="pagination justify-content-center">
-	                            <c:if test="${page.startPage > page.pageBlock}">
-	                                <c:url var="prevUrl" value="${pageContext.request.contextPath}/inventory/list">
-	                                    <c:param name="page" value="${page.startPage - page.pageBlock}" />
-	                                </c:url>
-	                                <li class="page-item">
-	                                    <a class="page-link" href="${prevUrl}">이전</a>
-	                                </li>
-	                            </c:if>
-	
-	                            <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-	                                <c:url var="pageUrl" value="${pageContext.request.contextPath}/inventory/list">
-	                                    <c:param name="page" value="${i}" />
-	                                </c:url>
-	                                <li class="page-item ${i == page.currentPage ? 'active' : ''}">
-	                                    <a class="page-link" href="${pageUrl}">${i}</a>
-	                                </li>
-	                            </c:forEach>
-	
-	                            <c:if test="${page.endPage < page.totalPage}">
-	                                <c:url var="nextUrl" value="${pageContext.request.contextPath}/inventory/list">
-	                                    <c:param name="page" value="${page.startPage + page.pageBlock}" />
-	                                </c:url>
-	                                <li class="page-item">
-	                                    <a class="page-link" href="${nextUrl}">다음</a>
-	                                </li>
-	                            </c:if>
-	                        </ul>
-	                    </nav>
-	                </c:if>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <c:if test="${page.startPage > page.pageBlock}">
+	                            <li class="page-item">
+									<a class="page-link" href="/inventory/list?page=${page.startPage - page.pageBlock}&size=${page.rowPage}">이전</a>
+								</li>
+                            </c:if>
+
+                            <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+                                <li class="page-item ${i == page.currentPage ? 'active' : ''}">
+									<a class="page-link" href="/inventory/list?page=${i}&size=${page.rowPage}">${i}</a>
+								</li>
+                            </c:forEach>
+
+                            <c:if test="${page.endPage < page.totalPage}">
+                                <li class="page-item">
+									<a class="page-link" href="/inventory/list?page=${page.startPage + page.pageBlock}&size=${page.rowPage}">다음</a>
+								</li>
+                            </c:if>
+                        </ul>
+                    </nav>
                 </div>
 			</main>
 			<%@ include file="../footer.jsp" %>
