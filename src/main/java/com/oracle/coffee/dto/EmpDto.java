@@ -31,6 +31,7 @@ public class EmpDto {
 	private LocalDateTime 		emp_reg_date; 				//등록일		
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date				emp_ipsa_date;				//입사일
+	private Date 				emp_birth;
 	
 	//join
 	private String				dept_code;					//부서코드
@@ -59,6 +60,7 @@ public class EmpDto {
 		this.emp_register = emp.getEmp_register();
 		this.emp_reg_date = emp.getEmp_reg_date();
 		this.emp_ipsa_date = emp.getEmp_ipsa_date();
+		this.emp_birth = emp.getEmp_birth();
 	
 		}
 	

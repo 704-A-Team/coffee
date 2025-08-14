@@ -85,6 +85,14 @@
                                         <input type="text" class="form-control" value="${empDto.emp_email}" disabled>
                                     </div>
                                 </div>
+                                
+                                 <!-- 생년월일 -->
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">생년월일</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" value="${empDto.emp_birth}" disabled>
+                                    </div>
+                                </div>
 
                                 <!-- 등록일 -->
                                 <div class="row mb-3">

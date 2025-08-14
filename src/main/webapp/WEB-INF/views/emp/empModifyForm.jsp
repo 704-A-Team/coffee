@@ -97,6 +97,16 @@
                             </div>
                         </div>
 
+						
+                        <!-- 입사일 -->
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">생일</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" name="emp_birth" value="${empDto.emp_birth}" required />
+                            </div>
+                        </div>
+                        
+                        
                         <!-- 입사일 -->
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">입사일</label>
