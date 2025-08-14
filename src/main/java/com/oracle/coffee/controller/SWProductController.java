@@ -29,8 +29,11 @@ public class SWProductController {
 	private final CustomFileUtil	fileUtil;
 	
 	@GetMapping("/wonProductInForm")
-	public String wonProductInForm() {
+	public String wonProductInForm(Model model) {
 		System.out.println("SWProductController wonProductInForm Strart...");
+		
+		List<ProductDto> wonProductAllList = productService.wonProductAllList();
+		model.addAttribute("wonProductAllList", wonProductAllList);
 		
 		return "sw/product/wonInForm";
 	}
@@ -64,7 +67,7 @@ public class SWProductController {
 		
 		productDto.setStart(page.getStart());
 		productDto.setEnd(page.getEnd()); 
-		System.out.println("SWProductController wonProductListPage productDto : "+productDto);
+		System.out.println("SWProductController wonProductListPage productDto : "+ productDto);
 		
 		productDto.setProduct_type(0);
 		List<ProductDto> wonProductDtoList = productService.productList(productDto);

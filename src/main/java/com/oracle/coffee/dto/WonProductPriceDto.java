@@ -22,6 +22,7 @@ public class WonProductPriceDto {
 	private int 		end;
 	private String      currentPage;
 	
+	private String 		productName;
 	private String 		unitName;      // 제품 단위명
 	private String 		typeName;      // 제품 유형명
 	private String		regName;	   // 등록자명

@@ -155,6 +155,7 @@
                             <tr><th>단가(1 ea/g/ml)</th><td>${wonProductDetail.price}</td></tr>
                             <tr><th>판매 단위</th><td>${wonProductDetail.product_order_pack} ${wonProductDetail.unitName}	</td></tr>
                             <tr><th>납품 여부</th><td>${wonProductDetail.isorderName}</td></tr>
+                            <tr><th>적정 수량</th><td>${wonProductDetail.product_min_amount} ${wonProductDetail.unitName} </td></tr>
                             <tr><th>삭제 구분</th>
                                 <td>
                                     <c:choose>

@@ -70,6 +70,32 @@
 							<div class="col-6 d-flex border border-end-0 p-3">
 								<div class="flex-fill pe-3 w-100">
 									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">발주 코드</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].purchase_code}">${purchaseDetailList[0].purchase_code}</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+									
+									<div class="mb-2 d-flex">
+									    <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">발주유형</label>
+									    <div class="form-control form-control-sm bg-light">
+									        <c:choose>
+									            <c:when test="${not empty purchaseDetailList[0].purchase_type}">
+									                <c:choose>
+									                    <c:when test="${purchaseDetailList[0].purchase_type == 0}">수동발주</c:when>
+									                    <c:when test="${purchaseDetailList[0].purchase_type == 1}">자동발주</c:when>
+									                    <c:otherwise>-</c:otherwise>
+									                </c:choose>
+									            </c:when>
+									            <c:otherwise>-</c:otherwise>
+									        </c:choose>
+									    </div>
+									</div>
+
+									<div class="mb-2 d-flex">
 										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">상태</label>
 										<div class="form-control form-control-sm bg-light">
 											<c:choose>
@@ -80,17 +106,7 @@
 									</div>
 
 									<div class="mb-2 d-flex">
-										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">발주 코드</label>
-										<div class="form-control form-control-sm bg-light">
-											<c:choose>
-												<c:when test="${not empty purchaseDetailList[0].purchase_code}">${purchaseDetailList[0].purchase_code}</c:when>
-												<c:otherwise>-</c:otherwise>
-											</c:choose>
-										</div>
-									</div>
-
-									<div class="mb-2 d-flex">
-										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">등록일</label>
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청일</label>
 										<div class="form-control form-control-sm bg-light">
 											<c:choose>
 												<c:when test="${not empty purchaseDetailList[0].purchase_reg_date}">
