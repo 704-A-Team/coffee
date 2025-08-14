@@ -13,6 +13,7 @@ import com.oracle.coffee.dto.EmpDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -166,11 +167,21 @@ public class EmpRepositoryImpl implements EmpRepository {
 	    return dto;
 	}
 	
+	@Transactional
 	@Override
 	public void empDelete(int emp_code) {
 		Emp emp = em.find(Emp.class, emp_code);
 		emp.changeEmp_isdel(1);
+		 
+		//퇴사한 사원 guest처리 
+		em.createNativeQuery(
+			        "UPDATE account SET roles = :role WHERE emp_code = :empCode"
+			    )
+			    .setParameter("role", "ROLE_GUEST")
+			    .setParameter("empCode", emp_code)
+			    .executeUpdate();
 	}
+	
 
 	@Override
 	public EmpDto updateEmp(EmpDto empDto) {
