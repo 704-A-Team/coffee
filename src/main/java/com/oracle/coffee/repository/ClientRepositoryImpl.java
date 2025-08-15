@@ -191,9 +191,14 @@ public class ClientRepositoryImpl implements ClientRepository {
 		    int status = clientDto.getClient_status();
 		    int type   = clientDto.getClient_type();
 		    
+		    
 		        if (status == 1) {
 		            targetRole = "ROLE_GUEST";
-		        } else if (status == 0) {
+		        } 
+		        else if (status == 2) {
+		            targetRole = "ROLE_GUEST";
+		        } 		        
+		        else if (status == 0) {
 		            if (type == 2)      targetRole = "ROLE_CLIENT";
 		            else if (type == 3) targetRole = "ROLE_CLIENT2";
 		        }
