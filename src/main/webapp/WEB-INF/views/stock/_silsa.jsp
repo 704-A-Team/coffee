@@ -123,6 +123,17 @@
 <div class="container p-4">
 
 	<div class="form-section-title">재고 조정 (실사)</div>
+	<c:if test="${not isClosedToday }">
+		<div class="card border-0 pe-0">
+			<div class="alert alert-danger d-flex align-items-center" role="alert">
+		  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
+		  		<div>
+		    		<strong>일마감이 진행된 후 </strong>재고 조정이 가능합니다.<br>
+		    		<u>일마감을 먼저 진행해주세요.</u>
+		  		</div>
+			</div>
+		</div>
+	</c:if>
 	<div class="col-12 border p-3 mb-3">
 	  	<div id="silsa-list" class="mb-3">
 	  		<div class="row fw-bold text-center border-bottom pb-2 mb-2">
@@ -140,7 +151,7 @@
 	</div>
 	<div class="silsa-data"></div>
 	<div class="d-flex justify-content-end gap-2 pe-0">
-		<button type="button" class="btn btn-md btn-primary fw-bold" onclick="return saveSilsaData()">조정</button>
+		<button type="button" class="btn btn-md btn-primary fw-bold" ${isClosedToday ? '' : 'disabled'} onclick="return saveSilsaData()">조정</button>
 		<button type="button" class="btn btn-md btn-danger fw-bold" onclick="location.href='/inventory/silsa'">취소</button>
 	</div>
 

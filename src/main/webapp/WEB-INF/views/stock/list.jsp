@@ -17,7 +17,7 @@
 		if (${isClosed}) location.href = "/inventory/cancel";
 		else location.href = "/inventory/close"
 	}
-	
+
 
 </script>
 </head>
@@ -33,10 +33,21 @@
             <main class="flex-grow-1">
             	<div class="container mt-4 p-4">
                 	<div class="form-section-title">재고 현황</div>
-                    <!-- 오른쪽: 마감/취소 -->
+                	
+                    <!-- 일마감/취소 -->
                     <div class="d-flex justify-content-end mb-3">
-                    	<button class="btn btn-danger btn-md fw-bold me-2" ${isClosed ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#magamModal">마감</button>
-                        <button class="btn btn-secondary btn-md fw-bold" ${isClosed ? '' : 'disabled'} data-bs-toggle="modal" data-bs-target="#magamModal">마감취소</button>
+                    	<c:if test="${isClosed }">
+                    		<div class="alert alert-danger d-flex align-items-center" role="alert">
+						  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
+						  		<div>
+						    		<strong>월마감이 완료</strong>되어 <u>일마감 진행 및 취소가 불가능</u>합니다.
+						  		</div>
+							</div>
+                    	</c:if>
+                    	<c:if test="${not isClosed }">
+	                    	<button class="btn btn-danger btn-md fw-bold me-2" ${isClosedToday ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#magamModal">일마감</button>
+	                        <button class="btn btn-secondary btn-md fw-bold" ${isClosedToday ? '' : 'disabled'} data-bs-toggle="modal" data-bs-target="#magamModal">일마감취소</button>
+                 		</c:if>
                  	</div>
                  	
                  	<!-- 마감 모달 -->

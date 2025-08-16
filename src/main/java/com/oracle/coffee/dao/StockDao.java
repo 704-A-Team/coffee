@@ -2,10 +2,12 @@ package com.oracle.coffee.dao;
 
 import java.util.List;
 
-import com.oracle.coffee.dto.MagamStatusDto;
 import com.oracle.coffee.dto.PageRequestDto;
-import com.oracle.coffee.dto.SilsaDto;
-import com.oracle.coffee.dto.StockDto;
+import com.oracle.coffee.dto.stock.MagamPageDto;
+import com.oracle.coffee.dto.stock.MagamStatusDto;
+import com.oracle.coffee.dto.stock.MonthMagamDto;
+import com.oracle.coffee.dto.stock.SilsaDto;
+import com.oracle.coffee.dto.stock.StockDto;
 
 public interface StockDao {
 	public MagamStatusDto getTodayMagam();
@@ -15,4 +17,9 @@ public interface StockDao {
 	public void cancelTodayMagam();
 	public List<StockDto> getAllStock();
 	public void saveSilsa(List<SilsaDto> silsaList);
+	public MagamStatusDto getMonthMagam();
+	public int totalMonthMagam();
+	public List<MonthMagamDto> getMonthMagamList(PageRequestDto page);
+	public int totalMonthMagamPrds(MagamPageDto magamPage);
+	public List<MonthMagamDto> getMonthMagamPrds(MagamPageDto magamPage);
 }
