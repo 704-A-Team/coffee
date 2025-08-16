@@ -23,5 +23,92 @@
 			MM_COLLECTION_PKG.MM_COLLECTION_MAIN(to_char(sysdate, 'YYYYMMDD'), 0, 0);
 		END;
 	</select>
+	
+	<!-- 이번달 월마감 조회 -->
+	<select id="selectMonthMagam" resultType="MagamStatusDto">
+		select * from magam 
+		where yrmo like to_char(sysdate, 'YYYYMM') || '%'
+			and magam_status = 2
+	</select>
+	
+	
+	<!-- 전체 재고 개수 조회 -->
+	<select id="totalStock" resultType="int">
+		select COUNT(*) 
+	  from product
+	  where product_isdel = 0
+	</select>
+  
+	<!-- 페이징 재고 리스트 조회 -->
+	<select id="stockList" parameterType="PageRequestDto" resultType="StockDto">
+		select * from (
+		    select rownum rn, a.* from (
+		        select p.*, ub.cd_contents as unit_contents, tb.cd_contents as type_contents,
+		        	REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
+		        from product p, bunryu ub, bunryu tb
+		        where ub.bcd = 750 and p.product_unit = ub.mcd
+		        	and tb.bcd = 700 and p.product_type = tb.mcd
+		        	and p.product_isdel = 0
+		    ) a
+		) where rn between #{start} and #{end}
+	</select>
+  
+	<!-- 전체 재고 리스트 조회 -->
+	<select id="selectAllStock" resultType="StockDto">
+		select p.*, REAL_STOCK(p.product_code) as real_stock, CALC_USABLE_STOCK(p.product_code) as usable_stock 
+		from product p
+		where p.product_isdel = 0
+	</select>
+  
+  	<!-- 재고 실사 저장 -->
+	<insert id="insertSilsa" parameterType="java.util.List">
+		insert all
+		<foreach collection="list" item="item" separator=" ">
+			into silsa values (to_char(sysdate, 'YYYYMMDD'), #{item.silsa_product_code}, #{item.silsa_amount},
+				#{item.silsa_status}, #{item.silsa_reason}, #{item.silsa_reg_code}, sysdate)
+		</foreach>
+		select * from dual
+	</insert>
+	
+	<!-- 월마감 월 전체 개수 조회 -->
+	<select id="totalMonthMagam" resultType="int">
+		select count(*) from (
+			select distinct month_yrmo, month_magam_status
+			from month_magam
+		)
+	</select>
+	
+	<!-- 월마감 전체 개수 조회 -->
+	<select id="monthMagamList" parameterType="PageRequestDto" resultType="MonthMagamDto">
+		select * from (
+		    select rownum rn, a.* from (
+		        select distinct month_yrmo, month_magam_status
+		        from month_magam
+		        order by month_yrmo desc, month_magam_status desc
+		    ) a
+		) where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 월마감 월별 전체 개수 조회 -->
+	<select id="totalMonthMagamPrds" parameterType="MagamPageDto" resultType="int">
+		select count(*)
+		from month_magam
+		where month_yrmo = #{yrmo} and month_magam_status = #{status}
+	</select>
+	
+	<!-- 월마감 전체 개수 조회 -->
+	<select id="monthMagamPrdList" parameterType="MagamPageDto" resultType="MonthMagamDto">
+		select * from (
+		    select rownum rn, a.* from (
+		        select mm.month_yrmo, mm.month_magam_status, mm.product_code,
+		        mm.month_magam_amount, mm.month_magam_reg_date, p.product_name
+		        from month_magam mm, product p
+		        where 
+		        	mm.product_code = p.product_code
+		        	and mm.month_yrmo = #{yrmo}
+		        	and mm.month_magam_status = #{status}
+		    ) a
+		) where rn between #{start} and #{end}
+	</select>
 
 </mapper>

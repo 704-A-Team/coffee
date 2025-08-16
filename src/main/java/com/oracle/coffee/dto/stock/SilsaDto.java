@@ -1,4 +1,4 @@
-package com.oracle.coffee.dto;
+package com.oracle.coffee.dto.stock;
 
 import lombok.Getter;
 import lombok.Setter;
