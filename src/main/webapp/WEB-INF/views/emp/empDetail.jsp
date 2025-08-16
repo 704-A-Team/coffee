@@ -9,7 +9,7 @@
 
 <style>
     :root{
-        --main-brown:#6f4e37;
+        --main-brown:#6f4e37;	
         --dark-brown:#4e342e;
         --soft-brown:#bfa08e;
         --danger-red:#a94442;
@@ -225,6 +225,6 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

@@ -89,8 +89,30 @@
 						    </li>
 						</sec:authorize>
 				<li class="px-3">
-						  <a href="${pageContext.request.contextPath}/MyPage/MyPage"
-						     class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  <sec:authorize access="hasAuthority('ROLE_MANAGER')">
+						    <a href="${pageContext.request.contextPath}/MyPage/manager"
+						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  </sec:authorize>
+						
+						  <sec:authorize access="hasAuthority('ROLE_USER')">
+						    <a href="${pageContext.request.contextPath}/MyPage/user"
+						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  </sec:authorize>
+						
+						  <sec:authorize access="hasAuthority('ROLE_CLIENT2')">
+						    <a href="${pageContext.request.contextPath}/MyPage/client2"
+						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  </sec:authorize>
+						
+						  <sec:authorize access="hasAuthority('ROLE_CLIENT')">
+						    <a href="${pageContext.request.contextPath}/MyPage/client"
+						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  </sec:authorize>
+						
+						  <sec:authorize access="hasAuthority('ROLE_GUEST')">
+						    <a href="${pageContext.request.contextPath}/MyPage/guest"
+						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						  </sec:authorize>
 						</li>
 		        <li>
 		          <form action="/logout" method="post" class="px-3">
