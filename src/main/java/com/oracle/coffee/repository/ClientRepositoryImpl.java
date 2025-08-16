@@ -186,20 +186,25 @@ public class ClientRepositoryImpl implements ClientRepository {
 			.setParameter("code", clientDto.getClient_code())
 			.executeUpdate();
 		
-		//업뎃 후 필요에 따른  ROLE 변경 
+		//업뎃 후 필요에 따른  ROLE. 휴업중이면 guest 2면 공급처 3이면 가맹점 
 		 String targetRole = null;
 		    int status = clientDto.getClient_status();
 		    int type   = clientDto.getClient_type();
 		    
+		    
 		        if (status == 1) {
 		            targetRole = "ROLE_GUEST";
-		        } else if (status == 0) {
+		        } 
+		        else if (status == 2) {
+		            targetRole = "ROLE_GUEST";
+		        } 		        
+		        else if (status == 0) {
 		            if (type == 2)      targetRole = "ROLE_CLIENT";
 		            else if (type == 3) targetRole = "ROLE_CLIENT2";
 		        }
 		    
 
-		    // 3) roles 업데이트 (client_code 참고)
+		    //roles 업데이트 (client_code 참고)
 		    if (targetRole != null) {
 		        final String ROLE_TABLE = "Account";
 		        em.createNativeQuery(
