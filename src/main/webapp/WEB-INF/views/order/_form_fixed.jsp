@@ -175,7 +175,7 @@
   	-->
   	<!-- "loginUser가 가맹점이면": <c:if test="${loginUser.login_type == 0 }"></c:if> -->
   	
-  	<c:if test="${order.order_status == 0 }">	<!-- and 가맹점만 -->
+  	<c:if test="${order.order_status == 0 and not isEmp}">	<!-- and 가맹점만 -->
   		<div class="card border-0 pe-0">
 	  		<c:if test="${isClosedMagam }">
 				<div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -204,7 +204,7 @@
 		  		</div>
 			</div>
 			
-			<c:if test="${isClosedMagam }">	<!-- and 본사만 -->
+			<c:if test="${isClosedMagam and isEmp}">
 				<div class="alert alert-danger d-flex align-items-center" role="alert">
 			  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
 			  		<div>
@@ -215,10 +215,10 @@
 			
 			<div class="d-flex justify-content-end gap-2 pe-0">
 				<button type="button" class="btn btn-md btn-secondary fw-bold" onclick="location.href='/order/modify/${order.order_code }'">내용변경</button>
-				<!-- 가맹점만 -->
+				<c:if test="${not isEmp}">
 				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, false)">요청취소</button>
-				
-				<c:if test="${not isClosedMagam }"> <!-- and 본사만 -->
+				</c:if>
+				<c:if test="${not isClosedMagam and isEmp}"> <!-- and 본사만 -->
 					<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
 					<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
 				</c:if>

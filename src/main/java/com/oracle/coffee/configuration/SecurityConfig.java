@@ -54,7 +54,11 @@ public class SecurityConfig {
                     
                     .requestMatchers("/sw/wonProductInForm").hasAuthority("ROLE_MANAGER")
                     
+                    .requestMatchers("/order/new").hasAuthority("ROLE_CLIENT2")
+                    .requestMatchers("/order/approve/**").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/order/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_CLIENT2")
                     
+                    .requestMatchers("/inventory/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER")
                     
                     
                     //통합기간중에만 login불필요
@@ -63,8 +67,7 @@ public class SecurityConfig {
                     .requestMatchers("/sw/**").permitAll()
                     .requestMatchers("/provide/**").permitAll()
                     .requestMatchers("/km/**").permitAll()
-                    .requestMatchers("/order/**").permitAll()
-                    .requestMatchers("/inventory/**").permitAll()
+                    
                     
                     
                     //상진 local 수정용 
