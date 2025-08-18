@@ -14,6 +14,28 @@
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
   }
 </style>
+<script type="text/javascript">
+	
+	function openMagamModal() {
+		if (confirm('일마감 전일 경우 일마감이 먼저 진행됩니다.\n진행하시겠습니까?')) {
+		    var myModal = new bootstrap.Modal(document.getElementById('mMagamModal'));
+		    myModal.show();
+		}
+	}
+
+	function mMagam() {
+		magamCheck = $('#mMagamModalCheck').val();
+		console.log(magamCheck)
+		if (magamCheck?.trim() !== "확인했습니다.") {
+			alert("확인 문장을 입력하세요");
+			return false;
+		}
+		
+		location.href = "/inventory/close/mm"
+	}
+
+
+</script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -27,6 +49,44 @@
             <main class="flex-grow-1 p-4">
 				<div class="container mt-4 p-4">
                 	<div class="form-section-title">마감 내역</div>
+                	
+                	<!-- 월마감 -->
+                    <div class="d-flex justify-content-end mb-3">
+                    	<c:if test="${isClosed }">
+                    		<div class="alert alert-danger d-flex align-items-center" role="alert">
+						  		<i class="bi bi-exclamation-octagon-fill me-2"></i>
+						  		<div>
+						    		<strong>월마감이 완료</strong>되었습니다
+						  		</div>
+							</div>
+                    	</c:if>
+                    	<c:if test="${not isClosed }">
+							<div class="d-flex justify-content-end gap-2 pe-0">
+		                    	<button class="btn btn-danger btn-md fw-bold me-2" onclick="openMagamModal()">월마감</button>
+                			</div>
+                 		</c:if>
+                 	</div>
+                 	
+                 	<!-- 마감 모달 -->
+				  	<div class="modal fade" id="mMagamModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body">
+					      	<div>이 동작은 돌이킬 수 없습니다.</div>
+					      	<div>계속 진행하려면 아래 문장을 입력하세요.</div>
+					      	<div><i>"확인했습니다."</i></div>
+					        <textarea rows="4" class="form-control form-control-sm mt-4" placeholder="확인했습니다." id="mMagamModalCheck"></textarea>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					        <button type="button" class="btn btn-danger fw-bold" onclick="return mMagam()">확인</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
                 	
                 	<div class="row g-4">
 					<c:forEach var="magam" items="${monthMagams}">

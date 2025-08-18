@@ -132,4 +132,11 @@ public class StockServiceImpl implements StockService{
 		return new PageRespDto<MonthMagamDto, Paging>(list, paging);
 	}
 
+	@Override
+	public void closeMonthMagam() throws Exception {
+		if (!isClosedToday()) closeTodayMagam();
+		
+		stockDao.closeMonthMagam();
+	}
+
 }

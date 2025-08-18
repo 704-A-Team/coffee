@@ -22,5 +22,6 @@ public interface StockDao {
 	public List<MonthMagamDto>    getMonthMagamList(PageRequestDto page);
 	public int                    totalMonthMagamPrds(MagamPageDto magamPage);
 	public List<MonthMagamDto>    getMonthMagamPrds(MagamPageDto magamPage);
-  public int 					          magamCheck();
+	public int 					  magamCheck();
+	public void 				  closeMonthMagam();
 }

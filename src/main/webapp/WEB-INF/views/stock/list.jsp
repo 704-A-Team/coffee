@@ -45,8 +45,23 @@
 							</div>
                     	</c:if>
                     	<c:if test="${not isClosed }">
-	                    	<button class="btn btn-danger btn-md fw-bold me-2" ${isClosedToday ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#magamModal">일마감</button>
-	                        <button class="btn btn-secondary btn-md fw-bold" ${isClosedToday ? '' : 'disabled'} data-bs-toggle="modal" data-bs-target="#magamModal">일마감취소</button>
+                    		<div class="card border-0 pe-0">
+								<div class="alert alert-info d-flex align-items-center" role="alert">
+							  		<i class="bi bi-info-circle-fill me-2"></i>
+							  		<div>
+							  			<c:if test="${not isClosedToday }">
+							  			현재 <strong>일마감 전</strong>입니다.
+							  			</c:if>
+							  			<c:if test="${isClosedToday }">
+							  			현재 <strong>일마감이 완료</strong>되었습니다.
+							  			</c:if>
+							  		</div>
+								</div>
+								<div class="d-flex justify-content-end gap-2 pe-0">
+			                    	<button class="btn btn-danger btn-md fw-bold me-2" ${isClosedToday ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#magamModal">일마감</button>
+			                        <button class="btn btn-secondary btn-md fw-bold" ${isClosedToday ? '' : 'disabled'} data-bs-toggle="modal" data-bs-target="#magamModal">일마감취소</button>
+                 				</div>
+                 			</div>
                  		</c:if>
                  	</div>
                  	
