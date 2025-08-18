@@ -14,7 +14,7 @@
 			return false;
 		}
 		
-		if (${isClosed}) location.href = "/inventory/cancel";
+		if (${isClosedToday}) location.href = "/inventory/cancel";
 		else location.href = "/inventory/close"
 	}
 
@@ -140,3 +140,4 @@
     </div><!-- /좌우 영역 -->
 </body>
 </html>
+
