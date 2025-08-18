@@ -26,7 +26,7 @@
 					
 					order_ddate: toDateString("${detail.order_ddate}"), // yyyy-MM-dd
 					
-					product_name: "${detail.product_name} (${detail.product_code})",
+					product_name: "[${prd.product_code}] ${detail.product_name}",
 					product_order_pack: "${detail.product_order_pack}",
 					product_unit: "${detail.product_cd_contents}",
 					product_price: "${detail.price}",
@@ -139,7 +139,7 @@
 	    	<select class="form-select prd-code" required>
 	    		<option value=""></option>
 	    			<c:forEach items="${products }" var="prd">
-    			<option value="${prd.product_code}" price="${prd.price}" pack="${prd.product_order_pack}" unit="${prd.cd_contents}">${prd.product_name} (${prd.product_code})</option>
+    			<option value="${prd.product_code}" price="${prd.price}" pack="${prd.product_order_pack}" unit="${prd.cd_contents}">[${prd.product_code}] ${prd.product_name}</option>
 			</c:forEach>
 		    </select>
 	      </div>
@@ -177,7 +177,7 @@
  	        if (nameInput) {
  	        	// 현재 가능한 products 목록(select태그의 value들)에 없으면
  	        	if (!detail.can_order) {
-	 	        	const deletedOption = new Option('[❌불가] ' + detail.product_name, 0, true, true);
+	 	        	const deletedOption = new Option('❌불가❌ ' + detail.product_name, 0, true, true);
 	  				$(deletedOption).prop("disabled", true);
 	  				nameInput.append(deletedOption)
 				} else $(nameInput).val(detail.product_code);
