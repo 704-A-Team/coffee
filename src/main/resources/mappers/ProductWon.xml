@@ -17,8 +17,10 @@
         	,product_type
         	,product_weight
         	,product_isorder
+        	,product_min_amount
+        	,product_order_pack
         	,product_isdel
-        	,product_reg_code
+         	,product_reg_code
         	,product_reg_date 
         )
         values
@@ -29,6 +31,8 @@
         	,#{product_type}
         	,#{product_weight}
         	,#{product_isorder}
+        	,#{product_min_amount}
+        	,#{product_order_pack}
         	,#{product_isdel}
         	,#{product_reg_code}
         	,sysdate

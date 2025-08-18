@@ -1,22 +1,47 @@
 package com.oracle.coffee.service;
 
+import java.util.List;
+
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
-import com.oracle.coffee.dto.StockDto;
+import com.oracle.coffee.dto.stock.MagamPageDto;
+import com.oracle.coffee.dto.stock.MonthMagamDto;
+import com.oracle.coffee.dto.stock.SilsaDto;
+import com.oracle.coffee.dto.stock.StockDto;
 
 public interface StockService {
-	public PageRespDto<StockDto, Paging> list(PageRequestDto page);
+	// 재고 정보 페이징 리스트
+	public PageRespDto<StockDto, Paging> getStockList(PageRequestDto page);
+	
+	// 오늘 기준 월마감인 경우 True
+	public boolean isClosedMonth();
 	
 	// 조회시간 기준 마감 상태 테이블에 오늘 날짜의 마감이 없거나 상태가 마감전인 경우 False
+	public boolean isClosedToday();
+	
+	// 일마감 + 월마감
 	public boolean isClosedMagam();
 	
-	// 수동 승인 (마감 프로시저 진행 + 마감 상태 테이블 변경)
+	// 수동 일마감 (마감 프로시저 진행 + 마감 상태 테이블 변경)
 	public void closeTodayMagam() throws Exception;
 	
-	// 수동 승인 취소 (마감 취소 프로시저 진행 + 마감 상태 테이블 변경)
+	// 수동 일마감 취소 (마감 취소 프로시저 진행 + 마감 상태 테이블 변경)
 	public void cancelTodayMagam() throws Exception;
 	
 	// 실시간 재고 수량 조회
 	public int getRealStock(int productCode);
+
+	// 모든 재고 정보
+	public List<StockDto> getAllStock();
+
+	// 재고 조정
+	public void saveSilsa(List<SilsaDto> silsaList, int empCode) throws Exception;
+
+	// 월마감 리스트
+	public PageRespDto<MonthMagamDto, Paging> getMonthMagams(PageRequestDto page);
+
+	// 월별 마감 제품 리스트
+	public PageRespDto<MonthMagamDto, Paging> getMonthMagamProducts(PageRequestDto page, MagamPageDto magamPage);
+
 
 }

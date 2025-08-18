@@ -22,6 +22,7 @@ public class ProductDto {
 	private int				product_type;
 	private int 			product_yield;
 	private int				product_weight;
+	private int 			product_min_amount;
 	private int				product_isorder;
 	private int				product_pack;
 	private int 			product_order_pack;

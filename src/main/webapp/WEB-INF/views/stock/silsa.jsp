@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>수주목록</title>
+<title>재고조정</title>   
 </head>
 <body class="d-flex flex-column min-vh-100">
 	
@@ -16,9 +16,10 @@
 		<%@ include file="../sidebar.jsp" %>
 		
 		<div class="d-flex flex-column flex-grow-1">
+			
 			<!-- 본문 -->
-			<main>
-    			<%@ include file="_list.jsp" %>
+			<main class="flex-grow-1 p-4 doc-bg">
+				<%@ include file="_silsa.jsp" %>
 			</main>
 			
 			<!-- FOOTER -->

@@ -98,13 +98,14 @@
                 <table class="table table-bordered align-middle text-center bg-white shadow-sm">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 10%;">등록코드</th>
+                            <th style="width: 5%;">등록코드</th>
                             <th style="width: 20%;">거래처명</th>
                             <th style="width: 10%;">총액</th>
+                            <th style="width: 10%;">발주유형</th>
                             <th style="width: 10%;">상태</th>
                             <th style="width: 10%;">요청자</th>
-                            <th style="width: 20%;">등록일</th>
-                            <th style="width: 10%;">상세</th>
+                            <th style="width: 15%;">등록일</th>
+                            <th style="width: 5%;">상세</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,6 +116,7 @@
                                 <td>
                                 	<fmt:formatNumber value="${purchase.totalPrice}" pattern="#,###"/>
                                 </td>
+                                <td>${purchase.purchase_type == 0 ? '수동발주' : '자동발주'}</td>
                                 <td>${purchase.statusName}</td>
                                 <td>${purchase.empRegName}</td>
                                 <td>
