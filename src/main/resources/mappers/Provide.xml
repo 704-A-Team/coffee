@@ -55,6 +55,9 @@
 	            </otherwise>
 	        </choose>
 	    </if>
+	    <if test="roles != null and (roles == 'ROLE_USER' || roles == 'ROLE_CLIENT')">
+        AND p.provide_idsel = 0
+       	</if>
 	</select>
 
 	<select id="provideList" parameterType="ProvideDto" resultType="ProvideDto">
@@ -91,13 +94,14 @@
 	                    </otherwise>
 	                </choose>
 	            </if>
+	            <if test="roles != null and (roles == 'ROLE_USER' || roles == 'ROLE_CLIENT')">
+		        AND p.provide_idsel = 0
+		       	</if>
 	            order by p.provide_code desc
 	        ) a
 	    )
 	    where rn between #{start} and #{end}
 	</select>
-
-
 
 	<select id="provideDetail" parameterType="int" resultType="ProvideDto">
 		select  p.*, 

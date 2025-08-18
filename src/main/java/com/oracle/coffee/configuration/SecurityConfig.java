@@ -49,6 +49,13 @@ public class SecurityConfig {
                     .requestMatchers("/dept/deptInForm").hasAuthority("ROLE_MANAGER")
                     .requestMatchers("/MyPage/MyPage").authenticated() //마이페이지는 로그인 필요
                     
+                    .requestMatchers("/provide/provideInForm").hasAuthority("ROLE_MANAGER")
+                    
+                    .requestMatchers("/sw/wonProductInForm").hasAuthority("ROLE_MANAGER")
+                    
+                    
+                    
+                    
                     //통합기간중에만 login불필요
                     .requestMatchers("/jh/**").permitAll()
                     .requestMatchers("/sw/**").permitAll()
@@ -60,7 +67,7 @@ public class SecurityConfig {
                     
                     
                     
-				  .anyRequest().authenticated()
+				    .anyRequest().authenticated()
 				  	
 					)
 			

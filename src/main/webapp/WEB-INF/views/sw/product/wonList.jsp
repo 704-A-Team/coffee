@@ -156,30 +156,34 @@
 
                                             <!-- ⬇⬇⬇ 하단 버튼: 3등분 (왼: 가격 등록/수정, 중: 가격 내역, 오: 상세 보기) -->
                                             <div class="mt-auto">
-                                                <div class="row g-2">
-                                                    <div class="col-4">
-                                                        <a
-                                                            href="${pageContext.request.contextPath}/sw/wonProductPriceInForm?product_code=${product.product_code}"
-                                                            class="btn btn-brown btn-sm w-100">
-                                                            가격 등록/수정
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <a
-                                                            href="${pageContext.request.contextPath}/sw/wonProductPriceList?product_code=${product.product_code}"
-                                                            class="btn btn-brown btn-sm w-100">
-                                                            가격 내역
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-4">
-												      <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="m-0">
-												        <input type="hidden" name="product_code" value="${product.product_code}" />
-												        <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>
-												      </form>
-												    </div>
-                                                </div>
-                                            </div>
-                                            <!-- ⬆⬆⬆ 링크는 직접 연결해 주세요 -->
+											    <div class="row g-2">
+											        <!-- ROLE_MANAGER 전용: 가격 등록/수정 -->
+											        <sec:authorize access="hasRole('ROLE_MANAGER')">
+											            <div class="col-4">
+											                <a href="${pageContext.request.contextPath}/sw/wonProductPriceInForm?product_code=${product.product_code}"
+											                   class="btn btn-brown btn-sm w-100">
+											                    가격 등록/수정
+											                </a>
+											            </div>
+											        </sec:authorize>
+											
+											        <!-- 가격 내역 (누구나 가능) -->
+											        <div class="col-4">
+											            <a href="${pageContext.request.contextPath}/sw/wonProductPriceList?product_code=${product.product_code}"
+											               class="btn btn-brown btn-sm w-100">
+											                가격 내역
+											            </a>
+											        </div>
+											
+											        <!-- 상세 보기 (누구나 가능) -->
+											        <div class="col-4">
+											            <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="m-0">
+											                <input type="hidden" name="product_code" value="${product.product_code}" />
+											                <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>
+											            </form>
+											        </div>
+											    </div>
+											</div>
                                         </div>
                                     </div>
                                 </div>

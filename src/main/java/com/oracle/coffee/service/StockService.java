@@ -19,4 +19,7 @@ public interface StockService {
 	// 실시간 재고 수량 조회
 	public int getRealStock(int productCode);
 
+	// 마감상태 조회
+	public int magamCheck();
+
 }

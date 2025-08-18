@@ -157,9 +157,16 @@
               </div>
 
               <!-- 카드폼 밖 버튼 -->
-              <!-- 카드폼 밖 버튼 -->
 			<div class="d-flex justify-content-end gap-2 mt-3">
-			  <button type="submit" class="btn btn-primary">등록</button>
+			  <c:choose>
+			    <c:when test="${magamStatus == 1 or magamStatus == 2}">
+			      <button type="submit" class="btn btn-primary" disabled 
+			              title="마감되었습니다">등록</button>
+			    </c:when>
+			    <c:otherwise>
+			      <button type="submit" class="btn btn-primary">등록</button>
+			    </c:otherwise>
+			  </c:choose>
 			  <button type="reset" class="btn btn-secondary-custom">초기화</button>
 			  <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
 			</div>

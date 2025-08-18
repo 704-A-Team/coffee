@@ -128,6 +128,7 @@
                     </thead>
                     <tbody>
                         <c:forEach var="provide" items="${provideList}">
+                            
                             <tr>
                                 <td>${provide.productName}</td>
                                 <td>${provide.clientName}</td>

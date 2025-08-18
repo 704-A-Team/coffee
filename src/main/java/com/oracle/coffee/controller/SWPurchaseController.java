@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,7 @@ import com.oracle.coffee.service.ProvideService;
 import com.oracle.coffee.service.SWClientService;
 import com.oracle.coffee.service.SWProductService;
 import com.oracle.coffee.service.SWPurchaseService;
+import com.oracle.coffee.service.StockService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,15 +36,18 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/sw")
 public class SWPurchaseController {
 
-	private final SWPurchaseService swPurchaseService;
-	private final SWClientService swClientService;
-	private final SWProductService swProductService;
-	private final ProvideService provideService;
+	private final SWPurchaseService 	swPurchaseService;
+	private final SWClientService 		swClientService;
+	private final SWProductService 		swProductService;
+	private final ProvideService 		provideService;
+	private final StockService			stockService; 
 
 	@GetMapping("/purchaseInForm")
 	public String purchaseInForm(Model model) {
 		System.out.println("SWPurchaseController purchaseInForm start...");
-
+		
+		int magamStatus = stockService.magamCheck();
+		
 		int product_type = 0;
 		List<ProductDto> productIsList = swProductService.productIsList(product_type);
 
@@ -51,7 +58,8 @@ public class SWPurchaseController {
 
 		model.addAttribute("productIsList", productIsList);
 		model.addAttribute("clientIsList", clientIsList);
-
+		model.addAttribute("magamStatus", magamStatus);
+		
 		return "sw/purchase/inForm";
 	}
 
@@ -122,7 +130,7 @@ public class SWPurchaseController {
 
 		List<PurchaseDto> purchaseList = swPurchaseService.purchaseList(purchaseDto);
 		System.out.println("SWPurchaseController purchaseListPage purchaseList : " + purchaseList);
-
+		
 		model.addAttribute("totalPurchaseCnt", totalPurchaseCnt);
 		model.addAttribute("purchaseList", purchaseList);
 		model.addAttribute("page", page);
@@ -133,7 +141,9 @@ public class SWPurchaseController {
 	@GetMapping("/purchaseDetail")
 	public String purchaseDetailPage(@RequestParam("purchase_code") int purchase_code, Model model) {
 		System.out.println("SWPurchaseController purchaseDetailPage Strart...");
-
+		
+		int magamStatus = stockService.magamCheck();
+		
 		List<PurchaseDto> purchaseDetailList = swPurchaseService.purchaseDetailList(purchase_code);
 
 		model.addAttribute("purchaseDetailList", purchaseDetailList);
@@ -141,6 +151,7 @@ public class SWPurchaseController {
 		boolean isApprovable = (purchaseDetailList != null && !purchaseDetailList.isEmpty())
                 && "1".equals(String.valueOf(purchaseDetailList.get(0).getPurchase_status()));
 		model.addAttribute("isApprovable", isApprovable);
+		model.addAttribute("magamStatus", magamStatus);
 
 		return "sw/purchase/detailList";
 	}

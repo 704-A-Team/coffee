@@ -3,6 +3,7 @@ package com.oracle.coffee.dao;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -107,10 +108,14 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		int magamStatus = session.selectOne("magamCheck");
+		System.out.println("SWPurchaseDaoImpl purchaseApprove magamCheck : " + magamStatus);
 		
 		try {
-			session.update("purchaseApprove", purchase_code);
-			transactionManager.commit(txStatus);
+			if(magamStatus == 0) {
+				session.update("purchaseApprove", purchase_code);
+				transactionManager.commit(txStatus);
+			}
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
 			e.printStackTrace();

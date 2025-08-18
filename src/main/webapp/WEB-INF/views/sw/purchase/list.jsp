@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>발주 현황</title>
+    <title>입고 현황</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -74,7 +74,7 @@
     <div class="d-flex flex-column flex-grow-1">
         <main class="flex-grow-1 p-4">
             <div class="container mt-3">
-                <div class="form-section-title">발주 현황</div>
+                <div class="form-section-title">입고 현황</div>
 
                 <!-- 검색 상단 배치 -->
                 <form action="${pageContext.request.contextPath}/sw/purchaseList" method="get" class="row g-2 mb-4">

@@ -61,4 +61,11 @@ public class StockServiceImpl implements StockService{
 		return 0;
 	}
 
+	@Override
+	public int magamCheck() {
+		System.out.println("StockServiceImpl magamCheck start...");
+		
+		return stockDao.magamCheck();
+	}
+
 }

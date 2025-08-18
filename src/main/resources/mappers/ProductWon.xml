@@ -49,8 +49,14 @@
 	    from product p
 	    where p.product_type = 0
 	    <if test="searchKeyword != null and searchKeyword != ''">
-	        and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	    AND lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
 	    </if>
+	    <if test="roles != null and roles == 'ROLE_USER'">
+        AND p.product_isdel = 0
+        </if>
+        <if test="roles != null and roles == 'ROLE_CLIENT2'">
+           AND p.product_isorder = 1
+       	</if>
 	</select>
 	
 	<select id="wonProductList" parameterType="ProductDto" resultType="ProductDto">
@@ -86,8 +92,14 @@
 			        ON pp.product_code 		= p.product_code and pp.start_date = pm.max_start_date
 	            where p.product_type = 0
 	            <if test="searchKeyword != null and searchKeyword != ''">
-	                and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	            AND lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
 	            </if>
+	            <if test="roles != null and roles == 'ROLE_USER'">
+                AND p.product_isdel = 0
+            	</if>
+            	<if test="roles != null and roles == 'ROLE_CLIENT2'">
+                AND p.product_isorder = 1
+            	</if>
 	            order by p.product_code desc
 	        ) a
 	    )

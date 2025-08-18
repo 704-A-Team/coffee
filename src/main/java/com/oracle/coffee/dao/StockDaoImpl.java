@@ -69,4 +69,9 @@ public class StockDaoImpl implements StockDao {
 		}
 	}
 
+	@Override
+	public int magamCheck() {
+		return session.selectOne("magamCheck");
+	}
+
 }

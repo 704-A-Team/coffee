@@ -91,8 +91,8 @@
                             <label for="product_isorder" class="form-label">납품 여부</label>
                             <select id="product_isorder" name="product_isorder" class="form-select" required>
                                 <option value="">-- 선택 --</option>
-                                <option value="0">납품</option>
-                                <option value="1">비납품</option>
+                                <option value="0">비납품</option>
+                                <option value="1">납품</option>
                             </select>
                         </div>
                     </div>

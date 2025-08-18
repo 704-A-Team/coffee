@@ -173,21 +173,23 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- 버튼들: 카드 밖, 오른쪽 정렬 -->
+                
+				<!-- 버튼들: 카드 밖, 오른쪽 정렬 -->
 				<div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-				    <!-- 수정: 파란색 -->
-				    <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" 
-				       class="btn btn-primary">수정</a>
+				    <sec:authorize access="hasRole('ROLE_MANAGER')">
+				        <a href="${pageContext.request.contextPath}/sw/wonProductModifyForm?product_code=${wonProductDetail.product_code}" 
+				           class="btn btn-primary">수정</a>
 				
-				    <!-- 삭제: 빨간색 -->
-				    <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" 
-				          onsubmit="return confirm('정말 삭제하시겠습니까?');">
-				        <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
-				        <button type="submit" class="btn btn-danger">삭제</button>
-				    </form>
+				        <form action="${pageContext.request.contextPath}/sw/wonProductDelete" method="post" 
+				              onsubmit="return confirm('정말 삭제하시겠습니까?');">
+				            <input type="hidden" name="product_code" value="${wonProductDetail.product_code}">
+				            <button type="submit" class="btn btn-danger">삭제</button>
+				        </form>
+				    </sec:authorize>
+				
 				    <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
 				</div>
+
             </div>
         </main>
 

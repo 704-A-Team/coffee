@@ -24,4 +24,11 @@
 		END;
 	</select>
 
+	<!-- 오늘자 마감 상태 리턴 -->
+	<select id="magamCheck" resultType="int">
+		select 	NVL(MAX(magam_status), 0) as magam_status
+		from 	magam
+		where 	yrmo = TO_CHAR(sysdate, 'YYYYMMDD')
+	</select>
+	
 </mapper>

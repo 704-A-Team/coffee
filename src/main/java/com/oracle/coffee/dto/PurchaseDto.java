@@ -47,4 +47,7 @@ public class PurchaseDto {
 	private String 		searchType;
 	private String 		searchKeyword;
 	
+	//security
+	private String 		roles;
+	
 }
