@@ -25,71 +25,74 @@
 
         <!-- 본문과 푸터를 같은 컬럼에 배치 -->
         <div class="d-flex flex-column flex-grow-1">
-            <main class="flex-grow-1 p-4">
-                <div class="d-flex justify-content-between mb-4">
-                    <h2>사원 목록</h2>
-                    <a href="${pageContext.request.contextPath}/emp/empInForm" class="btn btn-success">사원 등록</a>
-                </div>
+     <main class="flex-grow-1 p-4">
+    <div class="container p-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="form-section-title m-0">사원 목록</div>
+            <!-- 기존 버튼 유지 -->
+            <a href="${pageContext.request.contextPath}/emp/empInForm" class="btn btn-success">사원 등록</a>
+        </div>
 
-                <!-- Header -->
-                <div class="row fw-bold py-2 border-bottom bg-primary text-white text-center">
-                    <div class="col-1">사원 번호</div>
-                    <div class="col-2">이름</div>
-                    <div class="col-2">전화번호</div>
-                    <div class="col-1">소속 부서</div>
-                    <div class="col-1">직급</div>
-                    <div class="col-1">급여</div>
-                    <div class="col-2">이메일</div>
-                    <div class="col-1">등록일</div>
-                    <div class="col-1">입사일</div>
-                </div>
-
-                <!-- Data List -->
-                <div class="data-list-wrapper">
-                    <c:forEach var="empDto" items="${empDtoList}">
-                        <a href="${pageContext.request.contextPath}/emp/empDetail?emp_code=${empDto.emp_code}" class="text-decoration-none text-reset">
-                            <div class="row py-2 border-bottom list-item-row text-center">
-                                <div class="col-1">${empDto.emp_code}</div>
-                                <div class="col-2">${empDto.emp_name}</div>
-                                <div class="col-2">${empDto.emp_tel}</div>
-                                <div class="col-1">${empDto.dept_code}</div>
-                                <div class="col-1">${empDto.emp_grade_detail}</div>
-                                <div class="col-1">${empDto.emp_sal}</div>
-                                <div class="col-2">${empDto.emp_email}</div>
-                                <div class="col-1">${empDto.empRegDateFormatted}</div>
-                                <div class="col-1">${empDto.emp_ipsa_date}</div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </div>
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th>사원 번호</th>
+                    <th>이름</th>
+                    <th>소속 부서</th>
+                    <th>직급</th>
+                    <th>등록일</th>
+                    <th>입사일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="empDto" items="${empDtoList}">
+                    <tr class="clickable-row"
+                        style="cursor:pointer"
+                        onclick="location.href='${pageContext.request.contextPath}/emp/empDetail?emp_code=${empDto.emp_code}'">
+                        <td>${empDto.emp_code}</td>
+                        <td>${empDto.emp_name}</td>
+                        <td>${empDto.dept_code}</td>
+                        <td>${empDto.emp_grade_detail}</td>
+                        <td>${empDto.empRegDateFormatted}</td>
+                        <td>${empDto.emp_ipsa_date}</td>
+                    </tr>
+                </c:forEach>
 
                 <c:if test="${empty empDtoList}">
-                    <div class="text-center mt-4 text-muted">등록된 사원이 없습니다.</div>
+                    <tr>
+                        <td colspan="6" class="text-muted">등록된 사원이 없습니다.</td>
+                    </tr>
+                </c:if>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav class="mt-4" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <c:if test="${page.startPage > page.pageBlock}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="${pageContext.request.contextPath}/emp/empList?currentPage=${page.startPage - page.pageBlock}">이전</a>
+                    </li>
                 </c:if>
 
-                <!-- Paging -->
-                <nav class="mt-4" aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <c:if test="${page.startPage > page.pageBlock}">
-                            <li class="page-item">
-                                <a class="page-link" href="${pageContext.request.contextPath}/emp/empList?currentPage=${page.startPage - page.pageBlock}">&laquo; 이전</a>
-                            </li>
-                        </c:if>
+                <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+                    <li class="page-item ${i == page.currentPage ? 'active' : ''}">
+                        <a class="page-link"
+                           href="${pageContext.request.contextPath}/emp/empList?currentPage=${i}">${i}</a>
+                    </li>
+                </c:forEach>
 
-                        <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-                            <li class="page-item ${i == page.currentPage ? 'active' : ''}">
-                                <a class="page-link" href="${pageContext.request.contextPath}/emp/empList?currentPage=${i}">${i}</a>
-                            </li>
-                        </c:forEach>
-
-                        <c:if test="${page.endPage < page.totalPage}">
-                            <li class="page-item">
-                                <a class="page-link" href="${pageContext.request.contextPath}/emp/empList?currentPage=${page.startPage + page.pageBlock}">다음 &raquo;</a>
-                            </li>
-                        </c:if>
-                    </ul>
-                </nav>
-            </main>
+                <c:if test="${page.endPage < page.totalPage}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="${pageContext.request.contextPath}/emp/empList?currentPage=${page.startPage + page.pageBlock}">다음</a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
+    </div>
+</main>
 
             <%@ include file="../footer.jsp" %>
         </div>

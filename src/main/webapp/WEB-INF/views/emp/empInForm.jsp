@@ -1,16 +1,60 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사원 등록</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
-    .form-container {
-        width: 100%;
-        max-width: 980px;
-        margin: 0 auto;
+    :root {
+        --main-brown: #6f4e37;
+        --light-brown: #e6d3c1;
+        --dark-brown: #4e342e;
+        --soft-brown: #bfa08e;
+        --danger-red: #a94442;
+    }
+
+    body {
+        background-color: #f9f5f1;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .form-section-title {
+        border-left: 5px solid var(--main-brown);
+        padding-left: 12px;
+        margin-bottom: 24px;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--main-brown);
+    }
+
+    .card-detail {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    /* 프로젝트 표준 버튼 */
+    .btn-brown-outline {
+        border: 1px solid var(--main-brown) !important;
+        color: var(--main-brown) !important;
+        background-color: #fff !important;
+    }
+    .btn-brown-outline:hover {
+        background-color: #ccc !important;   /* 회색 배경 */
+        color: #333 !important;               /* 진회색 글자 */
+        border-color: #ccc !important;        /* 회색 테두리 */
+    }
+    .btn-secondary-custom {
+        background:#eee!important;
+        color:#333!important;
+        border:1px solid #ccc!important;
+    }
+    .btn-secondary-custom:hover { background:#ccc!important; }
+
+    @media (max-width: 768px) {
+        .d-flex.justify-content-end { justify-content: center !important; }
     }
 </style>
 </head>
@@ -23,41 +67,26 @@
         <!-- 본문 + 푸터 같은 컬럼 -->
         <div class="d-flex flex-column flex-grow-1">
             <main class="flex-grow-1 p-4">
-                <div class="form-container">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h2 class="h5 mb-0">사원 등록</h2>
-                        </div>
+                <div class="container mt-3" style="max-width: 980px;">
+                    <div class="form-section-title">사원 등록</div>
+
+                    <div class="card card-detail">
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/emp/saveEmp" method="post">
+                            <!-- ✅ 기능 유지: action / name / id 동일 -->
+                            <form action="${pageContext.request.contextPath}/emp/saveEmp" method="post" id="empCreateForm" novalidate>
                                 <!-- 사원명 -->
                                 <div class="mb-3">
                                     <label for="emp_name" class="form-label">이름</label>
                                     <input type="text" class="form-control" id="emp_name" name="emp_name" required>
                                 </div>
 
-                               <!-- 전화번호 -->
-								<div class="mb-3">
-								    <label for="emp_tel" class="form-label">전화번호</label>
-								    <input type="text" class="form-control" id="emp_tel" name="emp_tel" maxlength="13" required>
-								</div>
-								<script>
-								document.addEventListener("DOMContentLoaded", function () {
-								    const telInput = document.getElementById("emp_tel");
-								
-								    telInput.addEventListener("input", function () {
-								        let value = telInput.value.replace(/[^0-9]/g, ""); // 숫자만
-								        if (value.length > 3 && value.length <= 7) {
-								            value = value.replace(/(\d{3})(\d+)/, "$1-$2");
-								        } else if (value.length > 7) {
-								            value = value.replace(/(\d{3})(\d{4})(\d+)/, "$1-$2-$3");
-								        }
-								        telInput.value = value;
-								    });
-								});
-								</script>
+                                <!-- 전화번호 (자동 하이픈) -->
+                                <div class="mb-3">
+                                    <label for="emp_tel" class="form-label">전화번호</label>
+                                    <input type="tel" class="form-control" id="emp_tel" name="emp_tel" maxlength="13" required>
+                                </div>
 
-                                <!-- 부서코드 -->
+                                <!-- 소속 부서 -->
                                 <div class="mb-3">
                                     <label for="emp_dept_code" class="form-label">소속 부서</label>
                                     <select class="form-select" id="emp_dept_code" name="emp_dept_code">
@@ -95,16 +124,26 @@
                                     <input type="email" class="form-control" id="emp_email" name="emp_email" required>
                                 </div>
 
+                                <!-- 생일 -->
+                                <div class="mb-3">
+                                    <label for="emp_birth" class="form-label">생일</label>
+                                    <input type="date" class="form-control" id="emp_birth" name="emp_birth" required>
+                                </div>
+
                                 <!-- 입사일 -->
                                 <div class="mb-3">
                                     <label for="emp_ipsa_date" class="form-label">입사일</label>
                                     <input type="date" class="form-control" id="emp_ipsa_date" name="emp_ipsa_date" required>
                                 </div>
 
-                                <!-- 버튼 -->
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary btn-lg">등록하기</button>
-                                    <button type="reset" class="btn btn-secondary btn-lg">초기화</button>
+                                <!-- 버튼: 오른쪽 정렬(모바일 중앙) -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">등록</button>
+                                    <button type="reset" class="btn btn-secondary-custom">초기화</button>
+                                    <button type="button" class="btn btn-brown-outline"
+                                            onclick="location.href='${pageContext.request.contextPath}/emp/empList'">
+                                        목록으로
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -115,5 +154,41 @@
             <%@ include file="../footer.jsp" %>
         </div>
     </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 전화번호 자동 하이픈 (02와 010 등 이동통신/지역번호 모두 처리)
+    const telInput = document.getElementById("emp_tel");
+    if (telInput) {
+        const formatTel = (v) => {
+            v = v.replace(/[^0-9]/g, "");
+            if (v.startsWith("02")) {
+                if (v.length <= 2) return v;
+                if (v.length <= 5) return v.replace(/(\d{2})(\d{1,3})/, "$1-$2");
+                if (v.length <= 9) return v.replace(/(\d{2})(\d{3})(\d{1,4})/, "$1-$2-$3");
+                return v.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
+            } else {
+                if (v.length <= 3) return v;
+                if (v.length <= 7) return v.replace(/(\d{3})(\d{1,4})/, "$1-$2");
+                return v.replace(/(\d{3})(\d{3,4})(\d{4})/, "$1-$2-$3");
+            }
+        };
+        telInput.addEventListener("input", () => {
+            telInput.value = formatTel(telInput.value);
+        });
+    }
+
+    // 간단한 HTML5 유효성
+    const form = document.getElementById("empCreateForm");
+    form.addEventListener("submit", function (e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+});
+</script>
+
 </body>
 </html>

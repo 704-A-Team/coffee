@@ -31,6 +31,8 @@ public class EmpDto {
 	private LocalDateTime 		emp_reg_date; 				//등록일		
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date				emp_ipsa_date;				//입사일
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date 				emp_birth;					//생일
 	
 	//join
 	private String				dept_code;					//부서코드
@@ -59,10 +61,11 @@ public class EmpDto {
 		this.emp_register = emp.getEmp_register();
 		this.emp_reg_date = emp.getEmp_reg_date();
 		this.emp_ipsa_date = emp.getEmp_ipsa_date();
+		this.emp_birth = emp.getEmp_birth();
 	
 		}
 	
-	//날짜 패턴 yyyy-MM-dd로 변경
+		//등록일 yyyy-MM-dd로 변경
 		public String getEmpRegDateFormatted() {
 			if (emp_reg_date != null) {
 				return emp_reg_date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -70,6 +73,21 @@ public class EmpDto {
 				return "";
 			}
 		}
-	
+		
+		public String getEmpBirthFormatted() {
+		    if (emp_birth != null) {
+		        return new java.text.SimpleDateFormat("yyyy-MM-dd").format(emp_birth);
+		    }
+		    return "";
+		}
+
+		public String getEmpIpsaDateFormatted() {
+		    if (emp_ipsa_date != null) {
+		        return new java.text.SimpleDateFormat("yyyy-MM-dd").format(emp_ipsa_date);
+		    }
+		    return "";
+		}
+
+		
 
 }

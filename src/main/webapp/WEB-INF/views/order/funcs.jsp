@@ -6,11 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<!-- jQuery & Select2 CDN -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <script>
 
 	function toDateString(date_str)
@@ -31,7 +26,7 @@
 					
 					order_ddate: toDateString("${detail.order_ddate}"), // yyyy-MM-dd
 					
-					product_name: "${detail.product_name} (${detail.product_code})",
+					product_name: "[${prd.product_code}] ${detail.product_name}",
 					product_order_pack: "${detail.product_order_pack}",
 					product_unit: "${detail.product_cd_contents}",
 					product_price: "${detail.price}",
@@ -83,7 +78,7 @@
     	    	const $row = $(this).closest('.row');
     	    	const count = $(this).val();
     	    	const price = $row.find(".prd-price").text() ?? 0;
-    	    	$row.find(".prd-total-price").text(count * price);
+    	    	$row.find(".prd-total-price").text(parseInt(count * price));
     	    });
     		
     	 	// 선택한 제품에 따라 row 별 총액 계산
@@ -144,7 +139,7 @@
 	    	<select class="form-select prd-code" required>
 	    		<option value=""></option>
 	    			<c:forEach items="${products }" var="prd">
-    			<option value="${prd.product_code}" price="${prd.price}" pack="${prd.product_order_pack}" unit="${prd.cd_contents}">${prd.product_name} (${prd.product_code})</option>
+    			<option value="${prd.product_code}" price="${prd.price}" pack="${prd.product_order_pack}" unit="${prd.cd_contents}">[${prd.product_code}] ${prd.product_name}</option>
 			</c:forEach>
 		    </select>
 	      </div>
@@ -182,7 +177,7 @@
  	        if (nameInput) {
  	        	// 현재 가능한 products 목록(select태그의 value들)에 없으면
  	        	if (!detail.can_order) {
-	 	        	const deletedOption = new Option('[❌불가] ' + detail.product_name, 0, true, true);
+	 	        	const deletedOption = new Option('❌불가❌ ' + detail.product_name, 0, true, true);
 	  				$(deletedOption).prop("disabled", true);
 	  				nameInput.append(deletedOption)
 				} else $(nameInput).val(detail.product_code);

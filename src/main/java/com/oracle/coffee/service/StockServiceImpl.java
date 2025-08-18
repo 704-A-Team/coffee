@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.oracle.coffee.dao.StockDao;
-import com.oracle.coffee.dto.MagamStatusDto;
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
-import com.oracle.coffee.dto.StockDto;
+import com.oracle.coffee.dto.stock.MagamPageDto;
+import com.oracle.coffee.dto.stock.MagamStatusDto;
+import com.oracle.coffee.dto.stock.MonthMagamDto;
+import com.oracle.coffee.dto.stock.SilsaDto;
+import com.oracle.coffee.dto.stock.StockDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,36 +24,53 @@ public class StockServiceImpl implements StockService{
 	private final StockDao stockDao;
 	
 	@Override
-	public PageRespDto<StockDto, Paging> list(PageRequestDto page) {
-		int totalCount = stockDao.totalCount();
+	public PageRespDto<StockDto, Paging> getStockList(PageRequestDto page) {
+		int totalCount = stockDao.totalStockCount();
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		page.setStart(paging.getStart());
 		page.setEnd(paging.getEnd());
 		
-		List<StockDto> list = stockDao.list(page);
+		List<StockDto> list = stockDao.getStockList(page);
 		return new PageRespDto<StockDto, Paging>(list, paging);
 	}
-
+	
 	@Override
-	public boolean isClosedMagam() {
+	public boolean isClosedMonth() {
+		MagamStatusDto monthMagam = stockDao.getMonthMagam();
+		if (monthMagam != null) return true;
+		return false;
+	}
+	
+	@Override
+	public boolean isClosedToday() {
 		MagamStatusDto magam = stockDao.getTodayMagam();
 		if (magam == null || magam.getMagam_status() == 0) return false;
 		return true;
 	}
 
 	@Override
+	public boolean isClosedMagam() {
+		return (isClosedMonth() && isClosedToday());
+	}
+
+	@Override
 	public void closeTodayMagam() throws Exception {
-		// 이미 마감된 경우 예외처리
-		if (isClosedMagam()) throw new Exception();
+		// 일마감 후 월마감 진행됨
+		if (isClosedMonth()) throw new Exception();
+		
+		// 일마감된 경우 예외처리
+		if (isClosedToday()) throw new Exception();
 		
 		stockDao.closeTodayMagam();
 	}
 
 	@Override
 	public void cancelTodayMagam() throws Exception {
+		// 월마감 된 경우 마감 취소 불가능
+		if (isClosedMonth()) throw new Exception();
+		
 		// 오늘자 마감 안된 경우 예외처리
-		MagamStatusDto magam = stockDao.getTodayMagam();
-		if (magam == null || magam.getMagam_status() != 1) throw new Exception();
+		if (!isClosedToday()) throw new Exception();
 		
 		stockDao.cancelTodayMagam();
 	}
@@ -66,6 +86,48 @@ public class StockServiceImpl implements StockService{
 		System.out.println("StockServiceImpl magamCheck start...");
 		
 		return stockDao.magamCheck();
+  }
+
+  public List<StockDto> getAllStock() {
+		List<StockDto> stocks = stockDao.getAllStock();
+		return stocks;
+	}
+
+	@Override
+	public void saveSilsa(List<SilsaDto> silsaList, int empCode) throws Exception {
+		// "실사 요청"(마감 상태) -> 마감 취소 -> 실사 저장 -> 재마감
+		cancelTodayMagam();
+		
+		for (SilsaDto data : silsaList) {
+			data.setSilsa_reg_code(empCode);
+		}
+		stockDao.saveSilsa(silsaList);
+		
+		closeTodayMagam();
+	}
+
+	@Override
+	public PageRespDto<MonthMagamDto, Paging> getMonthMagams(PageRequestDto page) {
+		int totalCount = stockDao.totalMonthMagam();
+		
+		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
+		
+		page.setStart(paging.getStart());
+		page.setEnd(paging.getEnd());
+		List<MonthMagamDto> list = stockDao.getMonthMagamList(page);
+		return new PageRespDto<MonthMagamDto, Paging>(list, paging);
+	}
+
+	@Override
+	public PageRespDto<MonthMagamDto, Paging> getMonthMagamProducts(PageRequestDto page, MagamPageDto magamPage) {
+		int totalCount = stockDao.totalMonthMagamPrds(magamPage);
+		
+		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
+		
+		magamPage.setStart(paging.getStart());
+		magamPage.setEnd(paging.getEnd());
+		List<MonthMagamDto> list = stockDao.getMonthMagamPrds(magamPage);
+		return new PageRespDto<MonthMagamDto, Paging>(list, paging);
 	}
 
 }
