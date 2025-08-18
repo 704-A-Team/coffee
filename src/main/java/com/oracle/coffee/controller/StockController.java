@@ -34,7 +34,7 @@ public class StockController {
 	@GetMapping("/list")
 	public String listPage(PageRequestDto page, Model model) {
 		PageRespDto<StockDto, Paging> listData = stockService.getStockList(page);
-		boolean isClosed = stockService.isClosedMagam();
+		boolean isClosed = stockService.isClosedMonth();
 		boolean isClosedToday = stockService.isClosedToday();
 		
 		model.addAttribute("inventoryList", listData.getList());

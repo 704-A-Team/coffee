@@ -50,7 +50,7 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public boolean isClosedMagam() {
-		return (isClosedMonth() || isClosedToday());
+		return (isClosedMonth() && isClosedToday());
 	}
 
 	@Override

@@ -118,8 +118,7 @@
 			<div class="row g-2 mb-2 item-list-item">
 				<div class="col-2">
 					<div class="form-control form-control-sm bg-light">
-						<c:if test="${order.order_status <= 1 and not detail.can_order }">[❌불가] </c:if>${detail.product_name} (${detail.product_code})
-					</div>
+						<c:if test="${order.order_status <= 1 and not detail.can_order }">❌불가❌ </c:if>[${detail.product_code}] ${detail.product_name}					</div>
 				</div>
 				<div class="col-2">
 			    	<div class="form-control form-control-sm bg-light prd-price">${detail.price }</div>
