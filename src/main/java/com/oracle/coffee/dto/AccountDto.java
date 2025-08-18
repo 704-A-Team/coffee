@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountDto {
 	   private Long   	id;
-	   private int 	client_code;
-	   private int 	emp_code;
+	   private int 		client_code;
+	   private int 		emp_code;
 	   private String 	username;
 	   private String 	password;
 	   private String 	roles;
+	   private String 	displayName;
 
 
 		public AccountDto(int Long, String username, String password, String roles) {
