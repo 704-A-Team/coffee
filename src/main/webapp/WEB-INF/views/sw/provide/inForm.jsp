@@ -134,6 +134,10 @@
                             <label for="current_danga" class="form-label">단가 (₩)</label>
                             <input type="number" class="form-control" id="current_danga" name="current_danga" placeholder="단가를 입력하세요" required>
                         </div>
+                        
+                        <!-- 등록자 -->
+                        <input type="hidden" id="provide_reg_code" name="provide_reg_code" value="${emp_reg_code}">
+                        
                     </form>
                 </div>
 

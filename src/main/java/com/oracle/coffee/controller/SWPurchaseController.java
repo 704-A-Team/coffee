@@ -1,11 +1,11 @@
 package com.oracle.coffee.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.coffee.VO.PurchaseForm;
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.dto.PurchaseDto;
@@ -42,9 +43,17 @@ public class SWPurchaseController {
 	private final ProvideService 		provideService;
 	private final StockService			stockService; 
 
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER')")
 	@GetMapping("/purchaseInForm")
 	public String purchaseInForm(Model model) {
 		System.out.println("SWPurchaseController purchaseInForm start...");
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    System.out.println("controller wonProductList authentication : "+ authentication);
+	     
+	    AccountDto account = (AccountDto) authentication.getPrincipal();
+	    int emp_code = account.getEmp_code();
+	    System.out.println("emp_code : " + emp_code);
 		
 		int magamStatus = stockService.magamCheck();
 		
@@ -55,7 +64,8 @@ public class SWPurchaseController {
 		swclientDto.setClient_type(2);
 		swclientDto.setClient_status(0);
 		List<SWClientDto> clientIsList = swClientService.clientIsList(swclientDto);
-
+		
+		model.addAttribute("emp_reg_code", emp_code);
 		model.addAttribute("productIsList", productIsList);
 		model.addAttribute("clientIsList", clientIsList);
 		model.addAttribute("magamStatus", magamStatus);
@@ -106,15 +116,18 @@ public class SWPurchaseController {
 	        dto.setProduct_won_code(form.getProduct_won_code().get(i));
 	        dto.setPurchase_amount(form.getPurchase_amount().get(i));
 	        dto.setPurchase_danga(form.getPurchase_danga().get(i));
-
+	        dto.setPurchase_reg_code(form.getPurchase_reg_code());
+	        
 	        list.add(dto);
 	    }
-
+	    
+	    System.out.println("list : " + list);
 		swPurchaseService.purchaseSave(list);
 
 		return "redirect:/sw/purchaseList";
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT')")
 	@GetMapping("/purchaseList")
 	public String purchaseListPage(PurchaseDto purchaseDto, Model model) {
 		System.out.println("SWPurchaseController purchaseListPage Strart...");
@@ -138,6 +151,7 @@ public class SWPurchaseController {
 		return "sw/purchase/list";
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT')")
 	@GetMapping("/purchaseDetail")
 	public String purchaseDetailPage(@RequestParam("purchase_code") int purchase_code, Model model) {
 		System.out.println("SWPurchaseController purchaseDetailPage Strart...");
@@ -157,20 +171,22 @@ public class SWPurchaseController {
 	}
 
 	@PostMapping("/purchaseApprove")
-	public String purchaseApprove(@RequestParam("purchase_code") int purchase_code) {
+	public String purchaseApprove(PurchaseDto purchaseDto, @AuthenticationPrincipal AccountDto account) {
 		System.out.println("SWPurchaseController purchaseApprove Strart...");
-
-		swPurchaseService.purchaseApprove(purchase_code);
+		
+		purchaseDto.setPurchase_perm_code(account.getEmp_code());
+		swPurchaseService.purchaseApprove(purchaseDto);
 
 		return "redirect:/sw/purchaseList";
 
 	}
 
 	@PostMapping("/purchaseRefuse")
-	public String purchaseRefuse(PurchaseDto purchaseDto) {
+	public String purchaseRefuse(PurchaseDto purchaseDto, @AuthenticationPrincipal AccountDto account) {
 		System.out.println("SWPurchaseController purchaseRefuse Strart...");
 
 		purchaseDto.setPurchase_status(3);
+		purchaseDto.setPurchase_perm_code(account.getEmp_code());
 		swPurchaseService.purchaseRefuse(purchaseDto);
 
 		return "redirect:/sw/purchaseList";

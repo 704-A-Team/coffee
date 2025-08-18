@@ -131,7 +131,7 @@
                                         <div class="card-body d-flex flex-column h-100">
                                             <h5 class="card-title">${product.product_name}</h5>
                                             <ul class="product-info-list">
-                                                <li><strong>납품 여부</strong> <span>${product.isorderName}</span></li>
+                                                <li><strong>제조 납품 여부</strong> <span>${product.isorderName}</span></li>
                                                 <li><strong>삭제 구분</strong>
                                                     <span>
                                                         <c:choose>

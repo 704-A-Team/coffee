@@ -103,7 +103,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	}
 
 	@Override
-	public void purchaseApprove(int purchase_code) {
+	public void purchaseApprove(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseDaoImpl purchaseApprove start...");
 		
 		TransactionStatus txStatus = 
@@ -113,7 +113,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		
 		try {
 			if(magamStatus == 0) {
-				session.update("purchaseApprove", purchase_code);
+				session.update("purchaseApprove", purchaseDto);
 				transactionManager.commit(txStatus);
 			}
 		} catch (Exception e) {

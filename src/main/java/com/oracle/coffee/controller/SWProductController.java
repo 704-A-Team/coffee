@@ -3,8 +3,10 @@ package com.oracle.coffee.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +34,10 @@ public class SWProductController {
 	private final SWProductService 	productService;
 	private final CustomFileUtil	fileUtil;
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_MANAGER')")
 	@GetMapping("/wonProductInForm")
 	public String wonProductInForm(Model model) {
-		System.out.println("SWProductController wonProductInForm Strart...");
+		System.out.println("SWProductController wonProductInForm Start...");
 		
 		List<ProductDto> wonProductAllList = productService.wonProductAllList();
 		model.addAttribute("wonProductAllList", wonProductAllList);
@@ -43,13 +46,14 @@ public class SWProductController {
 	}
 	
 	@PostMapping("/wonProductSave")
-	public String wonProductSave(ProductDto productDto, RedirectAttributes redirectAttrs) {
-		System.out.println("SWProductController wonProductSave Strart...");
+	public String wonProductSave(ProductDto productDto, RedirectAttributes redirectAttrs, @AuthenticationPrincipal AccountDto account) {
+		System.out.println("SWProductController wonProductSave Start...");
 		
 		List<MultipartFile> file = productDto.getFiles();
 		List<String> uploadFileNames = fileUtil.saveFiles(file);
 		productDto.setUploadFileNames(uploadFileNames);
 		productDto.setProduct_type(0);
+		productDto.setProduct_reg_code(account.getEmp_code());
 		
 		int wonProduct_code = productService.wonProductSave(productDto);
 		log.info("Save wonProduct_code : ", wonProduct_code);
@@ -60,9 +64,10 @@ public class SWProductController {
 		return "redirect:/sw/wonProductList";
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT','ROLE_CLIENT2')")
 	@GetMapping("/wonProductList")
 	public String wonProductListPage(ProductDto productDto, Model model) {
-		System.out.println("SWProductController wonProductListPage Strart...");
+		System.out.println("SWProductController wonProductListPage Start...");
 		
 		// 로그인시 저장된 AccountDto(principal)을 가져와 stream.map을 이용해 꺼낸 뒤 productDto에 세팅 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -95,9 +100,10 @@ public class SWProductController {
 		return "sw/product/wonList";
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT','ROLE_CLIENT2')")
 	@GetMapping("/wonProductDetail")
 	public String wonProductDetailPage(@RequestParam("product_code") int product_code, Model model) {
-		System.out.println("SWProductController wonProductDetailPage Strart...");
+		System.out.println("SWProductController wonProductDetailPage Start...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
 		System.out.println("SWProductController wonProductDetailPage wonProductDetail : " + wonProductDetail);
@@ -109,7 +115,7 @@ public class SWProductController {
 	
 	@GetMapping("/wonProductModifyForm")
 	public String wonProductModifyForm(@RequestParam("product_code") int product_code, Model model) {
-		System.out.println("SWProductController wonProductModifyForm Strart...");
+		System.out.println("SWProductController wonProductModifyForm Start...");
 		
 		ProductDto wonProductDetail = productService.wonProductDetail(product_code);
 		System.out.println("SWProductController wonProductModifyForm wonProductDetail : " + wonProductDetail);
@@ -140,7 +146,7 @@ public class SWProductController {
 	
 	@PostMapping("/wonProductDelete")
 	public String wonProductDelete(@RequestParam("product_code") int product_code) {
-		System.out.println("SWProductController wonProductDelete Strart...");
+		System.out.println("SWProductController wonProductDelete Start...");
 		
 		productService.wonProductDelete(product_code);
 		

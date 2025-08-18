@@ -68,7 +68,10 @@
       <main class="flex-grow-1 p-3">
         <div class="container-fluid">
           <form action="${pageContext.request.contextPath}/sw/purchaseSave" method="post" id="purchaseForm">
-
+			
+			<!-- 등록자 -->
+  			<input type="hidden" id="purchase_reg_code" name="purchase_reg_code" value="${emp_reg_code}">
+			
             <!-- 상단: 35% -->
             <div class="pane-top mb-2">
               <div class="card-form">
@@ -160,9 +163,10 @@
 			<div class="d-flex justify-content-end gap-2 mt-3">
 			  <c:choose>
 			    <c:when test="${magamStatus == 1 or magamStatus == 2}">
-			      <button type="submit" class="btn btn-primary" disabled 
-			              title="마감되었습니다">등록</button>
-			    </c:when>
+				  <span data-bs-toggle="tooltip" title="마감되었습니다">
+				    <button type="button" class="btn btn-primary" disabled>등록</button>
+				  </span>
+				</c:when>
 			    <c:otherwise>
 			      <button type="submit" class="btn btn-primary">등록</button>
 			    </c:otherwise>
@@ -170,7 +174,7 @@
 			  <button type="reset" class="btn btn-secondary-custom">초기화</button>
 			  <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
 			</div>
-            </div>
+           </div>
           </form>
         </div>
       </main>
@@ -441,6 +445,12 @@
           alert('최소 1개 행은 있어야 합니다.');
         }
       });
+      
+     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+     
+     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+       new bootstrap.Tooltip(tooltipTriggerEl);
+     });
 
       // 초기 상태
       updateProductOptions();
