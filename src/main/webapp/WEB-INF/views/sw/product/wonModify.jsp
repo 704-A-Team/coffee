@@ -115,8 +115,8 @@
 						<div class="col-md-4">
 						    <label class="form-label">납품 유무</label>
 						    <select name="product_isorder" id="product_isorder" class="form-select" required>
-						        <option value="0" ${wonProductDetail.product_isorder == 0 ? 'selected' : ''}>납품</option>
-						        <option value="1" ${wonProductDetail.product_isorder == 1 ? 'selected' : ''}>비납품</option>
+						        <option value="0" ${wonProductDetail.product_isorder == 0 ? 'selected' : ''}>비납품</option>
+						        <option value="1" ${wonProductDetail.product_isorder == 1 ? 'selected' : ''}>납품</option>
 						    </select>
 						</div>
                     </div>

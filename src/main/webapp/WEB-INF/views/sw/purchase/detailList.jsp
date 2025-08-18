@@ -268,42 +268,50 @@
 
 					<!-- ===== 버튼 영역: 박스 밖 ===== -->
 					<div class="d-flex justify-content-end gap-2 mt-4">
-						<c:if test="${isApprovable}">
-							<form action="${pageContext.request.contextPath}/sw/purchaseApprove" method="post" class="m-0">
-								<input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
-								<button type="submit" class="btn btn-primary">승인</button>
-							</form>
-							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">거부</button>
-						</c:if>
-						<a href="javascript:history.back()" class="btn btn-brown-outline">목록</a>
+					    <!-- ROLE_MANAGER + isApprovable + magamStatus==0 조건일 때만 승인/거부 표시 -->
+					    <sec:authorize access="hasRole('ROLE_MANAGER')">
+					        <c:if test="${isApprovable and magamStatus == 0}">
+					            <form action="${pageContext.request.contextPath}/sw/purchaseApprove" method="post" class="m-0">
+					                <input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
+					                <button type="submit" class="btn btn-primary">승인</button>
+					            </form>
+					            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">거부</button>
+					        </c:if>
+					    </sec:authorize>
+					
+					    <!-- 목록 버튼은 항상 보이게 -->
+					    <a href="javascript:history.back()" class="btn btn-brown-outline">목록</a>
 					</div>
-
+					
 					<!-- 거부 사유 모달 -->
-					<c:if test="${isApprovable}">
-						<div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<form action="${pageContext.request.contextPath}/sw/purchaseRefuse" method="post">
-									<div class="modal-content">
-										<div class="modal-header bg-danger text-white">
-											<h5 class="modal-title" id="refuseModalLabel">거부 사유 입력</h5>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-										</div>
-										<div class="modal-body">
-											<input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
-											<div class="mb-3">
-												<label for="purchase_refuse" class="form-label">거부 사유</label>
-												<textarea class="form-control" id="purchase_refuse" name="purchase_refuse" rows="4" required></textarea>
-											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-											<button type="submit" class="btn btn-danger">거부 확정</button>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-					</c:if>
+					<sec:authorize access="hasRole('ROLE_MANAGER')">
+					    <c:if test="${isApprovable and magamStatus == 0}">
+					        <div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
+					            <div class="modal-dialog">
+					                <form action="${pageContext.request.contextPath}/sw/purchaseRefuse" method="post">
+					                    <div class="modal-content">
+					                        <div class="modal-header bg-danger text-white">
+					                            <h5 class="modal-title" id="refuseModalLabel">거부 사유 입력</h5>
+					                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+					                        </div>
+					                        <div class="modal-body">
+					                            <input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
+					                            <div class="mb-3">
+					                                <label for="purchase_refuse" class="form-label">거부 사유</label>
+					                                <textarea class="form-control" id="purchase_refuse" name="purchase_refuse" rows="4" required></textarea>
+					                            </div>
+					                        </div>
+					                        <div class="modal-footer">
+					                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					                            <button type="submit" class="btn btn-danger">거부 확정</button>
+					                        </div>
+					                    </div>
+					                </form>
+					            </div>
+					        </div>
+					    </c:if>
+					</sec:authorize>
+
 
 				</div> <!-- /.container -->
 			</main>

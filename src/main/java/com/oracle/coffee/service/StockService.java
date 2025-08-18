@@ -31,7 +31,10 @@ public interface StockService {
 	// 실시간 재고 수량 조회
 	public int getRealStock(int productCode);
 
-	// 모든 재고 정보
+	// 마감상태 조회
+	public int magamCheck();
+
+  // 모든 재고 정보
 	public List<StockDto> getAllStock();
 
 	// 재고 조정
@@ -42,6 +45,5 @@ public interface StockService {
 
 	// 월별 마감 제품 리스트
 	public PageRespDto<MonthMagamDto, Paging> getMonthMagamProducts(PageRequestDto page, MagamPageDto magamPage);
-
 
 }

@@ -82,7 +82,13 @@ public class StockServiceImpl implements StockService{
 	}
 
 	@Override
-	public List<StockDto> getAllStock() {
+	public int magamCheck() {
+		System.out.println("StockServiceImpl magamCheck start...");
+		
+		return stockDao.magamCheck();
+  }
+
+  public List<StockDto> getAllStock() {
 		List<StockDto> stocks = stockDao.getAllStock();
 		return stocks;
 	}

@@ -139,14 +139,24 @@
                 </div>
 
                 <!-- 버튼들: 카드 밖, 우측 하단 정렬 -->
-                <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                    <a href="${pageContext.request.contextPath}/provide/provideModifyForm?provide_code=${provideDetail.provide_code}" class="btn btn-brown">수정</a>
-                    <form action="${pageContext.request.contextPath}/provide/provideDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                        <input type="hidden" name="provide_code" value="${provideDetail.provide_code}">
-                        <button type="submit" class="btn btn-soft-danger">삭제</button>
-                    </form>
-                    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
-                </div>
+				<div class="d-flex justify-content-end gap-3 mt-4 mb-5">
+				
+				    <!-- ROLE_MANAGER 전용: 수정, 삭제 -->
+				    <sec:authorize access="hasRole('ROLE_MANAGER')">
+				        <a href="${pageContext.request.contextPath}/provide/provideModifyForm?provide_code=${provideDetail.provide_code}" 
+				           class="btn btn-brown">수정</a>
+				
+				        <form action="${pageContext.request.contextPath}/provide/provideDelete" method="post" 
+				              onsubmit="return confirm('정말 삭제하시겠습니까?');">
+				            <input type="hidden" name="provide_code" value="${provideDetail.provide_code}">
+				            <button type="submit" class="btn btn-soft-danger">삭제</button>
+				        </form>
+				    </sec:authorize>
+				
+				    <!-- 목록 버튼은 항상 보이도록 -->
+				    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
+				</div>
+
             </div>
         </main>
 

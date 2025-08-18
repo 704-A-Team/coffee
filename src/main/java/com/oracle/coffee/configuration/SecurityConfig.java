@@ -50,6 +50,13 @@ public class SecurityConfig {
                     .requestMatchers("/MyPage/MyPage").authenticated() //마이페이지는 로그인 필요
                     //->특정 페이지에 특정 ROLE을 가진사람만 접근가능하게 하고 싶을 경우 
                     
+                    .requestMatchers("/provide/provideInForm").hasAuthority("ROLE_MANAGER")
+                    
+                    .requestMatchers("/sw/wonProductInForm").hasAuthority("ROLE_MANAGER")
+                    
+                    
+                    
+                    
                     //통합기간중에만 login불필요
                     //아래 매핑으로 시작되는 url은 로그인 필요없이 접근 가능 
                     .requestMatchers("/jh/**").permitAll()
@@ -67,7 +74,7 @@ public class SecurityConfig {
                     
                     
                     
-				  .anyRequest().authenticated()
+				    .anyRequest().authenticated()
 				  	
 					)
 			

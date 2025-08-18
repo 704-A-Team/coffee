@@ -74,6 +74,10 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
+	public int magamCheck() {
+		return session.selectOne("magamCheck");
+	}
+
 	public List<StockDto> getAllStock() {
 		List<StockDto> stocks = new ArrayList<>();
 		
@@ -142,7 +146,7 @@ public class StockDaoImpl implements StockDao {
 
 	@Override
 	public List<MonthMagamDto> getMonthMagamPrds(MagamPageDto magamPage) {
-List<MonthMagamDto> magams = null;
+    List<MonthMagamDto> magams = null;
 		
 		try {
 			magams = session.selectList("monthMagamPrdList", magamPage);

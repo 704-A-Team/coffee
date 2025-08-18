@@ -51,4 +51,7 @@ public class ProductDto {
 	private List<MultipartFile> files = new ArrayList<>();
 	private List<String> uploadFileNames = new ArrayList<>();
 	
+	//security
+	private String 		roles;
+	
 }

@@ -28,4 +28,7 @@ public class ProvideDto {
 	
 	private String 		searchType;
 	private String 		searchKeyword;
+	
+	//security
+	private String 		roles;
 }

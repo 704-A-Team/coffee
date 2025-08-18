@@ -3,6 +3,9 @@ package com.oracle.coffee.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.service.Paging;
 import com.oracle.coffee.service.SWProductService;
@@ -59,6 +63,17 @@ public class SWProductController {
 	@GetMapping("/wonProductList")
 	public String wonProductListPage(ProductDto productDto, Model model) {
 		System.out.println("SWProductController wonProductListPage Strart...");
+		
+		// 로그인시 저장된 AccountDto(principal)을 가져와 stream.map을 이용해 꺼낸 뒤 productDto에 세팅 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("controller wonProductList authentication->"+authentication);
+		
+		String role = authentication.getAuthorities().stream()
+	            .map(GrantedAuthority::getAuthority)
+	            .findFirst()
+	            .orElse(null);
+		//AccountDto account = (AccountDto) authentication.getPrincipal(); // 강제 형변환시 오류남 -> stream.map으로 꺼냄
+		productDto.setRoles(role);
 		
 		int totalWonCount = productService.totalWonProduct(productDto);
 		System.out.println("SWProductController wonProductListPage totalCount : " + totalWonCount);

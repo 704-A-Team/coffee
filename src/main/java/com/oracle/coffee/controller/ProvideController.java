@@ -2,6 +2,9 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +56,16 @@ public class ProvideController {
 	@GetMapping("/provideList")
 	public String provideListPage(ProvideDto provideDto, Model model) {
 		System.out.println("ProvideController provideListPage Strart...");
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("controller wonProductList authentication : " + authentication);
+		
+		String role = authentication.getAuthorities().stream()
+	            .map(GrantedAuthority::getAuthority)
+	            .findFirst()
+	            .orElse(null);
+		
+		provideDto.setRoles(role);
 		
 		int totalProvideCount = provideService.totalProvide(provideDto);
 		System.out.println("ProvideController provideListPage totalProvideCount : " + totalProvideCount);
