@@ -78,14 +78,19 @@
 		      <sec:authorize access="isAuthenticated()">
 		       <sec:authorize access="isAuthenticated()">
 						    <li class="dropdown-item-text p-2" style="line-height: 1.6;">
-						        <div>
-						            <strong>로그인:</strong>
-						            <span><sec:authentication property="principal.username"/></span>
-						        </div>
-						        <div>
-						            <strong>권한:</strong>
-						            <span><sec:authentication property="principal.roles"/></span>
-						        </div>
+						       <div>
+								  <strong>로그인:</strong>
+								  <span>${displayName}</span>
+								</div>
+
+						   
+							<div>
+							  <strong>권한:</strong>
+							  <sec:authorize access="hasAuthority('ROLE_GUEST')">게스트</sec:authorize>
+							  <sec:authorize access="hasAuthority('ROLE_MANAGER')">매니저</sec:authorize>
+							  <sec:authorize access="hasAuthority('ROLE_USER')">사원</sec:authorize>
+							  <sec:authorize access="hasAnyAuthority('ROLE_CLIENT','ROLE_CLIENT2')">거래처</sec:authorize>
+							</div>
 						    </li>
 						</sec:authorize>
 				<li class="px-3">
@@ -99,13 +104,13 @@
 						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
 						  </sec:authorize>
 						
-						  <sec:authorize access="hasAuthority('ROLE_CLIENT2')">
-						    <a href="${pageContext.request.contextPath}/MyPage/client2"
+						  <sec:authorize access="hasAuthority('ROLE_CLIENT')">
+						    <a href="${pageContext.request.contextPath}/MyPage/client"
 						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
 						  </sec:authorize>
 						
-						  <sec:authorize access="hasAuthority('ROLE_CLIENT')">
-						    <a href="${pageContext.request.contextPath}/MyPage/client"
+						  <sec:authorize access="hasAuthority('ROLE_CLIENT2')">
+						    <a href="${pageContext.request.contextPath}/MyPage/client2"
 						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
 						  </sec:authorize>
 						
