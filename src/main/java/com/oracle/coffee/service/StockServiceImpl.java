@@ -50,7 +50,9 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public boolean isClosedMagam() {
-		return (isClosedMonth() && isClosedToday());
+		if (isClosedMonth()) return true;
+		if (isClosedToday()) return true;
+		return false;
 	}
 
 	@Override
@@ -128,6 +130,13 @@ public class StockServiceImpl implements StockService{
 		magamPage.setEnd(paging.getEnd());
 		List<MonthMagamDto> list = stockDao.getMonthMagamPrds(magamPage);
 		return new PageRespDto<MonthMagamDto, Paging>(list, paging);
+	}
+
+	@Override
+	public void closeMonthMagam() throws Exception {
+		if (!isClosedToday()) closeTodayMagam();
+		
+		stockDao.closeMonthMagam();
 	}
 
 }
