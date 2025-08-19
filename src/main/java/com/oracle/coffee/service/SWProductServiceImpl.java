@@ -187,4 +187,12 @@ public class SWProductServiceImpl implements SWProductService {
 		return productDao.wonProductAllList();
 	}
 
+	@Override
+	public List<ProductDto> getNewProduct() {
+		log.info("ProductServiceImpl getNewProduct start...");
+
+		return productDao.getNewProduct();
+	}
+
+
 }

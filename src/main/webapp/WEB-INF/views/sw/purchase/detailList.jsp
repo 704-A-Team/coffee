@@ -104,7 +104,19 @@
 											</c:choose>
 										</div>
 									</div>
-
+									
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청자</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+											    <c:when test="${not empty purchaseDetailList[0].purchase_reg_code}">
+											      ${purchaseDetailList[0].empRegName}
+											    </c:when>
+											  	<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+									
 									<div class="mb-2 d-flex">
 										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청일</label>
 										<div class="form-control form-control-sm bg-light">

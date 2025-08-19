@@ -223,8 +223,20 @@
 			#{product_reg_code},
 			sysdate
 		)
-		
 	</insert>
+	
+	<select id="getNewProduct" resultType="ProductDto">
+		select 	*
+		from 	(
+				    SELECT p.*
+				    FROM product p
+				    WHERE p.product_reg_date BETWEEN ADD_MONTHS(SYSDATE, -1) AND SYSDATE
+				    AND p.product_isdel = 0
+				    AND p.product_isorder = 1
+				    ORDER BY p.product_reg_date DESC
+				)
+		WHERE ROWNUM &lt;= 3
+	</select>
 	
 	
 </mapper>

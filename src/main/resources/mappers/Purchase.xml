@@ -76,12 +76,15 @@
 	                         , c.client_name  as clientName
 	                         , bs.cd_contents as statusName
 	                         , t.total_amount as totalPrice
+	                         , e.emp_name	  as empRegName
 	                      from purchase p
 	                 left join client_tb c
 	                        on p.purchase_client_code = c.client_code
 	                 left join bunryu bs
 	                        on p.purchase_status = bs.mcd
 	                       and bs.bcd = 100
+	                 left join emp e
+	                 		on p.purchase_reg_code = e.emp_code
 	                 left join (
 	                            select p2.purchase_code
 	                                 , sum(
@@ -161,19 +164,21 @@
 	    where pd.purchase_code = #{purchase_code}
 	</select>
 	
-	<update id="purchaseApprove" parameterType="int">
+	<update id="purchaseApprove" parameterType="PurchaseDto">
 		update 	purchase
 		set		purchase_ipgo_date 	= sysdate,
-				purchase_status 	= 4
+				purchase_status 	= 4,
+				purchase_perm_code  = #{purchase_perm_code}
 		where	purchase_code 		= #{purchase_code}
 		and		purchase_status = 1
 	</update>
 	
 	<update id="purchaseRefuse" parameterType="PurchaseDto">
 		update 	purchase
-		set		purchase_refuse = #{purchase_refuse},
-				purchase_status = #{purchase_status}
-		where	purchase_code 	= #{purchase_code}
+		set		purchase_refuse 	= #{purchase_refuse},
+				purchase_status 	= #{purchase_status},
+				purchase_perm_code  = #{purchase_perm_code}
+		where	purchase_code 		= #{purchase_code}
 		and		purchase_status = 1
 	</update>
 	
@@ -229,7 +234,34 @@
 	    where pd.purchase_code = #{purchase_code}
 	</select>
 	
-	
+	<select id="currentPurchase" resultType="PurchaseDto">
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT  p.*,
+		            NVL(cnt.product_cnt, 0) AS productCnt,
+		            pt.product_name         AS productName,
+		            b.cd_contents			AS unitName
+		    FROM    purchase p
+		    LEFT JOIN (
+		        SELECT  pd.purchase_code,
+		                COUNT(*) AS product_cnt,
+		                MIN(pd.product_won_code) AS any_product_won_code
+		        FROM    purchase_detail pd
+		        GROUP BY pd.purchase_code
+		    ) cnt
+		      ON cnt.purchase_code = p.purchase_code
+		    LEFT JOIN product pt
+		      ON pt.product_code = cnt.any_product_won_code
+		    LEFT JOIN bunryu b
+		      ON pt.product_unit = b.mcd and b.bcd = 750
+		    WHERE   p.purchase_status IN (4, 6)
+		      AND   p.purchase_ipgo_date >= sysdate - 7
+		    ORDER BY p.purchase_ipgo_date DESC
+		)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
 	
 </mapper>
 

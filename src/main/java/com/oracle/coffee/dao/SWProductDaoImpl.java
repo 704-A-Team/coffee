@@ -152,6 +152,14 @@ public class SWProductDaoImpl implements SWProductDao {
 		return session.selectList("wonProductAllList");
 	}
 
+	@Override
+	public List<ProductDto> getNewProduct() {
+		System.out.println("ProductDaoImpl getNewProduct start...");
+	    
+		return session.selectList("getNewProduct");
+	}
+
+
 
 
 	
