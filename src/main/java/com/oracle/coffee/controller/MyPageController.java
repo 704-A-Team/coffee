@@ -98,6 +98,12 @@ public class MyPageController {
 
     }
     
+    @GetMapping("/findPassword")
+	public String  findPassword(){
+		return "MyPage/findPassword";
+
+    }
+    
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/changePassword")
     public String mypagePassword(Model model, @AuthenticationPrincipal AccountDto accountDto) {
