@@ -80,7 +80,7 @@
 						    <li class="dropdown-item-text p-2" style="line-height: 1.6;">
 						       <div>
 								  <strong>로그인:</strong>
-								  <span>${displayName}</span>
+								  ${displayName}
 								</div>
 
 						   
