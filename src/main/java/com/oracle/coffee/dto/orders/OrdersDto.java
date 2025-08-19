@@ -27,6 +27,11 @@ public class OrdersDto {
 	
 	// join 조회용
 	
+	// mainPage 조회용
+	private String  	clientName;
+	private BigDecimal 	month_total_price;
+	private String 		productName;
+	
 	// bunryu 테이블
 	private String cd_contents;		// 상태 내용
 	

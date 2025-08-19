@@ -13,7 +13,7 @@ public class PurchaseForm {
 	private List<Date>				purchase_ipgo_date;
 	private List<Integer> 			purchase_perm_code;
 	private String 					purchase_refuse;
-	private List<Integer> 			purchase_reg_code;
+	private int			 			purchase_reg_code;
 	private List<Date>				purchase_reg_date;
 	
 	private List<Integer>			product_won_code;

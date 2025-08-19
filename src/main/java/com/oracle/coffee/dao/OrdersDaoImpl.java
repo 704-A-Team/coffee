@@ -185,4 +185,22 @@ public class OrdersDaoImpl implements OrdersDao {
 		
 	}
 
+	@Override
+	public List<OrdersDetailDto> currentOrder() {
+		
+		return session.selectList("currentOrder");
+	}
+
+	@Override
+	public List<OrdersDto> excellentClient() {
+
+		return session.selectList("excellentClient");
+	}
+
+	@Override
+	public List<OrdersDto> monthTotalPrice() {
+
+		return session.selectList("monthTotalPrice");
+	}
+
 }

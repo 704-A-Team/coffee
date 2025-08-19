@@ -128,6 +128,7 @@
                                     </c:choose>
                                 </td>
                             </tr>
+                            <tr><th>등록자</th><td>${provideDetail.regName}</td></tr>
                             <tr>
                                 <th>등록일</th>
                                 <td>

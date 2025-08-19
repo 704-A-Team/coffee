@@ -2,6 +2,8 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.dto.WonProductPriceDto;
@@ -30,6 +33,7 @@ public class SWProductPriceController {
 	private final SWProductService		swProductService;
 	private final ProvideService		provideService;
 	
+	@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 	@GetMapping("/wonProductPriceInForm")
 	public String wonProductPriceInForm(@RequestParam("product_code") int product_code, Model model) {
 		log.info("SWProductPriceController wonProductPriceInForm start...");
@@ -42,9 +46,10 @@ public class SWProductPriceController {
 	}
 	
 	@PostMapping("/wonProductPriceSave")
-	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto, Model model) {
+	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto, Model model, @AuthenticationPrincipal AccountDto account) {
 		log.info("SWProductPriceController wonProductPriceSave start...");
 
+		wonProductPriceDto.setPrice_reg_code(account.getEmp_code());
 		System.out.println("SWProductPriceController wonProductPriceSave wonProductPriceDto : " + wonProductPriceDto);
 		
 		swProductPriceService.wonProductPriceSave(wonProductPriceDto);
@@ -67,6 +72,7 @@ public class SWProductPriceController {
 		return getProvideByProduct;
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER')")
 	@GetMapping("/wonProductPriceList")
 	public String wonProductPriceList(WonProductPriceDto wonProductPriceDto, Model model) {
 		log.info("SWProductPriceController wonProductPriceList start...");

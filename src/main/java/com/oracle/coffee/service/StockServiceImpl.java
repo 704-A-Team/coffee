@@ -86,11 +86,17 @@ public class StockServiceImpl implements StockService{
 	@Override
 	public int magamCheck() {
 		System.out.println("StockServiceImpl magamCheck start...");
+		int result = 0;
+		if(isClosedMonth()) {
+			result = 2;
+		} else {
+			result = stockDao.magamCheck();
+		}
 		
-		return stockDao.magamCheck();
-  }
+		return result;
+    }
 
-  public List<StockDto> getAllStock() {
+    public List<StockDto> getAllStock() {
 		List<StockDto> stocks = stockDao.getAllStock();
 		return stocks;
 	}

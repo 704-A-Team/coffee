@@ -2,6 +2,7 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oracle.coffee.dto.SWClientDto;
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.service.Paging;
@@ -28,15 +30,24 @@ import lombok.extern.log4j.Log4j2;
 public class ProvideController {
 	private final ProvideService provideService;
 	
+	@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 	@GetMapping("/provideInForm")
 	public String wonProductInForm(Model model) {
 		System.out.println("ProvideController provideInForm Strart...");
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    System.out.println("controller wonProductList authentication : "+ authentication);
+	     
+	    AccountDto account = (AccountDto) authentication.getPrincipal();
+	    int emp_code = account.getEmp_code();
+	    System.out.println("emp_code : " + emp_code);
 		
 		int product_type = 0;
 		List<ProductDto> productList = provideService.getProductInfo(product_type);
 		int client_type = 2;
 		List<SWClientDto> clientList = provideService.getClientInfo(client_type);
 		
+		model.addAttribute("emp_reg_code", emp_code);
 		model.addAttribute("productList", productList);
 		model.addAttribute("clientList", clientList);
 		
