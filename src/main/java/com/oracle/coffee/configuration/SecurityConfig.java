@@ -44,6 +44,7 @@ public class SecurityConfig {
                     .requestMatchers( "/css/**", "/images/**", "/js/**", "/favicon.*", "/*/icon-*"
                     	         	, "/WEB-INF/views/**").permitAll()
                     .requestMatchers("/","/login*","/error*").permitAll()
+                    .requestMatchers("/login/findPassword","/login/findPassword/**").permitAll()
                     .requestMatchers("/client/clientInForm").hasAuthority("ROLE_MANAGER")
                     .requestMatchers("/emp/empInForm").hasAuthority("ROLE_MANAGER")
                     .requestMatchers("/dept/deptInForm").hasAuthority("ROLE_MANAGER")
