@@ -2,6 +2,7 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.PageRequestDto;
 import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.stock.MagamPageDto;
@@ -45,6 +47,17 @@ public class StockController {
 		return "stock/list";
 	}
 	
+	// 수동 월마감
+	@GetMapping("/close/mm")
+	public String closeMonthMagam() {
+		try {
+			stockService.closeMonthMagam();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/inventory/list";
+	}
+	
 	// 수동 일마감
 	@GetMapping("/close")
 	public String closeTodayMagam() {
@@ -71,9 +84,12 @@ public class StockController {
 	@GetMapping("/magam")
 	public String magamHistroyPage(PageRequestDto page, Model model) {
 		PageRespDto<MonthMagamDto, Paging> magams = stockService.getMonthMagams(page);
+		boolean isClosed = stockService.isClosedMonth();
 		
 		model.addAttribute("monthMagams", magams.getList());
 		model.addAttribute("page", magams.getPage());
+		model.addAttribute("isClosed", isClosed);
+    	
 		return "stock/magam";
 	}
 	
@@ -114,13 +130,13 @@ public class StockController {
 	
 	// 실사 저장
 	@PostMapping("/silsa")
-	public String silsaSave(@RequestBody List<SilsaDto> silsaList) {
+	public String silsaSave(@RequestBody List<SilsaDto> silsaList, @AuthenticationPrincipal AccountDto login) {
 		// 오늘자 실사가 있다면 예외처리
 		
 		try {
 			// 등록자
-			int loginEmpCode = 2003;
-			stockService.saveSilsa(silsaList, loginEmpCode);
+			int empCode = login.getEmp_code();
+			stockService.saveSilsa(silsaList, empCode);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -34,7 +34,7 @@ public interface StockService {
 	// 마감상태 조회
 	public int magamCheck();
 
-  // 모든 재고 정보
+	// 모든 재고 정보
 	public List<StockDto> getAllStock();
 
 	// 재고 조정
@@ -45,5 +45,8 @@ public interface StockService {
 
 	// 월별 마감 제품 리스트
 	public PageRespDto<MonthMagamDto, Paging> getMonthMagamProducts(PageRequestDto page, MagamPageDto magamPage);
+
+	// 수동 월마감
+	public void closeMonthMagam() throws Exception;
 
 }

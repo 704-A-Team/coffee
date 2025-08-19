@@ -101,7 +101,7 @@ public class StockDaoImpl implements StockDao {
 	@Override
 	public MagamStatusDto getMonthMagam() {
 		MagamStatusDto magam = null;
-		
+
 		try {
 			magam = session.selectOne("selectMonthMagam");
 		} catch (Exception e) {
@@ -146,7 +146,7 @@ public class StockDaoImpl implements StockDao {
 
 	@Override
 	public List<MonthMagamDto> getMonthMagamPrds(MagamPageDto magamPage) {
-    List<MonthMagamDto> magams = null;
+		List<MonthMagamDto> magams = null;
 		
 		try {
 			magams = session.selectList("monthMagamPrdList", magamPage);
@@ -154,5 +154,14 @@ public class StockDaoImpl implements StockDao {
 			e.printStackTrace();
 		}
 		return magams;
+	}
+
+	@Override
+	public void closeMonthMagam() {
+		try {
+			session.selectOne("closeMonthMagam");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

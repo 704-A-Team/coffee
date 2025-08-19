@@ -10,6 +10,13 @@
 		where to_char(sysdate, 'YYYYMMDD') = yrmo and magam_status != 2
 	</select>
 	
+	<!-- 이번달 월마감 진행 -->
+	<select id="closeMonthMagam" statementType="CALLABLE">
+		BEGIN
+			MM_COLLECTION_PKG.MM_COLLECTION_MAIN(to_char(sysdate, 'YYYYMMDD'), 2, 0);
+		END;
+	</select>
+	
 	<!-- 오늘자 마감 진행 -->
 	<select id="closeTodayMagam" statementType="CALLABLE">
 		BEGIN

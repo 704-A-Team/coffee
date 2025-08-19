@@ -42,6 +42,18 @@
   .col-form-label{ font-weight:600; color:#555; }
   .form-control[disabled]{ background:#fff; border-color:#e6e0db; color:#333; }
 
+  /* 프로젝트 표준 버튼(목록 스타일에 맞춤) */
+  .btn-brown-outline{
+    border:1px solid var(--main-brown) !important;
+    color:var(--main-brown) !important;
+    background-color:#fff !important;
+  }
+  .btn-brown-outline:hover{
+    background-color:#ccc !important;
+    color:#333 !important;
+    border-color:#ccc !important;
+  }
+
   /* 메인 찌그러짐 방지 */
   .content-row{ min-height:0; }
   .content-main{ min-width:0; }
@@ -54,7 +66,7 @@
   <div class="d-flex flex-grow-1 content-row">
     <%@ include file="../sidebar.jsp" %>
 
-    <!-- 본문과 푸터를 같은 컬럼에 배치 (emplist와 동일) -->
+    <!-- 본문과 푸터를 같은 컬럼에 배치 -->
     <div class="d-flex flex-column flex-grow-1">
       <main class="flex-grow-1 p-4 content-main">
         <div class="form-container">
@@ -91,22 +103,37 @@
               </div>
 
               <!-- 소속 부서 -->
-              <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">소속 부서</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control"
-                         value="<c:out value='${not empty empDto.dept_code ? empDto.dept_code : empDto.emp_dept_code}'/>" disabled>
-                </div>
-              </div>
-
-              <!-- 직급 -->
-              <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">직급</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control"
-                         value="<c:out value='${not empty empDto.emp_grade_detail ? empDto.emp_grade_detail : empDto.emp_grade}'/>" disabled>
-                </div>
-              </div>
+				<div class="row mb-3">
+				  <label class="col-sm-2 col-form-label">소속 부서</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" disabled
+				      value="${not empty empDto.dept_code
+				               ? empDto.dept_code
+				               : (empDto.emp_dept_code == 1000 ? '영업부'
+				                 : empDto.emp_dept_code == 1001 ? '생산관리팀'
+				                 : empDto.emp_dept_code == 1002 ? '재고팀'
+				                 : empDto.emp_dept_code == 1003 ? '인사팀'
+				                 : empDto.emp_dept_code == 1004 ? '구매팀'
+				                 : empDto.emp_dept_code == 1005 ? '판매팀'
+				                 : '경영팀')}">
+				  </div>
+				</div>
+				
+				<!-- 직급 -->
+				<div class="row mb-3">
+				  <label class="col-sm-2 col-form-label">직급</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" disabled
+				      value="${not empty empDto.emp_grade_detail
+				               ? empDto.emp_grade_detail
+				               : (empDto.emp_grade == 0 ? '사원'
+				                 : empDto.emp_grade == 1 ? '과장'
+				                 : empDto.emp_grade == 2 ? '부장'
+				                 : empDto.emp_grade == 3 ? '이사'
+				                 : empDto.emp_grade == 4 ? '사장'
+				                 : '미정')}">
+				  </div>
+				</div>
 
               <!-- 급여 -->
               <div class="row mb-3">
@@ -132,14 +159,6 @@
                 </div>
               </div>
 
-              <!-- 등록일 -->
-              <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">등록일</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control" value="${empDto.empRegDateFormatted}" disabled>
-                </div>
-              </div>
-
               <!-- 입사일 -->
               <div class="row mb-3">
                 <label class="col-sm-2 col-form-label">입사일</label>
@@ -148,6 +167,19 @@
                 </div>
               </div>
             </div><!-- /.card-body -->
+
+            <!-- ★ 카드 안쪽 하단: 바로 붙는 버튼들 -->
+            <div class="card-footer bg-transparent border-0 py-2">
+              <div class="d-flex justify-content-end gap-3">
+                <!-- 개인정보 변경: '수정'과 같은 톤 -->
+                <a href="${pageContext.request.contextPath}/MyPage/changeInformationManager"
+                   class="btn btn-primary">개인정보 변경</a>
+                <!-- 비밀번호 변경: '목록'과 같은 톤 -->
+                <a href="${pageContext.request.contextPath}/MyPage/changePassword"
+                   class="btn btn-brown-outline">비밀번호 변경</a>
+              </div>
+            </div>
+            <!-- /card-footer -->
           </div><!-- /.card -->
         </div><!-- /.form-container -->
       </main>
