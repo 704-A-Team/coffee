@@ -234,7 +234,34 @@
 	    where pd.purchase_code = #{purchase_code}
 	</select>
 	
-	
+	<select id="currentPurchase" resultType="PurchaseDto">
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT  p.*,
+		            NVL(cnt.product_cnt, 0) AS productCnt,
+		            pt.product_name         AS productName,
+		            b.cd_contents			AS unitName
+		    FROM    purchase p
+		    LEFT JOIN (
+		        SELECT  pd.purchase_code,
+		                COUNT(*) AS product_cnt,
+		                MIN(pd.product_won_code) AS any_product_won_code
+		        FROM    purchase_detail pd
+		        GROUP BY pd.purchase_code
+		    ) cnt
+		      ON cnt.purchase_code = p.purchase_code
+		    LEFT JOIN product pt
+		      ON pt.product_code = cnt.any_product_won_code
+		    LEFT JOIN bunryu b
+		      ON pt.product_unit = b.mcd and b.bcd = 750
+		    WHERE   p.purchase_status IN (4, 6)
+		      AND   p.purchase_ipgo_date >= sysdate - 7
+		    ORDER BY p.purchase_ipgo_date DESC
+		)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
 	
 </mapper>
 

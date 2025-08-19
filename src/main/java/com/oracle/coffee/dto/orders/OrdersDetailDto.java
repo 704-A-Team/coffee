@@ -20,6 +20,10 @@ public class OrdersDetailDto {
 	
 	// join 조회용
 	
+	// mainPage 제품종류 개수 조회용
+	private int 	productCnt;
+	private String 	productName;
+	
 	// bunryu 테이블
 	private String detail_cd_contents;		// 상태 내용
 	private String product_cd_contents;		// 단위 내용

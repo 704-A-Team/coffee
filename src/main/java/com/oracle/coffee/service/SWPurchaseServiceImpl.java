@@ -98,6 +98,13 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		
 		return purchaseDetailList;
 	}
+
+	@Override
+	public List<PurchaseDto> currentPurchase() {
+		System.out.println("SWPurchaseServiceImpl currentPurchase start...");
+		
+		return swPurchaseDao.currentPurchase();
+	}
 	
 	
 }

@@ -157,4 +157,11 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 		return purchaseDetailList;
 	}
 
+	@Override
+	public List<PurchaseDto> currentPurchase() {
+		System.out.println("SWPurchaseDaoImpl currentPurchase start...");
+		
+		return session.selectList("currentPurchase");
+	}
+
 }
