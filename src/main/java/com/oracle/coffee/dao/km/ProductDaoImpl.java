@@ -100,6 +100,12 @@ public class ProductDaoImpl implements ProductDao {
 	}
 	
 	@Override
+	public int findYield(int product_wan_code) {
+		int findYield = session.selectOne("findYield" , product_wan_code);
+		return findYield;
+	}
+	
+	@Override
 	public void saveWeight(int product_wan_code, double weight) {
 		session.update("saveWeight" , Map.of("product_code" , product_wan_code , "product_weight" , weight));
 		

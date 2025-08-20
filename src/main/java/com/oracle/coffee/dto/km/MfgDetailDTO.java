@@ -1,6 +1,8 @@
 package com.oracle.coffee.dto.km;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,5 +31,14 @@ public class MfgDetailDTO {	// 제품별 생산신청 상세
 	private String 			emp_tel;
 	private String			dept_name;
 	private String			cd_contents;        // 단위
-
+	private int				mfg_qty;
+	
+	// 조회용
+	private String      	pageNum;  
+	private int 			start; 		 	   
+	private int 			end;
+	private String      	currentPage;
+	// approve_mfg_detail Procedure  조회명
+	private int  				 result_status;   //  Procedure 에서 결과(성공 1 & 실패0)
+    private List<WonCodeLackDTO> listWonCodeLackDTO = new ArrayList<>();
 }

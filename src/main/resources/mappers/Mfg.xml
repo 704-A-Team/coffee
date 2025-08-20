@@ -111,4 +111,131 @@
 		WHERE mfg_code = #{mfg_code} AND product_code = #{product_code}
 	</update>
 	
+	<select id="mfgRpTotal" resultType="Int">
+		SELECT COUNT(*) FROM MFG_DETAIL WHERE MFG_STATUS = 4
+	</select>
+	
+	<select id="mfgReportList" parameterType="MfgDetailDTO" resultType="MfgDetailDTO">
+		SELECT * FROM (
+			    SELECT rownum rw , mfgRp.* FROM (
+			            SELECT mfg.* , pro.product_name , rp.mfg_qty
+			            FROM MFG_DETAIL mfg
+			            LEFT JOIN PRODUCT pro ON mfg.product_code = pro.product_code
+	                    LEFT JOIN MFG_RP rp ON mfg.mfg_code = rp.mfg_code
+			            WHERE MFG_STATUS IN (4,5,6) 
+			            ORDER BY mfg.mfg_code desc
+			            ) mfgRp
+		)WHERE rw BETWEEN #{start} and #{end} 
+	</select>
+	
+	<select id="mfgReportForm" parameterType="MfgRpDTO" resultType="MfgRpDTO">
+		SELECT pro.* , rcp.* ,mfg.mfg_amount , Round(mfg.mfg_amount*rcp.recipe_amount/(pro.product_yield/100.0),0) as target_amount 
+		        FROM PRODUCT pro
+		        LEFT JOIN (SELECT r.*, p.product_name product_won_name FROM RECIPE r , product p WHERE r.product_won_code = p.product_code) 
+		         rcp       ON pro.product_code = rcp.PRODUCT_WAN_CODE
+		        LEFT JOIN MFG_DETAIL mfg   ON pro.product_code = mfg.product_code
+		        WHERE pro.product_code = #{product_code}
+		        AND mfg.mfg_code = #{mfg_code}
+		        AND mfg.mfg_status IN (4,5)
+	</select>
+	
+	<update id="mfgRpstatus" parameterType="MfgRpDTO">
+		UPDATE MFG_DETAIL SET MFG_STATUS = 5 WHERE mfg_code = #{mfg_code} and product_code = #{product_code}
+	</update>
+	
+	<insert id="mfgRpSubmit" parameterType="MfgRpDTO">
+		INSERT INTO MFG_RP (MFG_CODE , PRODUCT_CODE , MFG_QTY , MFG_END_DATE , MFG_MAT , MFG_END , YIELD , PCT , NOTE , MFG_RP_REG_CODE , REPORT_REG_DATE)
+		VALUES( #{mfg_code}, #{product_code}, #{mfg_qty}, #{mfg_end_date,jdbcType=TIMESTAMP}, #{mfg_mat}, #{mfg_end}, #{yield}, #{pct}, #{note}, #{mfg_rp_reg_code}, sysdate)
+	</insert>
+	
+	<insert id="rpDetailSubmit" parameterType="RpDetailDTO">
+		INSERT INTO RP_DETAIL(MFG_CODE , PRODUCT_CODE , PRODUCT_WON_CODE , REAL_AMOUNT , TRASH_AMOUNT , TRASH_CONTENTS)
+		VALUES( #{mfg_code}, #{product_code}, #{product_won_code}, #{real_amount}, #{trash_amount}, #{trash_contents})
+	</insert>
+	
+	<select id="mfgReportDetail" parameterType="MfgRpDTO" resultMap="mfgRpDetailResultMap">
+		SELECT rp.* , detail.product_won_code , detail.real_amount , detail.trash_amount , detail.trash_contents , mfg.mfg_status
+		    , won.product_name as product_won_name , br.cd_contents , pro.product_name , emp.emp_name , emp.emp_tel , dept.dept_name
+		    FROM MFG_RP rp LEFT JOIN RP_DETAIL detail
+		    ON rp.mfg_code = detail.mfg_code AND rp.product_code = detail.product_code
+		    LEFT JOIN MFG_DETAIL mfg ON rp.mfg_code = mfg.mfg_code AND rp.product_code = mfg.product_code
+		    LEFT JOIN (SELECT product_code , product_name , product.product_unit FROM PRODUCT WHERE product_type = 0) won
+		    ON detail.product_won_code = won.product_code
+		    LEFT JOIN BUNRYU br ON br.bcd = 750 AND won.product_unit = br.mcd
+		    LEFT JOIN PRODUCT pro ON rp.product_code = pro.product_code
+		    LEFT JOIN EMP emp ON rp.mfg_rp_reg_code = emp.emp_code
+		    LEFT JOIN DEPT dept ON emp.emp_dept_code = dept.dept_code
+		    WHERE rp.mfg_code = #{mfg_code}
+		    AND rp.product_code = #{product_code}
+	</select>
+	
+	<resultMap type="MfgRpDetailDTO" id="mfgRpDetailResultMap">
+		    <id property="mfg_code" column="mfg_code"/>
+		    <result property="product_code" column="product_code"/>
+		    <result property="mfg_qty" column="mfg_qty"/>
+		    <result property="mfg_end_date" column="mfg_end_date"/>
+		    <result property="mfg_mat" column="mfg_mat"/>
+		    <result property="mfg_end" column="mfg_end"/>
+		    <result property="yield" column="yield"/>
+		    <result property="pct" column="pct"/>
+		    <result property="note" column="note"/>
+		    <result property="mfg_rp_reg_code" column="mfg_rp_reg_code"/>
+		    <result property="report_reg_date" column="report_reg_date"/>
+		    <result property="mfg_status" column="mfg_status"/>
+			<result property="product_name" column="product_name"/>
+		    <result property="emp_name" column="emp_name"/>
+		    <result property="emp_tel" column="emp_tel"/>
+		    <result property="dept_name" column="dept_name"/>
+		
+		    <!-- rp_detail 컬럼 매핑 -->
+		    <collection property="rp_detail" ofType="RpDetailDTO">
+		        <id property="product_won_code" column="product_won_code"/>
+		        <id property="mfg_code" column="mfg_code"/>
+		    	<result property="product_code" column="product_code"/>
+		        <result property="product_won_name" column="product_won_name"/>
+		        <result property="cd_contents" column="cd_contents"/>
+		        <result property="real_amount" column="real_amount"/>
+		        <result property="trash_amount" column="trash_amount"/>
+		        <result property="trash_contents" column="trash_contents"/>
+		    </collection>
+	</resultMap>
+	
+	<update id="mfgRpUpdate" parameterType="MfgRpDTO">
+		UPDATE MFG_RP SET mfg_qty = #{mfg_qty} , mfg_end_date = #{mfg_end_date} , mfg_mat = #{mfg_mat} , mfg_end = #{mfg_end} , yield = #{yield} , pct = #{pct} , 
+						  note = #{note} , report_reg_date = sysdate
+		WHERE mfg_code = #{mfg_code} AND product_code = #{product_code}
+	</update>
+	
+	<update id="rpDetailUpdate" parameterType="RpDetailDTO">
+		UPDATE RP_DETAIL SET real_amount = #{real_amount} , trash_amount = #{trash_amount} , trash_contents = #{trash_contents}
+		WHERE  mfg_code = #{mfg_code} AND product_code = #{product_code} AND product_won_code = #{product_won_code}
+	</update>
+	
+	
+	<select id="checkApprove" parameterType="MfgDetailDTO" statementType="CALLABLE" resultMap="wonCodeLackResultMap">
+		{
+			call approve_mfg_detail(
+				#{mfg_code 			    , mode=IN 	, jdbcType=INTEGER}
+			   ,#{product_code 		    , mode=IN 	, jdbcType=INTEGER}
+			   ,#{mfg_due_date 		    , mode=IN 	, jdbcType=VARCHAR}
+			   ,#{mfg_contents 		    , mode=IN 	, jdbcType=VARCHAR}
+			   ,#{listWonCodeLackDTO	, mode=OUT	, jdbcType=CURSOR
+			   									, javaType=java.sql.ResultSet
+						   					 	, resultMap=wonCodeLackResultMap}
+			   ,#{result_status	, mode=OUT		, jdbcType=INTEGER}
+			
+			)
+		}
+	</select>
+	
+	<resultMap id="wonCodeLackResultMap"    type="WonCodeLackDTO">
+	    <result property="product_won_code" column="product_won_code"/>
+	    <result property="product_name" 	column="product_name"/>
+	    <result property="required_amount" 	column="required_amount"/>
+	    <result property="usable_stock" 	column="usable_stock"/>
+	    <result property="storege" 			column="storege"/>
+	    <result property="status_msg" 		column="status_msg"/>
+	</resultMap>
+		
+	
 </mapper>

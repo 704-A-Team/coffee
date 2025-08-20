@@ -126,7 +126,6 @@
 				        <th style="border: 1px solid #ccc; text-align: center; vertical-align: middle;">요청일</th>
 				        <th style="border: 1px solid #ccc; text-align: center; vertical-align: middle;">상태</th>
 				        <th style="border: 1px solid #ccc; text-align: center; vertical-align: middle;">완료예정일</th>
-				        <th style="border: 1px solid #ccc; text-align: center; vertical-align: middle;">비고</th>
 				      </tr>
 				    </thead>
 				    <tbody>
@@ -148,7 +147,6 @@
 				            </c:choose>
 				          </td>
 				          <td style="border: 1px solid #ccc; text-align: center; vertical-align: middle;">${item.mfg_due_date}</td>
-				          <td style="border: 1px solid #ccc; text-align: center; vertical-align: middle;"></td>
 				        </tr>
 				      </c:forEach>
 				    </tbody>

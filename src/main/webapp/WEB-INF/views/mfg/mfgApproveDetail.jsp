@@ -57,32 +57,35 @@
                     <td>${item.cd_contents}</td>
                     <td>${item.mfg_request_date.toLocalDate()}</td>
                     <td>
-                      <c:choose>
-                        <c:when test="${item.mfg_status == 1}">요청</c:when>
-                        <c:when test="${item.mfg_status == 4}">승인</c:when>
-                        <c:when test="${item.mfg_status == 3}">거부</c:when>
-                        <c:when test="${item.mfg_status == 5}">완료</c:when>
-                        <c:when test="${item.mfg_status == 6}">마감</c:when>
-                        <c:otherwise>기타</c:otherwise>
-                      </c:choose>
+                        <c:choose>
+                            <c:when test="${item.mfg_status == 1}">요청</c:when>
+                            <c:when test="${item.mfg_status == 4}">승인</c:when>
+                            <c:when test="${item.mfg_status == 3}">거부</c:when>
+                            <c:when test="${item.mfg_status == 5}">완료</c:when>
+                            <c:when test="${item.mfg_status == 6}">마감</c:when>
+                            <c:otherwise>기타</c:otherwise>
+                        </c:choose>
                     </td>
                     <td>
-                      <input type="date" class="form-control mb-1 row-due-date"
-                             value="${fn:substring(item.mfg_due_date,0,10)}"
-                             <c:if test="${item.mfg_status != 1 && item.mfg_status != 4}">readonly</c:if> />
+                        <input type="date" 
+                               class="form-control mb-1 row-due-date"
+                               value="<c:out value='${item.mfg_due_date != null ? fn:substring(item.mfg_due_date,0,10) : magamNext}'/>"
+                               required="required"
+                               min="${magamNext}"
+                               <c:if test="${item.mfg_status != 1 && item.mfg_status != 4}">readonly</c:if> />
                     </td>
                     <td>
-                      <c:if test="${item.mfg_status == 1  || item.mfg_status == 4}">
-                        <button type="button" class="btn btn-success btn-sm mb-1"
-                                onclick="submitStatus(this, ${item.mfg_code}, ${item.product_code}, 4)">승인</button>
-                        <button type="button" class="btn btn-danger btn-sm"
-                                onclick="submitStatus(this, ${item.mfg_code}, ${item.product_code}, 3)">거부</button>
-                      </c:if>
+                        <c:if test="${item.mfg_status == 1  || item.mfg_status == 4}">
+                            <button type="button" class="btn btn-success btn-sm mb-1"
+                                    onclick="checkAndApprove(this, ${item.mfg_code}, ${item.product_code})">승인</button>
+                            <button type="button" class="btn btn-danger btn-sm"
+                                    onclick="submitReject(this, ${item.mfg_code}, ${item.product_code})">거부</button>
+                        </c:if>
                     </td>
                     <td>
-                      <textarea class="form-control row-contents"
-                                rows="2"
-                                <c:if test="${item.mfg_status != 1 && item.mfg_status != 4}">readonly</c:if>>${item.mfg_contents}</textarea>
+                        <textarea class="form-control row-contents"
+                                  rows="2"
+                                  <c:if test="${item.mfg_status != 1 && item.mfg_status != 4}">readonly</c:if>>${item.mfg_contents}</textarea>
                     </td>
                   </tr>
                 </c:forEach>
@@ -96,57 +99,137 @@
                   onclick="location.href='${pageContext.request.contextPath}/km/mfgList'">목록</button>
         </div>
 
-        <script>
-        function submitStatus(btn, mfg_code, product_code, status) {
-        	  const row = btn.closest('tr');
-        	  const dueDateInput = row.querySelector('.row-due-date');
-        	  const contentsInput = row.querySelector('.row-contents');
-        	  const form = document.getElementById('approveForm');
+        <!-- 모달 -->
+        <div class="modal fade" id="shortageModal" tabindex="-1" aria-labelledby="shortageModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="shortageModalLabel">원재료 부족</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="shortageBody"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        	  // 기존 hidden 제거
-        	  ['mfg_code','product_code','mfg_status','mfg_due_date','mfg_contents'].forEach(name=>{
-        	    const old = form.querySelector(`input[name="${name}"]`);
-        	    if(old) old.remove();
-        	  });
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script>
+  // 날짜를 'YY/MM/DD' 형식으로 변환
+  function formatYYMMDD(dateStr){
+      const [year, month, day] = dateStr.split('-');
+      return year.slice(-2) + '/' + month + '/' + day;
+  }
 
-        	  // 승인일 때 날짜 필수 체크
-        	  if (status === 4) {
-        	    let dueDateValue = dueDateInput?.value || '';
-        	    if (!dueDateValue) {
-        	      // 오늘 날짜로 자동 설정
-        	      const today = new Date();
-        	      dueDateValue = today.toISOString().slice(0, 10); // YYYY-MM-DD
-        	      dueDateInput.value = dueDateValue;
-        	    }
-        	  }
+  // 승인 전 원재료 체크 + 승인
+  function checkAndApprove(btn, mfg_code, product_code) {
+      const row = btn.closest('tr');
+      const dueDateInput = row.querySelector('.row-due-date');
+      const contentsInput = row.querySelector('.row-contents');
 
-        	  // 새로운 hidden 생성
-        	  const inputs = [
-        	    {name:'mfg_code', value:mfg_code},
-        	    {name:'product_code', value:product_code},
-        	    {name:'mfg_status', value:status}
-        	  ];
+      if(!dueDateInput.value){
+          alert('완료 예정일을 반드시 입력하세요.');
+          dueDateInput.focus();
+          return;
+      }
 
-        	  if (status === 4) { // 승인
-        	    inputs.push({name:'mfg_due_date', value:(dueDateInput?.value || '')});
-        	    inputs.push({name:'mfg_contents', value:(contentsInput?.value || '')});
-        	  } else if (status === 3) { // 거부
-        	    inputs.push({name:'mfg_due_date', value:''});
-        	    inputs.push({name:'mfg_contents', value:(contentsInput?.value || '')});
-        	  }
+      const dueDateFormatted = formatYYMMDD(dueDateInput.value);
 
-        	  inputs.forEach(obj=>{
-        	    const input = document.createElement('input');
-        	    input.type = 'hidden';
-        	    input.name = obj.name;
-        	    input.value = obj.value;
-        	    form.appendChild(input);
-        	  });
+      // Ajax 호출
+      fetch('${pageContext.request.contextPath}/km/checkApprove', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              mfg_code: mfg_code,
+              product_code: product_code,
+              mfg_due_date: dueDateFormatted,
+              mfg_contents: contentsInput.value
+          })
+      })
+      .then(res => res.json())
+      .then(data => {
+          const modalEl = document.getElementById('shortageModal');
+          const modalBody = document.getElementById('shortageBody');
+          const modal = new bootstrap.Modal(modalEl);
 
-        	  form.submit();
-        	}
-        </script>
+          if(data.result_status === 1){
+              // 충분 -> 승인 가능 모달
+              modalBody.innerHTML = '<p>원재료가 충분합니다. 승인 가능합니다.</p>';
+              modal.show();
 
+              // 승인 버튼 활성화
+              btn.disabled = false;
+
+              // 승인 hidden input 세팅 후 submit
+              setHiddenAndSubmit(mfg_code, product_code, 4, dueDateFormatted, contentsInput.value);
+          } else {
+              // 부족 -> 모달 표시, 승인 버튼 비활성화
+              
+               console.log('data.result_status', data.result_status);
+               console.log('data.listWonCodeLackDTO', data.listWonCodeLackDTO);
+				// data = resultMap
+				let html = '<ul>';
+				
+				data.listWonCodeLackDTO.forEach(won => {              // 실제 원재료 정보
+				    // html += `<li>${won.product_name}: 부족 ${won.storege}</li>`;
+				     html += "<li>"+won.product_name + ": 부족 " + won.storege +"</li>";
+				});
+				
+				html += '</ul>';
+				
+				// 모달 출력
+				const modalBody = document.getElementById('shortageBody');
+				modalBody.innerHTML = html;
+				const modal = new bootstrap.Modal(document.getElementById('shortageModal'));
+				modal.show();
+
+			    // 승인 버튼 비활성화
+			    btn.disabled = true;
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          alert('서버 오류 발생!');
+      });
+  }
+
+  // 거부 버튼
+  function submitReject(btn, mfg_code, product_code){
+	  const row = btn.closest('tr'); 
+	  const contentsInput = row.querySelector('.row-contents');  // 비고 textarea
+
+	  setHiddenAndSubmit(mfg_code, product_code, 3, '', contentsInput.value);
+  }
+
+  // hidden input 세팅 + form submit
+  function setHiddenAndSubmit(mfg_code, product_code, status, dueDate, contents){
+      const form = document.getElementById('approveForm');
+      ['mfg_code','product_code','mfg_status','mfg_due_date','mfg_contents'].forEach(name=>{
+          const old = form.querySelector(`input[name="${name}"]`);
+          if(old) old.remove();
+      });
+
+      const inputs = [
+          {name:'mfg_code', value:mfg_code},
+          {name:'product_code', value:product_code},
+          {name:'mfg_status', value:status},
+          {name:'mfg_due_date', value:dueDate},
+          {name:'mfg_contents', value:contents}
+      ];
+
+      inputs.forEach(obj=>{
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = obj.name;
+          input.value = obj.value;
+          form.appendChild(input);
+      });
+
+      form.submit();
+  }
+</script>
       </main>
     </div>
   </div>

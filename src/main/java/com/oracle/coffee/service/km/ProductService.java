@@ -36,12 +36,15 @@ public interface ProductService {
 	List<ProductPriceDTO> 	priceHistory(int product_code);
 
 	int 					findPack(int product_code);
+	
+	int 					findYield(int product_wan_code);
 
 	void 					saveWeight(int product_wan_code, double weight);
 
 	double 					launchPrice(int product_code);
 
 	void 					wanPriceModify(ProductPriceDTO priceDTO);
+
 	
 
 

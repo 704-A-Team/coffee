@@ -136,10 +136,11 @@ public class ProductController {
 			
 			// 3. 제품 테이블에서 생산단위 조회
 			int product_pack = productService.findPack(product_wan_code);
+		//	int yield = productService.findYield(product_wan_code);
 			
 			// 4. 기본 중량 계산
 			double weight = (double)totalRecipe/product_pack;
-			
+		//	double weight = (double)totalRecipe/product_pack/(yield/100.0);
 			// 5. 기본 중량 저장
 			productService.saveWeight(product_wan_code , weight);
 			
