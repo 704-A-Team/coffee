@@ -47,16 +47,16 @@
         }
 
         .btn-brown-outline {
-            background-color: transparent !important;
-            color: var(--main-brown) !important;
-            border: 1px solid var(--main-brown) !important;
-            transition: 0.2s;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		
+		.btn-brown-outline:hover {
+		    background-color: #ccc !important; /* 회색 배경 */
+		    color: #333 !important;            /* 진회색 글자 */
+		    border-color: #ccc !important;     /* 회색 테두리 */
+		}
 
         .btn-secondary-custom {
             background-color: #eee !important;
@@ -67,8 +67,7 @@
         .btn-secondary-custom:hover {
             background-color: #ccc !important;
         }
-        
-        /* Select2 드롭다운 높이 & hover 색상 커스터마이징 */
+
         .select2-results__options {
             max-height: 400px !important;
         }
@@ -76,6 +75,11 @@
         .select2-container--default .select2-results__option--highlighted[aria-selected] {
             background-color: var(--soft-brown) !important;
             color: white !important;
+        }
+
+        .input-price-warning {
+            border: 2px solid red !important;
+            background-color: #ffe5e5 !important;
         }
     </style>
 </head>
@@ -92,28 +96,26 @@
                 <div class="form-section-title">가격(원재료) 등록</div>
 
                 <form action="${pageContext.request.contextPath}/sw/wonProductPriceSave" method="post">
-                    <!-- 제품 선택 -->
+                    <!-- 제품 -->
                     <div class="mb-3">
-                        <label for="product_won_code" class="form-label">제품</label>
-                        <select id="product_won_code" name="product_won_code" class="form-select" required>
-                            <option value="">-- 제품을 선택하세요 --</option>
-                            <c:forEach var="product" items="${wonProductAllList}">
-                                <option value="${product.product_code}">${product.product_name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
+					    <label class="form-label">제품</label>
+					    <div class="form-control-plaintext bg-light ps-3">
+					        ${wonProductDetail.product_name}
+					    </div>
+					    <input type="hidden" id="product_code" name="product_code" value="${wonProductDetail.product_code}">
+					</div>
 
                     <!-- 가격 입력 -->
-					<div class="mb-3">
-					    <label for="price" class="form-label">가격(1ea, 1g, 1ml 기준)</label>
-					    <input type="number" id="price" name="price" class="form-control" required step="0.001" min="0">
-					</div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">가격(1ea, 1g, 1ml 기준)</label>
+                        <input type="number" id="price" name="price" class="form-control" required step="0.001" min="0">
+                    </div>
 
                     <!-- 버튼 -->
                     <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                        <button type="submit" class="btn btn-brown">등록</button>
+                        <button type="submit" class="btn btn-primary">등록</button>
                         <button type="reset" class="btn btn-secondary-custom">초기화</button>
-                        <a href="${pageContext.request.contextPath}/sw/purchaseList" class="btn btn-brown-outline">목록</a>
+                        <a href="${pageContext.request.contextPath}/sw/wonProductList" class="btn btn-brown-outline">목록</a>
                     </div>
                 </form>
             </div>
@@ -129,18 +131,8 @@
     }
 
     $(document).ready(function () {
-        $('#product_won_code').select2({
-            placeholder: '제품명을 선택하거나 검색하세요',
-            minimumInputLength: 0,
-            width: '100%',
-            language: {
-                noResults: function () {
-                    return "일치하는 제품이 없습니다";
-                }
-            }
-        });
-
-        $('#product_won_code').on('change', function () {
+        
+        $('#product_code').on('change', function () {
             const ajax_product_code = $(this).val();
 
             if (!ajax_product_code) {
@@ -153,45 +145,83 @@
                 type: 'GET',
                 data: { product_won_code: ajax_product_code },
                 cache: false,
-                success: function (ajax_provideList) {
-                    if (!Array.isArray(ajax_provideList) || ajax_provideList.length === 0) {
-                        $('#price').val('');
+                dataType: 'json', // ← 응답을 JSON으로 강제 파싱
+                success: function (ajax_provideList, textStatus, xhr) {
+                    // 204 No Content 또는 빈 배열 처리
+                    if (xhr.status === 204 || !Array.isArray(ajax_provideList) || ajax_provideList.length === 0) {
+                        $('#price').val('').removeData('original-price');
+                        alert('공급정보가 없습니다. 원재료 공급을 등록한 뒤 다시 시도해주세요.');
+                        window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
                         return;
                     }
 
-                    // 단가 / 공급단위 계산
                     const ajax_unitPrices = ajax_provideList.map(ajax_p => {
-                        const ajax_danga = parseFloat(ajax_p.current_danga);
+                        const ajax_danga  = parseFloat(ajax_p.current_danga);
                         const ajax_amount = parseFloat(ajax_p.provide_amount);
-
-                        if (isNaN(ajax_danga) || isNaN(ajax_amount) || ajax_amount <= 0) {
-                            return 0;
-                        }
-
+                        if (isNaN(ajax_danga) || isNaN(ajax_amount) || ajax_amount <= 0) return 0;
                         return ajax_danga / ajax_amount;
                     });
 
                     const ajax_maxUnitPrice = Math.max(...ajax_unitPrices);
 
                     if (isNaN(ajax_maxUnitPrice) || ajax_maxUnitPrice <= 0) {
-                        $('#price').val('');
+                        $('#price').val('').removeData('original-price');
+                        alert('공급 단가/수량이 유효하지 않습니다. 공급정보를 확인해주세요.');
+                        setTimeout(function () {
+                            window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
+                        }, 0);
                         return;
                     }
 
-                    const ajax_increased = ajax_maxUnitPrice * 1.1;
-                    const ajax_rounded = Math.round(ajax_increased * 1000) / 1000;
+                    const ajax_increased    = ajax_maxUnitPrice * 1.1;
+                    const ajax_rounded      = Math.round(ajax_increased * 1000) / 1000;
                     const ajax_displayValue = ajax_rounded.toFixed(2);
 
-                    $('#price').val(ajax_displayValue);
+                    $('#price').val(ajax_displayValue).data('original-price', ajax_rounded);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX 실패:", status, error);
-                    alert("공급 단가 조회 실패");
+                    alert(`공급정보 로딩 실패 (상태코드: ${xhr.status}). 원재료 공급이 등록되어있는지 확인해주세요.`);
+                    setTimeout(function () {
+                        window.location.href = '${pageContext.request.contextPath}/sw/wonProductList';
+                    }, 0);
+                }
+            });
+
+
+            $('#price').on('input', function () {
+                const currentVal  = parseFloat($(this).val());
+                const originalVal = parseFloat($(this).data('original-price'));
+
+                if (!isNaN(originalVal) && currentVal < originalVal) {
+                    $(this).addClass('input-price-warning');
+                } else {
+                    $(this).removeClass('input-price-warning');
                 }
             });
         });
+        
+        $('form[action$="/sw/wonProductPriceSave"]').on('submit', function (e) {
+            const ajax_currentVal  = parseFloat($('#price').val());
+            const ajax_originalVal = parseFloat($('#price').data('original-price')); // 제시가격
 
+            if (!isNaN(ajax_originalVal) && !isNaN(ajax_currentVal) && ajax_currentVal < ajax_originalVal) {
+                const ajax_confirm = confirm('설정한 금액이 정책 금액보다 낮습니다. 정말 등록하시겠습니까?');
+                if (!ajax_confirm) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
 
+        // hidden input이라 값 변경 이벤트가 발생하지 않으므로, 로드시 한 번 트리거
+        $('#product_code').trigger('change');
+
+        // 서버 에러 메시지 노출
+        const errorMsg = '${errorMsg}';
+        if (errorMsg && errorMsg !== 'null' && errorMsg.trim() !== '') {
+            alert(errorMsg);
+        }
     });
 </script>
 

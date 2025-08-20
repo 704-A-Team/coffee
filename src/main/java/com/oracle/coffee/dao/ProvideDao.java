@@ -14,5 +14,6 @@ public interface ProvideDao {
 	void 				provideDelete(ProvideDto provideDetail);
 	ProvideDto 			getProvideInfo(ProvideDto provideDto);
 	List<ProvideDto> 	getProvideByProduct(int product_code);
+	List<ProvideDto> 	getProductsByClient(int client_code);
 
 }

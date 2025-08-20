@@ -108,6 +108,13 @@ public class ProvideServiceImpl implements ProvideService {
 		return provideDao.getProvideByProduct(product_code);
 	}
 
+	@Override
+	public List<ProvideDto> getProductsByClient(int client_code) {
+		System.out.println("ProvideServiceImpl getProductsByClient start...");
+		
+		return provideDao.getProductsByClient(client_code);
+	}
+
 
 	
 }

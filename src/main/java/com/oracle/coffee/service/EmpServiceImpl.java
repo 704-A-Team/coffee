@@ -3,11 +3,13 @@ package com.oracle.coffee.service;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.oracle.coffee.domain.Emp;
 import com.oracle.coffee.dto.EmpDto;
 import com.oracle.coffee.repository.EmpRepository;
+import com.oracle.coffee.security.user.service.UserService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +21,17 @@ public class EmpServiceImpl implements EmpService {
 	
 	private final EmpRepository empRepository;
 	private final ModelMapper modelMapper;
+    
+
 
 	@Override
-	public Long totalEmp() {
-	Long totalCount =  empRepository.empTotalcount();
-		
-		return totalCount;
+	public Long totalEmp(EmpDto empDto) {
+	    return empRepository.empTotalcount(empDto); 
 	}
 
 	@Override
-	public List<EmpDto> empList(EmpDto empDto) {
-	    List<EmpDto> empRtnList = empRepository.findPageEmp(empDto);	
-	    
-	    return empRtnList;
+	public List<EmpDto> empList(EmpDto empDto) {	
+	    return empRepository.findPageEmp(empDto);   
 	}
 	
 	@Override

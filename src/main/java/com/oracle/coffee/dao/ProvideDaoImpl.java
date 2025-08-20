@@ -154,6 +154,13 @@ public class ProvideDaoImpl implements ProvideDao {
 		return getProvideByProduct;
 	}
 
+	@Override
+	public List<ProvideDto> getProductsByClient(int client_code) {
+		System.out.println("ProvideDaoImpl getProductsByClient start...");
+		
+		return session.selectList("getProductsByClient", client_code);
+	}
+
 	
 	
 }

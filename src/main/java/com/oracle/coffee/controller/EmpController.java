@@ -21,26 +21,34 @@ import lombok.RequiredArgsConstructor;
 public class EmpController {
 	
 	private final EmpService empService;
-
-	@GetMapping("/empList")
-	public String empList(EmpDto empDto, Model model) {
-		
-		Long totalCountLong = empService.totalEmp();
-		int totalCountInt = totalCountLong.intValue();
-		Paging page = new Paging(totalCountInt, empDto.getCurrentPage());
-
-		empDto.setStart(page.getStart());   
-		empDto.setEnd(page.getEnd());      
-		
-		List<EmpDto> empDtoList = empService.empList(empDto);
-
-		model.addAttribute("totalCount", totalCountInt);
-		model.addAttribute("empDtoList" , empDtoList);
-		model.addAttribute("page", page);
-
-		return "emp/empList";
-	}
 	
+
+    @GetMapping("/empList")
+    public String empList(EmpDto empDto, Model model) {
+
+        // 총건수(필터 반영)
+        Long totalCountLong = empService.totalEmp(empDto);
+        int totalCountInt = totalCountLong.intValue();
+
+        // 페이징
+        Paging page = new Paging(totalCountInt, empDto.getCurrentPage());
+        empDto.setStart(page.getStart());
+        empDto.setEnd(page.getEnd());
+
+        // 목록
+        List<EmpDto> empDtoList = empService.empList(empDto);
+
+        model.addAttribute("totalCount", totalCountInt);
+        model.addAttribute("empDtoList", empDtoList);
+        model.addAttribute("page", page);
+
+        model.addAttribute("searchType",   empDto.getSearchType());
+        model.addAttribute("searchKeyword",empDto.getSearchKeyword());
+        model.addAttribute("deptName",     empDto.getDeptName());
+        model.addAttribute("gradeName",    empDto.getGradeName());
+
+        return "emp/empList";
+    }
 	
 	@GetMapping("/empInForm")
 	public String empInForm() {
@@ -86,4 +94,6 @@ public class EmpController {
 		
 		return "redirect:empList";
 	}
+	
+	
 }

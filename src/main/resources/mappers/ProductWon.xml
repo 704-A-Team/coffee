@@ -17,8 +17,10 @@
         	,product_type
         	,product_weight
         	,product_isorder
+        	,product_min_amount
+        	,product_order_pack
         	,product_isdel
-        	,product_reg_code
+         	,product_reg_code
         	,product_reg_date 
         )
         values
@@ -29,6 +31,8 @@
         	,#{product_type}
         	,#{product_weight}
         	,#{product_isorder}
+        	,#{product_min_amount}
+        	,#{product_order_pack}
         	,#{product_isdel}
         	,#{product_reg_code}
         	,sysdate
@@ -45,8 +49,14 @@
 	    from product p
 	    where p.product_type = 0
 	    <if test="searchKeyword != null and searchKeyword != ''">
-	        and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	    AND lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
 	    </if>
+	    <if test="roles != null and roles == 'ROLE_USER'">
+        AND p.product_isdel = 0
+        </if>
+        <if test="roles != null and roles == 'ROLE_CLIENT2'">
+           AND p.product_isorder = 1
+       	</if>
 	</select>
 	
 	<select id="wonProductList" parameterType="ProductDto" resultType="ProductDto">
@@ -59,22 +69,37 @@
 	                bu.cd_contents as unitName,
 	                bt.cd_contents as typeName,
 	                bi.cd_contents as isorderName,
-	                img.file_name  as simage
+	                img.file_name  as simage,
+	                pp.price	   as price
 	            from product p
 	            left join bunryu bu 
-	                ON p.product_unit = bu.mcd and bu.bcd = 750
+	                ON p.product_unit 		= bu.mcd and bu.bcd = 750
 	            left join bunryu bt 
-	                ON p.product_type = bt.mcd and bt.bcd = 700
+	                ON p.product_type 		= bt.mcd and bt.bcd = 700
 	            left join bunryu bi 
-	                ON p.product_isorder = bi.mcd and bi.bcd = 800
+	                ON p.product_isorder 	= bi.mcd and bi.bcd = 800
 	            left join (select * 
 	            		   from product_img 
 	            		   where ord = 0) img
-	            	ON p.product_code = img.product_code
+	            	ON p.product_code 		= img.product_code
+	            left join (
+			        		select 	product_code, MAX(start_date) as max_start_date
+			        		from 	product_price
+					        group 	by product_code
+					      ) pm
+			        ON pm.product_code 		= p.product_code
+			    left join product_price pp
+			        ON pp.product_code 		= p.product_code and pp.start_date = pm.max_start_date
 	            where p.product_type = 0
 	            <if test="searchKeyword != null and searchKeyword != ''">
-	                and lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
+	            AND lower(p.product_name) like '%' || lower(#{searchKeyword}) || '%'
 	            </if>
+	            <if test="roles != null and roles == 'ROLE_USER'">
+                AND p.product_isdel = 0
+            	</if>
+            	<if test="roles != null and roles == 'ROLE_CLIENT2'">
+                AND p.product_isorder = 1
+            	</if>
 	            order by p.product_code desc
 	        ) a
 	    )
@@ -86,17 +111,26 @@
 	            bu.cd_contents as unitName,
 	            bt.cd_contents as typeName,
 	            bi.cd_contents as isorderName,
-	            e.emp_name	   as regName
+	            e.emp_name	   as regName,
+	            pp.price	   as price
 	   	from 	product p
 	    left join bunryu bu 
-	    	ON p.product_unit = bu.mcd 		and bu.bcd = 750
+	    	ON p.product_unit 		= bu.mcd 		and bu.bcd = 750
 	    left join bunryu bt 
-	    	ON p.product_type = bt.mcd 		and bt.bcd = 700
+	    	ON p.product_type 		= bt.mcd 		and bt.bcd = 700
 	    left join bunryu bi 
-	    	ON p.product_isorder = bi.mcd 	and bi.bcd = 800
+	    	ON p.product_isorder 	= bi.mcd 	and bi.bcd = 800
     	left join emp e
-    		ON p.product_reg_code = e.emp_code
-	    where product_code = #{product_code}
+    		ON p.product_reg_code 	= e.emp_code
+    	left join (
+	        		select 	product_code, MAX(start_date) as max_start_date
+	        		from 	product_price
+			        group 	by product_code
+			      ) pm
+	        ON pm.product_code 		= p.product_code
+		left join product_price pp
+	        ON pp.product_code 		= p.product_code and pp.start_date = pm.max_start_date
+	    where p.product_code = #{product_code}
 	</select>
 	
 	<select id="wonProductImgList" parameterType="int" resultType="ProductImgDTO">
@@ -172,5 +206,37 @@
 		from product
 		where product_type = 0
 	</select>
+	
+	<insert id="monthMagamSave" parameterType="ProductDto">
+		insert into month_magam (
+			month_yrmo,
+			month_magam_status,
+			product_code,
+			month_magam_amount,
+			month_magam_reg_code,
+			month_magam_reg_date
+		) values (
+			TO_CHAR(sysdate, 'yyyyMM'),
+			0,
+			#{product_code},
+			0,
+			#{product_reg_code},
+			sysdate
+		)
+	</insert>
+	
+	<select id="getNewProduct" resultType="ProductDto">
+		select 	*
+		from 	(
+				    SELECT p.*
+				    FROM product p
+				    WHERE p.product_reg_date BETWEEN ADD_MONTHS(SYSDATE, -1) AND SYSDATE
+				    AND p.product_isdel = 0
+				    AND p.product_isorder = 1
+				    ORDER BY p.product_reg_date DESC
+				)
+		WHERE ROWNUM &lt;= 3
+	</select>
+	
 	
 </mapper>

@@ -5,7 +5,64 @@
 <mapper namespace="com.oracle.coffee.WonProductPriceMapper">
 
 	<insert id="wonProductPriceSave" parameterType="WonProductPriceDto">
-		
+		insert into product_price
+		(	
+			product_code,
+			start_date,
+			end_date,
+			price,
+			price_reg_code,
+			price_reg_date
+		)
+		values
+		(
+			#{product_code},
+			SYSDATE,
+			#{end_date},
+			#{price},
+			#{price_reg_code},
+			SYSDATE
+		)
 	</insert>
+	
+	<select id="isPriceCheck" parameterType="int" resultType="int">
+		select 	count(*)
+		from 	product_price
+		where	product_code = #{product_code}
+	</select>
 
+	<update id="updateEndDate">
+		update 	product_price
+		SET 	end_date = SYSDATE - NUMTODSINTERVAL(1, 'MINUTE')
+		where 	product_code = #{product_code}
+		and		start_date = (select max(pp.start_date)
+				              from 	product_price pp
+				              where  pp.product_code = #{product_code}
+				             )
+	</update>
+	
+	<select id="wonProductPriceList" parameterType="WonProductPriceDto" resultType="WonProductPriceDto">
+		select 	*
+		from 	(
+				 select rownum rn, a.*
+				 from (
+				 	   select
+				 	   		  	pp.*
+				 	   		   ,p.product_name as productName
+				 	   		   ,e.emp_name     as regName
+				 	   		   ,b.cd_contents  as unitName
+				 	   from 	product_price pp
+				 	   left join product p
+				 	   	   ON p.product_code = pp.product_code
+				 	   left join emp e
+				 	   	   ON pp.price_reg_code = e.emp_code
+				 	   left join bunryu b
+				 	   	   ON p.product_unit = b.mcd and b.bcd = 750
+				 	   where 	pp.product_code = #{product_code}
+				 	  ) a
+		)
+		where rn between #{start} and #{end}
+	</select>
+	
+	
 </mapper>

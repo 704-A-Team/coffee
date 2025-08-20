@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.oracle.coffee.domain.Client;
-import com.oracle.coffee.domain.Emp;
 import com.oracle.coffee.dto.ClientDto;
 import com.oracle.coffee.repository.ClientRepository;
 
@@ -22,17 +21,13 @@ public class ClientServiceImpl implements ClientService {
 	private final ModelMapper modelMapper;
 	
 	@Override
-	public Long totalClient() {
-	Long totalCount =  clientRepository.clientTotalcount();
-	
-		return totalCount;
+	public Long totalClient(ClientDto cond) {
+	    return clientRepository.clientTotalcount(cond);
 	}
 	
 	@Override
-	public List<ClientDto> clientList(ClientDto clientDto) {
-	    List<ClientDto> clientRtnList = clientRepository.findPageClient(clientDto);	
-	    
-	    return clientRtnList;
+	public List<ClientDto> clientList(ClientDto cond) {
+	    return clientRepository.findPageClient(cond);
 	}
 	
 	@Override
@@ -67,5 +62,6 @@ public class ClientServiceImpl implements ClientService {
 
 		return clientRepository.updateClient(clientDto);
 	}
+
 	
 }

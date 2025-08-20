@@ -40,26 +40,30 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        .btn-brown {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-        }
+        /* 등록 버튼 (파란색) */
+		.btn-brown {
+		    background-color: #0d6efd !important; /* 부트스트랩 기본 파랑 */
+		    color: white !important;
+		    border: 1.5px solid #0d6efd !important;
+		}
+		
+		.btn-brown:hover {
+		    background-color: #0b5ed7 !important; /* hover 시 진한 파랑 */
+		    border-color: #0b5ed7 !important;
+		    color: white !important;
+		}
 
         .btn-brown-outline {
-            border: 1px solid var(--main-brown) !important;
-            color: var(--main-brown) !important;
-            background-color: white !important;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
+		    border: 1px solid var(--main-brown) !important;
+		    color: var(--main-brown) !important;
+		    background-color: white !important;
+		}
+		
+		.btn-brown-outline:hover {
+		    background-color: #ccc !important; /* 회색 배경 */
+		    color: #333 !important;            /* 진회색 글자 */
+		    border-color: #ccc !important;     /* 회색 테두리 */
+		}
 
         /* Select2 드롭다운 높이 & hover 색상 커스터마이징 */
         .select2-results__options {
@@ -70,6 +74,16 @@
             background-color: var(--soft-brown) !important;
             color: white !important;
         }
+        
+        .btn-secondary-custom {
+		    background:#eee!important;      /* 밝은 회색 배경 */
+		    color:#333!important;            /* 진회색 글자 */
+		    border:1px solid #ccc!important; /* 연한 회색 테두리 */
+		}
+		.btn-secondary-custom:hover {
+		    background:#ccc!important;       /* hover 시 진한 회색 */
+		}
+
     </style>
 </head>
 
@@ -120,15 +134,19 @@
                             <label for="current_danga" class="form-label">단가 (₩)</label>
                             <input type="number" class="form-control" id="current_danga" name="current_danga" placeholder="단가를 입력하세요" required>
                         </div>
+                        
+                        <!-- 등록자 -->
+                        <input type="hidden" id="provide_reg_code" name="provide_reg_code" value="${emp_reg_code}">
+                        
                     </form>
                 </div>
 
                 <!-- 버튼 -->
                 <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
-                    <button type="submit" form="provideForm" class="btn btn-brown">등록</button>
-                    <button type="reset" class="btn btn-brown-outline">초기화</button>
-                    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
-                </div>
+				    <button type="submit" form="provideForm" class="btn btn-brown">등록</button>
+				    <button type="reset" class="btn btn-secondary-custom">초기화</button>
+				    <a href="${pageContext.request.contextPath}/provide/provideList" class="btn btn-brown-outline">목록</a>
+				</div>
             </div>
         </main>
 

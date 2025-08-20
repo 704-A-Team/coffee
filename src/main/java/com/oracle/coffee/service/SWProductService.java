@@ -15,5 +15,6 @@ public interface SWProductService {
 	void 				wonProductDelete(int product_code);
 	List<ProductDto> 	productIsList(int product_type);
 	List<ProductDto> 	wonProductAllList();
+	List<ProductDto> 	getNewProduct();
 
 }

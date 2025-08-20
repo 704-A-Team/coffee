@@ -1,8 +1,10 @@
 
 package com.oracle.coffee.dto.orders;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.Getter;
@@ -18,34 +20,43 @@ public class OrdersDto {
 	private String order_refuse;
 	private int order_status;
 	private LocalDateTime order_reg_date;
-	private int order_final_price;
+	private BigDecimal order_final_price;
 	private LocalDateTime order_req_date;	// 수주 요청 시간
 	private LocalDateTime order_confirmed_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
 	
 	
+	// jsp 프린트용
+	public String reg_date() {
+		if (order_reg_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_reg_date);
+	}
+	public String req_date() {
+		if (order_req_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_req_date);
+	}
+	public String confirmed_date() {
+		if (order_confirmed_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_confirmed_date);
+	}
+	
 	// join 조회용
+	
+	// mainPage 조회용
+	private String  	clientName;
+	private BigDecimal 	month_total_price;
+	private String 		productName;
 	
 	// bunryu 테이블
 	private String cd_contents;		// 상태 내용
 	
-	/*
-	// client_tb 
-	private String client_name;		// 상호명
-	private String client_address;	// 가맹점 주소
-	private String client_tel;		// 가맹점 번호
-	private String saup_num;		// 사업자등록번호
-	private String boss_name;		// 가맹점 대표자명
-	private int client_emp_code;	// 담당직원 코드
-	
-	// emp 테이블
-	private String emp_name;		// 승인자 이름
-	*/
-	
-	public int calculateTotalPrice() {
-		int total = 0;
+	public BigDecimal calculateTotalPrice() {
+		BigDecimal total = BigDecimal.ZERO;
 		for(OrdersDetailDto detail : orders_details) {
-			total += detail.getPrice() * detail.getOrder_amount();
+			if (detail.getPrice() == null) continue;
+			total = total.add(
+						detail.getPrice().multiply(new BigDecimal(detail.getOrder_amount()))
+					);
 		}
 		return total;
 	}

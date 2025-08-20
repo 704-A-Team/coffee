@@ -14,6 +14,7 @@ public class ProvideDto {
 	private int				current_danga;
 	private int				provide_amount;
 	private int				provide_isdel;
+	private int				provide_reg_code;
 	private Date			provide_reg_date;
 	
 	// 조회용
@@ -25,7 +26,11 @@ public class ProvideDto {
 	private String 		productName;
 	private String 		clientName;
 	private String 		unitName;
+	private String 		regName;
 	
 	private String 		searchType;
 	private String 		searchKeyword;
+	
+	//security
+	private String 		roles;
 }

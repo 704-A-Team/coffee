@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>수주목록</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 	
@@ -16,7 +16,6 @@
 		<%@ include file="../sidebar.jsp" %>
 		
 		<div class="d-flex flex-column flex-grow-1">
-			
 			<!-- 본문 -->
 			<main>
     			<%@ include file="_list.jsp" %>

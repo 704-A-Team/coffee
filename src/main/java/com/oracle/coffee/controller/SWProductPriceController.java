@@ -2,6 +2,8 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.dto.WonProductPriceDto;
+import com.oracle.coffee.service.Paging;
 import com.oracle.coffee.service.ProvideService;
 import com.oracle.coffee.service.SWProductPriceService;
 import com.oracle.coffee.service.SWProductService;
@@ -29,25 +33,31 @@ public class SWProductPriceController {
 	private final SWProductService		swProductService;
 	private final ProvideService		provideService;
 	
+	@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 	@GetMapping("/wonProductPriceInForm")
-	public String wonProductPriceInForm(WonProductPriceDto wonProductPriceDto, Model model) {
+	public String wonProductPriceInForm(@RequestParam("product_code") int product_code, Model model) {
 		log.info("SWProductPriceController wonProductPriceInForm start...");
 		
-		List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
+		ProductDto wonProductDetail = swProductService.wonProductDetail(product_code);
 		
-		model.addAttribute("wonProductAllList", wonProductAllList);
+		model.addAttribute("wonProductDetail", wonProductDetail);
 		
 		return "sw/wonPrice/inForm";
 	}
 	
 	@PostMapping("/wonProductPriceSave")
-	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto) {
+	public String wonProductPriceSave(WonProductPriceDto wonProductPriceDto, Model model, @AuthenticationPrincipal AccountDto account) {
 		log.info("SWProductPriceController wonProductPriceSave start...");
 
-		int result = swProductPriceService.wonProductPriceSave(wonProductPriceDto);
-		System.out.println("wonProductPriceSave result : " + result);
+		wonProductPriceDto.setPrice_reg_code(account.getEmp_code());
+		System.out.println("SWProductPriceController wonProductPriceSave wonProductPriceDto : " + wonProductPriceDto);
 		
-		return "redirect:/sw/wonProductPriceList";
+		swProductPriceService.wonProductPriceSave(wonProductPriceDto);
+		
+        List<ProductDto> wonProductAllList = swProductService.wonProductAllList();
+        model.addAttribute("wonProductAllList", wonProductAllList);
+        
+        return "redirect:/sw/wonProductList";
 	}
 	
 	//조회용
@@ -60,5 +70,29 @@ public class SWProductPriceController {
 		System.out.println("getProvideByProduct : " + getProvideByProduct);
 		
 		return getProvideByProduct;
+	}
+	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER')")
+	@GetMapping("/wonProductPriceList")
+	public String wonProductPriceList(WonProductPriceDto wonProductPriceDto, Model model) {
+		log.info("SWProductPriceController wonProductPriceList start...");
+		
+		int totalWonProductPriceCnt = swProductPriceService.isPriceCheck(wonProductPriceDto.getProduct_code());
+		System.out.println("SWProductPriceController wonProductPriceList totalWonProductPriceCnt : " + totalWonProductPriceCnt);
+		
+		Paging page = new Paging(totalWonProductPriceCnt, wonProductPriceDto.getCurrentPage());
+		
+		wonProductPriceDto.setStart(page.getStart());
+		wonProductPriceDto.setEnd(page.getEnd());
+		System.out.println("SWProductPriceController wonProductPriceList wonProductPriceDto : "+ wonProductPriceDto);
+		
+		List<WonProductPriceDto> wonProductPriceList = swProductPriceService.wonProductPriceList(wonProductPriceDto);
+		System.out.println("SWProductPriceController wonProductPriceList : " + wonProductPriceList);
+		
+		model.addAttribute("totalWonProductPriceCnt", totalWonProductPriceCnt);
+		model.addAttribute("wonProductPriceList", wonProductPriceList);
+		model.addAttribute("page", page);
+		
+		return "sw/wonPrice/list";
 	}
 }

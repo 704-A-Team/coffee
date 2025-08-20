@@ -60,42 +60,34 @@
         }
 
         .btn-brown {
-		    background-color: #ffffff !important;           /* 흰색 배경 */
-		    color: #333 !important;                         /* 기본 글자색 */
-		    border: 1px solid #ccc !important;              /* 연한 회색 테두리 */
-		    box-shadow: none !important;
-		    outline: none !important;
-		    transition: background-color 0.2s ease-in-out;
-		}
-		
-		.btn-brown:hover {
-		    background-color: #e9ecef !important;           /* hover 시 연회색 */
-		    color: #000 !important;                         /* hover 시 진한 글자색 */
-		    border: 1px solid #bbb !important;              /* hover 시 약간 진한 테두리 */
-		}
-
-        .search-form {
-            margin-bottom: 2rem;
+            background-color: #ffffff !important;
+            color: #333 !important;
+            border: 1px solid #ccc !important;
+            box-shadow: none !important;
+            outline: none !important;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-brown:hover {
+            background-color: #e9ecef !important;
+            color: #000 !important;
+            border: 1px solid #bbb !important;
         }
 
-        .container {
-            max-width: 1100px;
-        }
+        .search-form { margin-bottom: 2rem; }
+        .container { max-width: 1100px; }
 
-        .pagination .page-link {
-            color: var(--main-brown);
-        }
-
+        .pagination .page-link { color: var(--main-brown); }
         .pagination .page-item.active .page-link {
             background-color: var(--main-brown);
             border-color: var(--main-brown);
             color: white;
         }
+
         .product-img {
-		    max-width: 100px;
-		    max-height: 100px;
-		    object-fit: contain; /* 이미지 왜곡 방지 */
-		}
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain; /* 이미지 왜곡 방지 */
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -114,10 +106,9 @@
                     <div class="col-md-9">
                         <input type="text" name="searchKeyword" value="${param.searchKeyword}" class="form-control" placeholder="제품명을 입력하세요" />
                     </div>
-                    <!-- 검색 버튼 -->
-					<div class="col-md-3">
-					    <button type="submit" class="btn btn-brown w-100">검색</button>
-					</div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brown w-100">검색</button>
+                    </div>
                 </form>
 
                 <!-- 카드 리스트 -->
@@ -127,21 +118,20 @@
                             <div class="card h-100">
                                 <div class="row g-0">
                                     <div class="col-md-4 d-flex align-items-center justify-content-center">
-									    <c:choose>
-									        <c:when test="${not empty product.simage}">
-									            <img src="${pageContext.request.contextPath}/upload/s_${product.simage}" class="img-fluid rounded-start product-img" alt="${product.product_name}">
-									        </c:when>
-									        <c:otherwise>
-									            <img src="${pageContext.request.contextPath}/upload/default.png" class="img-fluid rounded-start product-img" alt="기본 이미지">
-									        </c:otherwise>
-									    </c:choose>
-									</div>
+                                        <c:choose>
+                                            <c:when test="${not empty product.simage}">
+                                                <img src="${pageContext.request.contextPath}/upload/s_${product.simage}" class="img-fluid rounded-start product-img" alt="${product.product_name}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/upload/default.png" class="img-fluid rounded-start product-img" alt="기본 이미지">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                     <div class="col-md-8">
                                         <div class="card-body d-flex flex-column h-100">
                                             <h5 class="card-title">${product.product_name}</h5>
                                             <ul class="product-info-list">
-                                                <li><strong>유형</strong> <span>${product.typeName}</span></li>
-                                                <li><strong>납품 여부</strong> <span>${product.isorderName}</span></li>
+                                                <li><strong>제조 납품 여부</strong> <span>${product.isorderName}</span></li>
                                                 <li><strong>삭제 구분</strong>
                                                     <span>
                                                         <c:choose>
@@ -150,16 +140,50 @@
                                                         </c:choose>
                                                     </span>
                                                 </li>
-                                                <li><strong>등록일</strong> 
-												    <span>
-												        <fmt:formatDate value="${product.product_reg_date}" pattern="yyyy-MM-dd" />
-												    </span>
-												</li>
-	                                            </ul>
-                                            <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="mt-auto">
-                                                <input type="hidden" name="product_code" value="${product.product_code}" />
-                                                <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>
-                                            </form>
+                                                <li><strong>단가(1 ea/g/ml)</strong>
+                                                    <span>
+                                                        <c:choose>
+                                                            <c:when test="${product.price == null || product.price == 0}">
+                                                                가격조정필요
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                ${product.price}
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                            <!-- ⬇⬇⬇ 하단 버튼: 3등분 (왼: 가격 등록/수정, 중: 가격 내역, 오: 상세 보기) -->
+                                            <div class="mt-auto">
+											    <div class="row g-2">
+											        <!-- ROLE_MANAGER 전용: 가격 등록/수정 -->
+											        <sec:authorize access="hasRole('ROLE_MANAGER')">
+											            <div class="col-4">
+											                <a href="${pageContext.request.contextPath}/sw/wonProductPriceInForm?product_code=${product.product_code}"
+											                   class="btn btn-brown btn-sm w-100">
+											                    가격 등록/수정
+											                </a>
+											            </div>
+											        </sec:authorize>
+											
+											        <!-- 가격 내역 (누구나 가능) -->
+											        <div class="col-4">
+											            <a href="${pageContext.request.contextPath}/sw/wonProductPriceList?product_code=${product.product_code}"
+											               class="btn btn-brown btn-sm w-100">
+											                가격 내역
+											            </a>
+											        </div>
+											
+											        <!-- 상세 보기 (누구나 가능) -->
+											        <div class="col-4">
+											            <form action="${pageContext.request.contextPath}/sw/wonProductDetail" method="get" class="m-0">
+											                <input type="hidden" name="product_code" value="${product.product_code}" />
+											                <button type="submit" class="btn btn-brown btn-sm w-100">상세 보기</button>
+											            </form>
+											        </div>
+											    </div>
+											</div>
                                         </div>
                                     </div>
                                 </div>

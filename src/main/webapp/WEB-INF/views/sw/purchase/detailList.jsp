@@ -1,180 +1,336 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>발주 상세 정보</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>발주서</title>
 
-    <style>
-        :root {
-            --main-brown: #6f4e37;
-            --soft-brown: #bfa08e;
-            --dark-brown: #4e342e;
-        }
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
 
-        body {
-            background-color: #f9f5f1;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .form-section-title {
-            border-left: 5px solid var(--main-brown);
-            padding-left: 12px;
-            margin-bottom: 24px;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: var(--dark-brown);
-        }
-
-        .card-header {
-            background-color: var(--main-brown);
-            color: white;
-            font-weight: bold;
-        }
-
-        .btn-brown {
-            background-color: var(--soft-brown) !important;
-            color: white !important;
-            border: 1px solid var(--soft-brown) !important;
-        }
-
-        .btn-brown:hover {
-            background-color: var(--main-brown) !important;
-            border-color: var(--main-brown) !important;
-            color: white !important;
-        }
-
-        .btn-brown-outline {
-            border: 1px solid var(--main-brown) !important;
-            color: var(--main-brown) !important;
-            background-color: white !important;
-        }
-
-        .btn-brown-outline:hover {
-            background-color: var(--main-brown) !important;
-            color: white !important;
-        }
-
-        .btn-soft-danger {
-            background-color: #a94442 !important;
-            color: white !important;
-            border: 1px solid #a94442 !important;
-        }
-
-        .btn-soft-danger:hover {
-            background-color: #922d2b !important;
-            border-color: #922d2b !important;
-        }
-
-        .info-table th {
-            width: 180px;
-            color: #555;
-        }
-
-        .info-table td {
-            color: #222;
-        }
-    </style>
+<style>
+	:root {
+		--main-brown: #6f4e37;
+		--soft-brown: #bfa08e;
+		--dark-brown: #4e342e;
+	}
+	body { background-color: #f9f5f1; }
+	.doc-wrapper { background:#fff; border:1px solid #eee; border-radius:10px; padding:24px; }
+	.form-label { font-weight:600; }
+	.form-control[readonly], .bg-light { background:#f7f7f7 !important; }
+	.form-section-title {
+		border-left: 5px solid var(--main-brown);
+		padding-left: 12px;
+		margin-bottom: 24px;
+		font-weight: 700;
+		font-size: 1.8rem;
+		color: var(--dark-brown);
+	}
+	.doc-title { background:#fff; border:1px solid #eee; border-radius:10px; padding:16px 20px; }
+	.doc-title h4 { margin:0; font-weight:700; }
+	.doc-sub { font-size:.95rem; }
+	.doc-chip { display:inline-block; padding:2px 10px; border-radius:999px; background:#f1f1f1; margin-left:6px; }
+	
+	.btn-brown-outline {
+	    border: 1px solid var(--main-brown) !important;
+	    color: var(--main-brown) !important;
+	    background-color: white !important;
+	}
+	
+	.btn-brown-outline:hover {
+	    background-color: #ccc !important; /* 회색 배경 */
+	    color: #333 !important;            /* 진회색 글자 */
+	    border-color: #ccc !important;     /* 회색 테두리 */
+	}
+	
+</style>
 </head>
-
 <body class="d-flex flex-column min-vh-100">
-<%@ include file="../../header.jsp" %>
 
-<div class="d-flex flex-grow-1">
-    <%@ include file="../../sidebar.jsp" %>
+	<%@ include file="../../header.jsp"%>
 
-    <div class="d-flex flex-column flex-grow-1">
-        <main class="flex-grow-1 p-4">
-            <div class="container mt-3">
-                <div class="form-section-title">발주 상세 정보</div>
+	<div class="d-flex flex-grow-1">
+		<%@ include file="../../sidebar.jsp"%>
 
-                <div class="card shadow-sm border-0">
-                    <div class="card-header">
-                        원재료명 : ${purchaseDetail.productName}
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-borderless info-table">
-                            <tbody>
-                                <tr><th>발주 코드</th><td>${purchaseDetail.purchase_code}</td></tr>
-                                <tr><th>원재료명</th><td>${purchaseDetail.productName}</td></tr>
-                                <tr><th>거래처명</th><td>${purchaseDetail.clientName}</td></tr>
-                                <tr><th>공급단위</th>
-                                    <td><fmt:formatNumber value="${purchaseDetail.provideAmount}" type="number" groupingUsed="true"/></td></tr>
-                                <tr><th>단위</th><td>${purchaseDetail.unitName}</td></tr>
-                                <tr><th>단가</th>
-                                    <td><fmt:formatNumber value="${purchaseDetail.purchase_danga}" type="number" groupingUsed="true"/></td></tr>
-                                <tr><th>발주수량</th>
-                                    <td><fmt:formatNumber value="${purchaseDetail.purchase_amount}" type="number" groupingUsed="true"/></td></tr>
-                                <tr><th>총금액</th>
-                                    <td>
-                                        <fmt:formatNumber value="${purchaseDetail.purchase_danga * purchaseDetail.purchase_amount / purchaseDetail.provideAmount}" type="number" groupingUsed="true"/>
-                                    </td>
-                                </tr>
-                                <tr><th>상태</th><td>${purchaseDetail.statusName}</td></tr>
-                                <tr><th>입고일</th>
-                                	<td>
-                                		<fmt:formatDate value="${purchaseDetail.purchase_ipgo_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
-                                	</td>
-                                </tr>
-                                <tr><th>승인자</th><td>${purchaseDetail.empPermName}</td></tr>
-                                <tr><th>거부사유</th><td>${purchaseDetail.purchase_refuse}</td></tr>
-                                <tr><th>등록자</th><td>${purchaseDetail.empRegName}</td></tr>
-                                <tr><th>등록일</th>
-                                    <td>
-                                        <fmt:formatDate value="${purchaseDetail.purchase_reg_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+		<div class="d-flex flex-column flex-grow-1">
+			<main class="flex-grow-1 p-4">
+				<div class="container mt-3">
+					<h4 class="text-center mb-4 fw-bold">발주서</h4>
 
-                <!-- 오른쪽 하단 버튼 -->
-                <div class="d-flex justify-content-end gap-3 mt-4 mb-5">
-                    <form action="${pageContext.request.contextPath}/sw/purchaseApprove" method="post" class="m-0">
-                        <input type="hidden" name="purchase_code" value="${purchaseDetail.purchase_code}" />
-                        <button type="submit" class="btn btn-brown">승인</button>
-                    </form>
+					<div class="doc-wrapper">
 
-                    <button type="button" class="btn btn-soft-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">
-                        거부
-                    </button>
+						<!-- ================= 상단: 좌(발주 정보) / 우(거래처 정보) ================= -->
+						<div class="row mb-4">
+							<!-- 좌: 발주 정보 -->
+							<div class="col-6 d-flex border border-end-0 p-3">
+								<div class="flex-fill pe-3 w-100">
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">발주 코드</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].purchase_code}">${purchaseDetailList[0].purchase_code}</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+									
+									<div class="mb-2 d-flex">
+									    <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">발주유형</label>
+									    <div class="form-control form-control-sm bg-light">
+									        <c:choose>
+									            <c:when test="${not empty purchaseDetailList[0].purchase_type}">
+									                <c:choose>
+									                    <c:when test="${purchaseDetailList[0].purchase_type == 0}">수동발주</c:when>
+									                    <c:when test="${purchaseDetailList[0].purchase_type == 1}">자동발주</c:when>
+									                    <c:otherwise>-</c:otherwise>
+									                </c:choose>
+									            </c:when>
+									            <c:otherwise>-</c:otherwise>
+									        </c:choose>
+									    </div>
+									</div>
 
-                    <a href="javascript:history.back()" class="btn btn-brown-outline">목록</a>
-                </div>
-            </div>
-        </main>
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">상태</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].statusName}">${purchaseDetailList[0].statusName}</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+									
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청자</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+											    <c:when test="${not empty purchaseDetailList[0].purchase_reg_code}">
+											      ${purchaseDetailList[0].empRegName}
+											    </c:when>
+											  	<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+									
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청일</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].purchase_reg_date}">
+													<fmt:formatDate value="${purchaseDetailList[0].purchase_reg_date}" pattern="yyyy-MM-dd HH:mm:ss" />
+												</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
 
-        <%@ include file="../../footer.jsp" %>
-    </div>
-</div>
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">입고일</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].purchase_ipgo_date}">
+													<fmt:formatDate value="${purchaseDetailList[0].purchase_ipgo_date}" pattern="yyyy-MM-dd HH:mm:ss" />
+												</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
 
-<!-- 모달: 거부사유 -->
-<div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="${pageContext.request.contextPath}/sw/purchaseRefuse" method="post">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="refuseModalLabel">거부 사유 입력</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="purchase_code" value="${purchaseDetail.purchase_code}" />
-                    <div class="mb-3">
-                        <label for="purchase_refuse" class="form-label">거부 사유</label>
-                        <textarea class="form-control" id="purchase_refuse" name="purchase_refuse" rows="4" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="submit" class="btn btn-soft-danger">거부 확정</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">승인자</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].empPermName}">${purchaseDetailList[0].empPermName}</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
 
+									<div class="mb-2 d-flex">
+										<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">비고</label>
+										<div class="form-control form-control-sm bg-light">
+											<c:choose>
+												<c:when test="${not empty purchaseDetailList[0].purchase_refuse}">${purchaseDetailList[0].purchase_refuse}</c:when>
+												<c:otherwise>-</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- 우: 거래처 정보 -->
+							<div class="col-6 border p-3">
+								<div class="mb-2 d-flex">
+									<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">거래처명</label>
+									<div class="form-control form-control-sm bg-light">
+										<c:choose>
+											<c:when test="${not empty purchaseDetailList[0].clientName}">${purchaseDetailList[0].clientName}</c:when>
+											<c:otherwise>-</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+
+								<div class="mb-2 d-flex">
+									<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">대표자명</label>
+									<div class="form-control form-control-sm bg-light">
+										<c:choose>
+											<c:when test="${not empty purchaseDetailList[0].bossName}">${purchaseDetailList[0].bossName}</c:when>
+											<c:otherwise>-</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+
+								<div class="mb-2 d-flex">
+									<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">사업자등록번호</label>
+									<div class="form-control form-control-sm bg-light">
+										<c:choose>
+											<c:when test="${not empty purchaseDetailList[0].saupNum}">${purchaseDetailList[0].saupNum}</c:when>
+											<c:otherwise>-</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+
+								<div class="mb-2 d-flex">
+									<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">주소</label>
+									<div class="form-control form-control-sm bg-light">
+										<c:choose>
+											<c:when test="${not empty purchaseDetailList[0].clientAddress}">${purchaseDetailList[0].clientAddress}</c:when>
+											<c:otherwise>-</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+
+								<div class="mb-2 d-flex">
+									<label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">전화번호</label>
+									<div class="form-control form-control-sm bg-light">
+										<c:choose>
+											<c:when test="${not empty purchaseDetailList[0].clientTel}">${purchaseDetailList[0].clientTel}</c:when>
+											<c:otherwise>-</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+
+								<!-- 필요 시 추가 정보들 여기에 더 배치 -->
+							</div>
+						</div>
+
+						<!-- ================= 하단: 품목 리스트 ================= -->
+						<div class="row">
+							<div class="col-12 border p-3">
+								<div class="row g-2 fw-bold text-center border-bottom pb-2 mb-2">
+									<div class="col-3">품목명</div>
+									<div class="col-2">공급단위</div>
+									<div class="col-2">단가</div>
+									<div class="col-2">수량</div>
+									<div class="col-2">금액</div>
+								</div>
+
+								<c:if test="${not empty purchaseDetailList}">
+									<c:set var="totalPrice" value="0" />
+									<c:forEach var="d" items="${purchaseDetailList}">
+										<c:set var="rowTotal"
+											value="${ (d.purchase_danga / (d.provideAmount == 0 ? 1 : d.provideAmount)) * d.purchase_amount }" />
+										<div class="row g-2 mb-2 align-items-center">
+											<div class="col-3">
+												<div class="form-control form-control-sm bg-light">
+													${d.productName} (${d.product_won_code})
+												</div>
+											</div>
+											<div class="col-2">
+												<div class="form-control form-control-sm bg-light">
+													<fmt:formatNumber value="${d.provideAmount}" type="number" /> ${d.unitName}
+												</div>
+											</div>
+											<div class="col-2">
+												<div class="form-control form-control-sm bg-light">
+													<fmt:formatNumber value="${d.purchase_danga}" type="number" />
+												</div>
+											</div>
+											<div class="col-2">
+												<div class="form-control form-control-sm bg-light">
+													<fmt:formatNumber value="${d.purchase_amount}" type="number" /> ${d.unitName}
+												</div>
+											</div>
+											<div class="col-2">
+												<div class="form-control form-control-sm bg-light">
+													<fmt:formatNumber value="${rowTotal}" type="number" />
+												</div>
+											</div>
+										</div>
+										<c:set var="totalPrice" value="${totalPrice + rowTotal}" />
+									</c:forEach>
+
+									<div class="col text-end mt-2">
+										<strong>총액:&nbsp;</strong>
+										<span><fmt:formatNumber value="${totalPrice}" type="number" /></span> 원
+									</div>
+								</c:if>
+
+							</div>
+						</div>
+						<!-- ================= /하단: 품목 리스트 ================= -->
+
+					</div> <!-- /.doc-wrapper -->
+
+					<!-- ===== 버튼 영역: 박스 밖 ===== -->
+					<div class="d-flex justify-content-end gap-2 mt-4">
+					    <!-- ROLE_MANAGER + isApprovable + magamStatus==0 조건일 때만 승인/거부 표시 -->
+					    <sec:authorize access="hasRole('ROLE_MANAGER')">
+					        <c:if test="${isApprovable and magamStatus == 0}">
+					            <form action="${pageContext.request.contextPath}/sw/purchaseApprove" method="post" class="m-0">
+					                <input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
+					                <button type="submit" class="btn btn-primary">승인</button>
+					            </form>
+					            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#refuseModal">거부</button>
+					        </c:if>
+					    </sec:authorize>
+					
+					    <!-- 목록 버튼은 항상 보이게 -->
+					    <a href="javascript:history.back()" class="btn btn-brown-outline">목록</a>
+					</div>
+					
+					<!-- 거부 사유 모달 -->
+					<sec:authorize access="hasRole('ROLE_MANAGER')">
+					    <c:if test="${isApprovable and magamStatus == 0}">
+					        <div class="modal fade" id="refuseModal" tabindex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
+					            <div class="modal-dialog">
+					                <form action="${pageContext.request.contextPath}/sw/purchaseRefuse" method="post">
+					                    <div class="modal-content">
+					                        <div class="modal-header bg-danger text-white">
+					                            <h5 class="modal-title" id="refuseModalLabel">거부 사유 입력</h5>
+					                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+					                        </div>
+					                        <div class="modal-body">
+					                            <input type="hidden" name="purchase_code" value="${purchaseDetailList[0].purchase_code}">
+					                            <div class="mb-3">
+					                                <label for="purchase_refuse" class="form-label">거부 사유</label>
+					                                <textarea class="form-control" id="purchase_refuse" name="purchase_refuse" rows="4" required></textarea>
+					                            </div>
+					                        </div>
+					                        <div class="modal-footer">
+					                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					                            <button type="submit" class="btn btn-danger">거부 확정</button>
+					                        </div>
+					                    </div>
+					                </form>
+					            </div>
+					        </div>
+					    </c:if>
+					</sec:authorize>
+
+
+				</div> <!-- /.container -->
+			</main>
+
+			<%@ include file="../../footer.jsp"%>
+		</div>
+	</div>
+	
 </body>
 </html>

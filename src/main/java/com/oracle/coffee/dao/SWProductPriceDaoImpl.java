@@ -5,10 +5,6 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import com.oracle.coffee.dto.ProvideDto;
 import com.oracle.coffee.dto.WonProductPriceDto;
 
 import lombok.RequiredArgsConstructor;
@@ -23,19 +19,31 @@ public class SWProductPriceDaoImpl implements SWProductPriceDao {
 	@Override
 	public int wonProductPriceSave(WonProductPriceDto wonProductPriceDto) {
 		System.out.println("SWProductPriceDaoImpl wonProductPriceSave start...");
+		System.out.println("SWProductPriceDaoImpl wonProductPriceSave[insert] wonProductPriceDto-->"+wonProductPriceDto);
 		
-		TransactionStatus txStatus = 
-				transactionManager.getTransaction(new DefaultTransactionDefinition());
-		int result = 0;
-		try {
-			result = session.insert("wonProductPriceSave", wonProductPriceDto);
-			transactionManager.commit(txStatus);
-			result = 1;
-		} catch (Exception e) {
-			transactionManager.rollback(txStatus);
-			System.out.println("SWProductPriceDaoImpl wonProductPriceSave Exception : " + e.getMessage());
-		}
-		return result;
+		return session.insert("wonProductPriceSave", wonProductPriceDto);
+	}
+
+	@Override
+	public int isPriceCheck(int product_code) {
+		System.out.println("SWProductPriceDaoImpl isPriceCheck start...");
+		
+		return session.selectOne("isPriceCheck", product_code);
+	}
+
+	@Override
+	public void updateEndDate(WonProductPriceDto wonProductPriceDto) {
+		System.out.println("SWProductPriceDaoImpl updateEndDate start...");
+		System.out.println("SWProductPriceDaoImpl updateEndDate wonProductPriceDto-->"+wonProductPriceDto);
+		
+		session.update("updateEndDate", wonProductPriceDto);
+	}
+
+	@Override
+	public List<WonProductPriceDto> wonProductPriceList(WonProductPriceDto wonProductPriceDto) {
+		System.out.println("SWProductPriceDaoImpl wonProductPriceList start...");
+		
+		return session.selectList("wonProductPriceList", wonProductPriceDto);
 	}
 	
 	

@@ -7,7 +7,7 @@ import com.oracle.coffee.dto.EmpDto;
 
 public interface EmpRepository {
 
-	Long 			empTotalcount();
+	Long            empTotalcount(EmpDto empDto);
 	List<EmpDto>	findPageEmp(EmpDto empDto);
 	List<EmpDto> 	findAllEmp();
 	
@@ -15,6 +15,7 @@ public interface EmpRepository {
 	EmpDto 			findByEmp_code(int emp_code);
 	void 			empDelete(int emp_code);
 	EmpDto 			updateEmp(EmpDto empDto);
+	
 	
 
 }

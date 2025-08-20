@@ -3,6 +3,7 @@ package com.oracle.coffee.dao;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -20,19 +21,22 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	private final SqlSession 	session;
 
 	@Override
-	public int purchaseSave(PurchaseDto purchaseDto) {
+	public int purchaseSave(List<PurchaseDto> purchaseDtoList) {
 		System.out.println("SWPurchaseDaoImpl purchaseSave start...");
 		
-		System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto : " + purchaseDto);
+		System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDtoList : " + purchaseDtoList);
 		int purchase_result = 0;
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		boolean first = true;
 		try {
-			purchase_result = session.insert("purchaseSave", purchaseDto);
-			System.out.println("SWPurchaseDaoImpl purchaseSave purchaseDto->"+purchaseDto);
-				
-			session.insert("purchaseDetailSave", purchaseDto);
-				
+			for(PurchaseDto dto : purchaseDtoList) {
+				if(first) {
+					purchase_result = session.insert("purchaseSave", dto);
+					first = false;
+				}
+				session.insert("purchaseDetailSave", dto);
+			}
 			transactionManager.commit(txStatus);
 			purchase_result = 1;
 		} catch (Exception e) {
@@ -83,6 +87,7 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	@Override
 	public PurchaseDto purchaseDetail(int purchase_code) {
 		System.out.println("SWPurchaseDaoImpl purchaseDetail start...");
+		System.out.println(purchase_code);
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -98,15 +103,19 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 	}
 
 	@Override
-	public void purchaseApprove(PurchaseDto purchaseApprove) {
+	public void purchaseApprove(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseDaoImpl purchaseApprove start...");
 		
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		int magamStatus = session.selectOne("magamCheck");
+		System.out.println("SWPurchaseDaoImpl purchaseApprove magamCheck : " + magamStatus);
 		
 		try {
-			session.update("purchaseApprove", purchaseApprove);
-			transactionManager.commit(txStatus);
+			if(magamStatus == 0) {
+				session.update("purchaseApprove", purchaseDto);
+				transactionManager.commit(txStatus);
+			}
 		} catch (Exception e) {
 			transactionManager.rollback(txStatus);
 			e.printStackTrace();
@@ -129,6 +138,30 @@ public class SWPurchaseDaoImpl implements SWPurchaseDao {
 			e.printStackTrace();
 			System.out.println("SWPurchaseDaoImpl purchaseRefuse Exception : " + e.getMessage());
 		}
+	}
+
+	@Override
+	public List<PurchaseDto> purchaseDetailList(int purchase_code) {
+		System.out.println("SWPurchaseDaoImpl purchaseDetailList start...");
+		
+		TransactionStatus txStatus = 
+				transactionManager.getTransaction(new DefaultTransactionDefinition());
+		List<PurchaseDto> purchaseDetailList = null;
+		try {
+			purchaseDetailList = session.selectList("purchaseDetailList", purchase_code);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			transactionManager.rollback(txStatus);
+			System.out.println("SWPurchaseDaoImpl purchaseDetailList Exception : " + e.getMessage());
+		}
+		return purchaseDetailList;
+	}
+
+	@Override
+	public List<PurchaseDto> currentPurchase() {
+		System.out.println("SWPurchaseDaoImpl currentPurchase start...");
+		
+		return session.selectList("currentPurchase");
 	}
 
 }

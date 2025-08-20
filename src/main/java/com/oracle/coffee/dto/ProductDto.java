@@ -1,5 +1,6 @@
 package com.oracle.coffee.dto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ProductDto {
 	private int				product_type;
 	private int 			product_yield;
 	private int				product_weight;
+	private int 			product_min_amount;
 	private int				product_isorder;
 	private int				product_pack;
 	private int 			product_order_pack;
@@ -38,6 +40,7 @@ public class ProductDto {
 	private String 		typeName;      // 제품 유형명
 	private String 		isorderName;   // 납품 여부명
 	private String		regName;	   // 등록자명
+	private BigDecimal	price;		
 	
 	private String 		searchType;
 	private String 		searchKeyword;
@@ -47,5 +50,8 @@ public class ProductDto {
 	private List<ProductImgDTO> wonImgList;
 	private List<MultipartFile> files = new ArrayList<>();
 	private List<String> uploadFileNames = new ArrayList<>();
+	
+	//security
+	private String 		roles;
 	
 }

@@ -1,69 +1,143 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>부서 등록</title>
-<!-- 부트스트랩 CSS CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-    .form-container {
-        max-width: 70%;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #FFBB00;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    :root {
+        --main-brown: #6f4e37;
+        --soft-brown: #bfa08e;
+        --danger-red: #a94442;
+    }
+
+    body {
+        background-color: #f9f5f1;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .form-section-title {
+        border-left: 5px solid var(--main-brown);
+        padding-left: 12px;
+        margin-bottom: 24px;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: var(--main-brown);
+    }
+
+    /* 프로젝트 표준 버튼 */
+    .btn-brown {
+        background-color: var(--soft-brown) !important;
+        color: white !important;
+        border: none !important;
+    }
+    .btn-brown:hover {
+        background-color: var(--main-brown) !important;
+    }
+
+    /* 목록/아웃라인 표준: hover 시 회색(#ccc) 배경, #333 글자, #ccc 테두리 */
+    .btn-brown-outline {
+        border: 1px solid var(--main-brown) !important;
+        color: var(--main-brown) !important;
+        background-color: white !important;
+    }
+    .btn-brown-outline:hover {
+        background-color: #ccc !important;
+        color: #333 !important;
+        border-color: #ccc !important;
+    }
+
+    /* reset 전용(제품/거래처 폼과 동일) */
+    .btn-secondary-custom {
+        background:#eee!important;
+        color:#333!important;
+        border:1px solid #ccc!important;
+    }
+    .btn-secondary-custom:hover { background:#ccc!important; }
+
+    @media (max-width: 768px) {
+        .d-flex.justify-content-end { justify-content: center !important; }
     }
 </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- HEADER -->
     <%@ include file="../header.jsp" %>
 
     <div class="d-flex flex-grow-1">
-        <!-- SIDEBAR -->
         <%@ include file="../sidebar.jsp" %>
 
-        <!-- CONTENT -->
         <div class="d-flex flex-column flex-grow-1">
             <main class="flex-grow-1 p-4">
-                <div class="container">
-                    <div class="form-container bg-primary bg-opacity-25">
-                        <h2 class="text-center mb-4">부서 등록</h2>
-                        <form action="${pageContext.request.contextPath}/dept/saveDept" method="post">
-                            <!-- 부서 이름 -->
-                            <div class="mb-3">
-                                <label for="dept_name" class="form-label">부서명</label>
-                                <input type="text" class="form-control" id="dept_name" name="dept_name" placeholder="부서이름을 입력하세요 (예: 개발팀)" required>
-                            </div>
+                <div class="container mt-3" style="max-width: 980px;">
+                    <div class="form-section-title">부서 등록</div>
 
-                            <!-- 부서 전화 -->
-                            <div class="mb-3">
-                                <label for="dept_tel" class="form-label">부서 대표 전화</label>
-                                <input type="text" class="form-control" id="dept_tel" name="dept_tel" placeholder="부서대표전화를 입력하세요 (예: 02-333-1234)" required>
-                            </div>
+                    <form action="${pageContext.request.contextPath}/dept/saveDept" method="post" id="deptForm" novalidate>
+                        <!-- 부서명 -->
+                        <div class="mb-3">
+                            <label for="dept_name" class="form-label">부서명</label>
+                            <input type="text" class="form-control" id="dept_name" name="dept_name"
+                                   placeholder="부서이름을 입력하세요 (예: 개발팀)" required>
+                        </div>
 
-                            <!-- 버튼 -->
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">등록하기</button>
-                                <button type="reset" class="btn btn-secondary btn-lg">초기화</button>
-                            </div>
-                        </form>
-                    </div>
+                        <!-- 부서 대표 전화 -->
+                        <div class="mb-3">
+                            <label for="dept_tel" class="form-label">부서 대표 전화</label>
+                            <input type="text" class="form-control" id="dept_tel" name="dept_tel"
+                                   placeholder="예: 02-333-1234" maxlength="13" required>
+                        </div>
+
+                        <!-- 버튼 영역: 우측 정렬(거래처 등록과 동일) -->
+                        <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+                            <button type="submit" class="btn btn-primary">등록</button>
+                            <button type="reset" class="btn btn-secondary-custom">초기화</button>
+                            <button type="button" class="btn btn-brown-outline"
+                                    onclick="location.href='${pageContext.request.contextPath}/dept/deptList'">
+                                목록으로
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </main>
 
-            <!-- FOOTER -->
             <%@ include file="../footer.jsp" %>
         </div>
     </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 전화번호 자동 하이픈 (거래처 등록과 동일 로직)
+    const telInput = document.getElementById("dept_tel");
+    telInput.addEventListener("input", function () {
+        let value = telInput.value.replace(/[^0-9]/g, "");
+        if (value.length === 9) {
+            value = value.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3");
+        } else if (value.length === 11) {
+            value = value.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+        } else if (value.length === 10) {
+            if (value.startsWith("02")) {
+                value = value.replace(/(\d{2})(\d{4})(\d{4})/, "$1-$2-$3");
+            } else {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+            }
+        }
+        telInput.value = value;
+    });
+
+    // 간단한 HTML5 유효성 검사
+    const form = document.getElementById("deptForm");
+    form.addEventListener("submit", function (e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+});
+</script>
 
 </body>
 </html>

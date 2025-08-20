@@ -17,6 +17,7 @@
         	,provide_amount
         	,current_danga
         	,provide_isdel
+        	,provide_reg_code
         	,provide_reg_date
         )
         values
@@ -27,6 +28,7 @@
         	,${provide_amount}
         	,${current_danga}
         	,${provide_isdel}
+        	,${provide_reg_code}
         	,sysdate
         )
 	</insert>
@@ -55,6 +57,9 @@
 	            </otherwise>
 	        </choose>
 	    </if>
+	    <if test="roles != null and (roles == 'ROLE_USER' || roles == 'ROLE_CLIENT')">
+        AND p.provide_isdel = 0
+       	</if>
 	</select>
 
 	<select id="provideList" parameterType="ProvideDto" resultType="ProvideDto">
@@ -65,12 +70,15 @@
 	            select 
 	                p.*, 
 	                pt.product_name as productName,
-	                ct.client_name  as clientName
+	                ct.client_name  as clientName,
+	                b.cd_contents   as unitName
 	            from provide p
 	            left join product pt 
 	                on p.product_won_code = pt.product_code
 	            left join client_tb ct 
 	                on p.provide_client_code = ct.client_code
+	            left join bunryu b
+	            	on pt.product_unit = b.mcd and b.bcd = 750
 	            where 1=1
 	            <if test="searchKeyword != null and searchKeyword != ''">
 	                <choose>
@@ -88,19 +96,21 @@
 	                    </otherwise>
 	                </choose>
 	            </if>
+	            <if test="roles != null and (roles == 'ROLE_USER' || roles == 'ROLE_CLIENT')">
+		        AND p.provide_isdel = 0
+		       	</if>
 	            order by p.provide_code desc
 	        ) a
 	    )
 	    where rn between #{start} and #{end}
 	</select>
 
-
-
 	<select id="provideDetail" parameterType="int" resultType="ProvideDto">
 		select  p.*, 
 	            pt.product_name as productName,
 		        ct.client_name  as clientName,
-		        bu.cd_contents  as unitName
+		        bu.cd_contents  as unitName,
+		        e.emp_name 		as regName
 	   	from 	provide p
 		left join product pt 
 			ON p.product_won_code = pt.product_code
@@ -108,6 +118,8 @@
 			ON pt.product_unit = bu.mcd and bu.bcd = 750
 		left join client_tb ct
 			ON p.provide_client_code = ct.client_code
+		left join emp e
+			ON p.provide_reg_code = e.emp_code
 		where p.provide_code = #{provide_code}
 	</select>
 
@@ -138,6 +150,18 @@
 		select 	*
 		from 	provide
 		where 	product_won_code = #{product_code}
+		and		provide_isdel = 0
+	</select>
+	
+	<select id="getProductsByClient" parameterType="int" resultType="ProvideDto">
+		select 	p.*,
+				pt.product_name as productName
+		from 	provide p
+		left join product pt
+			ON p.product_won_code = pt.product_code
+		where 	provide_client_code = #{client_code}
+		and 	provide_isdel = 0
+		
 	</select>
 	
 </mapper>
