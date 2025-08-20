@@ -82,8 +82,7 @@
               <th>사원 번호</th>
               <th>이름</th>
               <th>소속 부서</th>
-              <th>직급</th>
-              <th>입사일</th>
+              <th>직급</th>          
             </tr>
           </thead>
           <tbody>
@@ -94,7 +93,6 @@
                 <td>${empDto.emp_name}</td>
                 <td><c:out value="${empty empDto.dept_code ? empDto.emp_dept_code : empDto.dept_code}"/></td>
                 <td><c:out value="${empty empDto.emp_grade_detail ? empDto.emp_grade : empDto.emp_grade_detail}"/></td>
-                <td>${empDto.empIpsaDateFormatted}</td>
               </tr>
             </c:forEach>
             <c:if test="${empty empDtoList}">
