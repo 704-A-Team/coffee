@@ -6,8 +6,8 @@ import com.oracle.coffee.dto.ClientDto;
 
 public interface ClientService {
 
-	Long 					totalClient();
-	List<ClientDto> 		clientList(ClientDto clientDto);
+	Long            		totalClient(ClientDto cond);  
+	List<ClientDto> 		clientList(ClientDto cond);
 	List<ClientDto> 		clientAllList();
 	
 	int 					clientSave(ClientDto clientDto);

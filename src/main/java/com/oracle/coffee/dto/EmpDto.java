@@ -38,8 +38,13 @@ public class EmpDto {
 	private String				dept_code;					//부서코드
 	private String 				emp_grade_detail;			//직급분류
     
+	//검색
+	private String  searchType;    
+	private String  searchKeyword; 
+	private String  deptName;      
+	private String  gradeName;     
 	
-
+	
 	// 페이징 관련 
 	private String      pageNum;  
 	private int 		start; 		 	   

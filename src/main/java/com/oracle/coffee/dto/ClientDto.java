@@ -35,6 +35,10 @@ public class ClientDto {
 	private String client_emp_tel;						//join해서 가져올 사원 번호 
 	private String client_type_br;						//join해서 가져올 거래처 유형 
 		
+	// 검색 조건용(추가)
+	private String  searchType;    
+	private String  searchKeyword; 
+	private Integer status;        
 
 	
 	// 페이징 관련 

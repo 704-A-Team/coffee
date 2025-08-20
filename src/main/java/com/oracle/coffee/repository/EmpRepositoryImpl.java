@@ -12,7 +12,6 @@ import com.oracle.coffee.dto.EmpDto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -23,64 +22,143 @@ public class EmpRepositoryImpl implements EmpRepository {
 	private final EntityManager em;
     private final PasswordEncoder passwordEncoder;
 
-	@Override
-	public Long empTotalcount() {
-		TypedQuery<Long> query = 	
-				em.createQuery("select count(e) from Emp e where e.emp_isdel = 0", Long.class); 
-		Long totalCountLong = query.getSingleResult();
+    // ===== 유틸 =====
+    private static Integer toInt(Object v){ return v==null? null : ((Number)v).intValue(); }
+    private static String  toStr(Object v){ return v==null? null : v.toString(); }
+    private static java.time.LocalDateTime toLdt(Object v){
+        if(v==null) return null;
+        if(v instanceof java.sql.Timestamp ts) return ts.toLocalDateTime();
+        if(v instanceof java.time.LocalDateTime ldt) return ldt;
+        return null;
+    }
+    private static java.sql.Date toSqlDate(Object v){
+        if(v==null) return null;
+        if(v instanceof java.sql.Date d) return d;
+        if(v instanceof java.util.Date d) return new java.sql.Date(d.getTime());
+        return null;
+    }
+    private static boolean notBlank(String s){ return s!=null && !s.isBlank(); }
 
-		return totalCountLong;
-	}
+    @Override
+    public Long empTotalcount(EmpDto empDto) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT COUNT(*) ");
+        sb.append("  FROM emp emp ");
+        sb.append("  JOIN dept d ON emp.emp_dept_code = d.dept_code ");
+        sb.append("  LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 ");
+        sb.append(" WHERE emp.emp_isdel = 0 ");
 
-	@Override
-	public List<EmpDto> findPageEmp(EmpDto empDto) {
-		String nativeSql = 
-			    "SELECT * FROM ( " +
-			    "    SELECT ROWNUM rn, e.* FROM ( " +
-			    "        SELECT emp.emp_code, emp.emp_name, emp.emp_tel, emp.emp_dept_code, emp.emp_grade, " +
-			    "               emp.emp_sal, emp.emp_email, emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, emp_birth, " +
-			    "               d.dept_name, b.cd_contents" +
-			    "        FROM emp " +
-			    "        JOIN dept d ON emp.emp_dept_code = d.dept_code " +
-			    "        LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
-			    "        WHERE emp.emp_isdel = 0 " +
-			    "        ORDER BY emp.emp_code " +
-			    "    ) e " +
-			    ") " +
-			    "WHERE rn BETWEEN :start AND :end";
+        if (notBlank(empDto.getSearchKeyword())) {
+            if ("empCode".equalsIgnoreCase(empDto.getSearchType())) {
+                sb.append(" AND TO_CHAR(emp.emp_code) LIKE :kw ");
+            } else {
+                sb.append(" AND emp.emp_name LIKE :kw ");
+            }
+        }
+        // 부서명 필터
+        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
+            sb.append(" AND d.dept_name = :deptName ");
+        }
+        // 직급명 필터
+        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
+            sb.append(" AND b.cd_contents = :gradeName ");
+        }
 
+        Query q = em.createNativeQuery(sb.toString());
 
-		Query query = em.createNativeQuery(nativeSql);
-		query.setParameter("start", empDto.getStart());
-		query.setParameter("end", empDto.getEnd());
+        if (notBlank(empDto.getSearchKeyword())) {
+            q.setParameter("kw", "%" + empDto.getSearchKeyword().trim() + "%");
+        }
+        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
+            q.setParameter("deptName", empDto.getDeptName().trim());
+        }
+        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
+            q.setParameter("gradeName", empDto.getGradeName().trim());
+        }
 
-		List<Object[]> resultList = query.getResultList();
+        Number n = (Number) q.getSingleResult();
+        return n.longValue();
+    }
 
-		List<EmpDto> empDtoList = resultList.stream().map(row -> {
-		    EmpDto dto = new EmpDto();
-		    dto.setEmp_code(((Number) row[1]).intValue());
-		    dto.setEmp_name((String) row[2]);
-		    dto.setEmp_tel((String) row[3]);
-		    dto.setEmp_dept_code(((Number) row[4]).intValue());
-		    dto.setEmp_grade(((Number) row[5]).intValue());
-		    dto.setEmp_sal(((Number) row[6]).intValue());
-		    dto.setEmp_email((String) row[7]);
-		    dto.setEmp_isdel(((Number) row[8]).intValue());
-		    dto.setEmp_register(((Number) row[9]).intValue());
-		    dto.setEmp_reg_date(((java.sql.Timestamp) row[10]).toLocalDateTime());
-		    dto.setEmp_ipsa_date(row[11] != null ? new java.sql.Date(((java.util.Date) row[11]).getTime()) : null);
-		    dto.setEmp_birth(row[12] != null ? new java.sql.Date(((java.util.Date) row[12]).getTime()) : null);
-		    dto.setDept_code((String) row[13]); // join된 부서명
-		    dto.setEmp_grade_detail((String) row[14]); //join된 직급
-		    
-		    return dto;
-		}).collect(Collectors.toList());
+    @Override
+    public List<EmpDto> findPageEmp(EmpDto empDto) {
+        String selectCols =
+            "emp.emp_code, emp.emp_name, emp.emp_tel, " +
+            "emp.emp_dept_code, emp.emp_grade, emp.emp_sal, emp.emp_email, " +
+            "emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, emp.emp_birth, " +
+            "d.dept_name, b.cd_contents";
 
-		return empDtoList;
+        StringBuilder where = new StringBuilder(" WHERE emp.emp_isdel = 0 ");
 
-		}
+        if (notBlank(empDto.getSearchKeyword())) {
+            if ("empCode".equalsIgnoreCase(empDto.getSearchType())) {
+                where.append(" AND TO_CHAR(emp.emp_code) LIKE :kw ");
+            } else {
+                where.append(" AND emp.emp_name LIKE :kw ");
+            }
+        }
+        // 부서명 필터
+        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
+            where.append(" AND d.dept_name = :deptName ");
+        }
+        // 직급명 필터
+        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
+            where.append(" AND b.cd_contents = :gradeName ");
+        }
 
+        String base =
+            "SELECT " + selectCols +
+            "  FROM emp emp " +
+            "  JOIN dept d ON emp.emp_dept_code = d.dept_code " +
+            "  LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
+                 where +
+            " ORDER BY emp.emp_code ASC "; 
 
+        String sql =
+            "SELECT * FROM ( " +
+            "  SELECT t.*, ROWNUM rn FROM ( " + base + " ) t " +
+            ") WHERE rn BETWEEN :start AND :end";
+
+        Query q = em.createNativeQuery(sql);
+
+        if (notBlank(empDto.getSearchKeyword())) {
+            q.setParameter("kw", "%" + empDto.getSearchKeyword().trim() + "%");
+        }
+        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
+            q.setParameter("deptName", empDto.getDeptName().trim());
+        }
+        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
+            q.setParameter("gradeName", empDto.getGradeName().trim());
+        }
+
+        q.setParameter("start", empDto.getStart());
+        q.setParameter("end",   empDto.getEnd());
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> rows = q.getResultList();
+
+        return rows.stream().map(row -> {
+            EmpDto dto = new EmpDto();
+            int i = 0;
+            dto.setEmp_code(toInt(row[i++]));           
+            dto.setEmp_name(toStr(row[i++]));           
+            dto.setEmp_tel(toStr(row[i++]));            
+            dto.setEmp_dept_code(toInt(row[i++]));      
+            dto.setEmp_grade(toInt(row[i++]));          
+            dto.setEmp_sal(toInt(row[i++]));            
+            dto.setEmp_email(toStr(row[i++]));          
+            dto.setEmp_isdel(toInt(row[i++]));          
+            dto.setEmp_register(toInt(row[i++]));       
+            dto.setEmp_reg_date(toLdt(row[i++]));       
+            dto.setEmp_ipsa_date(toSqlDate(row[i++]));  
+            dto.setEmp_birth(toSqlDate(row[i++]));      
+            dto.setDept_code(toStr(row[i++]));          
+            dto.setEmp_grade_detail(toStr(row[i++]));   
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    
 	@Override
 	public List<EmpDto> findAllEmp() {
 		List<Emp> empEntityList = em.createQuery("select e from Emp e",Emp.class)
