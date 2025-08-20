@@ -20,5 +20,6 @@ public interface SWProductDao {
 	void 				deleteProductImgs(int product_code);
 	void 				insertProductImgs(List<ProductImgDTO> list);
 	List<ProductDto> 	wonProductAllList();
+	List<ProductDto> 	getNewProduct();
 	
 }

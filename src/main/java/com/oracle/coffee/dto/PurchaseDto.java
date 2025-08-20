@@ -43,6 +43,8 @@ public class PurchaseDto {
     private String 		bossName;
     private String 		clientTel;
     private String 		clientAddress;
+    
+    private int 		productCnt;
 	
 	private String 		searchType;
 	private String 		searchKeyword;

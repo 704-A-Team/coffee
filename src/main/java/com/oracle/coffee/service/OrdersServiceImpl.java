@@ -266,4 +266,26 @@ public class OrdersServiceImpl implements OrdersService {
 		return new PageRespDto<OrdersListDto, Paging>(list, paging);
 	}
 
+	@Override
+	public List<OrdersDetailDto> currentOrder() {
+		System.out.println("OrdersServiceImpl currentOrder start...");
+	
+		return ordersDao.currentOrder();
+	}
+
+	@Override
+	public List<OrdersDto> excellentClient() {
+		System.out.println("OrdersServiceImpl excellentClient start...");
+		
+		return ordersDao.excellentClient();
+	}
+
+	@Override
+	public List<OrdersDto> monthTotalPrice() {
+		System.out.println("OrdersServiceImpl monthTotalPrice start...");
+		
+		return ordersDao.monthTotalPrice();
+	}
+
+
 }

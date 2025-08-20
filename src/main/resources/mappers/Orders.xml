@@ -191,4 +191,74 @@
 			#{enabled_products, mode=OUT, jdbcType=CURSOR, resultMap=approvedPrds}
 		)
 	</select>
+	
+	<select id="currentOrder" resultType="OrdersDetailDto">
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT  od.order_code,
+		            COUNT(od.product_code) AS productCnt,
+		            MIN(pt.product_name)   AS productName,
+		            MAX(od.order_ddate)    AS order_ddate
+		    FROM    orders_detail od
+		    LEFT JOIN product pt
+		      ON pt.product_code = od.product_code
+		    WHERE   od.order_detail_status IN (2, 6)
+		      AND   od.order_ddate >= SYSDATE - 7
+		    GROUP BY od.order_code
+		    ORDER BY MAX(od.order_ddate) DESC
+		)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<select id="excellentClient" resultType="OrdersDto">
+		<![CDATA[
+		SELECT sub.orders_client_code,
+		       sub.total_price as month_total_price,
+		       c.client_name as clientName
+		FROM (
+		    SELECT  o.orders_client_code,
+		            SUM(o.order_final_price) AS total_price
+		    FROM    orders o
+		    WHERE   TRUNC(o.order_confirmed_date, 'MM') = TRUNC(SYSDATE, 'MM')
+		      AND   o.order_status IN (4,6)
+		    GROUP BY o.orders_client_code
+		    ORDER BY total_price DESC
+		) sub
+		LEFT JOIN client_tb c
+		  ON sub.orders_client_code = c.client_code
+		WHERE ROWNUM <= 3
+		]]>
+	</select>
+	
+	<select id="monthTotalPrice" resultType="OrdersDto">
+		<![CDATA[
+		SELECT  product_code, 
+				product_name 		as productName, 
+				month_total_price
+		FROM (
+		  SELECT
+		      od.product_code
+		     ,p.product_name
+		     ,SUM(od.order_amount * NVL(pp.price, 0)) AS month_total_price
+		  FROM orders o
+		  JOIN orders_detail od
+		     ON od.order_code = o.order_code
+		  LEFT JOIN product p
+		     ON p.product_code = od.product_code
+		  LEFT JOIN product_price pp
+		     ON pp.product_code = od.product_code
+		   AND o.order_confirmed_date >= pp.start_date
+		   AND o.order_confirmed_date < pp.end_date
+		  WHERE TRUNC(o.order_confirmed_date, 'MM') = TRUNC(SYSDATE, 'MM')
+		    AND o.order_status IN (4,6)
+		  GROUP BY od.product_code, p.product_name
+		  ORDER BY month_total_price DESC
+		)
+		WHERE ROWNUM <= 5
+		]]> 
+	</select>
+	
+	
 </mapper>

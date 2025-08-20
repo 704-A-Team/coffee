@@ -29,7 +29,6 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		TransactionStatus txStatus = 
 				transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
-		
 		int magamStatus = stockDao.magamCheck();
 		int purchase_result = 0;
 		try {
@@ -75,11 +74,11 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 	}
 	
 	@Override
-	public void purchaseApprove(int purchase_code) {
+	public void purchaseApprove(PurchaseDto purchaseDto) {
 		System.out.println("SWPurchaseServiceImpl purchaseApprove start...");
 		
-		swPurchaseDao.purchaseApprove(purchase_code);
-		System.out.println("SWPurchaseServiceImpl purchase_code : " + purchase_code);
+		swPurchaseDao.purchaseApprove(purchaseDto);
+		System.out.println("SWPurchaseServiceImpl purchaseDto : " + purchaseDto);
 	}
 	
 	@Override
@@ -98,6 +97,13 @@ public class SWPurchaseServiceImpl implements SWPurchaseService {
 		System.out.println("SWPurchaseServiceImpl purchaseDetailList : " + purchaseDetailList);
 		
 		return purchaseDetailList;
+	}
+
+	@Override
+	public List<PurchaseDto> currentPurchase() {
+		System.out.println("SWPurchaseServiceImpl currentPurchase start...");
+		
+		return swPurchaseDao.currentPurchase();
 	}
 	
 	
