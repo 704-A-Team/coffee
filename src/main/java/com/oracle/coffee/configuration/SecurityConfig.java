@@ -65,8 +65,6 @@ public class SecurityConfig {
                     .requestMatchers("/inventory/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER")
                    
                     
-                    
-                    
                     //통합기간중에만 login불필요
                     //아래 매핑으로 시작되는 url은 로그인 필요없이 접근 가능
                     

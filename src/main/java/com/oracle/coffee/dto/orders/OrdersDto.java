@@ -4,6 +4,7 @@ package com.oracle.coffee.dto.orders;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.Getter;
@@ -24,6 +25,20 @@ public class OrdersDto {
 	private LocalDateTime order_confirmed_date;	// 수주 승인/반려 시간
 	private List<OrdersDetailDto> orders_details;
 	
+	
+	// jsp 프린트용
+	public String reg_date() {
+		if (order_reg_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_reg_date);
+	}
+	public String req_date() {
+		if (order_req_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_req_date);
+	}
+	public String confirmed_date() {
+		if (order_confirmed_date == null) return "";
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(order_confirmed_date);
+	}
 	
 	// join 조회용
 	

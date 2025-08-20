@@ -1,5 +1,7 @@
 package com.oracle.coffee.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -119,23 +121,34 @@ public class StockController {
 	// 재고 조정(실사)페이지
 	@GetMapping("/silsa")
 	public String silsaPage(Model model) {
-		List<StockDto> products = stockService.getAllStock();
-		boolean isClosedToday = stockService.isClosedToday();
-
-		model.addAttribute("products", products);
-    	model.addAttribute("isClosed", isClosedToday);
+		// 이번달
+		String now = DateTimeFormatter.ofPattern("YYYY년 MM월 dd일").format(LocalDate.now());
 		
+		// 선택 가능한 재고 목록
+		List<StockDto> products = stockService.getAllStock();
+		
+		boolean isClosed = stockService.isClosedMonth();
+		boolean isClosedToday = stockService.isClosedToday();
+		
+		// 이번달 저장된 실사내역
+		List<SilsaDto> silsas = stockService.getMonthSilsa();
+
+		model.addAttribute("now", now);
+		model.addAttribute("products", products);
+    	model.addAttribute("isClosed", isClosed);
+    	model.addAttribute("isClosedToday", isClosedToday);
+    	model.addAttribute("silsas", silsas);
+    	
 		return "stock/silsa";
 	}
 	
 	// 실사 저장
 	@PostMapping("/silsa")
 	public String silsaSave(@RequestBody List<SilsaDto> silsaList, @AuthenticationPrincipal AccountDto login) {
-		// 오늘자 실사가 있다면 예외처리
-		
 		try {
 			// 등록자
-			int empCode = login.getEmp_code();
+//			int empCode = login.getEmp_code();
+			int empCode = 2002;
 			stockService.saveSilsa(silsaList, empCode);
 			
 		} catch (Exception e) {
@@ -144,5 +157,5 @@ public class StockController {
 
 		return "redirect:/inventory/list";
 	}
-	
+
 }

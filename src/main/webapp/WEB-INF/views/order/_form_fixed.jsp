@@ -43,15 +43,15 @@
 	        </div>
 	      	<div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">등록일</label>
-		        <div class="form-control form-control-sm bg-light">${order.order_reg_date }</div>
+		        <div class="form-control form-control-sm bg-light">${order.reg_date() }</div>
 	        </div>
 	        <div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청일</label>
-		        <div class="form-control form-control-sm bg-light">${order.order_req_date }</div>
+		        <div class="form-control form-control-sm bg-light">${order.req_date() }</div>
 	        </div>
 	        <div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">확정일</label>
-		        <div class="form-control form-control-sm bg-light">${order.order_confirmed_date }</div>
+		        <div class="form-control form-control-sm bg-light">${order.confirmed_date() }</div>
 	        </div>
 	      	<div class="mb-2 d-flex">
 		        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">담당자명</label>
@@ -218,7 +218,7 @@
 				<c:if test="${not isEmp}">
 				<button type="button" class="btn btn-md btn-danger fw-bold" onclick="return cancelOrder(${order.order_code}, false)">요청취소</button>
 				</c:if>
-				<c:if test="${not isClosedMagam and isEmp}"> <!-- and 본사만 -->
+				<c:if test="${not isClosedMagam and isManagerEmp}"> <!-- and 본사만 -->
 					<button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#refuseModal">반려</button>
 					<button type="button" class="btn btn-primary fw-bold" onclick="return approveOrder(${order.order_code})">승인</button>
 				</c:if>

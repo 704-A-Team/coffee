@@ -164,4 +164,25 @@ public class StockDaoImpl implements StockDao {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public List<SilsaDto> getMonthSilsa() {
+		List<SilsaDto> silsas = new ArrayList<>();
+		
+		try {
+			silsas = session.selectList("monthSilsaList");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return silsas;
+	}
+
+	@Override
+	public void deleteTodaySilsa() {
+		try {
+			session.delete("deleteTodaySilsa");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
