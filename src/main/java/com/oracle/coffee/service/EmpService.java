@@ -6,7 +6,7 @@ import com.oracle.coffee.dto.EmpDto;
 
 public interface EmpService {
 
-	Long 				totalEmp();
+    Long         		totalEmp(EmpDto empDto);
 	List<EmpDto> 		empList(EmpDto empDto);
 	List<EmpDto>   		empAllList();
 	

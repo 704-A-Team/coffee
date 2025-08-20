@@ -25,17 +25,13 @@ public class EmpServiceImpl implements EmpService {
 
 
 	@Override
-	public Long totalEmp() {
-	Long totalCount =  empRepository.empTotalcount();
-		
-		return totalCount;
+	public Long totalEmp(EmpDto empDto) {
+	    return empRepository.empTotalcount(empDto); 
 	}
 
 	@Override
-	public List<EmpDto> empList(EmpDto empDto) {
-	    List<EmpDto> empRtnList = empRepository.findPageEmp(empDto);	
-	    
-	    return empRtnList;
+	public List<EmpDto> empList(EmpDto empDto) {	
+	    return empRepository.findPageEmp(empDto);   
 	}
 	
 	@Override

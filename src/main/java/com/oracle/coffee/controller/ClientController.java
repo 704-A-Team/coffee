@@ -26,21 +26,29 @@ public class ClientController {
 	
 	@GetMapping("/clientList")
 	public String clientList(ClientDto clientDto, Model model) {
-		
-		Long totalCountLong = clientService.totalClient();
-		int totalCountInt = totalCountLong.intValue();
-		Paging page = new Paging(totalCountInt, clientDto.getCurrentPage());
 
-		clientDto.setStart(page.getStart());   
-		clientDto.setEnd(page.getEnd());      
-		
-		List<ClientDto> clientDtoList = clientService.clientList(clientDto);
+	    // 총 개수 (검색 조건 반영)
+	    Long totalCountLong = clientService.totalClient(clientDto);
+	    int totalCountInt   = totalCountLong.intValue();
 
-		model.addAttribute("totalCount", totalCountInt);
-		model.addAttribute("clientDtoList" , clientDtoList);
-		model.addAttribute("page", page);
+	    // 페이징
+	    Paging page = new Paging(totalCountInt, clientDto.getCurrentPage());
+	    clientDto.setStart(page.getStart());
+	    clientDto.setEnd(page.getEnd());
 
-		return "client/clientList";
+	    // 목록 조회 (검색+페이징 반영)
+	    List<ClientDto> clientDtoList = clientService.clientList(clientDto);
+
+	    model.addAttribute("totalCount", totalCountInt);
+	    model.addAttribute("clientDtoList", clientDtoList);
+	    model.addAttribute("page", page);
+
+	    // 검색 파라미터 유지용 (JSP에서 param.* 써도 되지만 명시적으로 넘겨둠)
+	    model.addAttribute("searchType",   clientDto.getSearchType());
+	    model.addAttribute("searchKeyword",clientDto.getSearchKeyword());
+	    model.addAttribute("status",       clientDto.getStatus());
+
+	    return "client/clientList";
 	}
 
 	
