@@ -7,12 +7,11 @@ import com.oracle.coffee.dto.ClientDto;
 
 public interface ClientRepository {
 
-	List<ClientDto> 	findPageClient(ClientDto clientDto);
-	Long 				clientTotalcount();
-	List<ClientDto>		findAllClient();
-	
-	Client 				clientSave(Client client);
-	ClientDto 			findByClient_code(int client_code);
-	ClientDto 			updateClient(ClientDto clientDto);
+    List<ClientDto>  findPageClient(ClientDto cond);  
+    Long             clientTotalcount(ClientDto cond);
+    List<ClientDto>  findAllClient();
 
+    Client           clientSave(Client client);
+    ClientDto        findByClient_code(int client_code);
+    ClientDto        updateClient(ClientDto clientDto);
 }

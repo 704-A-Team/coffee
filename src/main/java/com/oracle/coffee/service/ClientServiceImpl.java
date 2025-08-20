@@ -21,17 +21,13 @@ public class ClientServiceImpl implements ClientService {
 	private final ModelMapper modelMapper;
 	
 	@Override
-	public Long totalClient() {
-	Long totalCount =  clientRepository.clientTotalcount();
-	
-		return totalCount;
+	public Long totalClient(ClientDto cond) {
+	    return clientRepository.clientTotalcount(cond);
 	}
 	
 	@Override
-	public List<ClientDto> clientList(ClientDto clientDto) {
-	    List<ClientDto> clientRtnList = clientRepository.findPageClient(clientDto);	
-	    
-	    return clientRtnList;
+	public List<ClientDto> clientList(ClientDto cond) {
+	    return clientRepository.findPageClient(cond);
 	}
 	
 	@Override
