@@ -83,6 +83,7 @@
 								  ${displayName}
 								</div>
 
+
 						   
 							<div>
 							  <strong>권한:</strong>
@@ -114,10 +115,6 @@
 						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						
-						  <sec:authorize access="hasAuthority('ROLE_GUEST')">
-						    <a href="${pageContext.request.contextPath}/MyPage/guest"
-						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
-						  </sec:authorize>
 						</li>
 		        <li>
 		          <form action="/logout" method="post" class="px-3">
