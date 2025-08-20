@@ -54,7 +54,7 @@
                             <c:when test="${item.mfg_status == 1}">검토중</c:when>
                             <c:when test="${item.mfg_status == 3}">거부</c:when>
                             <c:when test="${item.mfg_status == 4}">진행중</c:when>
-                            <c:when test="${item.mfg_status == 5}">승인</c:when>
+                            <c:when test="${item.mfg_status == 5}">생산완료</c:when>
                             <c:otherwise>기타</c:otherwise>
                         </c:choose>
                     </td>

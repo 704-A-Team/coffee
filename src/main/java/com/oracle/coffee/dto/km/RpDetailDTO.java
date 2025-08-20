@@ -10,4 +10,7 @@ public class RpDetailDTO {			// 생산보고 원재료 상세
 	private int 	real_amount;		// 실제 사용량
 	private int 	trash_amount;		// 폐기 수량
 	private String 	trash_contents;		// 비고
+	
+	private String 	product_won_name;
+	private String	cd_contents;
 }

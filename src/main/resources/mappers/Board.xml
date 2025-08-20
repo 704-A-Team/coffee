@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.coffee.BoardMapper">
+
+	<insert id="boardWrite" parameterType="BoardDTO">
+		INSERT INTO 
+			Board (board_code, board_title, board_contents ,READ_COUNT ,REF ,REF_STEP ,REF_LVL , board_reg_code, board_reg_date) 
+			VALUES(BOARD_SEQ.nextval,#{board_title}, #{board_contents}, 0, BOARD_SEQ.nextval, 0, 0 , #{board_reg_code} , sysdate )
+	</insert>
+	
+	<select id="boardTotal" resultType="Int">
+		SELECT COUNT(*) FROM BOARD
+	</select>
+	
+	<select id="boardList" parameterType="BoardDTO" resultType="BoardDTO">
+		SELECT * FROM (
+		        SELECT rownum rw , board.* FROM (
+		            SELECT board.* , dept.dept_name FROM BOARD 
+		            LEFT JOIN EMP ON board.board_reg_code = emp.emp_code
+		            LEFT JOIN DEPT ON emp.emp_dept_code = dept.dept_code
+		            order by board_code desc
+		        ) board
+		) WHERE rw BETWEEN #{start} and #{end}
+	</select>
+	
+	<update id="upReadCount" parameterType="BoardDTO">
+		UPDATE BOARD
+		SET READ_COUNT = READ_COUNT + 1
+		WHERE BOARD_CODE = #{board_code}
+		AND REF = #{board_code}
+	</update>
+	
+	<select id="boardView" parameterType="BoardDTO" resultType="BoardDTO">
+		SELECT board.* , dept.dept_name 
+		FROM BOARD 
+	        LEFT JOIN EMP ON board.board_reg_code = emp.emp_code
+	        LEFT JOIN DEPT ON emp.emp_dept_code = dept.dept_code
+		WHERE board.BOARD_CODE = #{board_code}
+		AND board.ref = #{board_code}
+	</select>
+	
+	<update id="boardUpdate" parameterType="BoardDTO">
+		UPDATE BOARD
+		SET board_title = #{board_title} , board_contents = #{board_contents}
+		WHERE board_code = #{board_code}
+		AND   ref = #{board_code}
+	</update>
+	
+	<delete id="boardDelete" parameterType="BoardDTO">
+		DELETE FROM BOARD WHERE BOARD_CODE = #{board_code}
+	</delete>
+
+
+</mapper>

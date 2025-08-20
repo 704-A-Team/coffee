@@ -82,6 +82,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
+	public int findYield(int product_wan_code) {
+		int findYield = productDao.findYield(product_wan_code);
+		return findYield;
+	}
+	
+	@Override
 	public void saveWeight(int product_wan_code, double weight) {
 		log.info("product_wan_code , weight->" + product_wan_code + " , " + weight);
 		productDao.saveWeight(product_wan_code , weight);

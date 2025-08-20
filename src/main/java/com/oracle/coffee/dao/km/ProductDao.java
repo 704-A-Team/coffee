@@ -49,6 +49,8 @@ public interface ProductDao {
 	List<ProductPriceDTO> 	priceHistory(int product_code);
 
 	int 					findPack(int product_code);
+	
+	int 					findYield(int product_wan_code);
 
 	void 					saveWeight(int product_wan_code, double weight);
 
@@ -59,6 +61,7 @@ public interface ProductDao {
 	void 					wanPriceModify(ProductPriceDTO priceDTO);
 
 	void 					wanPriceBeforeModify(ProductPriceDTO priceDTO);
+
 
 
 }

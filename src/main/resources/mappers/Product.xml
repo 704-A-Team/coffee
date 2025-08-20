@@ -60,6 +60,10 @@
 		SELECT product_pack FROM product WHERE product_code = #{product_code}
 	</select>
 	
+	<select id="findYield" parameterType="Int" resultType="Int">
+		SELECT product_yield FROM product WHERE product_code = #{product_code}
+	</select>
+	
 	<update id="saveWeight" parameterType="Map">
 		UPDATE PRODUCT SET PRODUCT_WEIGHT = #{product_weight} WHERE product_code = #{product_code}
 	</update>

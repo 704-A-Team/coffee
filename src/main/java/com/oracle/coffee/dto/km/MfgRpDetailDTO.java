@@ -1,13 +1,14 @@
 package com.oracle.coffee.dto.km;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
 @Data
-public class MfgRpDTO {		// 생산보고
+public class MfgRpDetailDTO {
 	private int 			mfg_code;			// 생산신청코드
 	private int 			product_code;		// 완제품 제품코드
 	private int 			mfg_qty;			// 실제완료생산량(EA)	   (완제품 증가)
@@ -21,16 +22,17 @@ public class MfgRpDTO {		// 생산보고
 	private int 			mfg_rp_reg_code;	// 사원번호(신청인과 다를 수 있다)
 	private LocalDateTime 	report_reg_date;	// 등록일
 	
+
+	private List<RpDetailDTO> 		rp_detail;
 	
-	
-	private String			product_name;
+	private int				mfg_status;
 	private String			product_won_name;
-	private int				mfg_amount;
-	private int 			product_yield;		// 예상수율
-	private int				product_pack;		// 생산단위
-	private int				product_weight;		// 기본중량
-	private int				product_won_code;	// 원재료 코드
-	private int				recipe_amount;		// 원재료 소모량
-	private int				target_amount;		// 생산신청 수 * 원재료 소모량
+	private String			cd_contents;		// 원재료 단위
+	private String			product_name;		// 완제품 이름
+	private String			emp_name;
+	private String			emp_tel;
+	private String			dept_name;
+	
+	private String 			mfgEndDateStr; // JSP에서 안전하게 포맷된 생산완료일 표시용
 
 }

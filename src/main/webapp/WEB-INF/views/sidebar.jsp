@@ -65,9 +65,10 @@
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductInForm" class="link-light rounded menu-small">원재료 등록</a></li>
 				    <li class="mt-2"><a href="${pageContext.request.contextPath}/sw/wonProductPriceInForm" class="link-light rounded menu-small">가격 등록</a></li>
             <li class="mt-2"><a href="${pageContext.request.contextPath}/km/productInForm" class="link-light rounded menu-small">완제품 등록</a></li>
-				    <li class="mt-2"><a href="${pageContext.request.contextPath}/km/wanList" class="link-light rounded menu-small">완제품 리스트</a></li>
+				    <li class="mt-2"><a href="${pageContext.request.contextPath}/km/wanList" class="link-light rounded menu-small">완제품 목록</a></li>
             <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgInForm" class="link-light rounded menu-small">생산 신청</a></li>
 					  <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgList" class="link-light rounded menu-small">생산 신청 목록</a></li>
+					  <li class="mt-2"><a href="${pageContext.request.contextPath}/km/mfgReportList" class="link-light rounded menu-small">생산 승인 내역</a></li>
 					
 				</ul>
 			</div>
@@ -133,6 +134,20 @@
 					</li>
 					<li class="mt-2">
   			 			<a href="${pageContext.request.contextPath}/dept/deptInForm" class="link-light rounded menu-small">부서 등록</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		
+		<!-- 게시판 -->
+		<li class="mb-3">
+			<button class="btn btn-toggle text-light rounded collapsed" data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
+				<i class="bi bi-caret-right-fill me-2"></i>게시판
+			</button>
+			<div class="collapse" id="board-collapse">
+				<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+					<li class="mt-2">
+ 			 			<a href="${pageContext.request.contextPath}/board/boardList" class="link-light rounded menu-small">게시판</a>
 					</li>
 				</ul>
 			</div>
