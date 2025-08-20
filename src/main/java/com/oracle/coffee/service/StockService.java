@@ -28,9 +28,6 @@ public interface StockService {
 	// 수동 일마감 취소 (마감 취소 프로시저 진행 + 마감 상태 테이블 변경)
 	public void cancelTodayMagam() throws Exception;
 	
-	// 실시간 재고 수량 조회
-	public int getRealStock(int productCode);
-
 	// 마감상태 조회
 	public int magamCheck();
 
@@ -48,5 +45,7 @@ public interface StockService {
 
 	// 수동 월마감
 	public void closeMonthMagam() throws Exception;
+	
+	public List<SilsaDto> getMonthSilsa();
 
 }

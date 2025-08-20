@@ -57,10 +57,10 @@
                 	</c:otherwise>
                 </c:choose></td>
                 <td>
-                    ${order.order_req_date }
+                    ${order.req_date() }
                 </td>
-                <td>${order.order_confirmed_date }</td>
-                <td>${order.order_reg_date }</td>
+                <td>${order.confirmed_date() }</td>
+                <td>${order.reg_date() }</td>
             </tr>
         </c:forEach>
     </tbody>

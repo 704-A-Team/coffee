@@ -43,18 +43,18 @@
 		        <div class="form-control form-control-sm bg-light">
 		        	<c:choose>
 		        		<c:when test="${empty order }">${nowDate }</c:when>
-		        		<c:otherwise>${order.order_reg_date }</c:otherwise>
+		        		<c:otherwise>${order.reg_date() }</c:otherwise>
 		        	</c:choose>
 		        </div>
 	        </div>
 	        <c:if test="${not empty order}">
 		        <div class="mb-2 d-flex">
 			        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">요청일</label>
-			        <div class="form-control form-control-sm bg-light">${order.order_req_date }</div>
+			        <div class="form-control form-control-sm bg-light">${order.req_date() }</div>
 		        </div>
 		        <div class="mb-2 d-flex">
 			        <label class="form-label me-2 mb-0 col-3" style="white-space: nowrap;">확정일</label>
-			        <div class="form-control form-control-sm bg-light">${order.order_confirmed_date }</div>
+			        <div class="form-control form-control-sm bg-light">${order.confirmed_date() }</div>
 		        </div>
 		    </c:if>
 	      	<div class="mb-2 d-flex">

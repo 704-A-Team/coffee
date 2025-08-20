@@ -52,6 +52,12 @@ public class SecurityConfig {
                     //->특정 페이지에 특정 ROLE을 가진사람만 접근가능하게 하고 싶을 경우 
                     
                     
+                    .requestMatchers("/order/new").hasAuthority("ROLE_CLIENT2")
+                    .requestMatchers("/order/approve/**").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/order/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_CLIENT2")
+
+                    .requestMatchers("/inventory/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER")
+                    
                     //통합기간중에만 login불필요
                     //아래 매핑으로 시작되는 url은 로그인 필요없이 접근 가능 
                     .requestMatchers("/jh/**").permitAll()

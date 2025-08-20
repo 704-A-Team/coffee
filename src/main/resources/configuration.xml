@@ -16,6 +16,7 @@
 		<typeAlias type="com.oracle.coffee.dto.stock.StockDto" alias="StockDto"/>
 		<typeAlias type="com.oracle.coffee.dto.stock.MonthMagamDto" alias="MonthMagamDto"/>
 		<typeAlias type="com.oracle.coffee.dto.stock.MagamPageDto" alias="MagamPageDto"/>
+		<typeAlias type="com.oracle.coffee.dto.stock.SilsaDto" alias="SilsaDto"/>
 
 		<typeAlias alias="ProductWanDTO" type="com.oracle.coffee.dto.km.ProductWanDTO"/>
 		<typeAlias alias="ProductPriceDTO" type="com.oracle.coffee.dto.km.ProductPriceDTO"/>

@@ -78,12 +78,6 @@ public class StockServiceImpl implements StockService{
 	}
 
 	@Override
-	public int getRealStock(int productCode) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int magamCheck() {
 		System.out.println("StockServiceImpl magamCheck start...");
 		int result = 0;
@@ -103,15 +97,13 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public void saveSilsa(List<SilsaDto> silsaList, int empCode) throws Exception {
-		// "실사 요청"(마감 상태) -> 마감 취소 -> 실사 저장 -> 재마감
-		cancelTodayMagam();
+		// 오늘 날짜 기준 upsert
+		stockDao.deleteTodaySilsa();
 		
 		for (SilsaDto data : silsaList) {
 			data.setSilsa_reg_code(empCode);
 		}
 		stockDao.saveSilsa(silsaList);
-		
-		closeTodayMagam();
 	}
 
 	@Override
@@ -143,6 +135,11 @@ public class StockServiceImpl implements StockService{
 		if (!isClosedToday()) closeTodayMagam();
 		
 		stockDao.closeMonthMagam();
+	}
+
+	@Override
+	public List<SilsaDto> getMonthSilsa() {
+		return stockDao.getMonthSilsa();
 	}
 
 }

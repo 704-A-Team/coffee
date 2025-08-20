@@ -28,9 +28,7 @@ import com.oracle.coffee.service.OrdersService;
 import com.oracle.coffee.service.Paging;
 import com.oracle.coffee.service.StockService;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 ////////////////////////////////////////////////////////////
 ////////////////////// 수주 (가맹점 발주) //////////////////////
@@ -93,6 +91,7 @@ public class OrdersController {
 
 		// 로그인 정보 조회
 		boolean isEmp = login.getClient_code() == 0 ? true : false;
+		boolean isManagerEmp = login.getRoles().equals("ROLE_MANAGER") ? true : false;
 		
 		// 수주 가맹점 조회
 		int clientCode = order.getOrders_client_code();
@@ -102,6 +101,7 @@ public class OrdersController {
 		boolean isClosedMagam = stockService.isClosedMagam();
 		
 		model.addAttribute("isEmp", isEmp);
+		model.addAttribute("isManagerEmp", isManagerEmp);
 		model.addAttribute("client", client);
 		model.addAttribute("order", order);
 		model.addAttribute("isFixedPage", true);
