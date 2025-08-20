@@ -68,13 +68,13 @@
 		}
 		
 		/* 본문이 가리지 않도록 */
-		.corner-pad{ padding-left:72px; padding-top:16px; }
+		.corner-pad{ padding-left:80px; padding-top:16px; }
 		
 		@media (min-width: 992px){
 		  /* 공지사항 카드 조절 */
 		  .card-notice { min-height: 260px; } 
 		  /* 신규 제품 카드 위아래 조절 */
-		  .card-new-products { min-height: 235px; }
+		  .card-new-products { min-height: 225px; }
 		}
 
         
@@ -104,7 +104,7 @@
 				      <div class="card-body">
 				        <h5 class="card-title mb-3">환영합니다 👋</h5>
 				        <sec:authorize access="isAuthenticated()">
-				          <p class="mb-1"><strong><sec:authentication property="name"/></strong> 님, 반갑습니다.</p>
+				          <p class="mb-1"><strong><c:out value="${displayName}"/></strong> 님, 반갑습니다.</p>
 				          <p class="text-muted small mb-0">오늘도 좋은 하루 되세요.</p>
 				        </sec:authorize>
 				        <sec:authorize access="isAnonymous()">
@@ -154,7 +154,7 @@
 				
 				    <!-- 신규 제품 카드(더 작게) -->
 				    <div class="card shadow-sm card-new-products">
-				      <div class="card-header fw-semibold">신규 제품!</div>
+				      <div class="card-header fw-semibold">NEW! 제품!</div>
 				      <div class="card-body">
 				        <ul class="list-group list-group-flush">
 				          <c:forEach var="product" items="${newProduct}">
@@ -232,7 +232,7 @@
 							              : purchase.productName += ' 외 ' += (purchase.productCnt - 1)}
 							          </span>
 							          <small class="text-muted">
-							            <fmt:formatDate value="${purchase.purchase_ipgo_date}" pattern="MM-dd HH:mm"/>
+							            <fmt:formatDate value="${purchase.purchase_ipgo_date}" pattern="MM-dd"/>
 							          </small>
 							        </div>
 							      </li>
