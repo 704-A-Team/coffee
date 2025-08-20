@@ -122,7 +122,7 @@
 		        <li>
 		          <form action="/logout" method="post" class="px-3">
 		            <sec:csrfInput/>
-		            <button type="submit" class="btn btn-sm btn-outline-danger w-50">로그아웃</button>
+		            <button type="submit" class="btn btn-sm btn-outline-danger w-100">로그아웃</button>
 		          </form>
 		        </li>
 		      </sec:authorize>
