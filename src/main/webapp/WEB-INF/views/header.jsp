@@ -72,7 +72,7 @@
 		
 		    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
 		      <sec:authorize access="isAnonymous()">
-		        <li><a class="dropdown-item" href="/login">Login</a></li>
+		        <li><a class="dropdown-item" href="/login">로그인</a></li>
 		      </sec:authorize>
 		
 		      <sec:authorize access="isAuthenticated()">
@@ -96,33 +96,33 @@
 				<li class="px-3">
 						  <sec:authorize access="hasAuthority('ROLE_MANAGER')">
 						    <a href="${pageContext.request.contextPath}/MyPage/manager"
-						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						
 						  <sec:authorize access="hasAuthority('ROLE_USER')">
 						    <a href="${pageContext.request.contextPath}/MyPage/user"
-						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						
 						  <sec:authorize access="hasAuthority('ROLE_CLIENT')">
 						    <a href="${pageContext.request.contextPath}/MyPage/client"
-						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						
 						  <sec:authorize access="hasAuthority('ROLE_CLIENT2')">
 						    <a href="${pageContext.request.contextPath}/MyPage/client2"
-						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						
 						  <sec:authorize access="hasAuthority('ROLE_GUEST')">
 						    <a href="${pageContext.request.contextPath}/MyPage/guest"
-						       class="btn btn-sm btn-outline-primary w-100">My Page</a>
+						       class="btn btn-sm btn-outline-primary w-100">마이페이지</a>
 						  </sec:authorize>
 						</li>
 		        <li>
 		          <form action="/logout" method="post" class="px-3">
 		            <sec:csrfInput/>
-		            <button type="submit" class="btn btn-sm btn-outline-danger w-100">Log out</button>
+		            <button type="submit" class="btn btn-sm btn-outline-danger w-50">로그아웃</button>
 		          </form>
 		        </li>
 		      </sec:authorize>

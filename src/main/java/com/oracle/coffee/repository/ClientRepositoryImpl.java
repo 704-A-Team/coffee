@@ -86,7 +86,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 	        }
 	    }
 
-	    sql.append("    ORDER BY cl.client_code DESC ")
+	    sql.append("    ORDER BY cl.client_code ASC ")
 	       .append("  ) c ")
 	       .append(") WHERE rn BETWEEN :start AND :end ");
 
