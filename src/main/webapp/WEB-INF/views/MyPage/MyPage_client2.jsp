@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>가맹점 정보</title>
+<title>공급처 정보</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
@@ -23,6 +23,14 @@
   .content-main{ min-width:0; }
   .btn-brown-outline{ border:1px solid var(--main-brown)!important; color:var(--main-brown)!important; background:#fff!important; }
   .btn-brown-outline:hover{ background:#ccc!important; color:#333!important; border-color:#ccc!important; }
+
+  /* 프로필/브랜드 이미지 영역 */
+  .profile-box{ width:100%; max-width:220px; }
+  .profile-img{ width:100%; height:220px; object-fit:cover; }
+  @media (max-width: 992px){
+    .profile-box{ max-width:180px; }
+    .profile-img{ height:200px; }
+  }
 </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -34,7 +42,7 @@
     <div class="d-flex flex-column flex-grow-1">
       <main class="flex-grow-1 p-4 content-main">
         <div class="form-container">
-          <div class="form-section-title">우리 매장 정보</div>
+          <div class="form-section-title">우리 공급처 정보</div>
 
           <div class="card card-detail shadow-sm">
             <div class="card-header">
@@ -42,79 +50,94 @@
             </div>
 
             <div class="card-body">
-              <table class="table table-borderless table-detail mb-0">
-                <tbody>
-                  <tr>
-                    <th>거래처 코드</th>
-                    <td><c:out value="${clientDto.client_code}"/></td>
-                  </tr>
-                  <tr>
-                    <th>거래처명</th>
-                    <td class="fw-bold" style="color: var(--main-brown);">
-                      <c:out value="${clientDto.client_name}"/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>사업자등록번호</th>
-                    <td><c:out value="${clientDto.saup_num}"/></td>
-                  </tr>
-                  <tr>
-                    <th>대표자명</th>
-                    <td><c:out value="${clientDto.boss_name}"/></td>
-                  </tr>
-                  <tr>
-                    <th>거래처 유형</th>
-                    <td><c:out value="${clientDto.client_type_br}"/></td>
-                  </tr>
-                  <tr>
-                    <th>주소</th>
-                    <td><c:out value="${clientDto.client_address}"/></td>
-                  </tr>
-                  <tr>
-                    <th>전화번호</th>
-                    <td><c:out value="${clientDto.client_tel}"/></td>
-                  </tr>
-                  <tr>
-                    <th>담당 사원명</th>
-                    <td><c:out value="${clientDto.client_emp_name}"/></td>
-                  </tr>
-                  <tr>
-                    <th>담당 사원 연락처</th>
-                    <td><c:out value="${clientDto.client_emp_tel}"/></td>
-                  </tr>
-                  <tr>
-                    <th>영업 상태</th>
-                    <td>
-                      <c:choose>
-                        <c:when test="${clientDto.client_status == 0}">
-                          <span class="badge bg-success-subtle text-success badge-status">영업중</span>
-                        </c:when>
-                        <c:when test="${clientDto.client_status == 1}">
-                          <span class="badge bg-warning-subtle text-warning badge-status">휴업중</span>
-                        </c:when>
-                        <c:when test="${clientDto.client_status == 2}">
-                          <span class="badge bg-danger-subtle text-danger badge-status">폐점</span>
-                        </c:when>
-                        <c:otherwise>
-                          <span class="badge bg-secondary-subtle text-dark badge-status">기타</span>
-                        </c:otherwise>
-                      </c:choose>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>등록일</th>
-                    <td>${clientDto.clientRegDateFormatted}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <!-- 왼쪽 이미지 + 오른쪽 상세 테이블 -->
+              <div class="row g-4 align-items-start">
+                <!-- 왼쪽: 이미지(브랜드/거래처 로고 등) -->
+                <div class="col-lg-3 col-md-4 d-flex justify-content-center">
+                  <div class="profile-box">
+                    <img src="${pageContext.request.contextPath}/resources/image/cafe.jpg"
+                         alt="카페 이미지"
+                         class="img-thumbnail profile-img">
+                  </div>
+                </div>
+
+                <!-- 오른쪽: 기존 테이블 그대로 -->
+                <div class="col-lg-9 col-md-8">
+                  <table class="table table-borderless table-detail mb-0">
+                    <tbody>
+                      <tr>
+                        <th>거래처 코드</th>
+                        <td><c:out value="${clientDto.client_code}"/></td>
+                      </tr>
+                      <tr>
+                        <th>거래처명</th>
+                        <td class="fw-bold" style="color: var(--main-brown);">
+                          <c:out value="${clientDto.client_name}"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>사업자등록번호</th>
+                        <td><c:out value="${clientDto.saup_num}"/></td>
+                      </tr>
+                      <tr>
+                        <th>대표자명</th>
+                        <td><c:out value="${clientDto.boss_name}"/></td>
+                      </tr>
+                      <tr>
+                        <th>거래처 유형</th>
+                        <td><c:out value="${clientDto.client_type_br}"/></td>
+                      </tr>
+                      <tr>
+                        <th>주소</th>
+                        <td><c:out value="${clientDto.client_address}"/></td>
+                      </tr>
+                      <tr>
+                        <th>전화번호</th>
+                        <td><c:out value="${clientDto.client_tel}"/></td>
+                      </tr>
+                      <tr>
+                        <th>담당 사원명</th>
+                        <td><c:out value="${clientDto.client_emp_name}"/></td>
+                      </tr>
+                      <tr>
+                        <th>담당 사원 연락처</th>
+                        <td><c:out value="${clientDto.client_emp_tel}"/></td>
+                      </tr>
+                      <tr>
+                        <th>영업 상태</th>
+                        <td>
+                          <c:choose>
+                            <c:when test="${clientDto.client_status == 0}">
+                              <span class="badge bg-success-subtle text-success badge-status">영업중</span>
+                            </c:when>
+                            <c:when test="${clientDto.client_status == 1}">
+                              <span class="badge bg-warning-subtle text-warning badge-status">휴업중</span>
+                            </c:when>
+                            <c:when test="${clientDto.client_status == 2}">
+                              <span class="badge bg-danger-subtle text-danger badge-status">폐점</span>
+                            </c:when>
+                            <c:otherwise>
+                              <span class="badge bg-secondary-subtle text-dark badge-status">기타</span>
+                            </c:otherwise>
+                          </c:choose>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>등록일</th>
+                        <td>${clientDto.clientRegDateFormatted}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div><!-- /row -->
             </div><!-- /.card-body -->
 
             <div class="card-footer bg-transparent border-0 py-2">
               <div class="d-flex justify-content-end gap-3">
-                <sec:authorize access="hasRole('CLIENT2')">
-                <a href="${pageContext.request.contextPath}/MyPage/changePassword" class="btn btn-brown-outline">
-                  비밀번호 변경
-                </a>
+                <sec:authorize access="hasRole('CLIENT')">
+                  <a href="${pageContext.request.contextPath}/MyPage/changePassword" class="btn btn-brown-outline">
+                    비밀번호 변경
+                  </a>
                 </sec:authorize>
               </div>
             </div>
