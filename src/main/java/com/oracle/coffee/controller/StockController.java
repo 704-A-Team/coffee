@@ -121,7 +121,6 @@ public class StockController {
 	// 재고 조정(실사)페이지
 	@GetMapping("/silsa")
 	public String silsaPage(Model model) {
-		// 이번달
 		String now = DateTimeFormatter.ofPattern("YYYY년 MM월 dd일").format(LocalDate.now());
 		
 		// 선택 가능한 재고 목록
@@ -130,8 +129,8 @@ public class StockController {
 		boolean isClosed = stockService.isClosedMonth();
 		boolean isClosedToday = stockService.isClosedToday();
 		
-		// 이번달 저장된 실사내역
-		List<SilsaDto> silsas = stockService.getMonthSilsa();
+		// 오늘 저장된 실사내역
+		List<SilsaDto> silsas = stockService.getTodaySilsa();
 
 		model.addAttribute("now", now);
 		model.addAttribute("products", products);
@@ -147,8 +146,7 @@ public class StockController {
 	public String silsaSave(@RequestBody List<SilsaDto> silsaList, @AuthenticationPrincipal AccountDto login) {
 		try {
 			// 등록자
-//			int empCode = login.getEmp_code();
-			int empCode = 2002;
+			int empCode = login.getEmp_code();
 			stockService.saveSilsa(silsaList, empCode);
 			
 		} catch (Exception e) {
@@ -156,6 +154,15 @@ public class StockController {
 		}
 
 		return "redirect:/inventory/list";
+	}
+	
+	@GetMapping("/silsa/list")
+	public String silsaListPage(PageRequestDto page, Model model) {
+		PageRespDto<SilsaDto, Paging> silsas = stockService.getSilsaList(page);
+
+		model.addAttribute("silsas", silsas.getList());
+    	model.addAttribute("page", silsas.getPage());
+		return "stock/silsa_list";
 	}
 
 }

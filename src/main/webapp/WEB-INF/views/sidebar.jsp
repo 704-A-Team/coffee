@@ -89,6 +89,9 @@
 					<li class="mt-2">
   						<a href="/inventory/silsa" class="link-light rounded menu-small">재고 조정</a>
 					</li>
+					<li class="mt-2">
+  						<a href="/inventory/silsa/list" class="link-light rounded menu-small">재고 조정 내역</a>
+					</li>
 				</ul>
 			</div>
 		</li>
