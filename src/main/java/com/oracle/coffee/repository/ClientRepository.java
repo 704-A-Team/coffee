@@ -7,8 +7,8 @@ import com.oracle.coffee.dto.ClientDto;
 
 public interface ClientRepository {
 
-    List<ClientDto>  findPageClient(ClientDto cond);  
-    Long             clientTotalcount(ClientDto cond);
+	Long             clientTotalcount(ClientDto cond);
+    List<ClientDto>  findPageClient(ClientDto cond);     
     List<ClientDto>  findAllClient();
 
     Client           clientSave(Client client);

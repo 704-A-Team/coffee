@@ -22,18 +22,18 @@ public class AccountContext implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return roles;
 	}
 
 	@Override
 	public String getUsername() {
+		
 		return accountDto.getUsername();
 	}
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
+
 		return accountDto.getPassword();
 	}
 
