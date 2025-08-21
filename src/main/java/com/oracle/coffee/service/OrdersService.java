@@ -7,6 +7,7 @@ import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
+import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 
@@ -19,8 +20,7 @@ public interface OrdersService {
 	public void 								refuseOrCancel(OrdersRefuseDto refuse);
 	public void 								request(int orderCode);
 	public void 								delete(int orderCode);
-	public PageRespDto<OrdersListDto, Paging> 	list(PageRequestDto page);
-	public PageRespDto<OrdersListDto, Paging> 	list(PageRequestDto page, int clientCode);
+	public PageRespDto<OrdersListDto, Paging> 	list(PageRequestDto page, OrdersPageDto ordersPage);
 	public List<OrdersDetailDto> 				currentOrder();
 	public List<OrdersDto> 						excellentClient();
 	public List<OrdersDto>						monthTotalPrice();

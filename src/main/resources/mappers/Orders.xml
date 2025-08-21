@@ -118,14 +118,26 @@
 	</update>
 	
 	<!-- orders 테이블 count -->
-	<select id="totalCountOrders" resultType="int">
-		select count(*) from orders
-		where order_status != 0
-	</select>
-	
-	<select id="totalCountOrdersByClient" resultType="int" parameterType="int">
-		select count(*) from orders
-		where orders_client_code = #{code}
+	<select id="totalCountOrders" resultType="int" parameterType="OrdersPageDto">
+		select count(*)
+		from orders o, client_tb c, emp e
+		<choose>
+			<when test="client_code == 0">
+				where order_status != 0
+			</when>
+			<otherwise>
+				where orders_client_code = #{client_code}
+			</otherwise>
+		</choose>
+		and o.orders_client_code = c.client_code
+		and c.client_emp_code = e.emp_code
+		<if test="keyword != null and keyword != ''">
+			and (
+				to_char(order_code) like '%' || #{keyword} || '%'
+				or e.emp_name like '%' || #{keyword} || '%'
+				or c.client_name like '%' || #{keyword} || '%'
+			)
+		</if>
 	</select>
 	
 	<!-- orders 테이블 list -->
@@ -133,25 +145,26 @@
 		select * from (
 			select rownum rn, a.* from (
 				select o.*, b.cd_contents, c.client_name, e.emp_name
-				from orders o, bunryu b, client_tb c, emp e 
-				where o.order_status != 0
+				from orders o, bunryu b, client_tb c, emp e
+				where 1=1
+				<choose>
+					<when test="client_code == 0">
+						and o.order_status != 0
+					</when>
+					<otherwise>
+						and o.orders_client_code = #{client_code}
+					</otherwise>
+				</choose>
 				and o.orders_client_code = c.client_code
 				and c.client_emp_code = e.emp_code
 				and b.bcd = 200 and b.mcd = o.order_status
-				order by o.order_code desc
-			) a 
-		) where rn between #{start} and #{end}
-	</select>
-	
-	<select id="listOrdersByClient" parameterType="OrdersPageDto" resultType="OrdersListDto">
-		select * from (
-			select rownum rn, a.* from (
-				select o.*, b.cd_contents, c.client_name, e.emp_name
-				from orders o, bunryu b, client_tb c, emp e 
-				where o.orders_client_code = #{client_code}
-				and o.orders_client_code = c.client_code
-				and c.client_emp_code = e.emp_code
-				and b.bcd = 200 and b.mcd = o.order_status
+				<if test="keyword != null and keyword != ''">
+					and (
+						to_char(order_code) like '%' || #{keyword} || '%'
+						or e.emp_name like '%' || #{keyword} || '%'
+						or c.client_name like '%' || #{keyword} || '%'
+					)
+				</if>
 				order by o.order_code desc
 			) a 
 		) where rn between #{start} and #{end}

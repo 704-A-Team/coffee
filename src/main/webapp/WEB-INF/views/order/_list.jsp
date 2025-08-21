@@ -5,11 +5,25 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript">
 
+	function searchKeyword() {
+		const keyword = $('#searchKeyword').val().trim();
+		location.href = '/order/list?keyword='+keyword;
+	}
+
+</script>
 </head>
 <body>
 <div class="container p-4">
-<div class="form-section-title">수주 목록</div>
+<div class="form-section-title mb-4">수주 목록</div>
+
+<div class="input-group w-50 ms-auto mb-4">
+	<input class="form-control me-2 w-50 rounded border-dark" type="search"
+	placeholder="검색어를 입력하세요. (등록코드, 상호명, 담당사원)" id="searchKeyword" value="${keyword }"
+	onkeypress="if(event.key === 'Enter'){ searchKeyword(); }">
+	<button class="btn btn-outline-dark rounded" type="button" onclick="return searchKeyword()">검색</button>
+</div>
 
 <table class="table table-bordered table-hover text-center">
     <thead class="table-secondary">
@@ -21,7 +35,6 @@
             <th>상태</th>
             <th>요청일</th>
             <th>확정일</th>
-            <th>등록일</th>
         </tr>
     </thead>
     <tbody class="table-hover">
@@ -60,7 +73,6 @@
                     ${order.req_date() }
                 </td>
                 <td>${order.confirmed_date() }</td>
-                <td>${order.reg_date() }</td>
             </tr>
         </c:forEach>
     </tbody>
@@ -71,19 +83,19 @@
 	<ul class="pagination justify-content-center">
 		<c:if test="${page.startPage > page.pageBlock}">
 			<li class="page-item">
-				<a class="page-link" href="/order/list?page=${page.startPage - page.pageBlock}&size=${page.rowPage}">이전</a>
+				<a class="page-link" href="/order/list?page=${page.startPage - page.pageBlock}&size=${page.rowPage}&keyword=${keyword }">이전</a>
 			</li>
 		</c:if>
 
 		<c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
 			<li class="page-item ${i == page.currentPage ? 'active' : ''}">
-				<a class="page-link" href="/order/list?page=${i}&size=${page.rowPage}">${i}</a>
+				<a class="page-link" href="/order/list?page=${i}&size=${page.rowPage}&keyword=${keyword }">${i}</a>
 			</li>
 		</c:forEach>
 
 		<c:if test="${page.endPage < page.totalPage}">
 			<li class="page-item">
-				<a class="page-link" href="/order/list?page=${page.startPage + page.pageBlock}&size=${page.rowPage}">다음</a>
+				<a class="page-link" href="/order/list?page=${page.startPage + page.pageBlock}&size=${page.rowPage}&keyword=${keyword }">다음</a>
 			</li>
 		</c:if>
 	</ul>

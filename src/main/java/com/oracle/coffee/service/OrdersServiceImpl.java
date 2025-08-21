@@ -235,26 +235,12 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page) {
-		int totalCount = ordersDao.totalCount();
+	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page, OrdersPageDto ordersPage) {
+		int totalCount = ordersDao.totalCount(ordersPage);
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
-		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd());
-		List<OrdersListDto> list = ordersDao.list(ordersPage);
 		
-		// 확정전 예상 금액
-		for (OrdersListDto order : list) {
-			if (order.getOrder_status() > 1) continue;
-			OrdersDto detail_order = ordersDao.findByCode(order.getOrder_code());
-			order.setOrder_final_price(detail_order.calculateTotalPrice());
-		}
-		return new PageRespDto<OrdersListDto, Paging>(list, paging);
-	}
-
-	@Override
-	public PageRespDto<OrdersListDto, Paging> list(PageRequestDto page, int clientCode) {
-		int totalCount = ordersDao.totalCount(clientCode);
-		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
-		OrdersPageDto ordersPage = new OrdersPageDto(paging.getStart(), paging.getEnd(), clientCode);
+		ordersPage.setStart(paging.getStart());
+		ordersPage.setEnd(paging.getEnd());
 		List<OrdersListDto> list = ordersDao.list(ordersPage);
 		
 		// 확정전 예상 금액
@@ -286,6 +272,5 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		return ordersDao.monthTotalPrice();
 	}
-
 
 }

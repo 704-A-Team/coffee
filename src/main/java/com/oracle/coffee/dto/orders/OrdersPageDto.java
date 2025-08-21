@@ -8,16 +8,6 @@ import lombok.Setter;
 public class OrdersPageDto {
 	private int start;
 	private int end;
+	private String keyword;
 	private int client_code;
-	
-	public OrdersPageDto(int start, int end) {
-		this.start = start;
-		this.end = end;
-	}
-	
-	public OrdersPageDto(int start, int end, int client_code) {
-		this.start = start;
-		this.end = end;
-		this.client_code = client_code;
-	}
 }
