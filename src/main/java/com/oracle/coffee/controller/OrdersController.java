@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.coffee.dto.AccountDto;
@@ -21,6 +22,7 @@ import com.oracle.coffee.dto.PageRespDto;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.dto.orders.OrdersListDto;
+import com.oracle.coffee.dto.orders.OrdersPageDto;
 import com.oracle.coffee.dto.orders.OrdersProductDto;
 import com.oracle.coffee.dto.orders.OrdersRefuseDto;
 import com.oracle.coffee.service.ClientService;
@@ -63,22 +65,27 @@ public class OrdersController {
 	
 	// 리스트 조회
 	@GetMapping("/list")
-	public String listPage(@AuthenticationPrincipal AccountDto login, PageRequestDto page, Model model) {
+	public String listPage(
+			@AuthenticationPrincipal AccountDto login,
+			PageRequestDto page,
+			@RequestParam(name = "keyword", required = false) String keyword,
+			Model model
+	) {
 		// 로그인 정보 조회
 		boolean isEmp = login.getClient_code() == 0 ? true : false;
-
-		// 본사/가맹점에 따라 리스트 조회
-		PageRespDto<OrdersListDto, Paging> respData = null;
-		if (isEmp) {	// 본사 직원이 조회
-			respData = ordersService.list(page);
-		}
-		else {	// 가맹점이 조회
-			int clientCode = login.getClient_code();
-			respData = ordersService.list(page, clientCode);
-		}
-
-		model.addAttribute("orders", respData.getList());
-		model.addAttribute("page", respData.getPage());
+		
+		OrdersPageDto ordersPage = new OrdersPageDto();
+		// 가맹점인 경우 해당 목록만 파싱
+		if (!isEmp)
+			ordersPage.setClient_code(login.getClient_code());
+		ordersPage.setKeyword(keyword);
+		
+		PageRespDto<OrdersListDto, Paging> orders = ordersService.list(page, ordersPage);
+		
+		model.addAttribute("isEmp", isEmp);
+		model.addAttribute("orders", orders.getList());
+		model.addAttribute("page", orders.getPage());
+		model.addAttribute("keyword", keyword);
 		return "order/list";
 	}
 	

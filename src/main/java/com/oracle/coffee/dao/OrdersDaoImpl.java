@@ -111,11 +111,11 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	@Override
-	public int totalCount() {
+	public int totalCount(OrdersPageDto ordersPage) {
 		int count = 0;
 
 		try {
-			count = session.selectOne("totalCountOrders");
+			count = session.selectOne("totalCountOrders", ordersPage);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -123,26 +123,11 @@ public class OrdersDaoImpl implements OrdersDao {
 	}
 
 	@Override
-	public int totalCount(int clientCode) {
-		int count = 0;
-
-		try {
-			count = session.selectOne("totalCountOrdersByClient", clientCode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return count;
-	}
-
-	@Override
-	public List<OrdersListDto> list(OrdersPageDto page) {
-		// mybatis에서 parameter를 1개만 받을 수 있기 때문에 OrdersPageDto 사용 => 메서드 오버로딩 불가
-		
+	public List<OrdersListDto> list(OrdersPageDto ordersPage) {
 		List<OrdersListDto> list = null;
 		
 		try {
-			if (page.getClient_code() == 0) list = session.selectList("listOrders", page);
-			else list = session.selectList("listOrdersByClient", page);
+			list = session.selectList("listOrders", ordersPage);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
