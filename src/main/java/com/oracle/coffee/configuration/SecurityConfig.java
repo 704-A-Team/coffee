@@ -35,8 +35,6 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		//  :: -> 메소드 참조라고 하며 람다식에서 불필요한 매개변수를 제거하는 것이 목적
-
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			// 인가
