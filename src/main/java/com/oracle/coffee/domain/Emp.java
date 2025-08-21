@@ -31,7 +31,8 @@ import lombok.ToString;
 		
 		)
 
-@EntityListeners(AuditingEntityListener.class) 
+//사원
+@EntityListeners(AuditingEntityListener.class)// Auditing 리스너 활성화 -> LocalDate 기본값 
 public class Emp {
 	@Id
 	@GeneratedValue(

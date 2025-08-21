@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.oracle.coffee.domain.Account;
 import com.oracle.coffee.domain.Client;
 import com.oracle.coffee.dto.ClientDto;
+import com.oracle.coffee.util.SecurityUtil;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -133,11 +134,16 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 	@Override
 	public Client clientSave(Client client) {
+		
+	 	//현재 세션들고있는 사람을 등록자로
+    	int curEmp = SecurityUtil.currentEmpCode();
+    	client.changeClient_reg_code(curEmp);
+    	
 		// 1. 거래처 등록
 		em.persist(client);
 		em.flush();
 		
-		// 2.거래처 
+		// 2.전화번호 마지막 4글자 가져와서 비밀번호로  
 		  String tel = client.getClient_tel();
 	        if (tel == null || tel.isBlank()) {
 	            throw new IllegalArgumentException("전화번호가 없습니다.");
@@ -150,9 +156,9 @@ public class ClientRepositoryImpl implements ClientRepository {
 
 	        // 3) Account 생성 (id는 시퀀스로 자동)
 	        Account account = new Account();
-	        account.setClient_code(client.getClient_code());              // EMP_CODE 저장
-	        account.setUsername(String.valueOf(client.getClient_code())); // USERNAME = emp_code
-	        account.setPassword(encoded);                       // PASSWORD = hash(last4)
+	        account.setClient_code(client.getClient_code());              // Client_CODE 저장
+	        account.setUsername(String.valueOf(client.getClient_code())); // USERNAME = Client_code
+	        account.setPassword(encoded);                     			  // PASSWORD = hash(last4)
 	        if (client.getClient_type() == 2) 
 	        { 
 	            account.setRoles("ROLE_CLIENT");

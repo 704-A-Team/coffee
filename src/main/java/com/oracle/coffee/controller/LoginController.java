@@ -26,20 +26,21 @@ public class LoginController {
 
 	private final FindPasswordService findPasswordService;
 
-
+	//로그인
 	@GetMapping(value = "/login" )
 	public String login(
 			@RequestParam(value = "error" , required = false) String error,
 			@RequestParam(value = "exception" , required = false ) String exception,
 			Model model
-			) {
+			) 
+	{
 	       	model.addAttribute("error",error);
 	        model.addAttribute("exception",exception);
 	        
 	        return "login/loginPage";
-
 	}
 	
+	//로그아웃 
     @GetMapping(value = "/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContextHolderStrategy()
@@ -52,6 +53,7 @@ public class LoginController {
         return "redirect:/login";
     }
 
+    //로그인 정보가 틀렸을 경우
     @GetMapping(value="/denied")
     public String accessDenied(@RequestParam(value = "exception", required = false) String exception, 
     		                   @AuthenticationPrincipal AccountDto accountDto, 
@@ -62,12 +64,14 @@ public class LoginController {
         return "login/denied";
     }
     
+    //비밀번호 찾기 
     @GetMapping("/login/findPassword")
   	public String  findPassword(){    	
   		return "login/findPassword";
       }
     
     
+    //비밀번호 재설정(사원/거래처 코드, 이름, 전화번호가 일치할 경우) 
     @PostMapping("/login/findPassword/request")
     public String requestFindPassword(
             @RequestParam("code")  Integer    emp_code,

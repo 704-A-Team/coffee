@@ -32,7 +32,8 @@ import lombok.ToString;
 		
 		)
 
-@EntityListeners(AuditingEntityListener.class) 
+//거래처(공급처+가맹점)
+@EntityListeners(AuditingEntityListener.class) // Auditing 리스너 활성화 -> LocalDate 기본값
 public class Client {
 	@Id
 	@GeneratedValue(

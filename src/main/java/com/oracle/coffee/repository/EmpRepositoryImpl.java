@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.oracle.coffee.domain.Account;
 import com.oracle.coffee.domain.Emp;
 import com.oracle.coffee.dto.EmpDto;
+import com.oracle.coffee.util.SecurityUtil;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -172,12 +173,16 @@ public class EmpRepositoryImpl implements EmpRepository {
 	}
 
     public Emp empSave(Emp emp) {
-        // 1) emp 저장
+
+    	//현재 세션들고있는 사람을 등록자로
+    	int curEmp = SecurityUtil.currentEmpCode();
+    	emp.changeEmp_register(curEmp);
+
         if (emp.getEmp_isdel() == 1) emp.changeEmp_isdel(0);
         em.persist(emp);
         em.flush(); 
 
-        // 2) emp_tel 뒤 4자리 → 해시
+        // 2.전화번호 마지막 4글자 가져와서 비밀번호로 
         String tel = emp.getEmp_tel();
         if (tel == null || tel.isBlank()) {
             throw new IllegalArgumentException("전화번호가 없습니다.");
@@ -197,6 +202,7 @@ public class EmpRepositoryImpl implements EmpRepository {
             account.setRoles("ROLE_MANAGER");
         } else {
             account.setRoles("ROLE_USER");
+            
         }                  
 
         em.persist(account); 
