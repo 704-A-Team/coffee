@@ -18,4 +18,5 @@ public class SilsaDto {
 	private int silsa_after_amount;
 	
 	private String product_name;
+	private String emp_name;
 }

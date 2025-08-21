@@ -46,6 +46,10 @@ public interface StockService {
 	// 수동 월마감
 	public void closeMonthMagam() throws Exception;
 	
-	public List<SilsaDto> getMonthSilsa();
+	// 오늘자 실사 목록
+	public List<SilsaDto> getTodaySilsa();
+
+	// 과거 실사 목록
+	public PageRespDto<SilsaDto, Paging> getSilsaList(PageRequestDto page);
 
 }

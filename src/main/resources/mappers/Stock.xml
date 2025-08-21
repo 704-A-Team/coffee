@@ -91,7 +91,7 @@
 		)
 	</select>
 	
-	<!-- 월마감 전체 개수 조회 -->
+	<!-- 월마감 월 전체 조회 -->
 	<select id="monthMagamList" parameterType="PageRequestDto" resultType="MonthMagamDto">
 		select * from (
 		    select rownum rn, a.* from (
@@ -109,7 +109,7 @@
 		where month_yrmo = #{yrmo} and month_magam_status = #{status}
 	</select>
 	
-	<!-- 월마감 전체 개수 조회 -->
+	<!-- 월마감 월별 전체 조회 -->
 	<select id="monthMagamPrdList" parameterType="MagamPageDto" resultType="MonthMagamDto">
 		select * from (
 		    select rownum rn, a.* from (
@@ -132,11 +132,11 @@
 	</select>
 	
 	<!-- 이번달 실사 조회 -->
-	<select id="monthSilsaList" resultType="SilsaDto">
+	<select id="todaySilsaList" resultType="SilsaDto">
 		select s.*, p.product_name
 		from silsa s, product p
 		where s.silsa_product_code = p.product_code
-			and substr(s.silsa_yrmo, 1, 6) = to_char(sysdate, 'YYYYMM')
+			and s.silsa_yrmo = to_char(sysdate, 'YYYYMMDD')
 	</select>
 	
 	<!-- 오늘자 실사 삭제 -->
@@ -144,5 +144,30 @@
 		delete silsa
 		where silsa_yrmo = to_char(sysdate, 'YYYYMMDD')
 	</select>
+	
+	<!-- 실사 전체 개수 조회 -->
+	<select id="totalSilsa" resultType="int">
+		<![CDATA[
+			select count(*) 
+		  	from silsa
+		  	where silsa_yrmo < to_char(sysdate, 'YYYYMMDD')
+		]]>
+	</select>
+	
+	<!-- 실사 전체 조회 -->
+	<select id="silsaList" parameterType="PageRequestDto" resultType="SilsaDto">
+		<![CDATA[
+			select * from (
+			    select rownum rn, a.* from (
+			    	select s.*, p.product_name, e.emp_name
+			        from silsa s, product p, emp e
+			        where s.silsa_product_code = p.product_code
+			        	and s.silsa_reg_code = e.emp_code
+			        	and s.silsa_yrmo < to_char(sysdate, 'YYYYMMDD')
+			    ) a
+			) where rn between #{start} and #{end}
+		]]>
+	</select>
+	
 	
 </mapper>

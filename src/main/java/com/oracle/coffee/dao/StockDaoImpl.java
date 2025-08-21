@@ -166,11 +166,11 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public List<SilsaDto> getMonthSilsa() {
+	public List<SilsaDto> getTodaySilsa() {
 		List<SilsaDto> silsas = new ArrayList<>();
 		
 		try {
-			silsas = session.selectList("monthSilsaList");
+			silsas = session.selectList("todaySilsaList");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -184,5 +184,28 @@ public class StockDaoImpl implements StockDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int totalSilsa(PageRequestDto page) {
+		int total = 0;
+		try {
+			total = session.selectOne("totalSilsa");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
+	@Override
+	public List<SilsaDto> getSilsaList(PageRequestDto page) {
+		List<SilsaDto> silsas = new ArrayList<>();
+		
+		try {
+			silsas = session.selectList("silsaList", page);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return silsas;
 	}
 }

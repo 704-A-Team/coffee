@@ -24,6 +24,8 @@ public interface StockDao {
 	public List<MonthMagamDto>    getMonthMagamPrds(MagamPageDto magamPage);
 	public int 					  magamCheck();
 	public void 				  closeMonthMagam();
-	public List<SilsaDto> getMonthSilsa();
+	public List<SilsaDto> getTodaySilsa();
 	public void deleteTodaySilsa();
+	public int totalSilsa(PageRequestDto page);
+	public List<SilsaDto> getSilsaList(PageRequestDto page);
 }

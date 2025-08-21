@@ -138,8 +138,20 @@ public class StockServiceImpl implements StockService{
 	}
 
 	@Override
-	public List<SilsaDto> getMonthSilsa() {
-		return stockDao.getMonthSilsa();
+	public List<SilsaDto> getTodaySilsa() {
+		return stockDao.getTodaySilsa();
+	}
+
+	@Override
+	public PageRespDto<SilsaDto, Paging> getSilsaList(PageRequestDto page) {
+		int totalCount = stockDao.totalSilsa(page);
+		
+		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
+		
+		page.setStart(paging.getStart());
+		page.setEnd(paging.getEnd());
+		List<SilsaDto> list = stockDao.getSilsaList(page);
+		return new PageRespDto<SilsaDto, Paging>(list, paging);
 	}
 
 }
