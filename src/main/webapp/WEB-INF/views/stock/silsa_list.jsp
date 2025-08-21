@@ -16,7 +16,7 @@
         <div class="d-flex flex-column flex-grow-1">
             <main class="flex-grow-1">
             	<div class="container mt-4 p-4">
-                	<div class="form-section-title">실사 내역</div>
+                	<div class="form-section-title">조정(실사) 내역</div>
 
 	                <!-- 테이블 -->
 	                <table class="table table-bordered text-center">

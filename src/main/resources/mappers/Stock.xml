@@ -136,7 +136,7 @@
 		select s.*, p.product_name
 		from silsa s, product p
 		where s.silsa_product_code = p.product_code
-			and substr(s.silsa_yrmo, 1, 6) = to_char(sysdate, 'YYYYMM')
+			and s.silsa_yrmo = to_char(sysdate, 'YYYYMMDD')
 	</select>
 	
 	<!-- 오늘자 실사 삭제 -->
