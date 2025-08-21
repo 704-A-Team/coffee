@@ -30,6 +30,7 @@ import lombok.ToString;
 		allocationSize =  1
 		
 		)
+//부서
 @EntityListeners(AuditingEntityListener.class) // Auditing 리스너 활성화 -> LocalDate 기본값
 public class Dept {
 	@Id
