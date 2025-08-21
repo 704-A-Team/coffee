@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FindPasswordService {
 
-    private final EmpRepository empRepository;        // MyBatis Repo (EmpDto 반환)
-    private final UserRepository userRepository;      // JPA Repo (Account)
+    private final EmpRepository empRepository;      
+    private final UserRepository userRepository;    
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 

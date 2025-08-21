@@ -24,79 +24,97 @@ public class ClientRepositoryImpl implements ClientRepository {
 	private final EntityManager em;
 	private final PasswordEncoder passwordEncoder;
 
+	//조건에 맞는 거래처 세기 
 	@Override
 	public Long clientTotalcount(ClientDto cond) {
-	    StringBuilder sql = new StringBuilder();
-	    sql.append("SELECT COUNT(*) ")
-	       .append("  FROM client_tb cl ")
-	       .append(" WHERE 1=1 ");
+	    final boolean hasStatus = (cond.getStatus() != null);
+	    final boolean hasKw = (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank());
+	    final String st = (cond.getSearchType() == null || cond.getSearchType().isBlank())
+	            ? "all" : cond.getSearchType();
 
-	    if (cond.getStatus() != null) {
-	        sql.append(" AND cl.client_status = :status ");
+	    String sql =
+	        "SELECT COUNT(*) " +
+	        "  FROM client_tb cl " +
+	        " WHERE 1=1 " +
+	        (hasStatus ? " AND cl.client_status = :status " : "") +
+	        (hasKw
+	            ? (" AND (" +
+	                ("clientName".equals(st)
+	                    ? " LOWER(cl.client_name) LIKE :kw "
+	                    : "bossName".equals(st)
+	                        ? " LOWER(cl.boss_name) LIKE :kw "
+	                        : " LOWER(cl.client_name) LIKE :kw OR LOWER(cl.boss_name) LIKE :kw "
+	                ) +
+	               ")")
+	            : ""
+	          );
+
+	    var q = em.createNativeQuery(sql);
+
+	    if (hasStatus) {
+	        q.setParameter("status", cond.getStatus());
 	    }
-	    if (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank()) {
-	        sql.append(" AND (");
-	        String st = (cond.getSearchType() == null || cond.getSearchType().isBlank()) ? "all" : cond.getSearchType();
-	        if ("clientName".equals(st)) {
-	            sql.append(" LOWER(cl.client_name) LIKE :kw ");
-	        } else if ("bossName".equals(st)) {
-	            sql.append(" LOWER(cl.boss_name)  LIKE :kw ");
-	        } else { // all
-	            sql.append(" LOWER(cl.client_name) LIKE :kw OR LOWER(cl.boss_name) LIKE :kw ");
-	        }
-	        sql.append(")");
-	    }
-
-	    var q = em.createNativeQuery(sql.toString());
-
-	    if (cond.getStatus() != null) q.setParameter("status", cond.getStatus());
-	    if (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank()) {
+	    if (hasKw) {
 	        q.setParameter("kw", "%" + cond.getSearchKeyword().toLowerCase() + "%");
 	    }
 
 	    Number n = (Number) q.getSingleResult();
 	    return n.longValue();
 	}
+	
+	//검색 조건과 페이지 범위에 맞춰 거래처 조회, 리스트로 반환 
 	@Override
 	public List<ClientDto> findPageClient(ClientDto cond) {
-	    StringBuilder sql = new StringBuilder();
-	    sql.append("SELECT * FROM ( ")
-	       .append("  SELECT c.*, ROWNUM rn FROM ( ") // 🔧 여기 순서만 바꿈
-	       .append("    SELECT ")
-	       .append("      cl.client_code, cl.client_name, cl.saup_num, cl.boss_name, cl.client_type, cl.client_address, ")
-	       .append("      cl.client_tel, cl.client_emp_code, cl.client_status, cl.client_reg_code, cl.client_reg_date, ")
-	       .append("      e.emp_name AS client_emp_name, ")
-	       .append("      e.emp_tel  AS client_emp_tel, ")
-	       .append("      br.CD_CONTENTS AS client_type_br ")
-	       .append("    FROM client_tb cl ")
-	       .append("    LEFT JOIN emp   e  ON cl.client_emp_code = e.emp_code ")
-	       .append("    LEFT JOIN bunryu br ON cl.client_type = br.MCD AND br.BCD = 400 ")
-	       .append("    WHERE 1=1 ");
+	    // 조건 플래그/타입
+	    final boolean hasStatus = (cond.getStatus() != null);
+	    final boolean hasKw = (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank());
+	    final String st = (cond.getSearchType() == null || cond.getSearchType().isBlank())
+	            ? "all" : cond.getSearchType();
 
-	    if (cond.getStatus() != null) {
-	        sql.append(" AND cl.client_status = :status ");
-	    }
-	    if (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank()) {
-	        String st = (cond.getSearchType() == null || cond.getSearchType().isBlank()) ? "all" : cond.getSearchType();
-	        if ("clientName".equals(st)) {
-	            sql.append(" AND LOWER(cl.client_name) LIKE :kw ");
-	        } else if ("bossName".equals(st)) {
-	            sql.append(" AND LOWER(cl.boss_name)  LIKE :kw ");
-	        } else {
-	            sql.append(" AND (LOWER(cl.client_name) LIKE :kw OR LOWER(cl.boss_name) LIKE :kw) ");
-	        }
-	    }
+	    // SELECT 컬럼 (인덱스 매핑 유지)
+	    String selectCols =
+	        "cl.client_code, cl.client_name, cl.saup_num, cl.boss_name, cl.client_type, cl.client_address, " +
+	        "cl.client_tel, cl.client_emp_code, cl.client_status, cl.client_reg_code, cl.client_reg_date, " +
+	        "e.emp_name AS client_emp_name, " +
+	        "e.emp_tel  AS client_emp_tel, " +
+	        "br.CD_CONTENTS AS client_type_br";
 
-	    sql.append("    ORDER BY cl.client_code ASC ")
-	       .append("  ) c ")
-	       .append(") WHERE rn BETWEEN :start AND :end ");
+	    // WHERE 절
+	    String where =
+	        " WHERE 1=1 " +
+	        (hasStatus ? " AND cl.client_status = :status " : "") +
+	        (hasKw
+	            ? (" AND " +
+	                ("clientName".equals(st)
+	                    ? " LOWER(cl.client_name) LIKE :kw "
+	                    : "bossName".equals(st)
+	                        ? " LOWER(cl.boss_name) LIKE :kw "
+	                        : " (LOWER(cl.client_name) LIKE :kw OR LOWER(cl.boss_name) LIKE :kw) "
+	                  )
+	              )
+	            : ""
+	          );
 
-	    var q = em.createNativeQuery(sql.toString());
+	    // 내부 base 쿼리
+	    String base =
+	        "SELECT " + selectCols + " " +
+	        "  FROM client_tb cl " +
+	        "  LEFT JOIN emp   e  ON cl.client_emp_code = e.emp_code " +
+	        "  LEFT JOIN bunryu br ON cl.client_type = br.MCD AND br.BCD = 400 " +
+	           where +
+	        " ORDER BY cl.client_code ASC";
 
-	    if (cond.getStatus() != null) q.setParameter("status", cond.getStatus());
-	    if (cond.getSearchKeyword() != null && !cond.getSearchKeyword().isBlank()) {
-	        q.setParameter("kw", "%" + cond.getSearchKeyword().toLowerCase() + "%");
-	    }
+	    // 페이징(Rownum) 래핑
+	    String sql =
+	        "SELECT * FROM ( " +
+	        "  SELECT c.*, ROWNUM rn FROM ( " + base + " ) c " +
+	        ") WHERE rn BETWEEN :start AND :end";
+
+	    var q = em.createNativeQuery(sql);
+
+	    if (hasStatus) q.setParameter("status", cond.getStatus());
+	    if (hasKw)     q.setParameter("kw", "%" + cond.getSearchKeyword().toLowerCase() + "%");
+
 	    q.setParameter("start", cond.getStart());
 	    q.setParameter("end",   cond.getEnd());
 
@@ -124,6 +142,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 	}
 
 
+	//전체 거래처 검색 
 	@Override
 	public List<ClientDto> findAllClient() {
 		List<Client> clientEntityList = em.createQuery("select c from Client c", Client.class).getResultList();
@@ -132,6 +151,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 			.collect(Collectors.toList());
 	}
 
+	//거래처 등록
 	@Override
 	public Client clientSave(Client client) {
 		
@@ -139,7 +159,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     	int curEmp = SecurityUtil.currentEmpCode();
     	client.changeClient_reg_code(curEmp);
     	
-		// 1. 거래처 등록
+		// 1. 거래처 데이터 등록 
 		em.persist(client);
 		em.flush();
 		
@@ -159,6 +179,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 	        account.setClient_code(client.getClient_code());              // Client_CODE 저장
 	        account.setUsername(String.valueOf(client.getClient_code())); // USERNAME = Client_code
 	        account.setPassword(encoded);                     			  // PASSWORD = hash(last4)
+	        //공급처면 ROLE_CLIENT 가맹점이면 ROLE_CLIENT2로 저장  
 	        if (client.getClient_type() == 2) 
 	        { 
 	            account.setRoles("ROLE_CLIENT");
@@ -172,6 +193,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 		return client;
 	}
 	
+    //전화번호 마지막 4글자 따오는 로직 
 	  private String extractLast4Digits(String tel) {
 	        String digits = tel.replaceAll("\\D", "");
 	        int len = digits.length();
@@ -179,7 +201,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 	        return digits.substring(len - 4);
 	    }
 	    
-
+	//거래처코드로 검색 
 	@Override
 	public ClientDto findByClient_code(int client_code) {
 		String nativeSql =
@@ -215,6 +237,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 		return dto;
 	}
 
+	//거래처 정보 수정 
 	@Transactional
 	@Override
 	public ClientDto updateClient(ClientDto clientDto) {
@@ -242,7 +265,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 			.setParameter("code", clientDto.getClient_code())
 			.executeUpdate();
 		
-		//업뎃 후 필요에 따른  ROLE. 휴업중이면 guest 2면 공급처 3이면 가맹점 
+		//업데이트 후 필요에 따른  ROLE. 휴업중이면 guest 2면 공급처 3이면 가맹점 
 		 String targetRole = null;
 		    int status = clientDto.getClient_status();
 		    int type   = clientDto.getClient_type();

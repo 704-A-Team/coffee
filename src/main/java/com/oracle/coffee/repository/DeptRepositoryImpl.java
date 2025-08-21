@@ -21,6 +21,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 	private final EntityManager em;
 	
 	
+	//부서목록 가져오기
 	@Override
 	public List<DeptDto> findAllDept() {
 		List<Dept> deptEntityList = em.createQuery("select d from Dept d",Dept.class)
@@ -33,6 +34,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 			return deptDtoList;
 	}
 		
+	//삭제되지않은 부서 개수 조회
 	@Override
 	public Long deptTotalcount() {
 		TypedQuery<Long> query = 	
@@ -43,6 +45,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 	}
 
 	
+	//페이징 된 부서 리스트
 	@Override
 	public List<DeptDto> findPageDept(DeptDto deptDto) {
 		String nativeSql = 
@@ -66,10 +69,10 @@ public class DeptRepositoryImpl implements DeptRepository {
 
 			 return resultList.stream().map(row -> {
 			     DeptDto dto = new DeptDto();
-			     dto.setDept_code(((Number) row[0]).intValue()); // dept_code
-			     dto.setDept_name((String) row[1]);              // dept_name
-			     dto.setDept_tel((String) row[2]);               // dept_tel
-			     dto.setDept_isdel(((Number) row[3]).intValue()); // dept_isdel
+			     dto.setDept_code(((Number) row[0]).intValue());
+			     dto.setDept_name((String) row[1]);             
+			     dto.setDept_tel((String) row[2]);              
+			     dto.setDept_isdel(((Number) row[3]).intValue()); 
 			     dto.setDept_reg_date(((java.sql.Timestamp) row[4]).toLocalDateTime());
 			     dto.setDept_emp_name((String) row[5]);
 			     
@@ -77,12 +80,14 @@ public class DeptRepositoryImpl implements DeptRepository {
 			 }).collect(Collectors.toList());
 	}
 
+	//부서 저장
 	@Override
 	public Dept deptSave(Dept dept) {
 		em.persist(dept);
 		return dept;
 	}
 
+	//부서코드로 검색 
 	@Override
 	public DeptDto findByDept_code(int dept_code) {
 		Dept dept = em.find(Dept.class, dept_code);
@@ -90,7 +95,7 @@ public class DeptRepositoryImpl implements DeptRepository {
 		return new DeptDto(dept);
 	}
 
-
+	//부서 업데이트 
 	@Override
 	public DeptDto updateDept(DeptDto deptDto) {
 		 String updateSql =
@@ -109,9 +114,8 @@ public class DeptRepositoryImpl implements DeptRepository {
 		
 		return findByDept_code(deptDto.getDept_code());
 	}
-
-
-
+	
+	//부서 삭제
 	@Override
 	public void deptDelete(int dept_code) {
 		Dept dept = em.find(Dept.class, dept_code);

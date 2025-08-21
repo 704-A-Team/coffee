@@ -23,7 +23,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	private final EntityManager em;
     private final PasswordEncoder passwordEncoder;
 
-    // ===== 유틸 =====
+    // DB 결과 DTO로 변환시 Null값 처리 관련 메서드
     private static Integer toInt(Object v){ return v==null? null : ((Number)v).intValue(); }
     private static String  toStr(Object v){ return v==null? null : v.toString(); }
     private static java.time.LocalDateTime toLdt(Object v){
@@ -40,32 +40,27 @@ public class EmpRepositoryImpl implements EmpRepository {
     }
     private static boolean notBlank(String s){ return s!=null && !s.isBlank(); }
 
+    //조건에 맞는 직원수 세기 
     @Override
     public Long empTotalcount(EmpDto empDto) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT COUNT(*) ");
-        sb.append("  FROM emp emp ");
-        sb.append("  JOIN dept d ON emp.emp_dept_code = d.dept_code ");
-        sb.append("  LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 ");
-        sb.append(" WHERE emp.emp_isdel = 0 ");
+        String sql = "SELECT COUNT(*) " +
+                     "FROM emp emp " +
+                     "JOIN dept d ON emp.emp_dept_code = d.dept_code " +
+                     "LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
+                     "WHERE emp.emp_isdel = 0 " +
+                     (notBlank(empDto.getSearchKeyword())
+                         ? ("empCode".equalsIgnoreCase(empDto.getSearchType())
+                            ? " AND TO_CHAR(emp.emp_code) LIKE :kw "
+                            : " AND emp.emp_name LIKE :kw ")
+                         : "") +
+                     (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())
+                         ? " AND d.dept_name = :deptName "
+                         : "") +
+                     (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())
+                         ? " AND b.cd_contents = :gradeName "
+                         : "");
 
-        if (notBlank(empDto.getSearchKeyword())) {
-            if ("empCode".equalsIgnoreCase(empDto.getSearchType())) {
-                sb.append(" AND TO_CHAR(emp.emp_code) LIKE :kw ");
-            } else {
-                sb.append(" AND emp.emp_name LIKE :kw ");
-            }
-        }
-        // 부서명 필터
-        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
-            sb.append(" AND d.dept_name = :deptName ");
-        }
-        // 직급명 필터
-        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
-            sb.append(" AND b.cd_contents = :gradeName ");
-        }
-
-        Query q = em.createNativeQuery(sb.toString());
+        Query q = em.createNativeQuery(sql);
 
         if (notBlank(empDto.getSearchKeyword())) {
             q.setParameter("kw", "%" + empDto.getSearchKeyword().trim() + "%");
@@ -81,44 +76,38 @@ public class EmpRepositoryImpl implements EmpRepository {
         return n.longValue();
     }
 
+
+    //검색 조건과 페이지 범위에 맞춰 사원 조회, 리스트로 반환 
     @Override
     public List<EmpDto> findPageEmp(EmpDto empDto) {
-        String selectCols =
-            "emp.emp_code, emp.emp_name, emp.emp_tel, " +
-            "emp.emp_dept_code, emp.emp_grade, emp.emp_sal, emp.emp_email, " +
-            "emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, emp.emp_birth, " +
-            "d.dept_name, b.cd_contents";
+        String selectCols = "emp.emp_code, emp.emp_name, emp.emp_tel, " +
+                            "emp.emp_dept_code, emp.emp_grade, emp.emp_sal, emp.emp_email, " +
+                            "emp.emp_isdel, emp.emp_register, emp.emp_reg_date, emp.emp_ipsa_date, emp.emp_birth, " +
+                            "d.dept_name, b.cd_contents";
 
-        StringBuilder where = new StringBuilder(" WHERE emp.emp_isdel = 0 ");
+        String where = " WHERE emp.emp_isdel = 0 " +
+                       (notBlank(empDto.getSearchKeyword())
+                           ? ("empCode".equalsIgnoreCase(empDto.getSearchType())
+                              ? " AND TO_CHAR(emp.emp_code) LIKE :kw "
+                              : " AND emp.emp_name LIKE :kw ")
+                           : "") +
+                       (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())
+                           ? " AND d.dept_name = :deptName "
+                           : "") +
+                       (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())
+                           ? " AND b.cd_contents = :gradeName "
+                           : "");
 
-        if (notBlank(empDto.getSearchKeyword())) {
-            if ("empCode".equalsIgnoreCase(empDto.getSearchType())) {
-                where.append(" AND TO_CHAR(emp.emp_code) LIKE :kw ");
-            } else {
-                where.append(" AND emp.emp_name LIKE :kw ");
-            }
-        }
-        // 부서명 필터
-        if (notBlank(empDto.getDeptName()) && !"전체".equals(empDto.getDeptName())) {
-            where.append(" AND d.dept_name = :deptName ");
-        }
-        // 직급명 필터
-        if (notBlank(empDto.getGradeName()) && !"전체".equals(empDto.getGradeName())) {
-            where.append(" AND b.cd_contents = :gradeName ");
-        }
+        String base = "SELECT " + selectCols +
+                      " FROM emp emp " +
+                      " JOIN dept d ON emp.emp_dept_code = d.dept_code " +
+                      " LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
+                      where +
+                      " ORDER BY emp.emp_code ASC";
 
-        String base =
-            "SELECT " + selectCols +
-            "  FROM emp emp " +
-            "  JOIN dept d ON emp.emp_dept_code = d.dept_code " +
-            "  LEFT JOIN bunryu b ON emp.emp_grade = b.mcd AND b.bcd = 900 AND b.mcd BETWEEN 0 AND 5 " +
-                 where +
-            " ORDER BY emp.emp_code ASC "; 
-
-        String sql =
-            "SELECT * FROM ( " +
-            "  SELECT t.*, ROWNUM rn FROM ( " + base + " ) t " +
-            ") WHERE rn BETWEEN :start AND :end";
+        String sql = "SELECT * FROM (" +
+                     " SELECT t.*, ROWNUM rn FROM (" + base + ") t" +
+                     ") WHERE rn BETWEEN :start AND :end";
 
         Query q = em.createNativeQuery(sql);
 
@@ -133,7 +122,7 @@ public class EmpRepositoryImpl implements EmpRepository {
         }
 
         q.setParameter("start", empDto.getStart());
-        q.setParameter("end",   empDto.getEnd());
+        q.setParameter("end", empDto.getEnd());
 
         @SuppressWarnings("unchecked")
         List<Object[]> rows = q.getResultList();
@@ -141,25 +130,25 @@ public class EmpRepositoryImpl implements EmpRepository {
         return rows.stream().map(row -> {
             EmpDto dto = new EmpDto();
             int i = 0;
-            dto.setEmp_code(toInt(row[i++]));           
-            dto.setEmp_name(toStr(row[i++]));           
-            dto.setEmp_tel(toStr(row[i++]));            
-            dto.setEmp_dept_code(toInt(row[i++]));      
-            dto.setEmp_grade(toInt(row[i++]));          
-            dto.setEmp_sal(toInt(row[i++]));            
-            dto.setEmp_email(toStr(row[i++]));          
-            dto.setEmp_isdel(toInt(row[i++]));          
-            dto.setEmp_register(toInt(row[i++]));       
-            dto.setEmp_reg_date(toLdt(row[i++]));       
-            dto.setEmp_ipsa_date(toSqlDate(row[i++]));  
-            dto.setEmp_birth(toSqlDate(row[i++]));      
-            dto.setDept_code(toStr(row[i++]));          
-            dto.setEmp_grade_detail(toStr(row[i++]));   
+            dto.setEmp_code(toInt(row[i++]));
+            dto.setEmp_name(toStr(row[i++]));
+            dto.setEmp_tel(toStr(row[i++]));
+            dto.setEmp_dept_code(toInt(row[i++]));
+            dto.setEmp_grade(toInt(row[i++]));
+            dto.setEmp_sal(toInt(row[i++]));
+            dto.setEmp_email(toStr(row[i++]));
+            dto.setEmp_isdel(toInt(row[i++]));
+            dto.setEmp_register(toInt(row[i++]));
+            dto.setEmp_reg_date(toLdt(row[i++]));
+            dto.setEmp_ipsa_date(toSqlDate(row[i++]));
+            dto.setEmp_birth(toSqlDate(row[i++]));
+            dto.setDept_code(toStr(row[i++]));
+            dto.setEmp_grade_detail(toStr(row[i++]));
             return dto;
         }).collect(Collectors.toList());
     }
 
-    
+    //전체 사원 검색 
 	@Override
 	public List<EmpDto> findAllEmp() {
 		List<Emp> empEntityList = em.createQuery("select e from Emp e",Emp.class)
@@ -172,12 +161,15 @@ public class EmpRepositoryImpl implements EmpRepository {
 			return empDtoList;
 	}
 
+	//사원 등록
+	@Override
     public Emp empSave(Emp emp) {
 
     	//현재 세션들고있는 사람을 등록자로
     	int curEmp = SecurityUtil.currentEmpCode();
     	emp.changeEmp_register(curEmp);
-
+    	
+    	//1.사원 데이터 등록 
         if (emp.getEmp_isdel() == 1) emp.changeEmp_isdel(0);
         em.persist(emp);
         em.flush(); 
@@ -198,6 +190,7 @@ public class EmpRepositoryImpl implements EmpRepository {
         account.setEmp_code(emp.getEmp_code());              // EMP_CODE 저장
         account.setUsername(String.valueOf(emp.getEmp_code())); // USERNAME = emp_code
         account.setPassword(encoded);                       // PASSWORD = hash(last4)
+        //부장 이상일 경우 ROLE_MANAGER로 그 이외일 경우 ROLE_USER로 등록 
         if (emp.getEmp_grade() >= 2) { 
             account.setRoles("ROLE_MANAGER");
         } else {
@@ -210,6 +203,7 @@ public class EmpRepositoryImpl implements EmpRepository {
         return emp;
     }
 
+    //전화번호 마지막 4글자 따오는 로직 
     private String extractLast4Digits(String tel) {
         String digits = tel.replaceAll("\\D", "");
         int len = digits.length();
@@ -217,6 +211,7 @@ public class EmpRepositoryImpl implements EmpRepository {
         return digits.substring(len - 4);
     }
     
+    //사원코드로 검색 
 	@Override
 	public EmpDto findByEmp_code(int emp_code) {
 	    String sql =
@@ -252,6 +247,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	}
 	
 	@Transactional
+	//퇴직처리(isDel 1->0으로)
 	@Override
 	public void empDelete(int emp_code) {
 		Emp emp = em.find(Emp.class, emp_code);
@@ -268,6 +264,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 	
 	
 	@Transactional
+	//사원 정보 수정 
 	@Override
 	public EmpDto updateEmp(EmpDto empDto) {
 	    String updateSql =
@@ -297,15 +294,16 @@ public class EmpRepositoryImpl implements EmpRepository {
 	      .executeUpdate();
 	    
 	    
-	    //업뎃 후 ROLE 변경. 부장이상일경우 role_manager 아니면 user 
+	    //업데이트 후 ROLE 변경. 부장이상일경우 role_manager 아니면 user 
 	    String targetRole = null;
 	    int grade = empDto.getEmp_grade();
 	    
+	    //부장 이상일 경우 ROLE_MANAGER로 변경 
 	    if (grade >= 2) {
 	    	targetRole = "ROLE_MANAGER";
 	    } else targetRole = "ROLE_USER";
 	    
-	    //roles 업데이트
+	    //roles 업데이트(emp_code참고) 
 	    if (targetRole != null) {
 	    	final String ROLE_TABLE = "ACCOUNT";
 	    	em.createNativeQuery(
