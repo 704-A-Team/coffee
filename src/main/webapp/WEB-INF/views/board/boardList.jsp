@@ -8,6 +8,15 @@
     <meta charset="UTF-8">
     <title>게시판 목록</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style type="text/css">
+	    .form-section-title {
+		    border-left: 4px solid #0d6efd; /* 파란색 세로선 */
+		    padding-left: 10px;
+		    margin-bottom: 20px;
+		    font-weight: 600;
+		    font-size: 2rem;
+		}
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -18,7 +27,9 @@
 
         <div class="flex-grow-1 p-4">
             <div class="d-flex justify-content-center mb-4">
-                <h1>게시판 목록</h1>
+               <div class="container mt-3">
+			   <div class="form-section-title">게시판 목록</div>
+			   </div>
             </div>
 
             <div class="container">
@@ -29,7 +40,7 @@
 
                 <!-- 게시글 테이블 -->
 				<table class="table table-striped table-bordered text-center">
-				    <thead class="table-dark">
+				    <thead class="table-light" >
 				        <tr>
 				            <th style="width: 10%;">번호</th>
 				            <th style="width: 40%;">제목</th>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.km.CheckApproveResultDTO;
 import com.oracle.coffee.dto.km.MfgDTO;
 import com.oracle.coffee.dto.km.MfgDetailDTO;
@@ -64,12 +66,12 @@ public class MfgController {
 	
 	// 생산신청 저장
 	@PostMapping("/mfgRegister")
-	public String mfgRegister(@RequestParam("mfgDetailListJson") String mfgRegister) {
+	public String mfgRegister(@RequestParam("mfgDetailListJson") String mfgRegister , @AuthenticationPrincipal AccountDto emp) {
 		log.info("mfgRegister->"+mfgRegister);
 		
 		// 로그인한 사원 번호 저장
 		MfgDTO mfgDTO = new MfgDTO();
-		mfgDTO.setMfg_reg_code(2004);
+		mfgDTO.setMfg_reg_code(emp.getEmp_code());
 		mfgDTO.setMfg_reg_date(LocalDateTime.now());
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -253,15 +255,15 @@ public class MfgController {
 		if (mfgDetailDTO.getResult_status() == 0 ) {
 		   List<WonCodeLackDTO> listWonCodeLackDTO = mfgDetailDTO.getListWonCodeLackDTO();
 		   System.out.println("MfgController checkApprove listWonCodeLackDTO->"+listWonCodeLackDTO);
-		   resultMap.put("listWonCodeLackDTO",listWonCodeLackDTO );
-		   resultMap.put("result_status",result_status );
+		   resultMap.put("listWonCodeLackDTO",listWonCodeLackDTO);
+		   resultMap.put("result_status",result_status);
 		   System.out.println("resultMap->"+resultMap);
 		   
 		} else { // 1이면 성공 
 		
 			System.out.println("MfgController checkApprove 1이면 성공");
 		   // 경민 페리우스 로직
-		   resultMap.put("result_status",result_status );
+		   resultMap.put("result_status",result_status);
 		   System.out.println("resultMap->"+resultMap);
 
 	    }
@@ -362,11 +364,11 @@ public class MfgController {
 	
 	// 생산 보고 등록
 	@PostMapping("/mfgReportSubmit")
-	public String mfgReportSubmit(@ModelAttribute MfgRpSaveDTO mfgRpSaveDTO) {
+	public String mfgReportSubmit(@ModelAttribute MfgRpSaveDTO mfgRpSaveDTO , @AuthenticationPrincipal AccountDto emp) {
 		log.info("mfgRpSaveDTO->"+mfgRpSaveDTO);
 		
 		// 로그인한 사원	
-		mfgRpSaveDTO.getMfgRpDTO().setMfg_rp_reg_code(2004);
+		mfgRpSaveDTO.getMfgRpDTO().setMfg_rp_reg_code(emp.getEmp_code());
 		
 		mfgService.mfgRpstatus(mfgRpSaveDTO.getMfgRpDTO());		// 생산신청상태 	변경
 		mfgService.mfgRpSubmit(mfgRpSaveDTO.getMfgRpDTO());		// 생산보고 	등록

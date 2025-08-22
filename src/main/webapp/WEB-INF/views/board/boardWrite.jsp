@@ -7,6 +7,15 @@
     <meta charset="UTF-8">
     <title>게시판 글등록</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style type="text/css">
+    	.form-section-title {
+		    border-left: 4px solid #0d6efd; /* 파란색 세로선 */
+		    padding-left: 10px;
+		    margin-bottom: 20px;
+		    font-weight: 600;
+		    font-size: 2rem;
+		}
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -14,13 +23,14 @@
 
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
+        
+    <div class="d-flex flex-column flex-grow-1">
 
         <div class="flex-grow-1 p-4">
-            <div class="d-flex justify-content-center mb-4">
-                <h1>게시판 글 작성</h1>
-            </div>
-
+            
             <div class="container">
+            <div class="container mt-3">
+		    <div class="form-section-title">게시글 작성</div>
                 <form action="${pageContext.request.contextPath}/board/boardWrite" method="post">
                     <div class="mb-3">
                         <label for="board_title" class="form-label">제목</label>
@@ -38,6 +48,8 @@
             </div>
         </div>
     </div>
+  </div>
+</div>
 
     <%@ include file="../footer.jsp" %>
 

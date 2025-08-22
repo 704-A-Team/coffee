@@ -7,63 +7,92 @@
     <title>완제품 리스트</title>
  
 <style>
-  .form-section-title {
-      border-left: 4px solid #0d6efd;
-      padding-left: 10px;
-      margin-bottom: 20px;
-      font-weight: 600;
-      font-size: 2rem;
-  }
+	  .form-section-title {
+	      border-left: 4px solid #0d6efd;
+	      padding-left: 10px;
+	      margin-bottom: 20px;
+	      font-weight: 600;
+	      font-size: 2rem;
+	  }
+	
+	  .btn-light-primary {
+	    background-color: #cce5ff !important;
+	    color: #004085 !important;
+	    border: 1px solid #b8daff !important;
+	  }
+	  .btn-light-primary:hover {
+	    background-color: #b8daff !important;
+	    color: #002752 !important;
+	  }
+	
+	  .btn-light-warning {
+	    background-color: #fff3cd !important;
+	    color: #856404 !important;
+	    border: 1px solid #ffeeba !important;
+	  }
+	  .btn-light-warning:hover {
+	    background-color: #ffe8a1 !important;
+	    color: #533f03 !important;
+	  }
+	
+	  .btn-light-danger {
+	    background-color: #f8d7da !important;
+	    color: #721c24 !important;
+	    border: 1px solid #f5c6cb !important;
+	  }
+	  .btn-light-danger:hover {
+	    background-color: #f1b0b7 !important;
+	    color: #491217 !important;
+	  }
+	
+	  .card-title {
+	    font-weight: 700;
+	  }
+	  .product-info-list {
+	    list-style: none;
+	    padding: 0;
+	    margin-bottom: 1rem; 
+	  }
+	  .product-info-list li {
+	    display: flex;
+	    margin-bottom: 6px;
+	  }
+	  .product-info-list li strong {
+	    width: 40%;      
+	    /* opacity: 0.7;      */
+	  }
+	  .product-info-list li span {
+	    width: 60%;      
+	  }
+      .btn-brown {
+        background-color: #ffffff !important;
+        color: #333 !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        outline: none !important;
+        transition: background-color 0.2s ease-in-out;
+      }
+      .btn-brown:hover {
+        background-color: #e9ecef !important;
+        color: #000 !important;
+        border: 1px solid #bbb !important;
+      }
 
-  .btn-light-primary {
-    background-color: #cce5ff !important;
-    color: #004085 !important;
-    border: 1px solid #b8daff !important;
-  }
-  .btn-light-primary:hover {
-    background-color: #b8daff !important;
-    color: #002752 !important;
-  }
+      .search-form { margin-bottom: 2rem; }
+      .container { max-width: 1100px; }
 
-  .btn-light-warning {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
-    border: 1px solid #ffeeba !important;
-  }
-  .btn-light-warning:hover {
-    background-color: #ffe8a1 !important;
-    color: #533f03 !important;
-  }
+      .pagination .page-link { color: var(--main-brown); }
+      .pagination .page-item.active .page-link {
+        background-color: var(--main-brown);
+        border-color: var(--main-brown);
+        color: white;
+      }
 
-  .btn-light-danger {
-    background-color: #f8d7da !important;
-    color: #721c24 !important;
-    border: 1px solid #f5c6cb !important;
-  }
-  .btn-light-danger:hover {
-    background-color: #f1b0b7 !important;
-    color: #491217 !important;
-  }
-
-  .card-title {
-    font-weight: 700;
-  }
-  .product-info-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 1rem; 
-  }
-  .product-info-list li {
-    display: flex;
-    margin-bottom: 6px;
-  }
-  .product-info-list li strong {
-    width: 40%;      
-    /* opacity: 0.7;      */
-  }
-  .product-info-list li span {
-    width: 60%;      
-  }
+      .product-img {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: contain; /* 이미지 왜곡 방지 */
+      }
 </style>
 
        
@@ -85,12 +114,12 @@
 		    	<div class="container mt-3">
 		        <div class="form-section-title">완제품 리스트</div>
 		
-		   		        <div class="row">
+		   		   <div class="row">
 		            <c:forEach var="product" items="${wanProductList}">
 		                <div class="col-md-6 mb-4">
 		                    <div class="card h-100">
 		                        <div class="row g-0">
-		                     <div class="col-md-4">
+		                     <div class="col-md-4 d-flex align-items-center justify-content-center">
 							    <c:choose>
 							        <c:when test="${not empty product.simage}">
 							            <img src="${pageContext.request.contextPath}/upload/s_${product.simage}" class="img-fluid rounded-start" alt="${product.product_name}">
@@ -132,7 +161,7 @@
 													    </c:otherwise>
 													  </c:choose>
 												</li>
-		                                        <li><strong>등록일</strong> <span>${product.start_date != null ? product.start_date : '정보 없음'}</span></li>
+		                                        <li><strong>등록일</strong> <span>${product.product_reg_date != null ? product.product_reg_date : '정보 없음'}</span></li>
 		                                    </ul>
 		
 			       							<div class="d-flex gap-2 mt-auto">

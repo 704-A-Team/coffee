@@ -2,6 +2,7 @@ package com.oracle.coffee.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.km.BoardDTO;
 import com.oracle.coffee.service.km.BoardService;
 import com.oracle.coffee.service.km.Paging;
@@ -30,9 +32,9 @@ public class BoardController {
 	
 	// 게시글 등록
 	@PostMapping("/boardWrite")
-	public String boardWrite(BoardDTO boardDTO) {
+	public String boardWrite(@AuthenticationPrincipal AccountDto emp , BoardDTO boardDTO) {
 		System.out.println("BoardController boardWrite boardDTO->"+boardDTO);
-		boardDTO.setBoard_reg_code(2014);
+		boardDTO.setBoard_reg_code(emp.getEmp_code());
 		boardService.boardWrite(boardDTO);	
 		
 		return "redirect:/board/boardList";
@@ -88,7 +90,7 @@ public class BoardController {
 	}
 	
 	// 게시글 삭제
-	@PostMapping("/boardDelete")
+	@GetMapping("/boardDelete")
 	public String boardDelete(BoardDTO boardDTO) {
 		
 		System.out.println("BoardController boardDelete boardDTO->"+boardDTO);
@@ -96,6 +98,8 @@ public class BoardController {
 		
 		return "redirect:/board/boardList";
 	}
+	
+	
 	
 	
 	
