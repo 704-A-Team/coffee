@@ -73,7 +73,7 @@ public class SecurityConfig {
                     
                     .requestMatchers("/jh/**").permitAll()
                     .requestMatchers("/sw/**").permitAll()
-                    .requestMatchers("/provide/**").permitAll()
+                    //.requestMatchers("/provide/**").permitAll()
                     .requestMatchers("/km/**").permitAll()
                     
                     

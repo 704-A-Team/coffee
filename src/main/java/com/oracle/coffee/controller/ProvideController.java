@@ -64,6 +64,7 @@ public class ProvideController {
 		return "redirect:/provide/provideList";
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT')")
 	@GetMapping("/provideList")
 	public String provideListPage(ProvideDto provideDto, Model model) {
 		System.out.println("ProvideController provideListPage Strart...");
@@ -97,6 +98,7 @@ public class ProvideController {
 		return "sw/provide/list";
 	}
 	
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT')")
 	@GetMapping("/provideDetail")
 	public String provideDetailPage(@RequestParam("provide_code") int provide_code, Model model) {
 		System.out.println("ProvideController provideDetailPage Strart...");
