@@ -4,8 +4,8 @@
 
 	<insert id="boardWrite" parameterType="BoardDTO">
 		INSERT INTO 
-			Board (board_code, board_title, board_contents ,READ_COUNT ,REF ,REF_STEP ,REF_LVL , board_reg_code, board_reg_date) 
-			VALUES(BOARD_SEQ.nextval,#{board_title}, #{board_contents}, 0, BOARD_SEQ.nextval, 0, 0 , #{board_reg_code} , sysdate )
+			Board (board_code, board_title, board_contents ,READ_COUNT ,REF ,REF_STEP ,REF_LVL , board_reg_code, board_reg_date , board_type) 
+			VALUES(BOARD_SEQ.nextval,#{board_title}, #{board_contents}, 0, BOARD_SEQ.nextval, 0, 0 , #{board_reg_code} , sysdate ,#{board_type} )
 	</insert>
 	
 	<select id="boardTotal" resultType="Int">
@@ -18,7 +18,7 @@
 		            SELECT board.* , dept.dept_name FROM BOARD 
 		            LEFT JOIN EMP ON board.board_reg_code = emp.emp_code
 		            LEFT JOIN DEPT ON emp.emp_dept_code = dept.dept_code
-		            order by board_code desc
+		            order by board_type ASC , board_code DESC
 		        ) board
 		) WHERE rw BETWEEN #{start} and #{end}
 	</select>
