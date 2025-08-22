@@ -97,4 +97,11 @@ public class BoardDaoImpl implements BoardDao {
 		
 	}
 
+	@Override
+	public List<BoardDTO> mainBoardList() {
+		System.out.println("BoardDaoImpl mainBoardList start...");
+		
+		return session.selectList("mainBoardList");
+	}
+
 }

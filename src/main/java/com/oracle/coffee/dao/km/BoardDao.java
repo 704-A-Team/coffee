@@ -20,4 +20,6 @@ public interface BoardDao {
 
 	void 				upReadCount(BoardDTO boardDTO1);
 
+	List<BoardDTO> 		mainBoardList();
+
 }

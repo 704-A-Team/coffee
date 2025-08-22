@@ -132,20 +132,20 @@
 				      <div class="card-header d-flex justify-content-between align-items-center">
 				        <span class="fw-semibold">공지사항</span>
 				        <sec:authorize access="hasAnyRole('MANAGER','ADMIN','USER','CLIENT','CLIENT2','GUEST')">
-				          <a href="${pageContext.request.contextPath}/board/list" class="btn btn-sm btn-outline-secondary" title="게시판">＋</a>
+				          <a href="${pageContext.request.contextPath}/board/boardList" class="btn btn-sm btn-outline-secondary" title="게시판">＋</a>
 				        </sec:authorize>
 				      </div>
 				      <div class="card-body">
 				        <ul class="list-unstyled mb-0">
-				          <c:forEach var="n" items="${noticeTop5}">
+				          <c:forEach var="board" items="${boardList}">
 				            <li class="mb-2">
-				              <a href="${pageContext.request.contextPath}/notice/${n.id}" class="link-primary text-decoration-none">
-				                ${n.title}
-				              </a>
-				              <div class="text-muted small"><fmt:formatDate value="${n.createdAt}" pattern="yyyy-MM-dd"/></div>
+							  <a href="${pageContext.request.contextPath}/board/boardView?board_code=${board.board_code}&board_reg_code=${board.board_reg_code}"
+								 class="link-primary text-decoration-none">
+								 ${board.board_title}
+							  </a>
 				            </li>
 				          </c:forEach>
-				          <c:if test="${empty noticeTop5}">
+				          <c:if test="${empty boardList}">
 				            <div class="text-muted small">등록된 공지가 없습니다.</div>
 				          </c:if>
 				        </ul>

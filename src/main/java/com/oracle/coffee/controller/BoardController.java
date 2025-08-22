@@ -58,9 +58,11 @@ public class BoardController {
 	// 게시글 상세
 	@GetMapping("/boardView")
 	public String boardView(BoardDTO boardDTO1 , Model model) {
+		System.out.println("BoardController boardView start...");
 		
 		// 게시글 조회수
 		boardService.upReadCount(boardDTO1);
+		System.out.println("BoardController boardDTO1.board_code : " + boardDTO1.getBoard_code());
 		
 		// 게시글 상세보기
 		BoardDTO boardDTO = boardService.boardView(boardDTO1);
