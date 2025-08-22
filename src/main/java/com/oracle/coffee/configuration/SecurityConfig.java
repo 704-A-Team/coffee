@@ -43,7 +43,7 @@ public class SecurityConfig {
                     	         	, "/WEB-INF/views/**").permitAll()
                     .requestMatchers("/","/login*","/error*").permitAll()
                     .requestMatchers("/login/findPassword","/login/findPassword/**").permitAll()
-                    .requestMatchers("/client/clientInForm").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/client/clientInForm").hasAnyAuthority("ROLE_USER","ROLE_MANAGER")
                     .requestMatchers("/client/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER")
                     .requestMatchers("/emp/empInForm").hasAuthority("ROLE_MANAGER")
                     .requestMatchers("/emp/empDetail**").hasAuthority("ROLE_MANAGER")
