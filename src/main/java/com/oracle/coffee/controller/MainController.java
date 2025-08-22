@@ -10,11 +10,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coffee.dto.ProductDto;
 import com.oracle.coffee.dto.PurchaseDto;
+import com.oracle.coffee.dto.km.BoardDTO;
 import com.oracle.coffee.dto.orders.OrdersDetailDto;
 import com.oracle.coffee.dto.orders.OrdersDto;
 import com.oracle.coffee.service.OrdersService;
 import com.oracle.coffee.service.SWProductService;
 import com.oracle.coffee.service.SWPurchaseService;
+import com.oracle.coffee.service.km.BoardService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +28,8 @@ public class MainController {
     private final SWProductService 		swProductService;
     private final SWPurchaseService 	swPurchaseService;
     private final OrdersService			ordersService;
-	
+	private final BoardService			boardService;
+    
 	@GetMapping("/")
     public String mainPage(Model model) throws JsonProcessingException {
 		System.out.println("MainController mainPage start...");
@@ -52,6 +55,10 @@ public class MainController {
 		        								    .map(OrdersDto::getMonth_total_price)     
 		        								    .map(v -> v == null ? 0L : v.longValue())
 		        								    .toList();
+		
+		//게시판 가져오기
+		List<BoardDTO> boardList = boardService.mainBoardList();
+		
 		// Json 문자열로 변경
 		ObjectMapper om = new ObjectMapper();
 	    model.addAttribute("topSalesLabels", om.writeValueAsString(productName)); 
@@ -62,6 +69,7 @@ public class MainController {
 		model.addAttribute("currentOrder", currentOrder);
 		model.addAttribute("excellentClient", excellentClient);
 		model.addAttribute("monthTotalPrice", monthTotalPrice);
+		model.addAttribute("boardList", boardList);
 		
         return "main";
     }

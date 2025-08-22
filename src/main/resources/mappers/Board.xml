@@ -49,6 +49,19 @@
 	<delete id="boardDelete" parameterType="BoardDTO">
 		DELETE FROM BOARD WHERE BOARD_CODE = #{board_code}
 	</delete>
+	
+	<select id="mainBoardList" resultType="BoardDTO">
+		<![CDATA[
+		SELECT *
+		FROM (
+		    SELECT *
+		    FROM board
+		    WHERE board_type = 0
+		    ORDER BY board_reg_date DESC
+		)
+		WHERE ROWNUM <= 5
+		]]> 
+	</select>
 
 
 </mapper>

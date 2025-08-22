@@ -68,6 +68,13 @@ public class BoardServiceImpl implements BoardService {
 		System.out.println("BoardServiceImpl boardDelete boardDTO->"+boardDTO);
 		
 	}
+
+	@Override
+	public List<BoardDTO> mainBoardList() {
+		System.out.println("BoardServiceImpl mainBoardList start...");
+		
+		return boardDao.mainBoardList();
+	}
 	
 
 }
