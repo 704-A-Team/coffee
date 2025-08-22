@@ -132,7 +132,7 @@
 				      <div class="card-header d-flex justify-content-between align-items-center">
 				        <span class="fw-semibold">공지사항</span>
 				        <sec:authorize access="hasAnyRole('MANAGER','ADMIN','USER','CLIENT','CLIENT2','GUEST')">
-				          <a href="${pageContext.request.contextPath}/board/list" class="btn btn-sm btn-outline-secondary" title="게시판">＋</a>
+				          <a href="${pageContext.request.contextPath}/board/boardList" class="btn btn-sm btn-outline-secondary" title="게시판">＋</a>
 				        </sec:authorize>
 				      </div>
 				      <div class="card-body">
