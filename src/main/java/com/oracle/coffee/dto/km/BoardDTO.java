@@ -14,6 +14,7 @@ public class BoardDTO {
 	private int 			board_code;
 	private String 			board_title;
 	private String 			board_contents;
+	private int				board_type;			// type : 0 공지사항 1 일반 게시글
 	private int 			read_count;
 	private int 			ref;
 	private int 			ref_step;
