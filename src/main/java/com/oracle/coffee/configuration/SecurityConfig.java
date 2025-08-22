@@ -58,6 +58,11 @@ public class SecurityConfig {
                     
                     .requestMatchers("/sw/wonProductInForm").hasAuthority("ROLE_MANAGER")
                     
+                    .requestMatchers("/km/productInForm").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/km/mfgInForm").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/km/mfgReportList").hasAuthority("ROLE_MANAGER")
+                    .requestMatchers("/board/boardList").hasAuthority("ROLE_MANAGER")
+                    
                     .requestMatchers("/order/new").hasAuthority("ROLE_CLIENT2")
                     .requestMatchers("/order/approve/**").hasAuthority("ROLE_MANAGER")
                     .requestMatchers("/order/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_CLIENT2")

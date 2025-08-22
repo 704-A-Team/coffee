@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coffee.dto.km.ProductWanDTO;
+import com.oracle.coffee.dto.AccountDto;
 import com.oracle.coffee.dto.km.ProductPriceDTO;
 import com.oracle.coffee.dto.km.RecipeDTO;
 import com.oracle.coffee.dto.km.WanAndRecipeDTO;
@@ -53,7 +55,8 @@ public class ProductController {
 	@PostMapping("/wanRegister")
 	public String wanRegister(@ModelAttribute ProductWanDTO 	  productDTO
 							, @ModelAttribute ProductPriceDTO priceDTO
-							, RedirectAttributes redirectAttributes) {
+							, RedirectAttributes redirectAttributes
+							, @AuthenticationPrincipal AccountDto emp ) {
 		// 완제품 등록 -->> 레시피 등록 하고 싶을 때 RedirectAttributes 사용
 /*
 	    // 로그인한 사원 정보 꺼내기
@@ -68,8 +71,8 @@ public class ProductController {
 	    }
 */		
 		// 임의 사원 등록
-		productDTO.setProduct_reg_code(2004);
-		priceDTO.setPrice_reg_code(2004);
+		productDTO.setProduct_reg_code(emp.getEmp_code());
+		priceDTO.setPrice_reg_code(emp.getEmp_code());
 		
 		// productDTO의 등록일 컬럼("현재시간")을 priceDTO "가격변동시작일, 등록일" 에 저장
 		LocalDateTime date = productDTO.getProduct_reg_date();
@@ -338,7 +341,7 @@ public class ProductController {
 	
 	// 완제품 판매 여부 결정 및 가격 변동일 수정
 	@PostMapping("/wanProductDel")
-	public String wanProductDel(ProductWanDTO productWanDTO , HttpServletRequest request , RedirectAttributes redirectAttributes) {
+	public String wanProductDel(ProductWanDTO productWanDTO , HttpServletRequest request , RedirectAttributes redirectAttributes , @AuthenticationPrincipal AccountDto emp ) {
 		log.info("wanProductDel productWanDTO->"+productWanDTO.getProduct_code()+" , "+productWanDTO.isProduct_isdel());
 		
 		/* 로그인한 사원이 판매여부 버튼 누른 뒤 가격 table에 등록자로 넣어주기 위해
@@ -346,7 +349,7 @@ public class ProductController {
 		 * session.getAttribute("loginEmp");
 		 */
 		
-		productWanDTO.setProduct_reg_code(2004);
+		productWanDTO.setProduct_reg_code(emp.getEmp_code());
 		productService.wanProductDel(productWanDTO);
 		
 		redirectAttributes.addAttribute("product_code" , productWanDTO.getProduct_code());
@@ -370,11 +373,11 @@ public class ProductController {
 	
 	// 가격 조정
 	@PostMapping("/wanPriceModify")
-	public String wanPriceModify(ProductPriceDTO priceDTO , RedirectAttributes redirectAttributes , Model model) {
+	public String wanPriceModify(ProductPriceDTO priceDTO , RedirectAttributes redirectAttributes , @AuthenticationPrincipal AccountDto emp , Model model) {
 		System.out.println("priceDTO->"+priceDTO);
 		
 		// 로그인한 사원 정보
-		priceDTO.setPrice_reg_code(2004);
+		priceDTO.setPrice_reg_code(emp.getEmp_code());
 		productService.wanPriceModify(priceDTO);
 		
 		List<ProductPriceDTO> priceHistory = productService.priceHistory(priceDTO.getProduct_code());

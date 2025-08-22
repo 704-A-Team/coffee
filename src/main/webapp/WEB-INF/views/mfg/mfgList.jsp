@@ -30,7 +30,7 @@
             <div class="container mt-3">
 
                 <div class="form-section-title">생산 신청 목록</div>
-
+<%-- 
                 <!-- 🔍 검색 -->
                 <form action="${pageContext.request.contextPath}/km/mfgList" method="get" class="row g-2 mb-4">
                     <input type="hidden" name="searchType" value="mfg_code" />
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </c:if>
-
+ --%>
                 <!-- 📋 목록 테이블 -->
 				<table class="table table-bordered table-hover mt-4">
 				    <thead class="table-light">

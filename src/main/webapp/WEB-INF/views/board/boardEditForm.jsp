@@ -8,6 +8,15 @@
     <meta charset="UTF-8">
     <title>게시글 수정</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style type="text/css">
+        .form-section-title {
+            border-left: 4px solid #0d6efd; /* 파란색 세로선 */
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 2rem;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -17,9 +26,12 @@
 
         <div class="flex-grow-1 p-4">
             <div class="container">
-                <h3>게시글 수정</h3>
+                <div class="container mt-3">
+                    <div class="form-section-title">게시판 수정</div>
+                </div>
 
-                <form action="${pageContext.request.contextPath}/board/boardUpdate" method="post">
+                <!-- 수정 폼 -->
+                <form id="updateForm" action="${pageContext.request.contextPath}/board/boardUpdate" method="post">
                     <input type="hidden" name="board_code" value="${boardDTO.board_code}">
 
                     <table class="table table-bordered">
@@ -50,25 +62,28 @@
                             </tr>
                             <tr>
                                 <th>내용</th>
-                                <td>
+                                <td style="white-space: pre-wrap;">
                                     <textarea name="board_contents" class="form-control" rows="10" required>${boardDTO.board_contents}</textarea>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-
-                    <div class="mt-3 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">저장</button>
-
-						<!-- 삭제 버튼 -->
-                        <form action="${pageContext.request.contextPath}/board/boardDelete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                            <input type="hidden" name="board_code" value="${boardDTO.board_code}">
-                            <button type="submit" class="btn btn-danger">삭제</button>
-                        </form>
-
-                        <a href="${pageContext.request.contextPath}/board/boardList" class="btn btn-secondary">목록</a>
-                    </div>
                 </form>
+
+                <!-- 버튼 영역: 저장 / 삭제 / 목록 -->
+                <div class="mt-3 d-flex gap-2">
+                    <!-- 저장 버튼: form="updateForm" -->
+                    <button type="submit" form="updateForm" class="btn btn-primary">저장</button>
+
+                    <!-- 삭제 버튼: href + confirm -->
+                    <a href="${pageContext.request.contextPath}/board/boardDelete?board_code=${boardDTO.board_code}"
+                       onclick="return confirm('정말 삭제하시겠습니까?');"
+                       class="btn btn-danger">삭제</a>
+
+                    <!-- 목록 버튼 -->
+                    <a href="${pageContext.request.contextPath}/board/boardList" class="btn btn-secondary">목록</a>
+                </div>
+
             </div>
         </div>
     </div>

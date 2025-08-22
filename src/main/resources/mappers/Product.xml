@@ -9,7 +9,7 @@
 							values (
 								PRODUCT_SEQ.nextval, #{product_name}, #{product_contents}, #{product_unit},
 								#{product_type}, #{product_yield}, #{product_weight}, #{product_isorder}, #{product_pack}, #{product_pack},
-								#{product_isdel}, #{product_reg_code}, #{product_reg_date}	)
+								#{product_isdel}, #{product_reg_code}, sysdate	)
 		<selectKey keyProperty="product_code" resultType="Int" order="AFTER">
 			select PRODUCT_SEQ.CURRVAL From dual
 		</selectKey>

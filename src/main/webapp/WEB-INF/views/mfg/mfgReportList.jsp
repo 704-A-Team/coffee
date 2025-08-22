@@ -31,7 +31,7 @@
 
                 <div class="form-section-title">생산 승인 내역</div>
 
-                <!-- 🔍 검색 -->
+<%--                 <!-- 🔍 검색 -->
                 <form action="${pageContext.request.contextPath}/km/mfgList" method="get" class="row g-2 mb-4">
                     <input type="hidden" name="searchType" value="mfg_code" />
                     <div class="col-md-9">
@@ -40,7 +40,9 @@
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-primary w-100">검색</button>
                     </div>
-                </form>
+                </form> 
+                
+--%>
 
                 <!-- 검색 결과 없을 때 -->
                 <c:if test="${not empty param.searchKeyword and fn:length(fn:trim(param.searchKeyword)) > 0 and empty mfgList}">
