@@ -94,6 +94,8 @@
                     </div>
                 </c:if>
 
+				<sec:authentication property="principal.username" var="myClientCode" />
+				
                 <!-- 리스트 테이블 -->
                 <table class="table table-bordered align-middle text-center bg-white shadow-sm">
                     <thead class="table-light">
@@ -123,10 +125,23 @@
                                     <fmt:formatDate value="${purchase.purchase_reg_date}" pattern="yyyy-MM-dd HH:mm" />
                                 </td>
                                 <td>
-                                    <form action="${pageContext.request.contextPath}/sw/purchaseDetail" method="get">
+                                	<!-- ROLE_CLIENT가 아니면 모두 노출 -->
+								  <sec:authorize access="!hasRole('ROLE_CLIENT')">
+								    <form action="${pageContext.request.contextPath}/sw/purchaseDetail" method="get">
                                         <input type="hidden" name="purchase_code" value="${purchase.purchase_code}" />
                                         <button type="submit" class="btn btn-sm btn-brown-outline">보기</button>
                                     </form>
+								  </sec:authorize>
+								
+								  <!-- ROLE_CLIENT면 내 client_code(=username)와 같은 행만 노출 -->
+								  <sec:authorize access="hasRole('ROLE_CLIENT')">
+								    <c:if test="${purchase.purchase_client_code == myClientCode}">
+								      <form action="${pageContext.request.contextPath}/sw/purchaseDetail" method="get">
+                                        <input type="hidden" name="purchase_code" value="${purchase.purchase_code}" />
+                                        <button type="submit" class="btn btn-sm btn-brown-outline">보기</button>
+                                    </form>
+								    </c:if>
+								  </sec:authorize>
                                 </td>
                             </tr>
                         </c:forEach>

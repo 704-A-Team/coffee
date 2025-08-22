@@ -100,7 +100,7 @@ public class SWProductController {
 		return "sw/product/wonList";
 	}
 	
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT','ROLE_CLIENT2')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_MANAGER','ROLE_CLIENT2')")
 	@GetMapping("/wonProductDetail")
 	public String wonProductDetailPage(@RequestParam("product_code") int product_code, Model model) {
 		System.out.println("SWProductController wonProductDetailPage Start...");
