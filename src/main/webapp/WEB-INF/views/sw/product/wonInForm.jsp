@@ -209,8 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 납품여부에 따라 판매단위 활성/비활성
     function toggleOrderPackAvailability() {
-        const isOrder = isOrderSelect.value; // "0": 납품, "1": 비납품
-        if (isOrder === "0") {
+        const isOrder = isOrderSelect.value; // "0": 비납품, "1": 납품
+        if (isOrder === "1") {
             // 납품: 활성화 + 옵션 채우기 + required 부여
             orderPackSelect.disabled = false;
             populateOrderPackOptions();
