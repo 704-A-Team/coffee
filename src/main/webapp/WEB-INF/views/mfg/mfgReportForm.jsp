@@ -31,8 +31,9 @@
 <div class="d-flex flex-grow-1">
     <%@ include file="../sidebar.jsp" %>
 
-    <div class="flex-grow-1 p-4">
-        <div class="report-card shadow-sm">
+      <div class="d-flex flex-column flex-grow-1">
+         <main class="flex-grow-1 p-4">
+        	<div class="report-card shadow-sm">
             <div class="report-title">생산 보고서</div>
             <div class="divider"></div>
 
@@ -151,10 +152,10 @@
                 </div>
             </form>
         </div>
+       </main>
+      <%@ include file="../footer.jsp" %>
     </div>
 </div>
-
-<%@ include file="../footer.jsp" %>
 
 <!-- 부트스트랩 모달 -->
 <div class="modal fade" id="yieldModal" tabindex="-1" aria-hidden="true">

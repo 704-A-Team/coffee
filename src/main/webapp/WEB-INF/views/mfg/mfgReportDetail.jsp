@@ -33,14 +33,14 @@
             margin-bottom: 20px;
         }
 
-        /* 테이블 전체 선 표시 */
+        /* 테이블 스타일 */
         table {
             width: 100%;
-            border-collapse: collapse;  /* 안쪽 선까지 보이도록 */
+            border-collapse: collapse;
             margin-bottom: 15px;
         }
         th, td {
-            border: 1px solid #666;  /* 안쪽 선 또렷하게 */
+            border: 1px solid #666;
             padding: 6px 8px;
             font-size: 13px;
             text-align: center;
@@ -69,8 +69,8 @@
     <div class="d-flex flex-grow-1">
         <%@ include file="../sidebar.jsp" %>
         <div class="d-flex flex-column flex-grow-1">
-            <div class="a4page">
-                <main class="flex-grow-1 p-4">
+            <main class="flex-grow-1 p-4">
+                <div class="a4page">
                     <div class="title">생산보고서</div>
 
                     <c:forEach var="report" items="${mfgRpDetailDTO}">
@@ -178,10 +178,10 @@
 					    </c:if>
 					    <button type="button" class="btn btn-secondary btn-sm" onclick="location.href='${pageContext.request.contextPath}/km/mfgReportList'">목록</button>
 					</div>
-                </main>
-            </div>
+                </div>
+            </main>
+            <%@ include file="../footer.jsp" %>
         </div>
     </div>
-    <%@ include file="../footer.jsp" %>
 </body>
 </html>
