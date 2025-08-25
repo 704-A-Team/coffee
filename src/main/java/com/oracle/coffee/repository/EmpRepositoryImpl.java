@@ -163,6 +163,7 @@ public class EmpRepositoryImpl implements EmpRepository {
 
 	//사원 등록
 	@Override
+	@Transactional
     public Emp empSave(Emp emp) {
 
     	//현재 세션들고있는 사람을 등록자로
@@ -187,9 +188,9 @@ public class EmpRepositoryImpl implements EmpRepository {
 
         // 3) Account 생성 (id는 시퀀스로 자동)
         Account account = new Account();
-        account.setEmp_code(emp.getEmp_code());              // EMP_CODE 저장
+        account.setEmp_code(emp.getEmp_code());             	// EMP_CODE 저장
         account.setUsername(String.valueOf(emp.getEmp_code())); // USERNAME = emp_code
-        account.setPassword(encoded);                       // PASSWORD = hash(last4)
+        account.setPassword(encoded);                       	// PASSWORD = hash(last4)
         //부장 이상일 경우 ROLE_MANAGER로 그 이외일 경우 ROLE_USER로 등록 
         if (emp.getEmp_grade() >= 2) { 
             account.setRoles("ROLE_MANAGER");

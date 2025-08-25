@@ -88,7 +88,7 @@
 							<div>
 							  <strong>권한:</strong>
 							  <sec:authorize access="hasAuthority('ROLE_GUEST')">게스트</sec:authorize>
-							  <sec:authorize access="hasAuthority('ROLE_MANAGER')">매니저</sec:authorize>
+							  <sec:authorize access="hasAuthority('ROLE_MANAGER')">관리자</sec:authorize>
 							  <sec:authorize access="hasAuthority('ROLE_USER')">사원</sec:authorize>
 							  <sec:authorize access="hasAnyAuthority('ROLE_CLIENT','ROLE_CLIENT2')">거래처</sec:authorize>
 							</div>
