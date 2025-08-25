@@ -265,20 +265,23 @@ public class ClientRepositoryImpl implements ClientRepository {
 			.setParameter("code", clientDto.getClient_code())
 			.executeUpdate();
 		
-		//업데이트 후 필요에 따른  ROLE. 휴업중이면 guest 2면 공급처 3이면 가맹점 
+		//업데이트 후 필요에 따른  ROLE. 휴업중이면 guest 2면 공급처·3이면 가맹점 
 		 String targetRole = null;
 		    int status = clientDto.getClient_status();
 		    int type   = clientDto.getClient_type();
 		    
-		    
+		    	//휴업
 		        if (status == 1) {
 		            targetRole = "ROLE_GUEST";
 		        } 
+		        //폐점
 		        else if (status == 2) {
 		            targetRole = "ROLE_GUEST";
-		        } 		        
+		        } 	
+		        //정상 영업중
 		        else if (status == 0) {
-		            if (type == 2)      targetRole = "ROLE_CLIENT";
+		        	//type=2일경우 공급처 type=3 거래처
+		            if 		(type == 2) targetRole = "ROLE_CLIENT";
 		            else if (type == 3) targetRole = "ROLE_CLIENT2";
 		        }
 		    

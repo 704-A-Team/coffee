@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>매니저 마이페이지</title>
+<title>관리자 마이페이지</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
@@ -90,7 +90,7 @@
 
           <div class="card card-detail shadow-sm">
             <div class="card-header">
-              <h2 class="h5 title">매니저 기본 정보</h2>
+              <h2 class="h5 title">관리자 기본 정보</h2>
             </div>
 
             <div class="card-body">
