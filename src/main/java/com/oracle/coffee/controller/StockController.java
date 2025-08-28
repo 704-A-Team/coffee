@@ -45,6 +45,7 @@ public class StockController {
     	model.addAttribute("page", listData.getPage());
     	model.addAttribute("isClosed", isClosed);
     	model.addAttribute("isClosedToday", isClosedToday);
+    	model.addAttribute("keyword", page.getKeyword());
     	
 		return "stock/list";
 	}
@@ -115,6 +116,8 @@ public class StockController {
 		
 		model.addAttribute("magamProducts", magams.getList());
 		model.addAttribute("page", magams.getPage());
+		model.addAttribute("keyword", page.getKeyword());
+		
 		return "stock/magam_monthly";
 	}
 	

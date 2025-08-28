@@ -5,6 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>마감 상세 내역</title>
+<script type="text/javascript">
+
+	function searchKeyword(yrmo, status) {
+		const keyword = $('#searchKeyword').val().trim();
+		location.href = '/inventory/magam/' + yrmo + '/' + status + '?keyword=' + keyword;
+	}
+
+</script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -18,6 +26,13 @@
             <main class="flex-grow-1 p-4">
 				<div class="container mt-4 p-4">
                 	<div class="form-section-title">마감 상세</div>
+                	
+                	<div class="input-group w-50 ms-auto mb-4">
+						<input class="form-control me-2 w-50 rounded border-dark" type="search"
+						placeholder="검색어를 입력하세요. (제품코드, 제품명)" id="searchKeyword" value="${keyword }"
+						onkeypress="if(event.key === 'Enter'){ searchKeyword(${yrmo }, ${status }); }">
+						<button class="btn btn-outline-dark rounded" type="button" onclick="return searchKeyword(${yrmo }, ${status })">검색</button>
+					</div>
                 	
                 	<table class="table table-bordered text-center">
 	                    <thead class="table-secondary">
@@ -55,21 +70,21 @@
                             <c:if test="${page.startPage > page.pageBlock}">
 	                            <li class="page-item">
 									<a class="page-link"
-									href="/inventory/magam/${yrmo}/${status}?page=${page.startPage - page.pageBlock}&size=${page.rowPage}">이전</a>
+									href="/inventory/magam/${yrmo}/${status}?page=${page.startPage - page.pageBlock}&size=${page.rowPage}&keyword=${keyword }">이전</a>
 								</li>
                             </c:if>
 
                             <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
                                 <li class="page-item ${i == page.currentPage ? 'active' : ''}">
 									<a class="page-link"
-									href="/inventory/magam/${yrmo}/${status}?page=${i}&size=${page.rowPage}">${i}</a>
+									href="/inventory/magam/${yrmo}/${status}?page=${i}&size=${page.rowPage}&keyword=${keyword }">${i}</a>
 								</li>
                             </c:forEach>
 
                             <c:if test="${page.endPage < page.totalPage}">
                                 <li class="page-item">
 									<a class="page-link"
-									href="/inventory/magam/${yrmo}/${status}?page=${page.startPage + page.pageBlock}&size=${page.rowPage}">다음</a>
+									href="/inventory/magam/${yrmo}/${status}?page=${page.startPage + page.pageBlock}&size=${page.rowPage}&keyword=${keyword }">다음</a>
 								</li>
                             </c:if>
                         </ul>

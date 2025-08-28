@@ -16,4 +16,5 @@ public class MagamPageDto {
 	private int end;
 	private String yrmo;
 	private int status;
+	private String keyword;
 }
