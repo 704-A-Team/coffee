@@ -1,5 +1,7 @@
 package com.oracle.coffee.service.km;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -195,7 +197,8 @@ public class MfgServiceImpl implements MfgService {
 	@Override
 	public void mfgRpSubmit(MfgRpDTO mfgRpDTO) {
 		log.info("mfgRpSubmit mfgRpDTO->"+mfgRpDTO);
-		
+
+		/*
 		// 소수점 둘째
 		double yield = Math.round((double)mfgRpDTO.getMfg_end() / mfgRpDTO.getMfg_mat() * 100.0 * 100) / 100.0;
 		mfgRpDTO.setYield(yield);
@@ -206,6 +209,22 @@ public class MfgServiceImpl implements MfgService {
 		double pct = yield - t_yield;
 		mfgRpDTO.setPct(pct);
 		System.out.println("pct->"+pct);
+		*/
+		
+		BigDecimal mfgEnd = BigDecimal.valueOf(mfgRpDTO.getMfg_end()); // int/long이면
+		BigDecimal mfgMat = BigDecimal.valueOf(mfgRpDTO.getMfg_mat());
+		BigDecimal yield = mfgEnd
+		        .divide(mfgMat, 4, RoundingMode.HALF_UP)   // 소수점 넉넉히 4자리
+		        .multiply(BigDecimal.valueOf(100))         // % 환산
+		        .setScale(2, RoundingMode.HALF_UP);        // 소수점 둘째자리
+		mfgRpDTO.setYield(yield);
+		System.out.println("yield->" + yield);
+
+		// pct 계산
+		BigDecimal tYield = BigDecimal.valueOf(productService.findYield(mfgRpDTO.getProduct_code()));
+		BigDecimal pct = yield.subtract(tYield).setScale(2, RoundingMode.HALF_UP);
+		mfgRpDTO.setPct(pct);
+		System.out.println("pct->" + pct);
 		
 		mfgDao.mfgRpSubmit(mfgRpDTO);
 		 
@@ -230,7 +249,7 @@ public class MfgServiceImpl implements MfgService {
 	@Override
 	public void mfgRpUpdate(MfgRpDTO mfgRpDTO) {
 		log.info("mfgRpSubmit mfgRpDTO->"+mfgRpDTO);
-		
+	/*	
 		// 소수점 둘째
 		double yield = Math.round((double)mfgRpDTO.getMfg_end() / mfgRpDTO.getMfg_mat() * 100.0 * 100) / 100.0;
 		mfgRpDTO.setYield(yield);
@@ -241,6 +260,20 @@ public class MfgServiceImpl implements MfgService {
 		double pct = yield - t_yield;
 		mfgRpDTO.setPct(pct);
 		System.out.println("pct->"+pct);
+	*/
+		
+	    // BigDecimal로 계산
+	    BigDecimal mfgEnd = BigDecimal.valueOf(mfgRpDTO.getMfg_end()); // int/long이면 valueOf
+	    BigDecimal mfgMat = BigDecimal.valueOf(mfgRpDTO.getMfg_mat());
+	    BigDecimal yield = mfgEnd.divide(mfgMat, 4, RoundingMode.HALF_UP);  // 소수점 넉넉히
+	    mfgRpDTO.setYield(yield);
+	    System.out.println("yield->"+yield);
+	    
+	    // pct 계산
+	    BigDecimal tYield = BigDecimal.valueOf(productService.findYield(mfgRpDTO.getProduct_code()));
+	    BigDecimal pct = yield.subtract(tYield).setScale(2, RoundingMode.HALF_UP);
+	    mfgRpDTO.setPct(pct);
+	    System.out.println("pct->"+pct);
 		
 		mfgDao.mfgRpUpdate(mfgRpDTO);
 		

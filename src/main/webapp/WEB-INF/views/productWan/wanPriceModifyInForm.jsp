@@ -51,7 +51,7 @@
                                 가격 조정
                             </div>
                             <div class="card-body">
-                                <form action="${pageContext.request.contextPath}/km/wanPriceModify" method="post">
+                                <form id="priceForm" action="${pageContext.request.contextPath}/km/wanPriceModify" method="post">
                                     <input type="hidden" name="product_code" value="${param.product_code}" />
                                     <div class="mb-3">
 									    <label for="newPrice" class="form-label">새 가격</label>
@@ -149,22 +149,26 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
+    const form = document.querySelector('#priceForm');
     const newPriceInput = document.getElementById('newPrice');
     const startDateInput = document.getElementById('startDate');
     const minPrice = Number('${tot_wan_price}'); // 서버에서 전달된 최소 가격
 
+    console.log('minPrice',minPrice);
     form.addEventListener('submit', function (event) {
+        console.log("폼 submit 이벤트 발생 ✅");
+        console.log("newPriceInput.value:", newPriceInput.value);
         const enteredPrice = parseFloat(newPriceInput.value);
+        console.log("enteredPrice:", enteredPrice, "minPrice:", minPrice);
+        // 가격 검증 (minPrice 이하일 경우 차단)
+        if (isNaN(enteredPrice) || enteredPrice < minPrice) {
+		    event.preventDefault();
+		    event.stopPropagation();   // 이벤트 전파도 차단
+		    showModal(`가격은 최소 ${minPrice}원 이상 입력해야 합니다.`);
+		    return false;              // 폼 제출 완전히 차단
+		}
 
-        // 가격 검증
-        if (enteredPrice < minPrice) {
-            event.preventDefault();
-            showModal("가격을 재입력 하십시오.");
-            return;
-        }
-
-        // 초 단위 붙여서 전송
+        // 초 단위 붙여서 전송 (datetime-local에 초 없는 경우 보정)
         if (startDateInput.value && !startDateInput.value.includes(":")) {
             const now = new Date();
             const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -173,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 모달 생성 함수
-    function showModal(message) {
+    function showModal(minPrice) {
         // 기존 모달 제거
         const existingModal = document.getElementById('priceModal');
         if (existingModal) existingModal.remove();
@@ -183,10 +187,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">가격 오류</h5>
+                        <h5 class="modal-title text-danger">가격 오류</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
                     </div>
-                    <div class="modal-body">${message}</div>
+                    <div class="modal-body fw-bold text-center">가격을 재입력 하십시오.</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
                     </div>

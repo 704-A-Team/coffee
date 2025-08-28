@@ -35,7 +35,7 @@ public class ProductWanDTO {	// 제품
 	private LocalDateTime 	product_reg_date = LocalDateTime.now();	 // 등록일 (현재 날짜)
 	
 	private String simage;
-	private int    price;
+	private double price;
 	private String start_date;
 	
 	private String pageNum;

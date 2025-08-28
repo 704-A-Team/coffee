@@ -148,7 +148,7 @@
                 <!-- 버튼 -->
                 <div class="btn-row">
                     <button type="submit" class="btn btn-success">보고 완료</button>
-                    <a href="#" class="btn btn-secondary">취소</a>
+                    <a href="${pageContext.request.contextPath}/km/mfgReportList" class="btn btn-secondary">취소</a>
                 </div>
             </form>
         </div>

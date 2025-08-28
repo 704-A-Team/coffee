@@ -145,7 +145,7 @@
 	
 	<insert id="mfgRpSubmit" parameterType="MfgRpDTO">
 		INSERT INTO MFG_RP (MFG_CODE , PRODUCT_CODE , MFG_QTY , MFG_END_DATE , MFG_MAT , MFG_END , YIELD , PCT , NOTE , MFG_RP_REG_CODE , REPORT_REG_DATE)
-		VALUES( #{mfg_code}, #{product_code}, #{mfg_qty}, #{mfg_end_date,jdbcType=TIMESTAMP}, #{mfg_mat}, #{mfg_end}, #{yield}, #{pct}, #{note}, #{mfg_rp_reg_code}, sysdate)
+		VALUES( #{mfg_code}, #{product_code}, #{mfg_qty}, #{mfg_end_date,jdbcType=TIMESTAMP}, #{mfg_mat}, #{mfg_end}, #{yield,jdbcType=DECIMAL}, #{pct,jdbcType=DECIMAL}, #{note}, #{mfg_rp_reg_code}, sysdate)
 	</insert>
 	
 	<insert id="rpDetailSubmit" parameterType="RpDetailDTO">
