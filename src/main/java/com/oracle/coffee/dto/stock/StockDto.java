@@ -22,5 +22,5 @@ public class StockDto {
 	// bunryu 테이블
 	private String unit_contents;		// 단위
 	private String type_contents;		// 완제품, 원재료
-	
+
 }

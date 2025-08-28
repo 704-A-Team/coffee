@@ -25,7 +25,7 @@ public class StockServiceImpl implements StockService{
 	
 	@Override
 	public PageRespDto<StockDto, Paging> getStockList(PageRequestDto page) {
-		int totalCount = stockDao.totalStockCount();
+		int totalCount = stockDao.totalStockCount(page);
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));
 		page.setStart(paging.getStart());
 		page.setEnd(paging.getEnd());
@@ -120,6 +120,7 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public PageRespDto<MonthMagamDto, Paging> getMonthMagamProducts(PageRequestDto page, MagamPageDto magamPage) {
+		magamPage.setKeyword(page.getKeyword());
 		int totalCount = stockDao.totalMonthMagamPrds(magamPage);
 		
 		Paging paging = new Paging(totalCount, String.valueOf(page.getPage()));

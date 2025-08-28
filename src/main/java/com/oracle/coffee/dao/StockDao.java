@@ -11,7 +11,7 @@ import com.oracle.coffee.dto.stock.StockDto;
 
 public interface StockDao {
 	public MagamStatusDto         getTodayMagam();
-	public int                    totalStockCount();
+	public int                    totalStockCount(PageRequestDto page);
 	public List<StockDto>         getStockList(PageRequestDto page);
 	public void                   closeTodayMagam();
 	public void                   cancelTodayMagam();

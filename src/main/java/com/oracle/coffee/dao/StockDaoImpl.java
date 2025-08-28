@@ -34,10 +34,10 @@ public class StockDaoImpl implements StockDao {
 	}
 
 	@Override
-	public int totalStockCount() {
+	public int totalStockCount(PageRequestDto page) {
 		int total = 0;
 		try {
-			total = session.selectOne("totalStock");
+			total = session.selectOne("totalStock", page);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

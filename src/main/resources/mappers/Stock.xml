@@ -39,10 +39,16 @@
 	</select>
 	
 	<!-- 전체 재고 개수 조회 -->
-	<select id="totalStock" resultType="int">
+	<select id="totalStock" parameterType="PageRequestDto" resultType="int">
 		select COUNT(*) 
 	  	from product
 	  	where product_isdel = 0
+	  	<if test="keyword != null and keyword != ''">
+	  		and (
+				to_char(product_code) like '%' || #{keyword} || '%'
+				or product_name like '%' || #{keyword} || '%'
+			)
+	  	</if>
 	</select>
   
 	<!-- 페이징 재고 리스트 조회 -->
@@ -55,6 +61,12 @@
 		        where ub.bcd = 750 and p.product_unit = ub.mcd
 		        	and tb.bcd = 700 and p.product_type = tb.mcd
 		        	and p.product_isdel = 0
+		        	<if test="keyword != null and keyword != ''">
+		        		and (
+							to_char(p.product_code) like '%' || #{keyword} || '%'
+							or p.product_name like '%' || #{keyword} || '%'
+						)
+		        	</if>
 		    ) a
 		) where rn between #{start} and #{end}
 	</select>
@@ -105,8 +117,17 @@
 	<!-- 월마감 월별 전체 개수 조회 -->
 	<select id="totalMonthMagamPrds" parameterType="MagamPageDto" resultType="int">
 		select count(*)
-		from month_magam
-		where month_yrmo = #{yrmo} and month_magam_status = #{status}
+		from month_magam mm, product p
+		where
+			mm.product_code = p.product_code
+			and mm.month_yrmo = #{yrmo}
+			and mm.month_magam_status = #{status}
+		<if test="keyword != null and keyword != ''">
+	  		and (
+				to_char(p.product_code) like '%' || #{keyword} || '%'
+				or p.product_name like '%' || #{keyword} || '%'
+			)
+	  	</if>
 	</select>
 	
 	<!-- 월마감 월별 전체 조회 -->
@@ -120,6 +141,12 @@
 		        	mm.product_code = p.product_code
 		        	and mm.month_yrmo = #{yrmo}
 		        	and mm.month_magam_status = #{status}
+		        	<if test="keyword != null and keyword != ''">
+				  		and (
+							to_char(p.product_code) like '%' || #{keyword} || '%'
+							or p.product_name like '%' || #{keyword} || '%'
+						)
+				  	</if>
 		    ) a
 		) where rn between #{start} and #{end}
 	</select>
