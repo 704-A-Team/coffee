@@ -178,6 +178,8 @@ public class ProductController {
 		productDTO.setEnd(page.getEnd());
 		
 		List<ProductWanDTO> wanProductList = productService.wanList(productDTO);
+		System.out.println("wanProductList->"+wanProductList);
+
 		model.addAttribute("wanProductList" , wanProductList);
 		model.addAttribute("page",page);
 		return "productWan/wanList";

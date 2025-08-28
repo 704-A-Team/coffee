@@ -148,7 +148,7 @@
 												        <c:otherwise>
 												            ${product.price} 원
 												        </c:otherwise>
-												    </c:choose>
+												    </c:choose>	
 												    </span>
 												</li>
 												<li><strong>판매 여부</strong> 

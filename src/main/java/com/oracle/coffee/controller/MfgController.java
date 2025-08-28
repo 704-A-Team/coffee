@@ -319,7 +319,7 @@ public class MfgController {
 		List<MfgDetailDTO> mfgDetailList = mfgService.mfgDetail(mfgDetailDTO);
 		log.info("mfgDetailList->"+mfgDetailList);
 		model.addAttribute("mfgDetailList" , mfgDetailList);
-		return "mfg/mfgApproveDetail";
+		return "redirect:/km/mfgList";
 	}
 	
 	// 생산 보고 등록
@@ -420,6 +420,8 @@ public class MfgController {
 	// 생산보고 수정
 	@PostMapping("/mfgReportUpdate")
 	public String mfgReportUpdate(MfgRpSaveDTO mfgRpSaveDTO) {
+		System.out.println("MfgController mfgReportUpdate mfgRpSaveDTO->"+mfgRpSaveDTO);
+		
 		// 생산신청상태 	5번
 		mfgService.mfgRpUpdate(mfgRpSaveDTO.getMfgRpDTO());		// 생산보고 	변경
 		mfgService.rpDetailUpdate(mfgRpSaveDTO.getDetails());	// 생산보고상세 	변경

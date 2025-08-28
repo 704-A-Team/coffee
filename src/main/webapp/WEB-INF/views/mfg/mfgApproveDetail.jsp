@@ -195,13 +195,51 @@
       });
   }
 
-  // 거부 버튼
+/*   // 거부 버튼
   function submitReject(btn, mfg_code, product_code){
 	  const row = btn.closest('tr'); 
 	  const contentsInput = row.querySelector('.row-contents');  // 비고 textarea
 
 	  setHiddenAndSubmit(mfg_code, product_code, 3, '', contentsInput.value);
-  }
+  } */
+  
+  // 거부 버튼 모달
+  function submitReject(btn, mfg_code, product_code){
+    const row = btn.closest('tr'); 
+    const contentsInput = row.querySelector('.row-contents');
+
+    const modalEl = document.getElementById('shortageModal');
+    const modalTitle = modalEl.querySelector('.modal-title');   // 제목 선택
+    const modalBody = document.getElementById('shortageBody');
+    const modal = new bootstrap.Modal(modalEl);
+    
+    modalTitle.textContent = '확인';
+
+    modalBody.innerHTML = '<p>정말 거부하시겠습니까?</p>';
+
+    const modalFooter = modalEl.querySelector('.modal-footer');
+    modalFooter.innerHTML = '';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'btn btn-secondary';
+    cancelBtn.textContent = '취소';
+    cancelBtn.addEventListener('click', () => modal.hide());
+
+    const confirmBtn = document.createElement('button');
+    confirmBtn.type = 'button';
+    confirmBtn.className = 'btn btn-danger';
+    confirmBtn.textContent = '확인';
+    confirmBtn.addEventListener('click', () => {
+        modal.hide();
+        setHiddenAndSubmit(mfg_code, product_code, 3, '', contentsInput.value);
+    });
+
+    modalFooter.appendChild(cancelBtn);
+    modalFooter.appendChild(confirmBtn);
+
+    modal.show();
+}
 
   // hidden input 세팅 + form submit
   function setHiddenAndSubmit(mfg_code, product_code, status, dueDate, contents){

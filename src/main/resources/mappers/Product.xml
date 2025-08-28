@@ -76,7 +76,7 @@
 	<select id="wanList" parameterType="ProductWanDTO" resultType="ProductWanDTO">
 		SELECT * FROM (
 		    SELECT ROWNUM rw , wanAll.* FROM (
-		              SELECT pd.* , img.file_name simage    , pp_latest.price , pp_latest.start_date
+		              SELECT pd.* , img.file_name simage , pp_latest.price , pp_latest.start_date
 		              FROM (
 		                      SELECT * FROM product 
 		                      WHERE product_type = 1
@@ -92,7 +92,7 @@
 		                                       ) p_max_date
 		                                 
 		                                 WHERE pp.product_code = p_max_date.product_code
-		                                 AND   pp.start_date   = p_max_date.max_start_date
+		                                 AND   TO_CHAR(pp.start_date,'yymmdd')   = TO_CHAR(TO_DATE(p_max_date.max_start_date),'yymmdd')
 		                                 ) pp_latest     
 		              ON pd.product_code = pp_latest.product_code
 		              ORDER BY pd.product_code DESC
